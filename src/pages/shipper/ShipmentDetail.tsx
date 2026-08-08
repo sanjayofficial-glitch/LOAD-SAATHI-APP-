@@ -377,7 +377,7 @@ const ShipmentDetail = () => {
               </div>
             </CardHeader>
             <CardContent className="pt-6 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-1">
                   <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold">Departure Date</p>
                   <div className="flex items-center font-medium">

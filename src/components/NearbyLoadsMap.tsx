@@ -190,7 +190,7 @@ export default function NearbyLoadsMap() {
       {/* Map */}
       <div className="p-0">
         {loadsLoading && loads.length === 0 ? (
-          <Skeleton className="h-[420px] w-full rounded-none" />
+          <Skeleton className="h-[45vh] w-full rounded-none" />
         ) : (
           <LoadSaathiMap
             loads={sortedLoads}
@@ -199,7 +199,7 @@ export default function NearbyLoadsMap() {
                 ? { lat: gps.position.lat, lng: gps.position.lng, radiusKm }
                 : undefined
             }
-            height="420px"
+            height="min(420px, 45vh)"
             showLegend
           />
         )}

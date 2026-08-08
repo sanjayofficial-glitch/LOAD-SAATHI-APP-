@@ -1,5 +1,5 @@
-const CACHE_NAME = 'loadsaathi-v3';
-const STATIC_CACHE = 'loadsaathi-static-v3';
+const CACHE_NAME = 'loadsaathi-v4';
+const STATIC_CACHE = 'loadsaathi-static-v4';
 
 self.addEventListener('install', () => {
   self.skipWaiting();

@@ -18,30 +18,32 @@ export function initCapacitorOAuth() {
       console.log("[CapacitorOAuth] App opened via URL:", url);
 
       // Clerk OAuth callbacks contain these patterns
-      if (
+      const isClerkCallback =
         url.includes("__clerk_oauth_redirect") ||
+        url.includes("__clerk_handshake") ||
         url.includes("__clerk_ticket") ||
         url.includes("/auth-sync") ||
         url.includes("clerk.shared.lcl.dev") ||
-        url.includes("clerk.loadsaathi.in")
-      ) {
-        // Extract the path after the hostname/scheme
-        let path = "/auth-sync";
+        url.includes("clerk.loadsaathi.in");
 
-        if (url.includes("/auth-sync")) {
-          path = "/auth-sync";
-        } else if (url.includes("__clerk_oauth_redirect")) {
-          // Keep the full query string for Clerk to process
-          const urlObj = new URL(url);
-          path = urlObj.pathname + urlObj.search;
-        }
+      if (!isClerkCallback) return;
 
-        console.log("[CapacitorOAuth] Navigating to:", path);
-
-        // Navigate the SPA to handle the OAuth callback
-        // Use replace to avoid back-button loop
-        window.location.replace(path);
+      // Preserve the full path + query string so Clerk can finish the
+      // handshake (dropping the query breaks OAuth on the next load).
+      let path = "/auth-sync";
+      try {
+        const urlObj = new URL(url);
+        const target = urlObj.pathname + urlObj.search;
+        if (target && target !== "/") path = target;
+      } catch {
+        // Malformed URL — fall back to the auth-sync screen
       }
+
+      console.log("[CapacitorOAuth] Navigating to:", path);
+
+      // Navigate the SPA to handle the OAuth callback
+      // Use replace to avoid back-button loop
+      window.location.replace(path);
     });
 
     // Also handle when the app is restored from background

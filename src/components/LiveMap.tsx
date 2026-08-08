@@ -41,6 +41,8 @@ export interface TruckLocation {
 interface LiveMapProps {
   trucks: TruckLocation[];
   className?: string;
+  /** Map height. Defaults to a value that fits small phones (~55% of viewport). */
+  height?: string;
 }
 
 function FitBounds({ trucks, boundsKey }: { trucks: TruckLocation[]; boundsKey: string }) {
@@ -74,7 +76,7 @@ function formatTime(iso: string): string {
   }
 }
 
-export default React.memo(function LiveMap({ trucks, className = "" }: LiveMapProps) {
+export default React.memo(function LiveMap({ trucks, className = "", height = "min(500px, 55dvh)" }: LiveMapProps) {
   const { isDark } = useTheme();
 
   const defaultTileId: TileLayerId = isDark ? 'dark' : 'standard';
@@ -95,7 +97,7 @@ export default React.memo(function LiveMap({ trucks, className = "" }: LiveMapPr
   return (
     <div
       className={`relative w-full rounded-lg overflow-hidden border isolate ${className}`}
-      style={{ height: "500px" }}
+      style={{ height }}
     >
       <MapContainer
         center={[20.5937, 78.9629]}

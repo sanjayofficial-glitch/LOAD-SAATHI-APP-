@@ -274,18 +274,18 @@ const TruckerHub = () => {
       </div>
 
       <Tabs defaultValue={defaultTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
-          <TabsTrigger value="trips" className="flex items-center gap-2">
+        <TabsList className="flex w-full max-w-[600px] overflow-x-auto">
+          <TabsTrigger value="trips" className="flex flex-1 min-w-max items-center gap-2">
             <Truck className="h-4 w-4" />
             My Trips
             {trips.length > 0 && <Badge className="ml-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">{trips.length}</Badge>}
           </TabsTrigger>
-          <TabsTrigger value="sent" className="flex items-center gap-2">
+          <TabsTrigger value="sent" className="flex flex-1 min-w-max items-center gap-2">
             <Send className="h-4 w-4" />
             Sent Offers
             {sentOffers.length > 0 && <Badge className="ml-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">{sentOffers.length}</Badge>}
           </TabsTrigger>
-          <TabsTrigger value="incoming" className="flex items-center gap-2 relative">
+          <TabsTrigger value="incoming" className="flex flex-1 min-w-max items-center gap-2 relative">
             <Inbox className="h-4 w-4" />
             Booking Requests
             {pendingIncoming.length > 0 && (

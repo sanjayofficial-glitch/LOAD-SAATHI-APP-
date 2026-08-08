@@ -14,8 +14,32 @@ function afterPaint(fn: () => void) {
   }
 }
 
+/**
+ * In the Capacitor Android shell, the previous install's Service Worker can
+ * survive APK updates (WebView data persists) and serve stale hashed chunks —
+ * causing blank screens or outdated content after an update. Unregister + purge
+ * caches so the native app always runs the freshly bundled build. No-op on web.
+ */
+function cleanupServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((reg) => reg.unregister());
+    });
+  }
+  if (typeof caches !== 'undefined') {
+    caches.keys().then((names) => {
+      names.forEach((name) => caches.delete(name));
+    });
+  }
+}
+
 afterPaint(() => {
   import("./config/env");
+  import("@capacitor/core").then(({ Capacitor }) => {
+    if (Capacitor.isNativePlatform()) {
+      cleanupServiceWorker();
+    }
+  });
   import("./utils/capacitorOAuth").then(({ initCapacitorOAuth }) => initCapacitorOAuth());
 });
 

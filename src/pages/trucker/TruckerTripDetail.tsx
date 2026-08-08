@@ -515,7 +515,7 @@ const TruckerTripDetail = () => {
         </div>
 
         <Tabs defaultValue="pending">
-          <TabsList className="max-w-[360px]">
+          <TabsList className="w-full max-w-[360px] overflow-x-auto">
             <TabsTrigger value="pending">
               Pending {pendingCount > 0 && `(${pendingCount})`}
             </TabsTrigger>

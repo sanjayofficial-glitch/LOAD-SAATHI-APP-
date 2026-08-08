@@ -395,8 +395,8 @@ const BrowseShipments = () => {
         </div>
 
         <div className="lg:col-span-3 space-y-6">
-          <div className="flex gap-4 items-start">
-            <div className="relative flex-1">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+            <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input 
                 placeholder="Search by city or goods type..." 
@@ -405,34 +405,36 @@ const BrowseShipments = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="flex border rounded-md">
-              <button
-                onClick={() => setViewMode('list')}
-                className={`px-2 py-1 text-xs ${viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
-              >
-                <List className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={() => setViewMode('map')}
-                className={`px-2 py-1 text-xs ${viewMode === 'map' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
-              >
-                <Map className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <div className="w-48">
-              <Select value={sortBy} onValueChange={(val) => setSortBy(val as 'match' | 'budget_asc' | 'budget_desc' | 'date' | 'weight')}>
-                <SelectTrigger className="py-6 rounded-xl border-gray-200 dark:border-gray-700">
-                  <ArrowUpDown className="h-4 w-4 mr-2 text-gray-400" />
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="match">Best Match</SelectItem>
-                  <SelectItem value="budget_asc">Budget: Low to High</SelectItem>
-                  <SelectItem value="budget_desc">Budget: High to Low</SelectItem>
-                  <SelectItem value="date">Earliest Date</SelectItem>
-                  <SelectItem value="weight">Heaviest Load</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-3">
+              <div className="flex border rounded-md shrink-0">
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`px-2 py-1 text-xs ${viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
+                >
+                  <List className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={() => setViewMode('map')}
+                  className={`px-2 py-1 text-xs ${viewMode === 'map' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
+                >
+                  <Map className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <div className="w-full sm:w-48">
+                <Select value={sortBy} onValueChange={(val) => setSortBy(val as 'match' | 'budget_asc' | 'budget_desc' | 'date' | 'weight')}>
+                  <SelectTrigger className="py-6 rounded-xl border-gray-200 dark:border-gray-700">
+                    <ArrowUpDown className="h-4 w-4 mr-2 text-gray-400" />
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="match">Best Match</SelectItem>
+                    <SelectItem value="budget_asc">Budget: Low to High</SelectItem>
+                    <SelectItem value="budget_desc">Budget: High to Low</SelectItem>
+                    <SelectItem value="date">Earliest Date</SelectItem>
+                    <SelectItem value="weight">Heaviest Load</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -466,9 +468,9 @@ const BrowseShipments = () => {
             )
           ) : viewMode === 'map' ? (
             /* Map View — side-by-side on desktop, stacked on mobile */
-            <div className="flex flex-col lg:flex-row gap-4 h-[calc(100dvh-280px)] min-h-[400px]">
+            <div className="flex flex-col lg:flex-row gap-4 lg:h-[calc(100dvh-280px)] lg:min-h-[400px]">
               {/* Map */}
-              <div className="flex-1 min-h-[300px] lg:min-h-0">
+              <div className="h-[45vh] lg:h-auto lg:flex-1 lg:min-h-0">
                 <LoadSaathiMap
                   loads={filteredShipments.map(toLoadLocation)}
                   trucks={driverLocations}
@@ -484,7 +486,7 @@ const BrowseShipments = () => {
                 />
               </div>
               {/* Shipment List */}
-              <div className="w-full lg:w-80 overflow-y-auto overflow-x-hidden space-y-2">
+              <div className="w-full max-h-[45vh] lg:max-h-none lg:w-80 overflow-y-auto overflow-x-hidden space-y-2">
                 {filteredShipments.map((shipment) => (
                   <Card
                     key={shipment.id}

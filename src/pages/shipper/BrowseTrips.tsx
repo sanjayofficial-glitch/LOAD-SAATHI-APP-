@@ -310,7 +310,7 @@ const TripList = () => {
               />
             </div>
             
-            <div className="flex gap-2 items-center">
+            <div className="flex flex-wrap gap-2 items-center">
               <div className="flex border rounded-md">
                 <button
                   onClick={() => setViewMode('list')}
@@ -326,7 +326,7 @@ const TripList = () => {
                 </button>
               </div>
               <Select value={sortBy} onValueChange={(value: 'match' | 'price_asc' | 'price_desc' | 'date' | 'distance') => setSortBy(value)}>
-                <SelectTrigger className="w-[160px] border-gray-200 dark:border-gray-700">
+                <SelectTrigger className="flex-1 min-w-[140px] sm:flex-none sm:w-[160px] border-gray-200 dark:border-gray-700">
                   <ArrowUpDown className="h-4 w-4 mr-2 text-gray-400" />
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
@@ -430,9 +430,9 @@ const TripList = () => {
           />
         ) : viewMode === 'map' ? (
           /* Map View — side-by-side on desktop, stacked on mobile */
-          <div className="flex flex-col lg:flex-row gap-4 h-[calc(100dvh-280px)] min-h-[400px]">
+          <div className="flex flex-col lg:flex-row gap-4 lg:h-[calc(100dvh-280px)] lg:min-h-[400px]">
             {/* Map */}
-            <div className="flex-1 min-h-[300px] lg:min-h-0">
+            <div className="h-[45vh] lg:h-auto lg:flex-1 lg:min-h-0">
               <LoadSaathiMap
                 trucks={mapTrucks}
                 height="100%"
@@ -444,7 +444,7 @@ const TripList = () => {
               />
             </div>
             {/* Trip List */}
-            <div className="w-full lg:w-80 overflow-y-auto overflow-x-hidden space-y-2">
+            <div className="w-full max-h-[45vh] lg:max-h-none lg:w-80 overflow-y-auto overflow-x-hidden space-y-2">
               {filteredTrips.map((trip) => (
                 <Card
                   key={trip.id}

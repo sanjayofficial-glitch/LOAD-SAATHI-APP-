@@ -248,18 +248,18 @@ const MyShipments = () => {
       </div>
 
       <Tabs defaultValue={defaultTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
-          <TabsTrigger value="loads" className="flex items-center gap-2">
+        <TabsList className="flex w-full max-w-[600px] overflow-x-auto">
+          <TabsTrigger value="loads" className="flex flex-1 min-w-max items-center gap-2">
             <Package className="h-4 w-4" />
             My Loads
             {shipments.length > 0 && <Badge className="ml-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">{shipments.length}</Badge>}
           </TabsTrigger>
-          <TabsTrigger value="sent" className="flex items-center gap-2">
+          <TabsTrigger value="sent" className="flex flex-1 min-w-max items-center gap-2">
             <Send className="h-4 w-4" />
             Sent Requests
             {sentRequests.length > 0 && <Badge className="ml-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">{sentRequests.length}</Badge>}
           </TabsTrigger>
-          <TabsTrigger value="incoming" className="flex items-center gap-2 relative">
+          <TabsTrigger value="incoming" className="flex flex-1 min-w-max items-center gap-2 relative">
             <Inbox className="h-4 w-4" />
             Incoming Offers
             {pendingOffers.length > 0 && (
