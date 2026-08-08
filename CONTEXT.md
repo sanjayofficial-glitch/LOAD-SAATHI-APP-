@@ -253,6 +253,24 @@ LOAD-SAATHI-APP-1-OSRM/
 ├── supabase/                      # Supabase CLI config
 ├── scripts/                       # Build/utility scripts
 ├── docs/                          # Documentation
+│   ├── README.md                  # Docs index
+│   ├── architecture.md            # System architecture deep-dive
+│   ├── getting-started.md         # Local setup guide
+│   ├── data-models.md             # Database schema reference
+│   ├── authentication.md          # Clerk ↔ Supabase auth flow
+│   ├── realtime.md                # Supabase Realtime subscriptions
+│   ├── matching.md                # AI smart-matching algorithm
+│   ├── edge-functions.md          # Supabase Edge Functions reference
+│   ├── deployment.md              # Vercel + Capacitor deployment
+│   ├── mobile-android.md          # Android build guide
+│   ├── environment-variables.md   # Env var reference + Zod validation
+│   ├── roadmap.md                 # Product roadmap
+│   ├── llms.txt                   # Machine-readable site summary (copy)
+│   ├── llms-full.txt              # Extended site summary (copy)
+│   ├── seo/                       # SEO/GEO strategy
+│   │   └── README.md              # SEO/GEO overview + index
+│   ├── analytics/                 # Analytics instrumentation
+│   └── assets/                    # Brand assets (logo, team photos)
 ├── dist/                          # Vite build output (gitignored)
 ├── vercel.json                    # Vercel deployment config
 ├── vite.config.ts                 # Vite build config (manual chunks)
@@ -263,8 +281,8 @@ LOAD-SAATHI-APP-1-OSRM/
 ├── pnpm-lock.yaml                 # Lock file
 ├── index.html                     # SPA entry point (global JSON-LD schemas)
 ├── AI_RULES.md                    # Coding agent rules
-├── SEO-GEO-IMPLEMENTATION-PLAN.md # Existing SEO implementation plan
-└── CONTEXT.md                     # This file
+├── CONTEXT.md                     # This file
+└── loadsaathi.code-workspace      # VS Code workspace file
 ```
 
 ---
