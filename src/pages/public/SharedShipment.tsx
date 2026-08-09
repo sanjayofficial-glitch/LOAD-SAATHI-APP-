@@ -62,7 +62,7 @@ export default function SharedShipment() {
   if (loading) {
     return (
       <>
-        <SeoMeta title="Loading Shipment Details" description="Loading shared shipment information from LoadSaathi." />
+        <SeoMeta title="Loading Shipment Details" description="Loading shared shipment information from LoadSaathi." canonical={`/share/shipment/${id}`} />
         <div className="min-h-screen bg-gradient-to-b from-blue-50/50 to-background dark:from-blue-950/10 dark:to-background flex items-center justify-center px-6">
           <Card className="w-full max-w-lg">
             <CardContent className="p-8 space-y-4">
@@ -79,7 +79,7 @@ export default function SharedShipment() {
   if (error || !shipment) {
     return (
       <>
-        <SeoMeta title="Shipment Not Found" description="This shared shipment link is invalid or no longer available on LoadSaathi." />
+        <SeoMeta title="Shipment Not Found" description="This shared shipment link is invalid or no longer available on LoadSaathi." canonical={`/share/shipment/${id}`} />
         <div className="min-h-screen bg-gradient-to-b from-blue-50/50 to-background dark:from-blue-950/10 dark:to-background flex items-center justify-center px-6">
           <Card className="w-full max-w-lg text-center">
             <CardContent className="p-8">

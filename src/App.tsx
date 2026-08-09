@@ -79,6 +79,19 @@ const Moderation = lazy(() => import("./pages/admin/Moderation"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const CreditScore = lazy(() => import("./pages/CreditScore"));
 const Gallery = lazy(() => import("./pages/public/Gallery"));
+const ReturnLoad = lazy(() => import("./pages/public/commercial/ReturnLoad"));
+const PtlTransport = lazy(() => import("./pages/public/commercial/PtlTransport"));
+const LtlTransport = lazy(() => import("./pages/public/commercial/LtlTransport"));
+const TruckLoadBooking = lazy(() => import("./pages/public/commercial/TruckLoadBooking"));
+const FreightMarketplace = lazy(() => import("./pages/public/commercial/FreightMarketplace"));
+const TransportCostCalculator = lazy(() => import("./pages/public/tools/TransportCostCalculator"));
+const TruckLoadCalculator = lazy(() => import("./pages/public/tools/TruckLoadCalculator"));
+const PtlVsFtlCalculator = lazy(() => import("./pages/public/tools/PtlVsFtlCalculator"));
+const FreightRateCalculator = lazy(() => import("./pages/public/tools/FreightRateCalculator"));
+const ReturnLoadCalculator = lazy(() => import("./pages/public/tools/ReturnLoadCalculator"));
+const ForMsmes = lazy(() => import("./pages/public/ForMsmes"));
+const AiLogistics = lazy(() => import("./pages/public/AiLogistics"));
+const Data = lazy(() => import("./pages/public/Data"));
 const GalleryManager = lazy(() => import("./pages/admin/GalleryManager"));
 const TeamManager = lazy(() => import("./pages/admin/TeamManager"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -182,6 +195,31 @@ function App() {
 
                     {/* Gallery */}
                     <Route path="/gallery" element={<Gallery />} />
+
+                    {/* Commercial Hub Pages */}
+                    <Route path="/return-load" element={<ReturnLoad />} />
+                    <Route path="/ptl-transport" element={<PtlTransport />} />
+                    <Route path="/ltl-transport" element={<LtlTransport />} />
+                    <Route path="/truck-load-booking" element={<TruckLoadBooking />} />
+                    <Route path="/freight-marketplace" element={<FreightMarketplace />} />
+
+                    {/* Tool Calculators */}
+                    <Route path="/transport-cost-calculator" element={<TransportCostCalculator />} />
+                    <Route path="/truck-load-calculator" element={<TruckLoadCalculator />} />
+                    <Route path="/ptl-vs-ftl-calculator" element={<PtlVsFtlCalculator />} />
+                    <Route path="/freight-rate-calculator" element={<FreightRateCalculator />} />
+                    <Route path="/return-load-calculator" element={<ReturnLoadCalculator />} />
+
+                    {/* Cluster Pages */}
+                    <Route path="/for-msmes" element={<ForMsmes />} />
+                    <Route path="/ai-logistics" element={<AiLogistics />} />
+
+                    {/* Data Intelligence Hub */}
+                    <Route path="/data" element={<Data />} />
+                    <Route path="/freight-intelligence" element={<Data />} />
+
+                    {/* Transport by City (alias for /location/:city) */}
+                    <Route path="/transport/:city" element={<LocationPage />} />
                   </Route>
 
                   {/* Authenticated routes wrapped with Layout */}

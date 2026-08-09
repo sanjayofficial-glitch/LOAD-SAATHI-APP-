@@ -36,7 +36,11 @@ export default function SeoMeta({
   breadcrumbs,
 }: SeoMetaProps) {
   const fullTitle = `${title} | LoadSaathi`;
-  const url = canonical ? `${BASE_URL}${canonical}` : BASE_URL;
+  const url = canonical
+    ? `${BASE_URL}${canonical}`
+    : typeof window !== "undefined"
+      ? `${BASE_URL}${window.location.pathname}`
+      : BASE_URL;
   const isDefaultImage = image === DEFAULT_IMAGE;
 
   const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0

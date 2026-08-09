@@ -50,6 +50,8 @@ const publicMobileTabs: MobileTabItem[] = [
 const publicMobileMenuItems: MobileTabItem[] = [
   { label: "How It Works", path: "/how-it-works", icon: <BookOpen className="h-5 w-5" /> },
   { label: "Fare Calculator", path: "/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
+  { label: "Freight Rate Calculator", path: "/freight-rate-calculator", icon: <Calculator className="h-5 w-5" /> },
+  { label: "Return Load Calculator", path: "/return-load-calculator", icon: <Calculator className="h-5 w-5" /> },
   { label: "About", path: "/about", icon: <Info className="h-5 w-5" /> },
   { label: "FAQ", path: "/faq", icon: <HelpCircle className="h-5 w-5" /> },
   { label: "Blog", path: "/blog", icon: <Newspaper className="h-5 w-5" /> },
@@ -66,14 +68,22 @@ const footerLinks = {
   Solutions: [
     { label: "For Shippers", path: "/solutions/shippers" },
     { label: "For Truckers", path: "/solutions/truckers" },
-    { label: "Safety & Trust", path: "/safety-trust" },
+    { label: "For MSMEs", path: "/for-msmes" },
+    { label: "AI Logistics", path: "/ai-logistics" },
+  ],
+  Tools: [
     { label: "Fare Calculator", path: "/fare-calculator" },
+    { label: "Freight Rate Calculator", path: "/freight-rate-calculator" },
+    { label: "Return Load Calculator", path: "/return-load-calculator" },
+    { label: "Truck Load Calculator", path: "/truck-load-calculator" },
+    { label: "PTL vs FTL", path: "/ptl-vs-ftl-calculator" },
   ],
   Freight: [
     { label: "All Routes", path: "/routes" },
-    { label: "Rourkela–Ranchi", path: "/routes/rourkela-to-ranchi" },
-    { label: "Ranchi–Kolkata", path: "/routes/ranchi-to-kolkata" },
-    { label: "Bhubaneswar–Kolkata", path: "/routes/bhubaneswar-to-kolkata" },
+    { label: "Return Loads", path: "/return-load" },
+    { label: "PTL Transport", path: "/ptl-transport" },
+    { label: "LTL Transport", path: "/ltl-transport" },
+    { label: "Freight Data", path: "/data" },
   ],
   Company: [
     { label: "About", path: "/about" },

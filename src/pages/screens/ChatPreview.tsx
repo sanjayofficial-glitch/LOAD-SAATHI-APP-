@@ -81,7 +81,7 @@ export default function ChatPreview() {
 
   return (
     <>
-      <SeoMeta title="Chat Preview — LoadSaathi App Screens" description="Preview LoadSaathi's real-time messaging between shippers and truckers with delivery status, read receipts, and direct communication." />
+      <SeoMeta title="Chat Preview — LoadSaathi App Screens" description="Preview LoadSaathi's real-time messaging between shippers and truckers with delivery status, read receipts, and direct communication." canonical="/screens/chat" />
       <div className="min-h-screen bg-background">
         <div className="relative overflow-hidden border-b border-border bg-gradient-to-b from-green-500/5 via-transparent to-transparent">
           <div className="absolute top-0 left-1/3 w-[600px] h-[600px] rounded-full opacity-[0.06] pointer-events-none"

@@ -60,7 +60,7 @@ const StatCard = ({ icon: Icon, label, value, change, changeLabel, iconColor }: 
 export default function DashboardPreview() {
   return (
     <>
-    <SeoMeta title="Dashboard Preview — LoadSaathi App Screens" description="Preview LoadSaathi's role-based dashboard: real-time stats, earnings, and activity at a glance for shippers and truckers." />
+    <SeoMeta title="Dashboard Preview — LoadSaathi App Screens" description="Preview LoadSaathi's role-based dashboard: real-time stats, earnings, and activity at a glance for shippers and truckers." canonical="/screens/dashboard" />
     <div className="min-h-screen bg-background">
       <div className="relative overflow-hidden border-b border-border bg-gradient-to-b from-orange-500/5 via-transparent to-transparent">
         <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full opacity-[0.06] pointer-events-none"
