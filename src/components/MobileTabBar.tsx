@@ -98,11 +98,11 @@ const MobileTabBar = React.memo(
 
     return (
       <>
-        <div className={cn("fixed inset-x-0 bottom-0 z-[100] md:hidden contain-[layout_style]", className)}>
+        <div className={cn("fixed inset-x-0 bottom-2 z-[100] md:hidden contain-[layout_style] px-2", className)}>
           <nav
             aria-label="Mobile navigation"
             className={cn(
-              "flex items-stretch border-t border-gray-200/70 bg-white/85 backdrop-blur-lg dark:border-white/10 dark:bg-gray-950/85 safe-area-bottom"
+              "flex items-stretch border border-gray-200/70 bg-white/90 backdrop-blur-xl dark:border-white/10 dark:bg-gray-950/90 rounded-2xl shadow-lg safe-area-bottom"
             )}
           >
             {tabs.map((tab) => (

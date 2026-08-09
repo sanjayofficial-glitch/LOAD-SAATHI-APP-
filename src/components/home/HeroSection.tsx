@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Star, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const HeroSection = React.memo(() => {
@@ -48,6 +48,26 @@ const HeroSection = React.memo(() => {
                   I Have Truck Space <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
+            </div>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {[
+                { label: "See Problems", target: "problems" },
+                { label: "How It Works", target: "how-it-works" },
+                { label: "Platform", target: "platform" },
+                { label: "FAQ", target: "faq" },
+              ].map(({ label, target }) => (
+                <button
+                  key={target}
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById(target);
+                    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
+                  className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-orange-600 dark:hover:text-orange-400 transition-colors px-3 py-1.5 rounded-full border border-border/60 hover:border-orange-300 dark:hover:border-orange-700"
+                >
+                  {label} <ChevronDown className="h-3 w-3" />
+                </button>
+              ))}
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import SeoMeta from '@/components/SeoMeta';
 import HeroSection from '@/components/home/HeroSection';
+import SectionNav from '@/components/home/SectionNav';
 import ProofBar from '@/components/home/ProofBar';
 import BentoGrid from '@/components/home/BentoGrid';
 import WhatIsLoadSaathi from '@/components/home/WhatIsLoadSaathi';
@@ -359,17 +360,16 @@ const Index = () => {
         }}
       />
       <HeroSection />
-      <ProofBar />
-      <BentoGrid />
-      <WhatIsLoadSaathi />
-      <HowItWorksSection />
-      <WhyLoadSaathi />
-      <PlatformTabs />
-      <TrustedAcrossEastIndia />
+      <SectionNav />
+      <div id="problems"><ProofBar /><BentoGrid /></div>
+      <div id="what-is"><WhatIsLoadSaathi /></div>
+      <div id="how-it-works"><HowItWorksSection /><WhyLoadSaathi /></div>
+      <div id="platform"><PlatformTabs /></div>
+      <div id="locations"><TrustedAcrossEastIndia /></div>
       <VisionSection globeRef={globeRef} />
       <AppPreview />
       <SafetyTrust />
-      <FaqSection />
+      <div id="faq"><FaqSection /></div>
       <CtaSection />
     </>
   );

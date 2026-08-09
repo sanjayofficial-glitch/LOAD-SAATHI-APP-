@@ -41,6 +41,7 @@ import VerificationBadge from "./VerificationBadge";
 import AutoGpsTracker from "./AutoGpsTracker";
 import DockNav, { type NavAccent } from "./DockNav";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
+import ScrollToTopFab from "./ScrollToTopFab";
 import { DockItem, DockIcon, DockLabel } from "@/components/ui/dock";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
@@ -462,6 +463,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Button>
         }
       />
+      <ScrollToTopFab />
 
       <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-lg" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4 text-center">

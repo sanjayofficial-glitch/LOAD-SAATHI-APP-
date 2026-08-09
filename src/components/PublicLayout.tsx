@@ -21,6 +21,7 @@ import { Button } from "./ui/button";
 import LogoMark from "./LogoMark";
 import MobileMenu from "./MobileMenu";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
+import ScrollToTopFab from "./ScrollToTopFab";
 import type { BottomNavItem } from "./DockNav";
 
 // Desktop-only animated dock. Lazy so framer-motion (~130KB) is never
@@ -223,6 +224,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <MobileMenu open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
       {isDesktopView && <DockNav items={publicBottomNavItems} className="hidden md:flex" />}
       <MobileTabBar tabs={publicMobileTabs} menuItems={publicMobileMenuItems} />
+      <ScrollToTopFab />
     </div>
   );
 }
