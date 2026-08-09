@@ -47,11 +47,11 @@ const DockNav = React.memo(({ items, visible, extra, accent = "orange", classNam
   return (
     <div
       className={cn(
-        "fixed bottom-3 left-0 right-0 z-[100] flex justify-center px-2 pointer-events-none safe-area-bottom",
+        "fixed bottom-3 left-0 right-0 z-[100] flex justify-center px-2 pointer-events-none safe-area-bottom contain-[layout_style]",
         className
       )}
     >
-      <Dock className="pointer-events-auto gap-2.5 rounded-[1.75rem] border border-gray-200/60 bg-white/70 px-3.5 py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/60">
+      <Dock className="pointer-events-auto gap-2.5 rounded-[1.75rem] border border-gray-200/60 bg-white/70 px-3.5 py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:border-white/10 dark:bg-neutral-900/60">
         {items.map((item) => {
           const active = isActive(item.path);
           const icon = React.isValidElement<{ className?: string }>(item.icon)

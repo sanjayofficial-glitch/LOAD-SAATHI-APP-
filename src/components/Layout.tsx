@@ -336,7 +336,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       
       {userProfile?.user_type !== 'admin' && <AutoGpsTracker />}
       
-      <nav className="bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-[100] shadow-sm backdrop-blur-xl pt-[env(safe-area-inset-top)]">
+      <nav className="bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-[100] shadow-sm backdrop-blur-lg pt-[env(safe-area-inset-top)]" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between h-14 sm:h-16">
             <div className="flex items-center gap-4 sm:gap-8">
@@ -428,7 +428,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
 
         {mobileNavOpen && (
-          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 px-4 py-3 space-y-1 animate-fade-in-up shadow-lg backdrop-blur-xl">
+          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 px-4 py-3 space-y-1 animate-fade-in-up shadow-lg backdrop-blur-lg" style={{ contain: 'layout style' }}>
             <NavLinks navItems={navItems} currentPath={currentPath} onClick={() => setMobileNavOpen(false)} mobile />
           </div>
         )}
@@ -463,7 +463,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
       />
 
-      <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-xl">
+      <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-lg" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <LogoMark size="h-8 w-8" />

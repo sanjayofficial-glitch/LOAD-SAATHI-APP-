@@ -126,7 +126,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   return (
     <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       <OfflineBanner />
-      <nav className="fixed top-0 w-full z-[100] bg-background/70 dark:bg-[#050816]/70 backdrop-blur-xl border-b border-border dark:border-white/10 pt-[env(safe-area-inset-top)]">
+      <nav className="fixed top-0 w-full z-[100] bg-background/70 dark:bg-[#050816]/70 backdrop-blur-lg border-b border-border dark:border-white/10 pt-[env(safe-area-inset-top)]" style={{ contain: 'layout style' }}>
         <div className="flex justify-between items-center w-full px-6 sm:px-12 max-w-[1440px] mx-auto h-16">
           <Link to="/" className="flex items-center gap-2">
             <LogoMark size="h-11 w-11" />
