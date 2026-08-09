@@ -6,6 +6,7 @@ import { LoadSaathiMap } from '@/components/maps';
 import { useLiveDriverLocations } from '@/hooks/useLiveDriverLocations';
 import { useTripMapMarkers } from '@/hooks/useTripMapMarkers';
 import { isTruckInTransit, type TruckLocation } from '@/components/maps/TruckMarker';
+import { useAuth } from '@/contexts/AuthContext';
 import type { Trip } from '@/types';
 import TruckDetailsPanel, {
   type TripWithTrucker,
@@ -23,18 +24,18 @@ const FILTERS: { key: TruckFilter; label: string }[] = [
 ];
 
 interface LiveTruckMapProps {
-  getToken: (options?: { template?: string }) => Promise<string | null>;
   className?: string;
 }
 
-export default function LiveTruckMap({ getToken, className }: LiveTruckMapProps) {
-  const { driverLocations, isLoading } = useLiveDriverLocations(getToken);
+export default function LiveTruckMap({ className }: LiveTruckMapProps) {
+  const { getSupabaseToken } = useAuth();
+  const { driverLocations, isLoading } = useLiveDriverLocations();
 
   // Active posted trips — shown as pins even when a trucker isn't broadcasting GPS.
   const { data: activeTrips = [], isLoading: tripsLoading } = useQuery<Trip[]>({
     queryKey: ['shipper-map-active-trips'],
     queryFn: async () => {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return [];
       const supabase = createClerkSupabaseClient(token);
       const { data } = await supabase

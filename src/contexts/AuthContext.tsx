@@ -14,6 +14,7 @@ interface AuthContextType {
   setProfile: (profile: User) => void;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   isLoaded: boolean;
+  getSupabaseToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -181,6 +182,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [clerk.client]);
 
+  // Cached Supabase token — avoids redundant Clerk token mints across
+  // NotificationBell, AutoGpsTracker, realtime, useCreditScore, etc.
+  const supabaseTokenRef = useRef<string | null>(null);
+  const supabaseTokenExpiryRef = useRef(0);
+
+  const getSupabaseToken = useCallback(async (): Promise<string | null> => {
+    const now = Date.now();
+    // Reuse cached token if it hasn't expired (with 30s safety margin)
+    if (supabaseTokenRef.current && now < supabaseTokenExpiryRef.current - 30_000) {
+      return supabaseTokenRef.current;
+    }
+    const token = await session?.getToken({ template: 'supabase' });
+    if (token) {
+      supabaseTokenRef.current = token;
+      // Clerk tokens expire in 60s; refresh at 45s
+      supabaseTokenExpiryRef.current = now + 45_000;
+    }
+    return token;
+  }, [session]);
+
   const value = useMemo<AuthContextType>(
     () => ({
       user,
@@ -192,6 +213,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setProfile,
       resetPassword,
       isLoaded: clerkLoaded,
+      getSupabaseToken,
     }),
     [
       user,
@@ -203,6 +225,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       refreshProfile,
       setProfile,
       resetPassword,
+      getSupabaseToken,
     ]
   );
 

@@ -25,7 +25,7 @@ const Register = () => {
   const [code, setCode] = useState("");
 
   if (isSignedIn) {
-    navigate("/auth-sync", { replace: true });
+    navigate("/choose-role", { replace: true });
     return null;
   }
 
@@ -54,8 +54,8 @@ const Register = () => {
       const redirectBase = isNative ? "https://in.loadsaathi.app" : "";
       await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
-        redirectUrl: `${redirectBase}/auth-sync`,
-        redirectUrlComplete: `${redirectBase}/auth-sync`,
+        redirectUrl: `${redirectBase}/choose-role`,
+        redirectUrlComplete: `${redirectBase}/choose-role`,
       });
     } catch (err) {
       console.error("Google sign-up error:", err);
@@ -96,7 +96,7 @@ const Register = () => {
       const result = await signUp.attemptEmailAddressVerification({ code });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        navigate("/auth-sync", { replace: true });
+        navigate("/choose-role", { replace: true });
       } else {
         setError("Invalid verification code.");
       }

@@ -17,7 +17,7 @@ const Login = () => {
   const [error, setError] = useState("");
 
   if (isSignedIn) {
-    navigate("/auth-sync", { replace: true });
+    navigate("/choose-role", { replace: true });
     return null;
   }
 
@@ -31,8 +31,8 @@ const Login = () => {
       const redirectBase = isNative ? "https://in.loadsaathi.app" : "";
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
-        redirectUrl: `${redirectBase}/auth-sync`,
-        redirectUrlComplete: `${redirectBase}/auth-sync`,
+        redirectUrl: `${redirectBase}/choose-role`,
+        redirectUrlComplete: `${redirectBase}/choose-role`,
       });
     } catch (err) {
       console.error("Google sign-in error:", err);
@@ -50,7 +50,7 @@ const Login = () => {
       const result = await signIn.create({ identifier: email, password });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        navigate("/auth-sync", { replace: true });
+        navigate("/choose-role", { replace: true });
       } else {
         setError("Additional verification required.");
       }

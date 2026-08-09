@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { Bell, CheckCircle, AlertCircle, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,8 +27,7 @@ interface Notification {
 }
 
 const NotificationBell = React.memo(() => {
-  const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { userProfile, getSupabaseToken } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -38,7 +36,7 @@ const NotificationBell = React.memo(() => {
     if (!userProfile?.id) return;
     
     try {
-      const supabaseToken = await getToken({ template: 'supabase' });
+      const supabaseToken = await getSupabaseToken();
       if (!supabaseToken) return;
       
       const supabaseClient = createClerkSupabaseClient(supabaseToken);
@@ -59,7 +57,7 @@ const NotificationBell = React.memo(() => {
     } finally {
       setLoading(false);
     }
-  }, [userProfile?.id, getToken]);
+  }, [userProfile?.id, getSupabaseToken]);
 
   useEffect(() => {
     if (!userProfile?.id) return;
@@ -72,7 +70,7 @@ const NotificationBell = React.memo(() => {
     void (async () => {
       // Authorize the shared realtime socket with the Clerk JWT — RLS on
       // `notifications` is `TO authenticated`, anon is denied.
-      await authorizeRealtime(getToken);
+      await authorizeRealtime(getSupabaseToken);
       if (cancelled) return;
 
       channel = baseSupabase
@@ -99,12 +97,12 @@ const NotificationBell = React.memo(() => {
       cancelled = true;
       if (channel) baseSupabase.removeChannel(channel);
     };
-  }, [userProfile?.id, fetchNotifications, getToken]);
+  }, [userProfile?.id, fetchNotifications, getSupabaseToken]);
 
   const markAllAsRead = async () => {
     if (unreadCount === 0 || !userProfile?.id) return;
     try {
-      const supabaseToken = await getToken({ template: 'supabase' });
+      const supabaseToken = await getSupabaseToken();
       if (!supabaseToken) return;
       const supabaseClient = createClerkSupabaseClient(supabaseToken);
       await supabaseClient.from('notifications').update({ is_read: true }).eq('user_id', userProfile.id);

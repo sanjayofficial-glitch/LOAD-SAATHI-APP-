@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { LoadSaathiMap } from '@/components/maps';
 import { useLiveDriverLocations } from '@/hooks/useLiveDriverLocations';
@@ -40,12 +39,11 @@ interface Event {
 const VEHICLE_TYPES = ['All', 'Mini Truck', 'Tata Ace', 'Tempo', '10 MT', '16 MT', '20 MT', 'Container'];
 
 export default function CommandCenterLive() {
-  const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { userProfile, getSupabaseToken } = useAuth();
 
   // Real-time data hooks
-  const { driverLocations, isLoading: locationsLoading } = useLiveDriverLocations(getToken);
-  const { loads, isLoading: loadsLoading } = useLiveLoadLocations(getToken);
+  const { driverLocations, isLoading: locationsLoading } = useLiveDriverLocations();
+  const { loads, isLoading: loadsLoading } = useLiveLoadLocations();
 
   // Filters
   const [vehicleFilter, setVehicleFilter] = useState('All');
@@ -56,7 +54,7 @@ export default function CommandCenterLive() {
   const { data: stats, refetch: refetchStats } = useQuery({
     queryKey: ['admin-command-stats'],
     queryFn: async () => {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return null;
       const supabase = createClerkSupabaseClient(token);
 
@@ -107,7 +105,7 @@ export default function CommandCenterLive() {
   const { data: events = [] } = useQuery({
     queryKey: ['admin-command-events'],
     queryFn: async () => {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return [];
       const supabase = createClerkSupabaseClient(token);
 

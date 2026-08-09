@@ -21,7 +21,6 @@ const Layout = lazy(() => import("./components/Layout"));
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
-const AuthSync = lazy(() => import("./components/AuthSync"));
 const ChooseRole = lazy(() => import("./pages/ChooseRole"));
 const OnboardingFlow = lazy(() => import("./pages/OnboardingFlow"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
@@ -132,7 +131,7 @@ function App() {
         publishableKey={CLERK_PUBLISHABLE_KEY}
         allowedRedirectOrigins={['https://localhost', 'https://in.loadsaathi.app', 'capacitor://localhost', 'https://clerk.loadsaathi.in']}
         signUpFallbackRedirectUrl="/register"
-        signInFallbackRedirectUrl="/auth-sync"
+        signInFallbackRedirectUrl="/choose-role"
       >
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
@@ -147,7 +146,6 @@ function App() {
                   {/* Public routes with individual error boundaries */}
                   <Route path="/login" element={<ErrorBoundary><Login /></ErrorBoundary>} />
                   <Route path="/register" element={<ErrorBoundary><Register /></ErrorBoundary>} />
-                  <Route path="/auth-sync" element={<ErrorBoundary><AuthSync /></ErrorBoundary>} />
                   <Route path="/choose-role" element={<ErrorBoundary><ChooseRole /></ErrorBoundary>} />
                   <Route path="/onboarding" element={<ErrorBoundary><OnboardingFlow /></ErrorBoundary>} />
                   <Route path="/forgot-password" element={<ErrorBoundary><ForgotPassword /></ErrorBoundary>} />

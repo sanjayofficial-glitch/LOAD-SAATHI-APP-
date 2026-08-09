@@ -2,7 +2,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { useAuth as useClerkAuth } from "@clerk/clerk-react";
 import { createClerkSupabaseClient } from "@/utils/supabaseClient";
 import { supabase as supabaseAnon } from "@/integrations/supabase/client";
 import { authorizeRealtime } from "@/utils/realtime";
@@ -165,8 +164,7 @@ const FooterSocialLinks = React.memo(() => (
 FooterSocialLinks.displayName = "FooterSocialLinks";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { userProfile, signOut } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { userProfile, signOut, getSupabaseToken } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -176,7 +174,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     if (!userProfile?.id) return;
 
     const fetchUnread = async () => {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return;
       const supabase = createClerkSupabaseClient(token);
       const { count } = await supabase
@@ -195,7 +193,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     void (async () => {
       // Authorize the shared realtime socket with the Clerk JWT — RLS on
       // `messages` is `TO authenticated`, anon is denied.
-      await authorizeRealtime(getToken);
+      await authorizeRealtime(getSupabaseToken);
       if (cancelled) return;
 
       channel = supabaseAnon
@@ -225,7 +223,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       cancelled = true;
       if (channel) supabaseAnon.removeChannel(channel);
     };
-  }, [userProfile?.id, getToken]);
+  }, [userProfile?.id, getSupabaseToken]);
 
   const navItems = useMemo(() => {
     if (userProfile?.user_type === 'admin') {

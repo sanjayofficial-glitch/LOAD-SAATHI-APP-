@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -55,7 +54,7 @@ import {
 
 const TripList = () => {
   const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { getSupabaseToken } = useAuth();
   const navigate = useNavigate();
   
   const [searchTerm, setSearchTerm] = useState('');
@@ -76,7 +75,7 @@ const TripList = () => {
     queryKey: ['myShipment', userProfile?.id],
     queryFn: async () => {
       if (!userProfile?.id || userProfile.user_type !== 'shipper') return null;
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return null;
       const supabase = createClerkSupabaseClient(token);
       const { data } = await supabase
@@ -97,7 +96,7 @@ const TripList = () => {
   const { data: trips = [], isLoading, error, refetch } = useQuery({
     queryKey: ['activeTrips', filters.origin, filters.destination, filters.minCapacity, filters.maxPrice, filters.vehicle_type],
     queryFn: async () => {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) throw new Error('Authentication required');
       const supabase = createClerkSupabaseClient(token);
 
@@ -224,7 +223,7 @@ const TripList = () => {
   );
 
   // Live driver positions for map overlay
-  const { driverLocations } = useLiveDriverLocations(getToken);
+  const { driverLocations } = useLiveDriverLocations();
 
   // Map markers: every listed trip's truck gets a marker — its live GPS position
   // if the driver is sharing one, otherwise a pin at the trip's origin city

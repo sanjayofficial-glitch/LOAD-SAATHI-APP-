@@ -243,7 +243,7 @@ const ShipperDashboard = () => {
 
       {/* Live Truck Map — hero for first-time & returning shippers */}
       <div className="mb-8 sm:mb-10 animate-fade-in">
-        <LiveTruckMap getToken={getToken} />
+        <LiveTruckMap />
       </div>
 
       {/* Onboarding Checklist */}
