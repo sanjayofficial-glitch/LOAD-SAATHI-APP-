@@ -84,7 +84,7 @@ export default function LiveTruckMap({ className }: LiveTruckMapProps) {
     queryKey: ['shipper-map-trip', liveTruck?.trip_id],
     queryFn: async () => {
       if (!liveTruck?.trip_id) return null;
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return null;
       const supabase = createClerkSupabaseClient(token);
       const { data } = await supabase
@@ -104,7 +104,7 @@ export default function LiveTruckMap({ className }: LiveTruckMapProps) {
     queryKey: ['shipper-map-profile', liveTruck?.driver_id],
     queryFn: async () => {
       if (!liveTruck) return null;
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return null;
       const supabase = createClerkSupabaseClient(token);
       const { data } = await supabase

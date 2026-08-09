@@ -17,38 +17,39 @@ For the quickest introduction, read the [README](../README.md).
 
 ### Core Reference
 
-| Document | Description |
-|----------|-------------|
-| [Architecture](architecture.md) | System architecture, tech stack, and system flows |
-| [Getting Started](getting-started.md) | Full local development setup guide |
-| [Data Models](data-models.md) | Complete database schema reference |
-| [Environment Variables](environment-variables.md) | All configuration variables |
+| Document                                          | Description                                       |
+| ------------------------------------------------- | ------------------------------------------------- |
+| [Architecture](architecture.md)                   | System architecture, tech stack, and system flows |
+| [Getting Started](getting-started.md)             | Full local development setup guide                |
+| [Data Models](data-models.md)                     | Complete database schema reference                |
+| [Environment Variables](environment-variables.md) | All configuration variables                       |
+| [Coding Conventions](conventions.md)              | Standards, style, and the CI quality gate         |
 
 ### Feature Deep-Dives
 
-| Document | Description |
-|----------|-------------|
-| [Authentication](authentication.md) | Clerk ↔ Supabase auth flow |
-| [Matching Algorithm](matching.md) | AI smart-matching scoring engine |
-| [Realtime](realtime.md) | Supabase Realtime subscriptions |
+| Document                            | Description                              |
+| ----------------------------------- | ---------------------------------------- |
+| [Authentication](authentication.md) | Clerk ↔ Supabase auth flow               |
+| [Matching Algorithm](matching.md)   | AI smart-matching scoring engine         |
+| [Realtime](realtime.md)             | Supabase Realtime subscriptions          |
 | [Edge Functions](edge-functions.md) | Supabase Edge Functions (Deno) reference |
 
 ### Operations
 
-| Document | Description |
-|----------|-------------|
-| [Deployment](deployment.md) | Vercel web + Capacitor Android deployment |
-| [Mobile (Android)](mobile-android.md) | Android build and release guide |
-| [SEO / GEO](seo/README.md) | Search & AI-engine optimization strategy |
-| [Analytics](analytics/posthog-setup.md) | Analytics instrumentation report |
+| Document                                | Description                               |
+| --------------------------------------- | ----------------------------------------- |
+| [Deployment](deployment.md)             | Vercel web + Capacitor Android deployment |
+| [Mobile (Android)](mobile-android.md)   | Android build and release guide           |
+| [SEO / GEO](seo/README.md)              | Search & AI-engine optimization strategy  |
+| [Analytics](analytics/posthog-setup.md) | Analytics instrumentation report          |
 
 ### Planning & Strategy
 
-| Document | Description |
-|----------|-------------|
-| [Product Roadmap](roadmap.md) | Current status + phased product direction |
-| [SEO/GEO Implementation Plan](seo/geo-implementation-plan.md) | Phased SEO roadmap |
-| [Backlinks Strategy](seo/backlinks.md) | Backlink acquisition plan |
+| Document                                                      | Description                               |
+| ------------------------------------------------------------- | ----------------------------------------- |
+| [Product Roadmap](roadmap.md)                                 | Current status + phased product direction |
+| [SEO/GEO Implementation Plan](seo/geo-implementation-plan.md) | Phased SEO roadmap                        |
+| [Backlinks Strategy](seo/backlinks.md)                        | Backlink acquisition plan                 |
 
 ## Repository Maps
 

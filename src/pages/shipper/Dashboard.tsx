@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
-import LiveTruckMap from '@/components/shipper/LiveTruckMap';
+import LiveTruckMap from '@/features/shipper/components/LiveTruckMap';
 
 const LazyBarChart = React.lazy(() => import('./ShipperSpendingChart'));
 

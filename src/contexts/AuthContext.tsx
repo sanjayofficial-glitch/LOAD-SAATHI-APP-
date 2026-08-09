@@ -199,7 +199,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Clerk tokens expire in 60s; refresh at 45s
       supabaseTokenExpiryRef.current = now + 45_000;
     }
-    return token;
+    return token ?? null;
   }, [session]);
 
   const value = useMemo<AuthContextType>(

@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-ssr
+coverage
+android/.gradle
+android/.gradle_home
+android/app/build
+graphify-out
+pnpm-lock.yaml
+package-lock.json
+public/robots.txt

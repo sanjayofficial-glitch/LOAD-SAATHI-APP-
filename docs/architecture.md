@@ -37,24 +37,24 @@ Vercel. A Capacitor wrapper packages the same web build as an Android app.
 
 ## Tech Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Framework | React 19.2 + TypeScript 5.5 | SPA with strict typing |
-| Build Tool | Vite 6.3 | Dev server + production build |
-| UI Library | shadcn/ui + Radix UI | Accessible component primitives |
-| Styling | Tailwind CSS 3.4 | Utility-first CSS |
-| State/Data | TanStack React Query 5.56 | Server state caching + mutations |
-| Auth | Clerk 5.61 | Authentication + user management |
-| Database | Supabase 2.99 (PostgreSQL) | Database + Realtime subscriptions |
-| Maps | Leaflet + React-Leaflet | Map rendering + GPS tracking |
-| Charts | Recharts 3.9 | Dashboard visualizations |
-| Forms | React Hook Form + Zod | Form state + validation |
-| Animation | Framer Motion 12.43 | Page transitions + micro-interactions |
-| Analytics | PostHog + Vercel Analytics + GA | Event tracking + web vitals |
-| Mobile | Capacitor 8.4 | Android hybrid app wrapper |
-| Hosting | Vercel | Static hosting + edge functions |
-| Routing | React Router DOM 7.6 | Client-side routing |
-| SEO | React Helmet Async 3.0 | Dynamic meta tags + JSON-LD |
+| Layer      | Technology                      | Purpose                               |
+| ---------- | ------------------------------- | ------------------------------------- |
+| Framework  | React 19.2 + TypeScript 5.5     | SPA with strict typing                |
+| Build Tool | Vite 6.3                        | Dev server + production build         |
+| UI Library | shadcn/ui + Radix UI            | Accessible component primitives       |
+| Styling    | Tailwind CSS 3.4                | Utility-first CSS                     |
+| State/Data | TanStack React Query 5.56       | Server state caching + mutations      |
+| Auth       | Clerk 5.61                      | Authentication + user management      |
+| Database   | Supabase 2.99 (PostgreSQL)      | Database + Realtime subscriptions     |
+| Maps       | Leaflet + React-Leaflet         | Map rendering + GPS tracking          |
+| Charts     | Recharts 3.9                    | Dashboard visualizations              |
+| Forms      | React Hook Form + Zod           | Form state + validation               |
+| Animation  | Framer Motion 12.43             | Page transitions + micro-interactions |
+| Analytics  | PostHog + Vercel Analytics + GA | Event tracking + web vitals           |
+| Mobile     | Capacitor 8.4                   | Android hybrid app wrapper            |
+| Hosting    | Vercel                          | Static hosting + edge functions       |
+| Routing    | React Router DOM 7.6            | Client-side routing                   |
+| SEO        | React Helmet Async 3.0          | Dynamic meta tags + JSON-LD           |
 
 ### Key Services
 
@@ -74,6 +74,10 @@ src/
 ├── App.tsx                    # Root component: ALL route definitions + providers
 ├── main.tsx                   # Entry point (React root)
 ├── globals.css                # Tailwind directives + CSS custom properties
+├── features/                  # Feature-scoped modules
+│   ├── home/sections/         #   Landing page sections (Hero, BentoGrid, FAQ…)
+│   ├── marketing/screens/     #   Public app previews (Dashboard, Matching…)
+│   └── shipper/components/    #   Shipper-dashboard widgets (LiveTruckMap…)
 ├── pages/                     # Route components (lazy-loaded via React.lazy)
 │   ├── Index.tsx              # Homepage
 │   ├── Login.tsx / Register.tsx / ChooseRole.tsx / ForgotPassword.tsx
@@ -83,8 +87,7 @@ src/
 │   ├── trucker/               # Trucker role pages
 │   ├── shipper/               # Shipper role pages
 │   ├── admin/                 # Admin-only pages (role-protected)
-│   ├── blog/                  # Blog system
-│   └── screens/               # App preview screenshots (marketing)
+│   └── blog/                  # Blog system
 ├── components/                # Shared reusable components
 │   ├── Layout.tsx             # Authenticated app layout (sidebar + nav)
 │   ├── PublicLayout.tsx       # Marketing pages layout
@@ -92,6 +95,7 @@ src/
 │   ├── PricePredictor.tsx / AIInsights.tsx
 │   ├── CreditScore*.tsx       # Credit score components
 │   ├── RoleProtectedRoute.tsx # Role-based route guard
+│   ├── maps/                  # Leaflet map widgets
 │   └── ui/                    # shadcn/ui components (40+ files)
 ├── hooks/                     # Custom React hooks (useSupabase, useCreditScore…)
 ├── contexts/                  # AuthContext, ThemeContext

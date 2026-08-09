@@ -22,7 +22,7 @@ const SECTIONS: SectionItem[] = [
  */
 export default function SectionNav() {
   const [visible, setVisible] = useState(false);
-  const [activeId, setActiveId] = useState(SECTIONS[0].id);
+  const [activeId, setActiveId] = useState(SECTIONS[0]?.id ?? '');
 
   useEffect(() => {
     const onScroll = () => {
