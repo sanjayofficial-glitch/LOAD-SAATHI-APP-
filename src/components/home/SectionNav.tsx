@@ -70,7 +70,7 @@ export default function SectionNav() {
   return (
     <div
       className={cn(
-        "sticky top-16 z-[90] flex justify-center py-2 transition-all duration-300",
+        "sticky top-[calc(4rem+env(safe-area-inset-top,0px))] z-[90] flex justify-center py-2 transition-all duration-300",
         "bg-background/80 dark:bg-[#050816]/80 backdrop-blur-lg border-b border-border/50",
         visible
           ? "opacity-100 translate-y-0 pointer-events-auto"

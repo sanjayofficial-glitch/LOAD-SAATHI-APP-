@@ -121,9 +121,11 @@
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
     transition: background-color 0.15s ease, color 0.15s ease;
-    /* Contain layout/paint to the body — avoids full-page repaints when
-       children change. */
-    contain: layout style;
+    /* contain: style only — layout containment on body breaks position:fixed
+       for all descendants (body becomes the containing block instead of the
+       viewport). Removed layout to restore bottom-anchored fixed elements
+       like DockNav and MobileTabBar. */
+    contain: style;
   }
 
   /* Kill the legacy 300ms tap delay and double-tap zoom jank on interactive
