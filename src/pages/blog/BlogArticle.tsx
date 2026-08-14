@@ -24,6 +24,28 @@ const headingPrefixes = [
   "Indian Case Studies:",
   "Statistical Overview",
   "Conclusion & Call to Action",
+  "What Is a Return Load",
+  "Top Return Load Corridors",
+  "How LoadSaathi Finds Return Loads",
+  "5 Ways to Price Return Loads",
+  "What Is PTL Transport",
+  "2026 PTL Freight Rates",
+  "How to Book PTL Transport",
+  "Why LoadSaathi Is the Best PTL Platform",
+  "Why Steel Transport from Rourkela",
+  "Choosing the Right Truck",
+  "2026 Steel Freight Rates",
+  "Steel Transport Compliance",
+  "How LoadSaathi Connects Steel Shippers",
+  "What Do Truckers Actually Earn",
+  "Detailed Profit-and-Loss",
+  "Running Costs Per Kilometre",
+  "Why Return Loads Are the Key",
+  "New Truck Buyers",
+  "Transporter Obligations Under 2026",
+  "Step-by-Step Guide for Transporters",
+  "Indian Case Study: How One Fleet",
+  "Call to Action: Stay Compliant",
 ];
 
 const sectionImages: Record<number, { icon: React.ReactNode; label: string }> = {
@@ -190,6 +212,182 @@ export default function BlogArticle() {
           acceptedAnswer: {
             "@type": "Answer",
             text: "Yes! By booking Part Truckload (PTL) shared freight on LoadSaathi, MSMEs pay only for the exact volume or weight they use. This eliminates the financial waste of booking full truckloads (FTL) for small shipments.",
+          },
+        },
+      ],
+    },
+    "return-loads-rourkela": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is a return load?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A return load is cargo booked for the return leg of a truck trip. Instead of driving back empty after a delivery, the truck carries goods back toward its origin, generating revenue on both legs of the journey.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Which corridors have the best return loads from Rourkela?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "The busiest return-load corridors from Rourkela are Rourkela-Kolkata (430 km, ₹28,000-35,000 FTL), Rourkela-Ranchi (180 km, ₹12,000-16,000 FTL), and Rourkela-Bhubaneswar (310 km, ₹20,000-26,000 FTL). Steel, cement, FMCG, and auto parts are the most common return cargo types.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How does LoadSaathi help truckers find return loads?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "LoadSaathi's AI matching engine identifies return-load opportunities before the outbound trip concludes, pushing verified offers to truckers as they approach their destination. The platform filters by route, vehicle type, and capacity to ensure every offer is relevant.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How much can truckers save by filling return loads?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Filling return loads can add ₹28,000-35,000 per round trip. Over 8 trips per month, that's ₹2,24,000-2,56,000 in additional revenue. The marginal cost of a loaded return leg is minimal — primarily the additional diesel for the loaded weight (5-10% increase).",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How should I price a return load?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Price return loads above your marginal cost (diesel + toll). Anchor your rate to the corridor average — for Rourkela-Kolkata PTL, the 2026 average is ₹1,800-2,500 per tonne. Prioritise verified shippers with high credit scores over the highest rate offered.",
+          },
+        },
+      ],
+    },
+    "ptl-transport-odisha-jharkhand-2026": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is PTL transport?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "PTL (Partial Truckload) is a freight method where shippers pay only for the portion of truck space their cargo occupies. Multiple shippers share a single truck heading the same direction, reducing costs by 30-40% compared to booking a full truck.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How much cheaper is PTL compared to FTL?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "PTL rates are typically 30-40% lower than FTL rates. For example, a 2-tonne PTL shipment from Rourkela to Kolkata costs ₹9,000-12,000, while a full 9-tonne FTL booking costs ₹55,000-70,000 — a saving of ₹46,000-58,000.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Which corridors are best for PTL in Odisha and Jharkhand?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "The highest-volume PTL corridors are Rourkela-Kolkata (430 km, ₹1,800-2,500/tonne), Rourkela-Ranchi (180 km, ₹800-1,200/tonne), Rourkela-Bhubaneswar (310 km, ₹1,200-1,800/tonne), Bhubaneswar-Kolkata (470 km, ₹1,500-2,200/tonne), and Ranchi-Kolkata (350 km, ₹1,300-1,900/tonne).",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How do I book PTL transport online?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Enter your shipment details on LoadSaathi — origin, destination, weight, and departure date. The AI matches you with verified carriers within minutes. Compare offers, book, track via GPS, and pay through escrow. The entire process takes minutes, not hours.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What is the minimum weight for PTL shipping?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Most PTL carriers accept shipments from 100 kg upwards. There is no strict minimum, but rates are most competitive for shipments between 500 kg and 5 tonnes.",
+          },
+        },
+      ],
+    },
+    "steel-transport-rourkela-2026": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What truck type is best for transporting steel?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Hot-rolled coils and cold-rolled sheets require open-body trucks with lashing points. TMT bars and structural steel need side-panel trucks with reinforced panels. Pipe and tube products require trailer trucks with extended beds. 9-tonne open-body trucks (10-wheelers) are the standard for most steel products from Rourkela.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What are the 2026 steel freight rates from Rourkela?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Rourkela to Kolkata (430 km): ₹28,000-35,000 FTL, ₹2,000-2,800/tonne PTL. Rourkela to Bhubaneswar (310 km): ₹20,000-26,000 FTL. Rourkela to Ranchi (180 km): ₹12,000-16,000 FTL. Rourkela to Jamshedpur (120 km): ₹8,000-11,000 FTL.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What compliance is required for steel transport?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Steel shipments exceeding ₹50,000 in value require a valid e-Way Bill with Part-B populated before departure. Weight limits are enforced at NHAI weighbridges — overloading attracts ₹200/tonne penalties. Cargo must be properly lashed and secured per Motor Vehicles Act requirements.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How does LoadSaathi help steel shippers?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "LoadSaathi's AI matching engine connects steel shippers with carriers experienced in heavy and industrial cargo. Every carrier is verified with vehicle documentation, insurance, and safety ratings. Real-time GPS tracking and escrow payments ensure safe, timely delivery.",
+          },
+        },
+      ],
+    },
+    "trucker-earnings-odisha-2026": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "How much do truck drivers earn in Odisha in 2026?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "LCV drivers earn ₹12,000-18,000/month, 10-wheeler drivers ₹18,000-25,000, and multi-axle drivers ₹25,000-35,000. Owner-operators can earn ₹35,000-80,000+ per month depending on vehicle class and return-load utilisation.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What is the profit per round trip on Rourkela-Kolkata?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A loaded round trip (Rourkela-Kolkata-Rourkela) generates ₹58,000-67,000 in revenue with ₹22,000-26,000 in total costs, yielding ₹31,650-44,950 net profit per trip. Over 8 trips per month, that's ₹2,53,000-3,59,600 in monthly profit.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How much does it cost to run a truck per kilometre?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "All-in running costs for 10-wheelers are ₹25-35 per km and multi-axle trucks ₹35-50 per km. Diesel accounts for 45-55%, tolls 15-20%, maintenance 12-15%, insurance/permits 8-12%, and EMI 15-20% of total costs.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How do return loads affect trucker earnings?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A loaded return leg adds ₹28,000-35,000 per trip. Over 8 trips per month, consistent return-load booking adds ₹2,24,000-2,56,000 in monthly revenue. Truckers using LoadSaathi report 40-60% reduction in empty kilometres.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What is the payback period for a new truck?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A new 10-wheeler (₹25-35 lakh) has a payback period of 18-24 months at 8 trips/month. Truckers who consistently book return loads achieve payback in 14-18 months, while those running empty returns take 24-30 months.",
           },
         },
       ],

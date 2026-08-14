@@ -657,6 +657,30 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/return-loads-rourkela</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/ptl-transport-odisha-jharkhand-2026</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/steel-transport-rourkela-2026</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/trucker-earnings-odisha-2026</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- New Tools -->
   <url>
     <loc>https://loadsaathi.in/freight-rate-calculator</loc>
