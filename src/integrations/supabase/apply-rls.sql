@@ -52,23 +52,23 @@ FOR DELETE TO authenticated USING (auth.jwt()->>'sub' = shipper_id);
 CREATE POLICY "Truckers can see all shipments" ON public.shipments
 FOR SELECT TO authenticated USING (true);
 
--- Truckers can see requests for trips they're assigned to
+-- Truckers can see requests for trips they own
 CREATE POLICY "Truckers can see relevant requests" ON public.requests
 FOR SELECT TO authenticated USING (
-  auth.jwt()->>'sub' = trucker_id OR 
-  auth.jwt()->>'sub' IN (
-    SELECT trucker_id FROM public.shipment_requests 
-    WHERE shipment_id = requests.shipment_id
-  )
+  auth.jwt()->>'sub' = receiver_id
 );
 
--- Truckers can insert requests for trips
-CREATE POLICY "Truckers can insert requests" ON public.requests
-FOR INSERT TO authenticated WITH CHECK (auth.jwt()->>'sub' = trucker_id);
+-- Shippers can insert requests for trips
+CREATE POLICY "Shippers can create requests" ON public.requests
+FOR INSERT TO authenticated WITH CHECK (auth.jwt()->>'sub' = shipper_id);
 
--- Truckers can update their own requests
-CREATE POLICY "Truckers can update own requests" ON public.requests
-FOR UPDATE TO authenticated USING (auth.jwt()->>'sub' = trucker_id);
+-- Truckers can update received requests (accept/decline)
+CREATE POLICY "Truckers can update received requests" ON public.requests
+FOR UPDATE TO authenticated USING (auth.jwt()->>'sub' = receiver_id);
+
+-- Shippers can update own requests
+CREATE POLICY "Shippers can update own requests" ON public.requests
+FOR UPDATE TO authenticated USING (auth.jwt()->>'sub' = shipper_id);
 
 -- Shippers can see requests for their trips
 CREATE POLICY "Shippers can see requests for own trips" ON public.requests
@@ -106,9 +106,9 @@ FOR DELETE TO authenticated USING (auth.jwt()->>'sub' = shipper_id);
 CREATE POLICY "Users can see own notifications" ON public.notifications
 FOR SELECT TO authenticated USING (auth.jwt()->>'sub' = user_id);
 
--- System can insert notifications
-CREATE POLICY "System can insert notifications" ON public.notifications
-FOR INSERT TO authenticated WITH CHECK (true);
+-- Users can see their own notifications
+CREATE POLICY "Users can create own notifications" ON public.notifications
+FOR INSERT TO authenticated WITH CHECK (auth.jwt()->>'sub' = user_id);
 
 -- Users can see their own messages
 CREATE POLICY "Users can see own messages" ON public.messages
@@ -117,9 +117,22 @@ FOR SELECT TO authenticated USING (
   auth.jwt()->>'sub' = recipient_id
 );
 
--- System can insert messages
-CREATE POLICY "System can insert messages" ON public.messages
+-- Users can send messages
+CREATE POLICY "Users can send messages" ON public.messages
 FOR INSERT TO authenticated WITH CHECK (
-  auth.jwt()->>'sub' = sender_id OR 
+  auth.jwt()->>'sub' = sender_id
+);
+
+-- Users can mark their messages as read (update is_read)
+CREATE POLICY "Users can update own messages" ON public.messages
+FOR UPDATE TO authenticated USING (
   auth.jwt()->>'sub' = recipient_id
 );
+
+-- Anonymous users can view active trips (for public share links)
+CREATE POLICY "Anonymous can view active trips" ON public.trips
+FOR SELECT TO anon USING (status = 'active');
+
+-- Anonymous users can view open shipments (for public share links)
+CREATE POLICY "Anonymous can view open shipments" ON public.shipments
+FOR SELECT TO anon USING (status = 'pending');

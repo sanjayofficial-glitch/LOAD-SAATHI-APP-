@@ -6,28 +6,33 @@ interface NotificationPayload {
   getToken: () => Promise<string | null>;
   relatedTripId?: string;
   relatedShipmentRequestId?: string;
+  type?: string;
+  title?: string;
+  actionUrl?: string;
 }
 
-export const sendNotification = async (payload: NotificationPayload): Promise<void> => {
+export const sendNotification = async (payload: NotificationPayload): Promise<boolean> => {
   try {
     const token = await payload.getToken();
-    if (!token) return;
+    if (!token) return false;
 
     const supabase = createClerkSupabaseClient(token);
 
-    // Insert notification directly (RLS allows authenticated users to insert their own)
-    const { error } = await supabase
-      .from('notifications')
-      .insert({
-        user_id: payload.userId,
-        message: payload.message,
-        related_trip_id: payload.relatedTripId ?? null,
-        related_shipment_request_id: payload.relatedShipmentRequestId ?? null,
-      });
+    // Use SECURITY DEFINER function to bypass RLS for cross-user notifications
+    const { error } = await supabase.rpc('create_notification', {
+      p_user_id: payload.userId,
+      p_message: payload.message,
+      p_type: payload.type ?? 'info',
+      p_title: payload.title ?? '',
+      p_action_url: payload.actionUrl ?? '',
+      p_related_trip_id: payload.relatedTripId ?? null,
+      p_related_shipment_request_id: payload.relatedShipmentRequestId ?? null,
+    });
     if (error) throw error;
+    return true;
   } catch (err) {
     console.error('[sendNotification] Error:', err);
-    console.warn('[sendNotification] Failed:', err);
+    return false;
   }
 };
 
