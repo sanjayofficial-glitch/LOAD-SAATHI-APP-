@@ -4,7 +4,7 @@ import { Capacitor } from "@capacitor/core";
  * Initialize Capacitor OAuth handler for Clerk + Google sign-in.
  *
  * In a Capacitor Android app, after Google OAuth completes, Clerk redirects
- * to a URL like https://in.loadsaathi.app/auth-sync or /?__clerk_oauth_redirect=...
+ * to a URL like https://in.loadsaathi.app/choose-role or /?__clerk_oauth_redirect=...
  * This handler intercepts those redirects and ensures the SPA handles them
  * instead of the system browser opening a broken page.
  */
@@ -22,7 +22,7 @@ export function initCapacitorOAuth() {
         url.includes("__clerk_oauth_redirect") ||
         url.includes("__clerk_handshake") ||
         url.includes("__clerk_ticket") ||
-        url.includes("/auth-sync") ||
+        url.includes("/choose-role") ||
         url.includes("clerk.shared.lcl.dev") ||
         url.includes("clerk.loadsaathi.in");
 
@@ -30,13 +30,13 @@ export function initCapacitorOAuth() {
 
       // Preserve the full path + query string so Clerk can finish the
       // handshake (dropping the query breaks OAuth on the next load).
-      let path = "/auth-sync";
+      let path = "/choose-role";
       try {
         const urlObj = new URL(url);
         const target = urlObj.pathname + urlObj.search;
         if (target && target !== "/") path = target;
       } catch {
-        // Malformed URL — fall back to the auth-sync screen
+        // Malformed URL — fall back to choose-role
       }
 
       console.log("[CapacitorOAuth] Navigating to:", path);

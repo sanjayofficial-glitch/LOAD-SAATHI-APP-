@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSignUp, useUser } from "@clerk/clerk-react";
 import { Capacitor } from "@capacitor/core";
@@ -24,15 +24,18 @@ const Register = () => {
   const [verifying, setVerifying] = useState(false);
   const [code, setCode] = useState("");
 
-  if (isSignedIn) {
-    navigate("/choose-role", { replace: true });
-    return null;
-  }
+  useEffect(() => {
+    if (isSignedIn) {
+      navigate("/choose-role", { replace: true });
+    }
+  }, [isSignedIn, navigate]);
 
-  if (roleType && step === "role") {
-    setSelectedRole(roleType as "trucker" | "shipper");
-    setStep("sign");
-  }
+  useEffect(() => {
+    if (roleType && step === "role") {
+      setSelectedRole(roleType as "trucker" | "shipper");
+      setStep("sign");
+    }
+  }, [roleType]);
 
   const handleRoleSelect = (role: "trucker" | "shipper") => {
     setSelectedRole(role);
@@ -50,8 +53,9 @@ const Register = () => {
     setError("");
     try {
       // In Capacitor Android, use full URL for redirect so the intent filter captures it
-      const isNative = Capacitor.isNativePlatform();
-      const redirectBase = isNative ? "https://in.loadsaathi.app" : "";
+      const redirectBase = Capacitor.isNativePlatform()
+        ? "https://in.loadsaathi.app"
+        : window.location.origin;
       await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: `${redirectBase}/choose-role`,
