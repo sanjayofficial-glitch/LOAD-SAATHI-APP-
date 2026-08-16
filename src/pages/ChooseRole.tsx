@@ -52,23 +52,26 @@ const ChooseRole = () => {
 
       const supabase = createClerkSupabaseClient(supabaseToken);
 
-      const { data: existing } = await supabase
+      const { data: existing, error: lookupErr } = await supabase
         .from('users')
         .select('id')
         .eq('id', user.id)
         .maybeSingle();
 
-      let result;
+      if (lookupErr) throw lookupErr;
+
+      let writeErr = null;
       if (existing) {
-        result = await supabase
+        const { error } = await supabase
           .from('users')
           .update({
             user_type: role,
             full_name: user.fullName || '',
           })
           .eq('id', user.id);
+        writeErr = error;
       } else {
-        result = await supabase
+        const { error } = await supabase
           .from('users')
           .insert({
             id: user.id,
@@ -79,12 +82,12 @@ const ChooseRole = () => {
             rating: 0,
             total_trips: 0,
           });
+        writeErr = error;
       }
 
-      if (result.error) throw result.error;
+      if (writeErr) throw writeErr;
 
-      // Set profile synchronously in context before navigating
-      // This ensures RoleProtectedRoute sees the role immediately
+      // Set profile in context BEFORE navigating so OnboardingFlow sees the role
       const profileData: UserType = {
         id: user.id,
         user_type: role,
@@ -99,7 +102,9 @@ const ChooseRole = () => {
 
       showSuccess(`Welcome ${role === 'shipper' ? 'Shipper' : 'Trucker'}!`);
 
-      // First-time users go through onboarding before reaching their dashboard
+      // Small delay to let React state settle before navigating
+      await new Promise((r) => setTimeout(r, 100));
+
       justSelectedRef.current = true;
       navigate('/onboarding', { replace: true });
     } catch (err: unknown) {
