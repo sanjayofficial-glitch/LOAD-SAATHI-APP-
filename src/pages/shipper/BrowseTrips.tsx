@@ -18,10 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { 
-  Search, 
-  Calendar, 
-  ArrowRight, 
+import VehicleSelect from '@/components/VehicleSelect';
+import {
+  Search,
+  Calendar,
+  ArrowRight,
   IndianRupee,
   Filter,
   Truck,
@@ -401,10 +402,10 @@ const TripList = () => {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Vehicle Type</Label>
-                <Input
-                  placeholder="e.g. Open Truck, Container"
+                <VehicleSelect
                   value={filters.vehicle_type}
-                  onChange={(e) => setFilters({ ...filters, vehicle_type: e.target.value })}
+                  onChange={(vehicle_type) => setFilters({ ...filters, vehicle_type })}
+                  placeholder="Select Vehicle"
                   className="border-orange-100 dark:border-orange-800"
                 />
               </div>
