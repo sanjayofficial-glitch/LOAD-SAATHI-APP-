@@ -11,7 +11,7 @@ import LogoMark from '@/components/LogoMark';
 const ChooseRole = () => {
   const { user, isLoaded } = useUser();
   const { session } = useSession();
-  const { setProfile, userProfile } = useAuth();
+  const { setProfile, userProfile, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -99,6 +99,10 @@ const ChooseRole = () => {
         created_at: new Date().toISOString(),
       };
       setProfile(profileData);
+
+      // Re-fetch the DB-authoritative profile so the role we just saved
+      // overwrites any stale in-flight fetchProfile that may still be pending
+      await refreshProfile();
 
       showSuccess(`Welcome ${role === 'shipper' ? 'Shipper' : 'Trucker'}!`);
 

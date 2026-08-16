@@ -5,10 +5,12 @@ import { Capacitor } from "@capacitor/core";
 import ThemeToggle from "@/components/ThemeToggle";
 import LogoMark from "@/components/LogoMark";
 import { Loader2, Eye, EyeOff, ArrowLeft, Package, Truck, CheckCircle2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const { isSignedIn } = useUser();
+  const { userProfile } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const roleType = searchParams.get("type");
@@ -26,9 +28,12 @@ const Register = () => {
 
   useEffect(() => {
     if (isSignedIn) {
-      navigate("/choose-role", { replace: true });
+      if (userProfile?.user_type === "shipper") navigate("/shipper/dashboard", { replace: true });
+      else if (userProfile?.user_type === "trucker") navigate("/trucker/dashboard", { replace: true });
+      else if (userProfile?.user_type === "admin") navigate("/admin/monitoring", { replace: true });
+      else navigate("/choose-role", { replace: true });
     }
-  }, [isSignedIn, navigate]);
+  }, [isSignedIn, userProfile, navigate]);
 
   useEffect(() => {
     if (roleType && step === "role") {

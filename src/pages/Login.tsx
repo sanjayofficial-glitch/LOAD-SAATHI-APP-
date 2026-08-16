@@ -5,10 +5,12 @@ import { Capacitor } from "@capacitor/core";
 import ThemeToggle from "@/components/ThemeToggle";
 import LogoMark from "@/components/LogoMark";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useUser();
+  const { userProfile } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,9 +20,12 @@ const Login = () => {
 
   useEffect(() => {
     if (isSignedIn) {
-      navigate("/choose-role", { replace: true });
+      if (userProfile?.user_type === "shipper") navigate("/shipper/dashboard", { replace: true });
+      else if (userProfile?.user_type === "trucker") navigate("/trucker/dashboard", { replace: true });
+      else if (userProfile?.user_type === "admin") navigate("/admin/monitoring", { replace: true });
+      else navigate("/choose-role", { replace: true });
     }
-  }, [isSignedIn, navigate]);
+  }, [isSignedIn, userProfile, navigate]);
 
   const handleGoogleSignIn = async () => {
     if (!isLoaded) return;

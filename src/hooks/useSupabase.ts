@@ -1,13 +1,13 @@
-import { useAuth as useClerkAuth } from "@clerk/clerk-react";
+import { useSession } from "@clerk/clerk-react";
 import { createClerkSupabaseClient } from "@/utils/supabaseClient";
 import { useCallback, useMemo } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export const useSupabase = () => {
-  const { getToken } = useClerkAuth();
+  const { session } = useSession();
 
   const getAuthenticatedClient = useCallback(async () => {
-    const token = await getToken({ template: "supabase" });
+    const token = await session?.getToken({ template: "supabase" });
     if (!token) throw new Error("No authentication token found");
     const client = createClerkSupabaseClient(token);
     // Realtime sockets do NOT inherit the global Authorization header — set
@@ -16,7 +16,7 @@ export const useSupabase = () => {
     // `TO authenticated`; the anon role is denied).
     client.realtime.setAuth(token);
     return client;
-  }, [getToken]);
+  }, [session]);
 
   /**
    * Executes a Supabase operation with automatic retry on 401.
