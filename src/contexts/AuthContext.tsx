@@ -47,6 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return null;
     }
 
+    setLoading(true);
+
     try {
       const supabaseToken = await session?.getToken({ template: 'supabase' });
       if (!supabaseToken) {

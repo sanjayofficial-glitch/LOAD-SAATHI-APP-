@@ -11,7 +11,7 @@ import LogoMark from '@/components/LogoMark';
 const ChooseRole = () => {
   const { user, isLoaded } = useUser();
   const { session } = useSession();
-  const { setProfile, userProfile, refreshProfile } = useAuth();
+  const { setProfile, userProfile, refreshProfile, loading: profileLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -121,8 +121,10 @@ const ChooseRole = () => {
     }
   };
 
-  // Wait for Clerk to load
-  if (!isLoaded || !user) {
+  // Wait for Clerk to load AND for the profile to resolve before deciding
+  // what to render. Returning users with a saved role are redirected by the
+  // effect above — without ever flashing the role-selection UI.
+  if (!isLoaded || !user || profileLoading || userProfile?.user_type) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
         <div className="text-center">
