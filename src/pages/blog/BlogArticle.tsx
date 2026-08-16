@@ -46,6 +46,37 @@ const headingPrefixes = [
   "Step-by-Step Guide for Transporters",
   "Indian Case Study: How One Fleet",
   "Call to Action: Stay Compliant",
+  "Why East India freight corridors matter",
+  "Important East India freight corridors",
+  "What freight moves through these corridors?",
+  "How to choose between PTL, LTL, and FTL on an East India route",
+  "How return-load planning affects corridor economics",
+  "How to request a useful route quote",
+  "What should a corridor guide contain?",
+  "How are truck transport charges calculated in India?",
+  "The main factors behind the rate",
+  "What information should you provide for an accurate estimate?",
+  "Example calculation",
+  "Questions to ask before accepting a freight quote",
+  "What is a return load or backhaul?",
+  "Why do trucks return empty?",
+  "Five practical ways to find return loads",
+  "Backhaul KPIs every fleet should track",
+  "How to verify a return load before accepting it",
+  "A simple return-load decision rule",
+  "What is digital freight matching?",
+  "Traditional freight matching versus digital matching",
+  "How AI-assisted freight matching works",
+  "Benefits for shippers",
+  "Benefits for truckers and fleet owners",
+  "What makes a freight-matching platform trustworthy?",
+  "What are PTL freight rates?",
+  "How PTL pricing is usually assessed",
+  "A simple PTL rate framework",
+  "Example: what information changes a PTL quote?",
+  "PTL versus FTL: which is more economical?",
+  "How shippers can improve PTL pricing",
+  "Questions to ask before booking PTL",
 ];
 
 const sectionImages: Record<number, { icon: React.ReactNode; label: string }> = {
@@ -138,10 +169,10 @@ export default function BlogArticle() {
       mainEntity: [
         {
           "@type": "Question",
-          name: "What is the Ship-To GSTIN requirement in 2026?",
+          name: "What is the current status of the Ship-To GSTIN requirement in 2026?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Starting August 1, 2026, all Bill-To / Ship-To e-Way Bill transactions must capture the exact Ship-To GSTIN. If the recipient is unregistered, mark the field as URP (Unregistered Person).",
+            text: "The mandatory Ship-To GSTIN rule is on hold under GSTN Advisory 668 (August 5, 2026). No system or process changes are required until GSTN re-notifies it. The Ship-To field remains optional, and the existing single-GSTIN workflow continues to work.",
           },
         },
         {
@@ -149,7 +180,7 @@ export default function BlogArticle() {
           name: "Can I still use a single GSTIN for multi-location shipments?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "No. The new rules require the actual destination entity's GSTIN. Using your headquarters GSTIN for goods shipped to a branch will trigger a mismatch flag in the GST analytics engine.",
+            text: "Yes. Because the Ship-To GSTIN requirement is on hold, using a single GSTIN for invoicing remains valid. When the rule is eventually implemented, the actual destination entity's GSTIN (or URP for unregistered recipients) will need to be recorded.",
           },
         },
         {
@@ -157,23 +188,23 @@ export default function BlogArticle() {
           name: "What happens if my e-Way Bill data doesn't match my GSTR-3B filing?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "The GST department's tri-party cross-matching system will flag the discrepancy automatically. This can result in ITC blockage, detention notices, and penalties of up to 200% of the tax amount.",
+            text: "Standard e-Way Bill matching rules continue to apply. Discrepancies between e-Way Bill data and GSTR-3B filings can still trigger scrutiny and, where goods move without a valid e-Way Bill, penalties of up to 200% of the tax amount under existing provisions.",
           },
         },
         {
           "@type": "Question",
-          name: "How does voluntary e-Way Bill closure work?",
+          name: "Is voluntary e-Way Bill closure available now?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "After physical delivery is confirmed, any authorized party can close the e-Way Bill on the portal. A closed e-Way Bill prevents unauthorized reuse and eliminates transit audit discrepancies.",
+            text: "No. Voluntary e-Way Bill closure is also on hold under GSTN Advisory 668. e-Way Bills continue to close automatically on expiry as before; no workflow change is required until GSTN re-notifies the feature.",
           },
         },
         {
           "@type": "Question",
-          name: "What is the penalty for non-compliance with 2026 e-Way Bill rules?",
+          name: "What is the penalty for non-compliance with e-Way Bill rules?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Penalties can reach up to 200% of the tax amount for invoice-to-cargo mismatches. Detention notices are issued in real-time when the analytics engine detects discrepancies.",
+            text: "Penalties for moving goods without a valid e-Way Bill or with invoice-to-cargo mismatches can reach up to 200% of the tax amount. Existing rules and penalties are unchanged by Advisory 668.",
           },
         },
       ],
@@ -392,6 +423,196 @@ export default function BlogArticle() {
         },
       ],
     },
+    "truck-transport-charges-per-km-india": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "What is the average truck transport cost per km in India?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "There is no single reliable national average. The cost depends on vehicle class, route, cargo, distance, fuel, tolls, seasonality, loading time, and return-load availability. Use a current route-specific estimate rather than relying on a generic number.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is PTL priced per kilometre or per kilogram?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "PTL may be quoted using a combination of shipment weight, volume, route, used capacity, and service conditions. Some providers communicate a per-kilogram or per-tonne estimate, while others provide a route quote. Ask what is included before comparing providers.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Why can the same truck cost different amounts on two routes?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Route distance, tolls, road conditions, demand, truck availability, cargo requirements, loading time, and the probability of a paid return trip can all differ. The same vehicle does not have the same operating economics on every corridor.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How can a shipper reduce freight cost?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Provide accurate shipment details, compare PTL with FTL, improve packaging, reduce loading delays, plan flexible pickup windows, consolidate compatible orders, and consider routes where shared or return capacity is available. Do not reduce cost by compromising safe loading or legal payload limits.",
+          },
+        },
+      ],
+    },
+    "how-to-find-return-loads-india": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Where can truckers find return loads in India?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Truckers can use digital load boards, freight marketplaces, direct shipper relationships, transport associations, local networks, and fleet-management systems. Digital platforms are useful when they provide verified shipment information and route-compatible matching rather than only a large list of unfiltered loads.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is every backhaul better than returning empty?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No. A backhaul can be unprofitable if it requires a long detour, excessive waiting, unsuitable cargo handling, or unreliable payment. Evaluate the complete trip economics before accepting it.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How do return loads reduce truck operating costs?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A paid return leg can spread the cost of the vehicle, driver, fuel, and trip cycle across more revenue-generating kilometres. The actual benefit depends on the load price and additional operating costs.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How can LoadSaathi help truckers find suitable loads?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "LoadSaathi connects truckers with shipper freight and uses route, capacity, timing, pricing, and profile information to support matching. Availability depends on the live network and the trucker's vehicle and service area.",
+          },
+        },
+      ],
+    },
+    "digital-freight-matching-india": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Is digital freight matching the same as a load board?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Not always. A basic load board may display available loads and trucks. Digital freight matching can go further by comparing route, timing, capacity, cargo, pricing, and reliability signals to suggest more relevant options.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can AI eliminate empty truck kilometres completely?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "No platform should promise that every empty kilometre will disappear. Demand is often unbalanced between locations, and operational constraints remain. Better matching can improve the probability of finding suitable paid capacity, but the result depends on live demand, route, timing, and truck availability.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is digital freight matching useful for small shippers?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes. Small shippers may benefit from shared capacity, structured quotes, shipment visibility, and access to a wider network. They should provide accurate shipment details and compare service conditions before booking.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How does LoadSaathi use digital matching?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "LoadSaathi connects shippers and truckers for PTL and LTL freight across East India. Its matching approach considers shipment and vehicle details such as route, capacity, timing, price, and reliability. The live result depends on current network availability.",
+          },
+        },
+      ],
+    },
+    "ptl-freight-rates-india": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Are PTL rates quoted per kg in India?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Some providers may communicate a per-kilogram or per-tonne estimate, but PTL pricing can also depend on volume, used space, route, cargo, handling, and timing. Ask for the complete quote basis.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is PTL cheaper than booking a full truck?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "It can be, when the shipment does not need dedicated capacity and suitable shared capacity is available. The result depends on the route and service conditions.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is PTL safe for industrial cargo?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "PTL can be suitable when the vehicle, loading plan, cargo compatibility, securing, packaging, and handling process are appropriate. Heavy or sensitive cargo should be assessed before booking.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can LoadSaathi provide a fixed PTL rate?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "LoadSaathi can provide an indicative estimate based on the shipment and route information available. The final quote depends on live capacity, cargo details, timing, and confirmed service conditions.",
+          },
+        },
+      ],
+    },
+    "east-india-freight-corridors": {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Which are the main freight cities in East India?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "For LoadSaathi's initial network, important locations include Rourkela, Ranchi, Jamshedpur, Bhubaneswar, Kolkata, Burdwan, Dhanbad, Sambalpur, and nearby industrial or commercial centres. Coverage and live truck availability change, so confirm the route before booking.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is PTL available between Odisha and Jharkhand?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "PTL availability depends on live shipper demand, truck capacity, cargo compatibility, pickup timing, and route direction. Submit the shipment details through LoadSaathi to check current options.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How can I reduce freight costs on an East India corridor?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Compare PTL with FTL, provide accurate shipment details, reduce loading delays, plan flexible windows, use suitable packaging, and check whether compatible shared or return capacity is available. Do not compromise safe loading or legal payload limits.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Can truckers find return loads on East India routes?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Return-load availability depends on current demand and the truck's location, vehicle, capacity, and timing. Digital matching can make suitable opportunities easier to discover, but no platform can guarantee a return load on every trip.",
+          },
+        },
+      ],
+    },
   };
   const faqSchema = slug ? faqSchemas[slug] ?? null : null;
 
@@ -408,7 +629,7 @@ export default function BlogArticle() {
     <SeoMeta
       title={article.title}
       description={article.summary.substring(0, 160)}
-      canonical={`/blog/${slug}`}
+      canonical={`${article.canonicalUrl ?? `/blog/${slug}`}`}
       type="article"
       image={coverImage}
       publishedTime={isoDate}
