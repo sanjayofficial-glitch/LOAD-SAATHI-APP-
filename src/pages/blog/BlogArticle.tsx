@@ -151,14 +151,6 @@ export default function BlogArticle() {
         wordCount: article.content.join(" ").split(/\s+/).length,
         image: coverImage,
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://loadsaathi.in" },
-          { "@type": "ListItem", position: 2, name: "Blog", item: "https://loadsaathi.in/blog" },
-          { "@type": "ListItem", position: 3, name: article.title, item: `https://loadsaathi.in/blog/${slug}` },
-        ],
-      },
     ],
   };
 
