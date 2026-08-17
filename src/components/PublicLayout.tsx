@@ -217,7 +217,16 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
           </TooltipProvider>
           <div className="text-center">
-            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} LoadSaathi. All rights reserved.</p>
+            <p className="text-xs text-muted-foreground">
+              &copy; {new Date().getFullYear()} LoadSaathi. All rights reserved.{' '}
+              <button
+                type="button"
+                onClick={() => { try { window.cookiehub?.open(); } catch (e) {} }}
+                className="underline hover:text-foreground dark:hover:text-orange-400 transition-colors ml-1"
+              >
+                Cookie settings
+              </button>
+            </p>
           </div>
         </div>
       </footer>

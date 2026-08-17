@@ -66,6 +66,7 @@ export default function SharedShipment() {
         <div className="min-h-screen bg-gradient-to-b from-blue-50/50 to-background dark:from-blue-950/10 dark:to-background flex items-center justify-center px-6">
           <Card className="w-full max-w-lg">
             <CardContent className="p-8 space-y-4">
+              <h1 className="sr-only">LoadSaathi Shipment</h1>
               <Skeleton className="h-8 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-20 w-full" />

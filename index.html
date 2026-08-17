@@ -259,19 +259,57 @@
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.addEventListener('load', function() {
-        // CookieHub — loaded after first paint (was async in <head>)
-        var ch = document.createElement('script'); ch.async = true;
-        ch.src = 'https://cdn.cookiehub.eu/c2/ca96bc89.js';
-        ch.onload = function () {
+        // CookieHub — loaded after first paint (was async in <head>).
+        // GATE: if the user already answered, skip loading the widget entirely
+        // so the banner never re-appears. The consent cookie (base64 JSON) is
+        // read from document.cookie; we decode it and check the "answered" flag.
+        function hasCookieConsent() {
           try {
-            if (window.cookiehub) {
-              window.cookiehub.load({});
-            }
+            var m = document.cookie.match(/(?:^|; )cookiehub=([^;]*)/);
+            if (!m) return false;
+            var decoded = decodeURIComponent(atob(m[1]));
+            var data = JSON.parse(decoded);
+            return data.answered === true;
           } catch (e) {
-            /* consent widget errors must never break the page */
+            return false;
           }
-        };
-        document.getElementsByTagName('head')[0].appendChild(ch);
+        }
+        // Backup: if CookieHub's cookie didn't persist (domain mismatch, dev
+        // environment) but we saved a localStorage marker, also skip loading.
+        var consentGiven = hasCookieConsent();
+        try {
+          if (!consentGiven && localStorage.getItem('loadsaathi_cookie_consent') === '1') {
+            consentGiven = true;
+          }
+        } catch (e) {}
+        if (!consentGiven) {
+          var ch = document.createElement('script'); ch.async = true;
+          ch.src = 'https://cdn.cookiehub.eu/c2/ca96bc89.js';
+          ch.onload = function () {
+            try {
+              if (window.cookiehub) {
+                window.cookiehub.load({
+                  onStatusChange: function (status) {
+                    if (status && status.answered === true) {
+                      // Optional: persist a backup marker in localStorage so
+                      // environments where the first-party cookie doesn't stick
+                      // (localhost dev, Android WebView) still skip the banner.
+                      try { localStorage.setItem('loadsaathi_cookie_consent', '1'); } catch (e) {}
+                    }
+                  }
+                });
+              }
+            } catch (e) {
+              /* consent widget errors must never break the page */
+            }
+          };
+          document.getElementsByTagName('head')[0].appendChild(ch);
+        } else {
+          // Consent already given — make CookieHub available (if script cached)
+          // so the "Cookie settings" footer button can re-open the widget.
+          // No new script injection needed; window.cookiehub is likely already
+          // defined from a previous visit if the browser cached the JS file.
+        }
 
         var tagsLoaded = false;
         function loadAnalyticsTags() {

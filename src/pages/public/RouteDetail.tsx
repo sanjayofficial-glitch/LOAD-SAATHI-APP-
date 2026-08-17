@@ -1,10 +1,13 @@
 
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowRight, MapPin, Clock, Route, Truck, Package, Search, Shield, TrendingUp, CheckCircle, BookOpen, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SeoMeta from "@/components/SeoMeta";
 import { routes } from "@/data/routes";
 import { articles } from "@/data/blog";
+import QuoteLeadCard from "@/components/QuoteLeadCard";
+import { trackRouteView } from "@/utils/analytics";
 
 const benefits = [
   {
@@ -63,6 +66,17 @@ const howItWorks = [
 export default function RouteDetail() {
   const { slug } = useParams<{ slug: string }>();
   const route = slug ? routes.find((r) => r.slug === slug) : null;
+
+  useEffect(() => {
+    if (route) {
+      trackRouteView({
+        route_slug: route.slug,
+        origin: route.from,
+        destination: route.to,
+        distance_km: route.distanceKm,
+      });
+    }
+  }, [route]);
 
   if (!route) {
     return (
@@ -242,6 +256,17 @@ export default function RouteDetail() {
                     Check Estimated Fare
                   </Button>
                 </Link>
+              </div>
+
+              {/* Inline quote card — converts visitors who want to talk to a specialist */}
+              <div className="mt-8 max-w-lg">
+                <QuoteLeadCard
+                  origin={route.from}
+                  destination={route.to}
+                  weight={10}
+                  avgPrice={Math.round(route.distanceKm * 100)}
+                  route={`${route.from} → ${route.to}`}
+                />
               </div>
             </div>
           </div>

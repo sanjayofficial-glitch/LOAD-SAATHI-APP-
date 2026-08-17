@@ -6,6 +6,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LogoMark from "@/components/LogoMark";
 import { Loader2, Eye, EyeOff, ArrowLeft, Package, Truck, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { trackRegisterStarted } from "@/utils/analytics";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -41,6 +42,12 @@ const Register = () => {
       setStep("sign");
     }
   }, [roleType]);
+
+  // Track register page view
+  useEffect(() => {
+    const source = searchParams.get("source") || "direct";
+    trackRegisterStarted({ source, role: roleType as "shipper" | "trucker" | undefined });
+  }, []);
 
   const handleRoleSelect = (role: "trucker" | "shipper") => {
     setSelectedRole(role);
