@@ -4,6 +4,18 @@
   "outputDirectory": "dist",
   "installCommand": "pnpm install",
   "framework": "vite",
+  "redirects": [
+    { "source": "/blog/ptl-vs-ftl-difference", "destination": "/blog/ptl-vs-ftl-when-to-use-each", "permanent": true },
+    { "source": "/blog/how-to-ship-steel-india", "destination": "/blog/steel-transport-india-guide", "permanent": true },
+    { "source": "/blog/how-to-find-return-load-trucks", "destination": "/blog/how-to-find-return-loads-india", "permanent": true },
+    { "source": "/blog/ai-freight-matching", "destination": "/blog/digital-freight-matching-india", "permanent": true },
+    { "source": "/blog/digital-load-boards-india", "destination": "/blog/digital-freight-matching-india", "permanent": true },
+    { "source": "/blog/digital-freight-marketplace-benefits", "destination": "/blog/digital-freight-matching-india", "permanent": true },
+    { "source": "/blog/truck-transport-cost-per-km-india-2026", "destination": "/blog/truck-transport-charges-per-km-india", "permanent": true },
+    { "source": "/blog/gst-for-transporters-complete-guide", "destination": "/blog/indian-logistics-eway-bill-gst-2026", "permanent": true },
+    { "source": "/blog/monsoon-freight-tips-india", "destination": "/blog/monsoon-logistics-tips", "permanent": true },
+    { "source": "/blog/east-india-freight-corridors-guide", "destination": "/blog/east-india-freight-corridors", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/((?!assets/|.*\\..*).*)",

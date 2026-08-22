@@ -279,12 +279,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/ai-freight-matching</loc>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+
   <url>
     <loc>https://loadsaathi.in/blog/reduce-empty-kilometers</loc>
     <lastmod>2026-07-05</lastmod>
@@ -303,12 +298,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/digital-load-boards-india</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+
   <url>
     <loc>https://loadsaathi.in/blog/real-time-tracking-launch</loc>
     <lastmod>2026-06-20</lastmod>
@@ -329,7 +319,7 @@
   </url>
   <url>
     <loc>https://loadsaathi.in/blog/indian-logistics-eway-bill-gst-2026</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -345,18 +335,8 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/ptl-vs-ftl-difference</loc>
-    <lastmod>2026-07-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/how-to-ship-steel-india</loc>
-    <lastmod>2026-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+
+
   <url>
     <loc>https://loadsaathi.in/blog/how-to-ship-textiles-india</loc>
     <lastmod>2026-07-15</lastmod>
@@ -383,16 +363,11 @@
   </url>
   <url>
     <loc>https://loadsaathi.in/blog/monsoon-logistics-tips</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/gst-for-transporters-complete-guide</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+
   <url>
     <loc>https://loadsaathi.in/blog/how-to-become-truck-owner-india</loc>
     <lastmod>2026-07-01</lastmod>
@@ -437,7 +412,7 @@
   </url>
   <url>
     <loc>https://loadsaathi.in/blog/east-india-freight-corridors</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -465,27 +440,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/truck-transport-cost-per-km-india-2026</loc>
-    <lastmod>2026-08-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+
   <url>
     <loc>https://loadsaathi.in/blog/truck-transport-charges-per-km-india</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://loadsaathi.in/blog/how-to-find-return-loads-india</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://loadsaathi.in/blog/digital-freight-matching-india</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -629,22 +599,12 @@
   </url>
   <url>
     <loc>https://loadsaathi.in/blog/ptl-vs-ftl-when-to-use-each</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/east-india-freight-corridors-guide</loc>
-    <lastmod>2026-08-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/how-to-find-return-load-trucks</loc>
-    <lastmod>2026-08-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+
+
   <url>
     <loc>https://loadsaathi.in/blog/freight-booking-mistakes-to-avoid</loc>
     <lastmod>2026-08-09</lastmod>
@@ -653,28 +613,18 @@
   </url>
   <url>
     <loc>https://loadsaathi.in/blog/steel-transport-india-guide</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/monsoon-freight-tips-india</loc>
-    <lastmod>2026-08-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+
   <url>
     <loc>https://loadsaathi.in/blog/msme-freight-saving-guide</loc>
     <lastmod>2026-08-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://loadsaathi.in/blog/digital-freight-marketplace-benefits</loc>
-    <lastmod>2026-08-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+
   <url>
     <loc>https://loadsaathi.in/blog/trucker-credit-score-guide</loc>
     <lastmod>2026-08-09</lastmod>
@@ -730,5 +680,41 @@
     <lastmod>2026-08-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/hidden-cost-empty-miles-msme-logistics</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/return-loads-kolkata</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/trucker-earnings-jharkhand-2026</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/loadsaathi-vs-brokers</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/bhubaneswar-to-kolkata-freight-rates</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://loadsaathi.in/blog/cargo-insurance-guide-india</loc>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>

@@ -6,6 +6,38 @@ import { getBlogListItems } from "@/data/blog";
 
 const articles = getBlogListItems();
 
+const collectionPageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      name: "LoadSaathi Blog — Freight & Logistics Insights",
+      description: "Insights, guides, and stories from India's intelligent freight network. Learn about AI freight matching, reducing empty kilometers, digital load boards, and more.",
+      url: "https://loadsaathi.in/blog",
+      isPartOf: {
+        "@type": "WebSite",
+        "@id": "https://loadsaathi.in/#website",
+      },
+      about: {
+        "@type": "Thing",
+        name: "Indian Freight & Logistics",
+        sameAs: "https://loadsaathi.in",
+      },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: articles.length,
+        itemListElement: articles.map((a, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: `https://loadsaathi.in/blog/${a.slug}`,
+          name: a.title,
+          description: a.excerpt.substring(0, 160),
+        })),
+      },
+    },
+  ],
+};
+
 const categoryColors: Record<string, string> = {
   "Industry Insights": "bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/30",
   "Trucker Tips": "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800/30",
@@ -23,6 +55,7 @@ export default function BlogList() {
       description="Insights, guides, and stories from India's intelligent freight network. Learn about AI freight matching, reducing empty kilometers, digital load boards, and more."
       keywords="freight blog India, logistics insights, trucking tips India, PTL LTL blog, digital freight marketplace, load board India"
       canonical="/blog"
+      jsonLd={collectionPageSchema}
       breadcrumbs={[
         { name: "Home", url: "/" },
         { name: "Blog", url: "/blog" },
@@ -95,6 +128,17 @@ export default function BlogList() {
         </div>
       </div>
     </div>
+    <noscript>
+      <div style={{maxWidth:'800px',margin:'0 auto',padding:'24px',fontFamily:'system-ui,sans-serif'}}>
+        <h1>LoadSaathi Blog — Freight &amp; Logistics Insights</h1>
+        <p>Insights, guides, and stories from India's intelligent freight network.</p>
+        <ul>
+          {articles.map((a) => (
+            <li key={a.slug}><a href={`/blog/${a.slug}`}>{a.title}</a> — {a.excerpt}</li>
+          ))}
+        </ul>
+      </div>
+    </noscript>
     </>
   );
 }

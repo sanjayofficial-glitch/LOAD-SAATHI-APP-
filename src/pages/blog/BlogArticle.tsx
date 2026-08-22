@@ -1,4 +1,3 @@
-
 import { Link, useParams } from "react-router-dom";
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, Share2, BookOpen, FileText, Shield, TrendingUp, CheckCircle, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,40 @@ import { toast } from "sonner";
 import SeoMeta from "@/components/SeoMeta";
 import { articles, parseDate } from "@/data/blog";
 import { routes } from "@/data/routes";
+
+function parseInlineLinks(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const linkText = match[1] ?? "";
+    const href = match[2] ?? "#";
+    const isInternal = href.startsWith("/") && !href.startsWith("//");
+    if (isInternal) {
+      parts.push(
+        <Link key={key++} to={href} className="text-orange-600 dark:text-orange-400 underline underline-offset-2 hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
+          {linkText}
+        </Link>
+      );
+    } else {
+      parts.push(
+        <a key={key++} href={href} target="_blank" rel="noopener noreferrer" className="text-orange-600 dark:text-orange-400 underline underline-offset-2 hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
+          {linkText}
+        </a>
+      );
+    }
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+}
 
 const headingPrefixes = [
   "What Changed:",
@@ -77,6 +110,32 @@ const headingPrefixes = [
   "PTL versus FTL: which is more economical?",
   "How shippers can improve PTL pricing",
   "Questions to ask before booking PTL",
+  "Why Kolkata Return Loads Matter",
+  "The Cost of Driving Back Empty",
+  "Top Return Load Corridors from Kolkata",
+  "How LoadSaathi Finds Return Loads from Kolkata",
+  "5 Pricing Strategies for Kolkata Return Loads",
+  "Kolkata to Northeast Connection",
+  "Monthly Salary Ranges by Vehicle Type",
+  "Owner-Operator Earnings",
+  "Round-Trip Profitability:",
+  "How LoadSaathi Helps Jharkhand Truckers",
+  "Cost: Brokers Add",
+  "Trust: Phone Calls vs Verified Profiles",
+  "Speed: Days vs Minutes",
+  "Visibility: In the Dark vs Real-Time GPS",
+  "Payment: 30-45 Days vs 24 Hours",
+  "When Brokers Still Make Sense",
+  "Distance and Transit Time",
+  "PTL Rates:",
+  "FTL Rates by Vehicle Type",
+  "Return Load Opportunities",
+  "How to Get the Best Rate",
+  "Carrier Liability vs Cargo Insurance",
+  "Types of Cargo Insurance Coverage",
+  "How Much Does Cargo Insurance Cost",
+  "Claims Process",
+  "How Digital Freight Platforms Handle Insurance",
 ];
 
 const sectionImages: Record<number, { icon: React.ReactNode; label: string }> = {
@@ -150,463 +209,33 @@ export default function BlogArticle() {
         articleSection: article.category,
         wordCount: article.content.join(" ").split(/\s+/).length,
         image: coverImage,
+        keywords: article.keywords,
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: ["h1", ".prose p:first-of-type"],
+        },
+        isPartOf: {
+          "@type": "WebSite",
+          "@id": "https://loadsaathi.in/#website",
+        },
       },
     ],
   };
 
-  const faqSchemas: Record<string, Record<string, unknown>> = {
-    "indian-logistics-eway-bill-gst-2026": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
+  const faqSchema = article.faq
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: article.faq.map((item) => ({
           "@type": "Question",
-          name: "What is the current status of the Ship-To GSTIN requirement in 2026?",
+          name: item.question,
           acceptedAnswer: {
             "@type": "Answer",
-            text: "The mandatory Ship-To GSTIN rule is on hold under GSTN Advisory 668 (August 5, 2026). No system or process changes are required until GSTN re-notifies it. The Ship-To field remains optional, and the existing single-GSTIN workflow continues to work.",
+            text: item.answer,
           },
-        },
-        {
-          "@type": "Question",
-          name: "Can I still use a single GSTIN for multi-location shipments?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Because the Ship-To GSTIN requirement is on hold, using a single GSTIN for invoicing remains valid. When the rule is eventually implemented, the actual destination entity's GSTIN (or URP for unregistered recipients) will need to be recorded.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What happens if my e-Way Bill data doesn't match my GSTR-3B filing?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Standard e-Way Bill matching rules continue to apply. Discrepancies between e-Way Bill data and GSTR-3B filings can still trigger scrutiny and, where goods move without a valid e-Way Bill, penalties of up to 200% of the tax amount under existing provisions.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is voluntary e-Way Bill closure available now?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. Voluntary e-Way Bill closure is also on hold under GSTN Advisory 668. e-Way Bills continue to close automatically on expiry as before; no workflow change is required until GSTN re-notifies the feature.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is the penalty for non-compliance with e-Way Bill rules?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Penalties for moving goods without a valid e-Way Bill or with invoice-to-cargo mismatches can reach up to 200% of the tax amount. Existing rules and penalties are unchanged by Advisory 668.",
-          },
-        },
-      ],
-    },
-    "gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Does GST Advisory 668 mean e-Way Bills are no longer required for goods transport?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No! E-Way Bills remain strictly mandatory for all movement of goods exceeding ₹50,000 in consignment value. Advisory 668 only puts on hold the new proposed enhancements (mandatory 'Ship-To' GSTIN field and voluntary online closure). Standard e-Way Bill rules continue as before.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Should our business update its ERP software for 'Ship-To' GSTIN fields now?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. GSTN explicitly advises that taxpayers and ERP vendors do not need to make changes to their production environments at this time. All previous advisories regarding mandatory 'Ship-To' fields have been withdrawn.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does LoadSaathi protect MSMEs from transport compliance penalties?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LoadSaathi works with verified carriers and automatically links your e-Way Bill Part-A with the carrier's valid Transporter ID (TRANS ID) for Part-B compliance. Combined with real-time FASTag tracking, your cargo moves seamlessly without check-post delays.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can an MSME save money on freight during regulatory changes?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes! By booking Part Truckload (PTL) shared freight on LoadSaathi, MSMEs pay only for the exact volume or weight they use. This eliminates the financial waste of booking full truckloads (FTL) for small shipments.",
-          },
-        },
-      ],
-    },
-    "return-loads-rourkela": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What is a return load?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A return load is cargo booked for the return leg of a truck trip. Instead of driving back empty after a delivery, the truck carries goods back toward its origin, generating revenue on both legs of the journey.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Which corridors have the best return loads from Rourkela?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "The busiest return-load corridors from Rourkela are Rourkela-Kolkata (430 km, ₹28,000-35,000 FTL), Rourkela-Ranchi (180 km, ₹12,000-16,000 FTL), and Rourkela-Bhubaneswar (310 km, ₹20,000-26,000 FTL). Steel, cement, FMCG, and auto parts are the most common return cargo types.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does LoadSaathi help truckers find return loads?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LoadSaathi's AI matching engine identifies return-load opportunities before the outbound trip concludes, pushing verified offers to truckers as they approach their destination. The platform filters by route, vehicle type, and capacity to ensure every offer is relevant.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How much can truckers save by filling return loads?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Filling return loads can add ₹28,000-35,000 per round trip. Over 8 trips per month, that's ₹2,24,000-2,56,000 in additional revenue. The marginal cost of a loaded return leg is minimal — primarily the additional diesel for the loaded weight (5-10% increase).",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How should I price a return load?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Price return loads above your marginal cost (diesel + toll). Anchor your rate to the corridor average — for Rourkela-Kolkata PTL, the 2026 average is ₹1,800-2,500 per tonne. Prioritise verified shippers with high credit scores over the highest rate offered.",
-          },
-        },
-      ],
-    },
-    "ptl-transport-odisha-jharkhand-2026": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What is PTL transport?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "PTL (Partial Truckload) is a freight method where shippers pay only for the portion of truck space their cargo occupies. Multiple shippers share a single truck heading the same direction, reducing costs by 30-40% compared to booking a full truck.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How much cheaper is PTL compared to FTL?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "PTL rates are typically 30-40% lower than FTL rates. For example, a 2-tonne PTL shipment from Rourkela to Kolkata costs ₹9,000-12,000, while a full 9-tonne FTL booking costs ₹55,000-70,000 — a saving of ₹46,000-58,000.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Which corridors are best for PTL in Odisha and Jharkhand?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "The highest-volume PTL corridors are Rourkela-Kolkata (430 km, ₹1,800-2,500/tonne), Rourkela-Ranchi (180 km, ₹800-1,200/tonne), Rourkela-Bhubaneswar (310 km, ₹1,200-1,800/tonne), Bhubaneswar-Kolkata (470 km, ₹1,500-2,200/tonne), and Ranchi-Kolkata (350 km, ₹1,300-1,900/tonne).",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do I book PTL transport online?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Enter your shipment details on LoadSaathi — origin, destination, weight, and departure date. The AI matches you with verified carriers within minutes. Compare offers, book, track via GPS, and pay through escrow. The entire process takes minutes, not hours.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is the minimum weight for PTL shipping?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Most PTL carriers accept shipments from 100 kg upwards. There is no strict minimum, but rates are most competitive for shipments between 500 kg and 5 tonnes.",
-          },
-        },
-      ],
-    },
-    "steel-transport-rourkela-2026": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What truck type is best for transporting steel?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Hot-rolled coils and cold-rolled sheets require open-body trucks with lashing points. TMT bars and structural steel need side-panel trucks with reinforced panels. Pipe and tube products require trailer trucks with extended beds. 9-tonne open-body trucks (10-wheelers) are the standard for most steel products from Rourkela.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What are the 2026 steel freight rates from Rourkela?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Rourkela to Kolkata (430 km): ₹28,000-35,000 FTL, ₹2,000-2,800/tonne PTL. Rourkela to Bhubaneswar (310 km): ₹20,000-26,000 FTL. Rourkela to Ranchi (180 km): ₹12,000-16,000 FTL. Rourkela to Jamshedpur (120 km): ₹8,000-11,000 FTL.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What compliance is required for steel transport?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Steel shipments exceeding ₹50,000 in value require a valid e-Way Bill with Part-B populated before departure. Weight limits are enforced at NHAI weighbridges — overloading attracts ₹200/tonne penalties. Cargo must be properly lashed and secured per Motor Vehicles Act requirements.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does LoadSaathi help steel shippers?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LoadSaathi's AI matching engine connects steel shippers with carriers experienced in heavy and industrial cargo. Every carrier is verified with vehicle documentation, insurance, and safety ratings. Real-time GPS tracking and escrow payments ensure safe, timely delivery.",
-          },
-        },
-      ],
-    },
-    "trucker-earnings-odisha-2026": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "How much do truck drivers earn in Odisha in 2026?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LCV drivers earn ₹12,000-18,000/month, 10-wheeler drivers ₹18,000-25,000, and multi-axle drivers ₹25,000-35,000. Owner-operators can earn ₹35,000-80,000+ per month depending on vehicle class and return-load utilisation.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is the profit per round trip on Rourkela-Kolkata?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A loaded round trip (Rourkela-Kolkata-Rourkela) generates ₹58,000-67,000 in revenue with ₹22,000-26,000 in total costs, yielding ₹31,650-44,950 net profit per trip. Over 8 trips per month, that's ₹2,53,000-3,59,600 in monthly profit.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How much does it cost to run a truck per kilometre?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "All-in running costs for 10-wheelers are ₹25-35 per km and multi-axle trucks ₹35-50 per km. Diesel accounts for 45-55%, tolls 15-20%, maintenance 12-15%, insurance/permits 8-12%, and EMI 15-20% of total costs.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do return loads affect trucker earnings?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A loaded return leg adds ₹28,000-35,000 per trip. Over 8 trips per month, consistent return-load booking adds ₹2,24,000-2,56,000 in monthly revenue. Truckers using LoadSaathi report 40-60% reduction in empty kilometres.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is the payback period for a new truck?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A new 10-wheeler (₹25-35 lakh) has a payback period of 18-24 months at 8 trips/month. Truckers who consistently book return loads achieve payback in 14-18 months, while those running empty returns take 24-30 months.",
-          },
-        },
-      ],
-    },
-    "truck-transport-charges-per-km-india": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What is the average truck transport cost per km in India?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "There is no single reliable national average. The cost depends on vehicle class, route, cargo, distance, fuel, tolls, seasonality, loading time, and return-load availability. Use a current route-specific estimate rather than relying on a generic number.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is PTL priced per kilometre or per kilogram?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "PTL may be quoted using a combination of shipment weight, volume, route, used capacity, and service conditions. Some providers communicate a per-kilogram or per-tonne estimate, while others provide a route quote. Ask what is included before comparing providers.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Why can the same truck cost different amounts on two routes?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Route distance, tolls, road conditions, demand, truck availability, cargo requirements, loading time, and the probability of a paid return trip can all differ. The same vehicle does not have the same operating economics on every corridor.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How can a shipper reduce freight cost?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Provide accurate shipment details, compare PTL with FTL, improve packaging, reduce loading delays, plan flexible pickup windows, consolidate compatible orders, and consider routes where shared or return capacity is available. Do not reduce cost by compromising safe loading or legal payload limits.",
-          },
-        },
-      ],
-    },
-    "how-to-find-return-loads-india": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Where can truckers find return loads in India?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Truckers can use digital load boards, freight marketplaces, direct shipper relationships, transport associations, local networks, and fleet-management systems. Digital platforms are useful when they provide verified shipment information and route-compatible matching rather than only a large list of unfiltered loads.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is every backhaul better than returning empty?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. A backhaul can be unprofitable if it requires a long detour, excessive waiting, unsuitable cargo handling, or unreliable payment. Evaluate the complete trip economics before accepting it.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How do return loads reduce truck operating costs?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "A paid return leg can spread the cost of the vehicle, driver, fuel, and trip cycle across more revenue-generating kilometres. The actual benefit depends on the load price and additional operating costs.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How can LoadSaathi help truckers find suitable loads?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LoadSaathi connects truckers with shipper freight and uses route, capacity, timing, pricing, and profile information to support matching. Availability depends on the live network and the trucker's vehicle and service area.",
-          },
-        },
-      ],
-    },
-    "digital-freight-matching-india": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Is digital freight matching the same as a load board?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Not always. A basic load board may display available loads and trucks. Digital freight matching can go further by comparing route, timing, capacity, cargo, pricing, and reliability signals to suggest more relevant options.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can AI eliminate empty truck kilometres completely?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No platform should promise that every empty kilometre will disappear. Demand is often unbalanced between locations, and operational constraints remain. Better matching can improve the probability of finding suitable paid capacity, but the result depends on live demand, route, timing, and truck availability.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is digital freight matching useful for small shippers?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Small shippers may benefit from shared capacity, structured quotes, shipment visibility, and access to a wider network. They should provide accurate shipment details and compare service conditions before booking.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does LoadSaathi use digital matching?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LoadSaathi connects shippers and truckers for PTL and LTL freight across East India. Its matching approach considers shipment and vehicle details such as route, capacity, timing, price, and reliability. The live result depends on current network availability.",
-          },
-        },
-      ],
-    },
-    "ptl-freight-rates-india": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Are PTL rates quoted per kg in India?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Some providers may communicate a per-kilogram or per-tonne estimate, but PTL pricing can also depend on volume, used space, route, cargo, handling, and timing. Ask for the complete quote basis.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is PTL cheaper than booking a full truck?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "It can be, when the shipment does not need dedicated capacity and suitable shared capacity is available. The result depends on the route and service conditions.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is PTL safe for industrial cargo?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "PTL can be suitable when the vehicle, loading plan, cargo compatibility, securing, packaging, and handling process are appropriate. Heavy or sensitive cargo should be assessed before booking.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can LoadSaathi provide a fixed PTL rate?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LoadSaathi can provide an indicative estimate based on the shipment and route information available. The final quote depends on live capacity, cargo details, timing, and confirmed service conditions.",
-          },
-        },
-      ],
-    },
-    "east-india-freight-corridors": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Which are the main freight cities in East India?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "For LoadSaathi's initial network, important locations include Rourkela, Ranchi, Jamshedpur, Bhubaneswar, Kolkata, Burdwan, Dhanbad, Sambalpur, and nearby industrial or commercial centres. Coverage and live truck availability change, so confirm the route before booking.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Is PTL available between Odisha and Jharkhand?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "PTL availability depends on live shipper demand, truck capacity, cargo compatibility, pickup timing, and route direction. Submit the shipment details through LoadSaathi to check current options.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How can I reduce freight costs on an East India corridor?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Compare PTL with FTL, provide accurate shipment details, reduce loading delays, plan flexible windows, use suitable packaging, and check whether compatible shared or return capacity is available. Do not compromise safe loading or legal payload limits.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can truckers find return loads on East India routes?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Return-load availability depends on current demand and the truck's location, vehicle, capacity, and timing. Digital matching can make suitable opportunities easier to discover, but no platform can guarantee a return load on every trip.",
-          },
-        },
-      ],
-    },
-  };
-  const faqSchema = slug ? faqSchemas[slug] ?? null : null;
+        })),
+      }
+    : null;
 
   const relatedRoutes = article.relatedRoutes
     ? routes.filter((r) => article.relatedRoutes?.includes(r.slug))
@@ -633,6 +262,47 @@ export default function BlogArticle() {
         { name: article.title, url: `/blog/${slug}` },
       ]}
     />
+
+    <noscript>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
+        <h1>{article.title}</h1>
+        <p><strong>{article.category}</strong> | {article.author} | {article.date} | {article.readTime}</p>
+        {article.lastUpdated && <p>Last updated: {article.lastUpdated}</p>}
+        <p>{article.summary}</p>
+        <hr />
+        {article.content.map((paragraph, i) => {
+          const isH2 = paragraph.startsWith("## ");
+          return isH2 ? (
+            <h2 key={i} style={{ marginTop: "1.5rem" }}>{paragraph.replace(/^## /, "")}</h2>
+          ) : (
+            <p key={i} style={{ marginBottom: "1rem", lineHeight: 1.7 }}>{paragraph}</p>
+          );
+        })}
+        {article.faq && article.faq.length > 0 && (
+          <>
+            <h2>Frequently Asked Questions</h2>
+            {article.faq.map((item, i) => (
+              <div key={i} style={{ marginBottom: "1.5rem" }}>
+                <p><strong>Q: {item.question}</strong></p>
+                <p>A: {item.answer}</p>
+              </div>
+            ))}
+          </>
+        )}
+        {relatedRoutes.length > 0 && (
+          <>
+            <h2>Freight Routes Mentioned in This Article</h2>
+            <ul>
+              {relatedRoutes.map((r) => (
+                <li key={r.slug}><a href={`https://loadsaathi.in/routes/${r.slug}`}>{r.from} → {r.to}</a> — {r.distanceKm} km · ~{r.transitTime} hrs</li>
+              ))}
+            </ul>
+          </>
+        )}
+        <p><em>About the Author: {article.author} — {article.authorBio}</em></p>
+      </div>
+    </noscript>
+
     <div className="min-h-screen bg-background dark:bg-[#050816]">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-40" />
@@ -683,8 +353,10 @@ export default function BlogArticle() {
 
         <div className="prose prose-lg dark:prose-invert max-w-none">
           {article.content.map((paragraph, i) => {
-            const isHeading = headingPrefixes.some((p) => paragraph.startsWith(p));
+            const isH2Heading = paragraph.startsWith("## ");
+            const isHeading = isH2Heading || headingPrefixes.some((p) => paragraph.startsWith(p));
             const image = sectionImages[i];
+            const headingText = isH2Heading ? paragraph.replace(/^## /, "") : paragraph;
 
             return (
               <div key={i}>
@@ -696,17 +368,34 @@ export default function BlogArticle() {
                 )}
                 {isHeading ? (
                   <h2 className="text-2xl sm:text-3xl font-bold text-foreground mt-12 mb-4 leading-tight">
-                    {paragraph}
+                    {headingText}
                   </h2>
                 ) : (
                   <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6">
-                    {paragraph}
+                    {parseInlineLinks(paragraph)}
                   </p>
                 )}
               </div>
             );
           })}
         </div>
+
+        {/* FAQ Section */}
+        {article.faq && article.faq.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-border">
+            <h3 className="text-xl font-bold text-foreground mb-6">
+              Frequently Asked Questions
+            </h3>
+            <div className="space-y-6">
+              {article.faq.map((item, i) => (
+                <div key={i} className="glass-card p-5 rounded-xl border border-border">
+                  <h4 className="font-bold text-foreground mb-2">{item.question}</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Related Routes */}
         {relatedRoutes.length > 0 && (
