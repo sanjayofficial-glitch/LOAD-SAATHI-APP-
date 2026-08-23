@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -286,7 +286,9 @@ describe('Agentic Readiness: edge function (api/agent.js)', () => {
   });
 
   it('has a list of known SPA routes', () => {
-    expect(content).toContain("SPA_ROUTES");
+    // Accept either SPA_ROUTES (legacy) or EXACT_ROUTES + PREFIXES (modern)
+    const hasRouteList = content.includes("SPA_ROUTES") || content.includes("EXACT_ROUTES");
+    expect(hasRouteList).toBe(true);
     expect(content).toContain("'/'");
     expect(content).toContain("'/about'");
     expect(content).toContain("'/contact'");
@@ -318,4 +320,137 @@ describe('Agentic Readiness: edge function (api/agent.js)', () => {
     expect(content).toContain('Vary');
     expect(content).toContain('Accept');
   });
+
+  it('includes Vary: Accept, Accept-Encoding in responses', () => {
+    expect(content).toContain('Vary');
+    expect(content).toContain('Accept, Accept-Encoding');
+  });
+
+  it('handles dedicated HTML for trust anchors', () => {
+    expect(content).toContain('DEDICATED_HTML');
+    expect(content).toContain("'/about'");
+  });
+
+  it('normalizes trailing slashes', () => {
+    expect(content).toContain('normalizePath');
+  });
+});
+
+describe('Agentic Readiness: vercel.json Vary & install', () => {
+  let config: Record<string, unknown>;
+  let raw: string;
+
+  beforeAll(() => {
+    raw = readFile('vercel.json');
+    config = JSON.parse(raw);
+  });
+
+  it('has Vary header with Accept', () => {
+    expect(raw).toContain('"Vary"');
+    expect(raw).toContain('Accept');
+    const headers = config.headers as Array<{ source: string; headers: Array<{ key: string; value: string }> }>;
+    const varyHeader = headers.find(h => h.headers.some(v => v.key === 'Vary' && v.value.includes('Accept')));
+    expect(varyHeader).toBeDefined();
+    expect(varyHeader!.headers.find(v => v.key === 'Vary')!.value).toContain('Accept, Accept-Encoding');
+  });
+
+  it('uses pnpm install command', () => {
+    expect(raw).toContain('pnpm');
+    expect((config as unknown as { installCommand: string }).installCommand).toBe('pnpm install');
+  });
+
+  it('has correct buildCommand and outputDirectory', () => {
+    const c = config as unknown as { buildCommand: string; outputDirectory: string; framework: string };
+    expect(c.buildCommand).toBe('pnpm run build');
+    expect(c.outputDirectory).toBe('dist');
+    expect(c.framework).toBe('vite');
+  });
+
+  it('has cleanUrls enabled', () => {
+    expect((config as unknown as { cleanUrls: boolean }).cleanUrls).toBe(true);
+  });
+});
+
+describe('Agentic Readiness: index.html SSR fallback (no-JS content)', () => {
+  let content: string;
+
+  beforeAll(() => {
+    content = readFile('index.html');
+  });
+
+  it('has SSR fallback div with H1 visible without JS', () => {
+    expect(content).toContain('id="ssr-fallback"');
+    expect(content).toContain('<h1>LoadSaathi - India');
+  });
+
+  it('SSR fallback has 500+ chars of text', () => {
+    const fallbackMatch = content.match(/id="ssr-fallback"[\s\S]*?<\/div>/);
+    expect(fallbackMatch).not.toBeNull();
+    const start = content.indexOf('id="ssr-fallback"');
+    const slice = content.slice(start, start + 4000);
+    const textOnly = slice.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    expect(textOnly.length).toBeGreaterThan(500);
+  });
+
+  it('SSR fallback is hidden by JS and boot-loader shown', () => {
+    expect(content).toContain("document.getElementById('ssr-fallback')");
+    expect(content).toContain('id="boot-loader"');
+  });
+
+  it('raw HTML text outside scripts is 500+ chars (H1 + body)', () => {
+    // Simulate no-JS: strip scripts, styles, but keep fallback + noscript
+    const withoutScripts = content.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
+    const text = withoutScripts.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    expect(text.length).toBeGreaterThan(500);
+    expect(text).toContain('LoadSaathi');
+    expect(text).toContain('PTL');
+  });
+});
+
+describe('Agentic Readiness: trust anchor pages', () => {
+  const anchors = ['about', 'contact', 'privacy'];
+
+  for (const page of anchors) {
+    describe(`public/${page}.html`, () => {
+      let content: string;
+
+      beforeAll(() => {
+        content = readFile(`public/${page}.html`);
+      });
+
+      it('exists and has lang attribute', () => {
+        expect(content).toContain('<html lang="en">');
+      });
+
+      it('has canonical URL', () => {
+        expect(content).toContain(`<link rel="canonical" href="https://loadsaathi.in/${page}"`);
+      });
+
+      it('has og:image and og:type', () => {
+        expect(content).toContain('property="og:image"');
+        expect(content).toContain('property="og:type"');
+        expect(content).toContain('https://loadsaathi.in/og-image.png');
+      });
+
+      it('has 500+ chars of text content', () => {
+        const text = content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        expect(text.length).toBeGreaterThan(500);
+      });
+
+      it('has H1 heading', () => {
+        expect(content).toContain('<h1>');
+      });
+
+      it('contains relevant keywords for trust', () => {
+        if (page === 'about') expect(content).toContain('Rourkela');
+        if (page === 'contact') expect(content).toContain('support@loadsaathi.in');
+        if (page === 'privacy') expect(content).toContain('Privacy Policy');
+      });
+
+      it('links to machine-readable resources', () => {
+        expect(content).toContain('href="/llms.txt"');
+        expect(content).toContain('href="/sitemap.xml"');
+      });
+    });
+  }
 });
