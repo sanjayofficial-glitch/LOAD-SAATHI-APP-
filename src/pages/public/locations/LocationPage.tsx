@@ -354,7 +354,7 @@ const cityData: Record<string, {
 
 export default function LocationPage() {
   const { city } = useParams<{ city: string }>();
-  const data = city ? cityData[city] : null;
+  const data = city ? cityData[city.toLowerCase()] : null;
 
   if (!data) {
     return (

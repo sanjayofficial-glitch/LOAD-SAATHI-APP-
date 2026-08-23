@@ -52,7 +52,7 @@
     },
     {
       "src": "^/((?!assets/|.*\\..*).*)$",
-      "dest": "/api/agent.js"
+      "dest": "/index.html"
     }
   ]
 }

@@ -129,7 +129,7 @@ function App() {
       <PostHogProvider>
       <ClerkProvider
         publishableKey={CLERK_PUBLISHABLE_KEY}
-        allowedRedirectOrigins={['https://localhost', 'https://loadsaathi.in', 'https://www.loadsaathi.in', 'https://in.loadsaathi.app', 'capacitor://localhost', 'https://clerk.loadsaathi.in']}
+        allowedRedirectOrigins={['http://localhost', 'https://localhost', 'http://localhost:5173', 'https://loadsaathi.in', 'https://www.loadsaathi.in', 'https://in.loadsaathi.app', 'capacitor://localhost', 'https://clerk.loadsaathi.in']}
         signUpFallbackRedirectUrl="/register"
         signInFallbackRedirectUrl="/choose-role"
       >

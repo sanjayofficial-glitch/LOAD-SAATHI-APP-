@@ -65,7 +65,7 @@ const howItWorks = [
 
 export default function RouteDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const route = slug ? routes.find((r) => r.slug === slug) : null;
+  const route = slug ? routes.find((r) => r.slug === slug.toLowerCase()) : null;
 
   useEffect(() => {
     if (route) {

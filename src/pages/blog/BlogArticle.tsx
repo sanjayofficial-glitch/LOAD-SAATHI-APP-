@@ -150,7 +150,7 @@ const sectionImages: Record<number, { icon: React.ReactNode; label: string }> = 
 
 export default function BlogArticle() {
   const { slug } = useParams<{ slug: string }>();
-  const article = slug ? articles[slug] : null;
+  const article = slug ? articles[slug.toLowerCase()] : null;
 
   if (!article) {
     return (

@@ -90,7 +90,7 @@ const guideData: Record<string, {
 
 export default function GuidePage() {
   const { slug } = useParams<{ slug: string }>();
-  const guide = slug ? guideData[slug] : null;
+  const guide = slug ? guideData[slug.toLowerCase()] : null;
 
   if (!guide) {
     return (
