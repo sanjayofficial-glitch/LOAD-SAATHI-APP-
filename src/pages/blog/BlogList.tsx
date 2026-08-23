@@ -6,12 +6,47 @@ import { getBlogListItems } from "@/data/blog";
 
 const articles = getBlogListItems();
 
+const collectionPageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      name: "LoadSaathi Blog — Freight & Logistics Insights",
+      description: "Insights, guides, and stories from India's intelligent freight network. Learn about AI freight matching, reducing empty kilometers, digital load boards, and more.",
+      url: "https://loadsaathi.in/blog",
+      isPartOf: {
+        "@type": "WebSite",
+        "@id": "https://loadsaathi.in/#website",
+      },
+      about: {
+        "@type": "Thing",
+        name: "Indian Freight & Logistics",
+        sameAs: "https://loadsaathi.in",
+      },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: articles.length,
+        itemListElement: articles.map((a, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: `https://loadsaathi.in/blog/${a.slug}`,
+          name: a.title,
+          description: a.excerpt.substring(0, 160),
+        })),
+      },
+    },
+  ],
+};
+
 const categoryColors: Record<string, string> = {
   "Industry Insights": "bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/30",
   "Trucker Tips": "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800/30",
   "Product Updates": "bg-orange-100 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800/30",
   "Shipper Guide": "bg-purple-100 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800/30",
   "Case Study": "bg-teal-100 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800/30",
+  "Industry Guide": "bg-rose-100 dark:bg-rose-900/20 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/30",
+  "Route Guide": "bg-cyan-100 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800/30",
+  "Return Loads": "bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/30",
 };
 
 export default function BlogList() {
@@ -22,6 +57,7 @@ export default function BlogList() {
       description="Insights, guides, and stories from India's intelligent freight network. Learn about AI freight matching, reducing empty kilometers, digital load boards, and more."
       keywords="freight blog India, logistics insights, trucking tips India, PTL LTL blog, digital freight marketplace, load board India"
       canonical="/blog"
+      jsonLd={collectionPageSchema}
       breadcrumbs={[
         { name: "Home", url: "/" },
         { name: "Blog", url: "/blog" },
@@ -94,6 +130,17 @@ export default function BlogList() {
         </div>
       </div>
     </div>
+    <noscript>
+      <div style={{maxWidth:'800px',margin:'0 auto',padding:'24px',fontFamily:'system-ui,sans-serif'}}>
+        <h1>LoadSaathi Blog — Freight &amp; Logistics Insights</h1>
+        <p>Insights, guides, and stories from India's intelligent freight network.</p>
+        <ul>
+          {articles.map((a) => (
+            <li key={a.slug}><a href={`/blog/${a.slug}`}>{a.title}</a> — {a.excerpt}</li>
+          ))}
+        </ul>
+      </div>
+    </noscript>
     </>
   );
 }

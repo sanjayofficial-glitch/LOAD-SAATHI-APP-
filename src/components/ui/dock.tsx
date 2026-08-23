@@ -11,6 +11,7 @@ import {
   Children,
   cloneElement,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -88,6 +89,36 @@ function Dock({
   const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
   const height = useSpring(heightRow, spring);
 
+  // Throttle mouse-move events to ~30fps to avoid layout thrashing.
+  // getBoundingClientRect is called per frame; at 60fps this causes jank.
+  const rafRef = useRef(0);
+  const lastPageX = useRef(Infinity);
+
+  const handleMouseMove = useCallback(
+    ({ pageX }: React.MouseEvent) => {
+      lastPageX.current = pageX;
+      if (rafRef.current) return;
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = 0;
+        isHovered.set(1);
+        mouseX.set(lastPageX.current);
+      });
+    },
+    [isHovered, mouseX]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    isHovered.set(0);
+    mouseX.set(Infinity);
+  }, [isHovered, mouseX]);
+
+  // Cleanup rAF on unmount
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
     <motion.div
       style={{
@@ -97,14 +128,8 @@ function Dock({
       className='mx-2 flex max-w-full items-end overflow-x-auto'
     >
       <motion.div
-        onMouseMove={({ pageX }) => {
-          isHovered.set(1);
-          mouseX.set(pageX);
-        }}
-        onMouseLeave={() => {
-          isHovered.set(0);
-          mouseX.set(Infinity);
-        }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         className={cn(
           'mx-auto flex w-fit gap-4 rounded-2xl border border-white/20 bg-white/70 px-4 shadow-lg backdrop-blur-xl dark:border-white/10 dark:bg-white/10',
           className
@@ -187,7 +212,7 @@ function DockLabel({ children, className, ...rest }: DockLabelProps) {
           initial={{ opacity: 0, y: 0 }}
           animate={{ opacity: 1, y: -10 }}
           exit={{ opacity: 0, y: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
           className={cn(
             'absolute -top-6 left-1/2 w-fit whitespace-pre rounded-md border border-white/20 bg-white/80 px-2 py-0.5 text-xs text-neutral-700 backdrop-blur-xl dark:border-white/10 dark:bg-white/10 dark:text-white',
             className

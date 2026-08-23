@@ -11,7 +11,7 @@ import LogoMark from '@/components/LogoMark';
 const ChooseRole = () => {
   const { user, isLoaded } = useUser();
   const { session } = useSession();
-  const { setProfile, userProfile } = useAuth();
+  const { setProfile, userProfile, refreshProfile, loading: profileLoading } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -52,23 +52,26 @@ const ChooseRole = () => {
 
       const supabase = createClerkSupabaseClient(supabaseToken);
 
-      const { data: existing } = await supabase
+      const { data: existing, error: lookupErr } = await supabase
         .from('users')
         .select('id')
         .eq('id', user.id)
         .maybeSingle();
 
-      let result;
+      if (lookupErr) throw lookupErr;
+
+      let writeErr = null;
       if (existing) {
-        result = await supabase
+        const { error } = await supabase
           .from('users')
           .update({
             user_type: role,
             full_name: user.fullName || '',
           })
           .eq('id', user.id);
+        writeErr = error;
       } else {
-        result = await supabase
+        const { error } = await supabase
           .from('users')
           .insert({
             id: user.id,
@@ -79,12 +82,12 @@ const ChooseRole = () => {
             rating: 0,
             total_trips: 0,
           });
+        writeErr = error;
       }
 
-      if (result.error) throw result.error;
+      if (writeErr) throw writeErr;
 
-      // Set profile synchronously in context before navigating
-      // This ensures RoleProtectedRoute sees the role immediately
+      // Set profile in context BEFORE navigating so OnboardingFlow sees the role
       const profileData: UserType = {
         id: user.id,
         user_type: role,
@@ -97,9 +100,15 @@ const ChooseRole = () => {
       };
       setProfile(profileData);
 
+      // Re-fetch the DB-authoritative profile so the role we just saved
+      // overwrites any stale in-flight fetchProfile that may still be pending
+      await refreshProfile();
+
       showSuccess(`Welcome ${role === 'shipper' ? 'Shipper' : 'Trucker'}!`);
 
-      // First-time users go through onboarding before reaching their dashboard
+      // Small delay to let React state settle before navigating
+      await new Promise((r) => setTimeout(r, 100));
+
       justSelectedRef.current = true;
       navigate('/onboarding', { replace: true });
     } catch (err: unknown) {
@@ -112,8 +121,10 @@ const ChooseRole = () => {
     }
   };
 
-  // Wait for Clerk to load
-  if (!isLoaded || !user) {
+  // Wait for Clerk to load AND for the profile to resolve before deciding
+  // what to render. Returning users with a saved role are redirected by the
+  // effect above — without ever flashing the role-selection UI.
+  if (!isLoaded || !user || profileLoading || userProfile?.user_type) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
         <div className="text-center">

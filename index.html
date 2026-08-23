@@ -20,8 +20,10 @@
         } catch (e) {}
       })();
     </script>
-    <link rel="icon" type="image/png" href="/logo-512.png" />
-    <link rel="apple-touch-icon" href="/logo-512.png" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo-32.webp" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/logo-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo-512.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
@@ -41,38 +43,22 @@
     <link rel="preload" as="image" href="/logo-64.webp" imagesrcset="/logo-32.webp 32w, /logo-64.webp 64w, /logo-128.webp 128w" imagesizes="(min-width: 768px) 44px, 32px" />
     <link rel="preload" as="image" href="/hero-bg.webp" fetchpriority="high" />
 
-    <!-- Primary SEO -->
-    <title>LoadSaathi – AI Truck Load & Return Load Marketplace in India</title>
-    <meta name="description" content="LoadSaathi is India's AI-powered freight marketplace connecting shippers with verified truckers for PTL, FTL, and return loads. Save up to 40% on Rourkela, Ranchi, Bhubaneswar, Kolkata routes." />
-    <meta name="keywords" content="LoadSaathi, return load for trucks, PTL freight India, FTL booking, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela" />
+    <!-- Primary SEO (fallback for no-JS; SeoMeta replaces after hydration) -->
+    <title>LoadSaathi | India's Truck Load App</title>
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://loadsaathi.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://loadsaathi.in/og-image.png" />
+    <meta property="og:url" content="https://loadsaathi.in/" />
     <meta name="google-site-verification" content="f4bedcfa3ed7330b" />
-    <!-- Bing Webmaster Tools: replace with your verification code -->
-    <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" />
-    <!-- Yandex Webmaster: replace with your verification code -->
-    <meta name="yandex-verification" content="YOUR_YANDEX_VERIFICATION_CODE" />
+    <!-- Bing Webmaster Tools: uncomment and replace with your verification code -->
+    <!-- <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" /> -->
+    <!-- Yandex Webmaster: uncomment and replace with your verification code -->
+    <!-- <meta name="yandex-verification" content="YOUR_YANDEX_VERIFICATION_CODE" /> -->
     <!-- PWA -->
     <meta name="application-name" content="LoadSaathi" />
     <meta name="msapplication-TileColor" content="#ea580c" />
     <meta name="msapplication-TileImage" content="/logo-192.png" />
-
-    <!-- Open Graph (corrected domain) -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://loadsaathi.in/" />
-    <meta property="og:title" content="LoadSaathi – AI Truck Load & Return Load Marketplace in India" />
-    <meta property="og:description" content="Connect with verified truckers for PTL, FTL, and return loads on the Rourkela–Ranchi–Burdwan corridor. India's first shared freight marketplace for East India industrial corridors." />
-    <meta property="og:image" content="https://loadsaathi.in/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="LoadSaathi" />
-    <meta property="og:locale" content="en_IN" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LoadSaathi – AI Truck Load & Return Load Marketplace in India" />
-    <meta name="twitter:description" content="Book PTL, FTL, and return loads across Rourkela, Ranchi, and Burdwan. Verified truckers, zero middlemen, save up to 40%." />
-    <meta name="twitter:image" content="https://loadsaathi.in/og-image.png" />
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
@@ -87,7 +73,7 @@
           "url": "https://loadsaathi.in",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://loadsaathi.in/logo-512.png",
+            "url": "https://loadsaathi.in/logo.svg",
             "width": 512,
             "height": 512
           },
@@ -193,95 +179,6 @@
             "target": "https://loadsaathi.in/search?q={search_term_string}",
             "query-input": "required name=search_term_string"
           }
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://loadsaathi.in/#webpage",
-          "url": "https://loadsaathi.in",
-          "name": "LoadSaathi – AI Truck Load & Return Load Marketplace in India",
-          "isPartOf": {
-            "@id": "https://loadsaathi.in/#website"
-          },
-          "about": {
-            "@id": "https://loadsaathi.in/#organization"
-          },
-          "description": "LoadSaathi connects shippers and truckers for shared PTL/LTL freight across East India. Save up to 40% on the Rourkela–Ranchi–Burdwan corridor.",
-          "breadcrumb": {
-            "@id": "https://loadsaathi.in/#breadcrumb"
-          }
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": "https://loadsaathi.in/#breadcrumb",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://loadsaathi.in"
-            }
-          ]
-        },
-        {
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "What is LoadSaathi and how does it work?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "LoadSaathi is an AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. Shippers post their loads, AI matches them with the best available trucks based on route, capacity, price, and reliability — and both sides track the shipment in real time with GPS. It helps MSMEs save up to 40% on freight costs."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How much does it cost to use LoadSaathi?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "LoadSaathi is free to join for both shippers and truckers. We charge a small transaction fee of 2–5% per completed shipment, which varies by role, volume, and credit score. There are no subscriptions, no hidden fees, and no minimum commitments."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Which cities and routes does LoadSaathi cover?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "LoadSaathi currently operates across East India with the Rourkela–Ranchi–Burdwan corridor as our primary route. We also cover Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal with 25+ active freight corridors including Rourkela–Kolkata, Ranchi–Jamshedpur, and Bhubaneswar–Kolkata."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How does LoadSaathi's AI matching work?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "LoadSaathi uses a multi-layered AI scoring engine that analyzes route alignment, capacity fit, price compatibility, timeliness, historical performance, communication responsiveness, and tenure to match shippers with the best-suited truckers in seconds."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How does the credit score system work?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Every user on LoadSaathi has a digital freight credit score ranging from 300 to 900. The score is based on completion rate, on-time performance, bidirectional reviews, and tenure on the platform. Higher scores unlock better loads and preferential matching for truckers, and attract premium truckers for shippers."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is my payment secure on LoadSaathi?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. LoadSaathi uses an escrow-backed payment system. Funds are held securely and released in milestones as delivery progresses. Disputes are resolved through our built-in resolution system, and digital settlements mean faster, transparent payouts compared to traditional 30–60 day credit cycles."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Who can use LoadSaathi — shippers or truckers?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Both. Shippers (MSMEs, manufacturers, traders) can post loads and find truck space. Truckers (independent operators, fleet owners) can browse available loads, fill empty capacity, and earn on return trips. The platform is designed to eliminate empty kilometers for truckers and reduce freight costs for shippers."
-              }
-            }
-          ]
         }
       ]
     }
@@ -327,15 +224,96 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTBG3QKC"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <noscript><h1>LoadSaathi – AI Truck Load & Return Load Marketplace in India</h1></noscript>
+    <noscript>
+      <div style="max-width:800px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif;line-height:1.6">
+        <h1>LoadSaathi - India's AI-Powered Freight Marketplace</h1>
+        <p>LoadSaathi connects shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%.</p>
+        <h2>Who It's For</h2>
+        <ul>
+          <li><strong>Shippers:</strong> SMEs and enterprises in Odisha, Jharkhand, and West Bengal who need to move goods on the Rourkela-Ranchi-Burdwan corridor and beyond.</li>
+          <li><strong>Truckers &amp; Fleet Owners:</strong> Independent truckers and fleet operators looking to fill empty capacity, find return loads, and build a digital reputation.</li>
+        </ul>
+        <h2>Key Features</h2>
+        <ul>
+          <li>AI-Powered Matching: Multi-factor scoring engine that matches shippers with truckers in seconds.</li>
+          <li>Real-Time GPS Tracking: Live location sharing with ETAs, route visualization, and geofence alerts.</li>
+          <li>Digital Freight Credit Score: 300-900 score for every participant.</li>
+          <li>AI Price Prediction: Market-aligned pricing suggestions.</li>
+          <li>Escrow Payments: Secure milestone-based payment releases.</li>
+          <li>Bidirectional Reviews: Both shippers and truckers rate each other.</li>
+        </ul>
+        <h2>Pricing</h2>
+        <p>Free to join. Transaction fee: 2-5% per completed shipment. No subscriptions, no hidden fees.</p>
+        <h2>Cities Served</h2>
+        <p>Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal.</p>
+        <h2>Key Pages</h2>
+        <ul>
+          <li><a href="/about">About LoadSaathi</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/routes">All Freight Routes</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+        <h2>Machine-Readable Resources</h2>
+        <ul>
+          <li><a href="/llms.txt">llms.txt</a> - Site summary for AI agents</li>
+          <li><a href="/sitemap.xml">sitemap.xml</a> - XML sitemap</li>
+          <li><a href="/robots.txt">robots.txt</a> - Crawler directives</li>
+        </ul>
+        <p><strong>JavaScript is required for the full interactive experience.</strong> Please enable JavaScript in your browser or visit <a href="https://loadsaathi.in">loadsaathi.in</a> directly.</p>
+      </div>
+    </noscript>
     <div id="root">
-      <!-- Inline boot loader: visible instantly, replaced by React on mount -->
-      <div id="boot-loader" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fafafa;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
+      <!-- SSR fallback for AI crawlers and no-JS: H1 + 500+ chars visible without JavaScript.
+           React replaces this entire block on hydration. Kept in sync with noscript below. -->
+      <div id="ssr-fallback" style="max-width:800px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif;line-height:1.6;color:#1a1a1a">
+        <h1>LoadSaathi - India's AI-Powered Freight Marketplace</h1>
+        <p>LoadSaathi connects shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%. Shippers in Odisha, Jharkhand, and West Bengal post loads on the Rourkela-Ranchi-Burdwan corridor and beyond; truckers and fleet owners find return loads, fill empty capacity, and build a digital reputation with a 300-900 credit score.</p>
+        <h2>Who It's For</h2>
+        <ul>
+          <li><strong>Shippers:</strong> SMEs and enterprises in Odisha, Jharkhand, and West Bengal who need to move goods on the Rourkela-Ranchi-Burdwan corridor and beyond.</li>
+          <li><strong>Truckers &amp; Fleet Owners:</strong> Independent truckers and fleet operators looking to fill empty capacity, find return loads, and build a digital reputation.</li>
+        </ul>
+        <h2>Key Features</h2>
+        <ul>
+          <li>AI-Powered Matching: Multi-factor scoring engine that matches shippers with truckers in seconds.</li>
+          <li>Real-Time GPS Tracking: Live location sharing with ETAs, route visualization, and geofence alerts.</li>
+          <li>Digital Freight Credit Score: 300-900 score for every participant based on completion rates and reviews.</li>
+          <li>AI Price Prediction: Market-aligned pricing suggestions based on route, demand, and historical data.</li>
+          <li>Escrow Payments: Secure milestone-based payment releases with dispute resolution.</li>
+          <li>Bidirectional Reviews: Both shippers and truckers rate each other after every completed trip.</li>
+        </ul>
+        <h2>Pricing</h2>
+        <p>Free to join. Transaction fee: 2-5% per completed shipment. No subscriptions, no hidden fees, no minimum commitments. Enterprise pricing for 50+ loads per month.</p>
+        <h2>Cities Served</h2>
+        <p>Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal. 25+ active freight corridors including Rourkela-Ranchi-Burdwan, Rourkela-Kolkata, and Bhubaneswar-Kolkata. Indian logistics market: $350B+ (IBEF 2026).</p>
+        <h2>Key Pages</h2>
+        <ul>
+          <li><a href="/about">About LoadSaathi</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/features">Features</a></li>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/routes">All Freight Routes</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+      </div>
+      <!-- Inline boot loader: visible instantly, replaced by React on mount (hidden when SSR fallback present, shown via JS) -->
+      <div id="boot-loader" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:#fafafa;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">
         <div style="text-align:center;">
           <div style="width:44px;height:44px;border:4px solid rgba(234,88,12,0.15);border-top-color:#ea580c;border-radius:50%;animation:ls-spin 0.7s linear infinite;margin:0 auto 14px;"></div>
           <div style="color:#78716c;font-size:13px;font-weight:600;letter-spacing:0.4px;">Loading LoadSaathi…</div>
         </div>
       </div>
+      <script>document.getElementById('ssr-fallback') && (document.getElementById('ssr-fallback').style.display='none');document.getElementById('boot-loader') && (document.getElementById('boot-loader').style.display='flex');</script>
       <style>
         @keyframes ls-spin { to { transform: rotate(360deg); } }
         /* !important is required — #boot-loader has inline background styles */
@@ -366,19 +344,57 @@
       window.dataLayer = window.dataLayer || [];
       window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
       window.addEventListener('load', function() {
-        // CookieHub — loaded after first paint (was async in <head>)
-        var ch = document.createElement('script'); ch.async = true;
-        ch.src = 'https://cdn.cookiehub.eu/c2/ca96bc89.js';
-        ch.onload = function () {
+        // CookieHub — loaded after first paint (was async in <head>).
+        // GATE: if the user already answered, skip loading the widget entirely
+        // so the banner never re-appears. The consent cookie (base64 JSON) is
+        // read from document.cookie; we decode it and check the "answered" flag.
+        function hasCookieConsent() {
           try {
-            if (window.cookiehub) {
-              window.cookiehub.load({});
-            }
+            var m = document.cookie.match(/(?:^|; )cookiehub=([^;]*)/);
+            if (!m) return false;
+            var decoded = decodeURIComponent(atob(m[1]));
+            var data = JSON.parse(decoded);
+            return data.answered === true;
           } catch (e) {
-            /* consent widget errors must never break the page */
+            return false;
           }
-        };
-        document.getElementsByTagName('head')[0].appendChild(ch);
+        }
+        // Backup: if CookieHub's cookie didn't persist (domain mismatch, dev
+        // environment) but we saved a localStorage marker, also skip loading.
+        var consentGiven = hasCookieConsent();
+        try {
+          if (!consentGiven && localStorage.getItem('loadsaathi_cookie_consent') === '1') {
+            consentGiven = true;
+          }
+        } catch (e) {}
+        if (!consentGiven) {
+          var ch = document.createElement('script'); ch.async = true;
+          ch.src = 'https://cdn.cookiehub.eu/c2/ca96bc89.js';
+          ch.onload = function () {
+            try {
+              if (window.cookiehub) {
+                window.cookiehub.load({
+                  onStatusChange: function (status) {
+                    if (status && status.answered === true) {
+                      // Optional: persist a backup marker in localStorage so
+                      // environments where the first-party cookie doesn't stick
+                      // (localhost dev, Android WebView) still skip the banner.
+                      try { localStorage.setItem('loadsaathi_cookie_consent', '1'); } catch (e) {}
+                    }
+                  }
+                });
+              }
+            } catch (e) {
+              /* consent widget errors must never break the page */
+            }
+          };
+          document.getElementsByTagName('head')[0].appendChild(ch);
+        } else {
+          // Consent already given — make CookieHub available (if script cached)
+          // so the "Cookie settings" footer button can re-open the widget.
+          // No new script injection needed; window.cookiehub is likely already
+          // defined from a previous visit if the browser cached the JS file.
+        }
 
         var tagsLoaded = false;
         function loadAnalyticsTags() {

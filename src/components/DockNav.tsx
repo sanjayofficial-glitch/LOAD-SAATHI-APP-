@@ -51,7 +51,7 @@ const DockNav = React.memo(({ items, visible, extra, accent = "orange", classNam
         className
       )}
     >
-      <Dock className="pointer-events-auto gap-2.5 rounded-[1.75rem] border border-gray-200/60 bg-white/70 px-3.5 py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-2xl dark:border-white/10 dark:bg-neutral-900/60">
+      <Dock className="pointer-events-auto gap-2.5 rounded-[1.75rem] border border-gray-200/60 bg-white/70 px-3.5 py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:border-white/10 dark:bg-neutral-900/60">
         {items.map((item) => {
           const active = isActive(item.path);
           const icon = React.isValidElement<{ className?: string }>(item.icon)

@@ -1,4 +1,3 @@
-
 import { Link, useParams } from "react-router-dom";
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, Share2, BookOpen, FileText, Shield, TrendingUp, CheckCircle, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,40 @@ import { toast } from "sonner";
 import SeoMeta from "@/components/SeoMeta";
 import { articles, parseDate } from "@/data/blog";
 import { routes } from "@/data/routes";
+
+function parseInlineLinks(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  let lastIndex = 0;
+  let match;
+  let key = 0;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const linkText = match[1] ?? "";
+    const href = match[2] ?? "#";
+    const isInternal = href.startsWith("/") && !href.startsWith("//");
+    if (isInternal) {
+      parts.push(
+        <Link key={key++} to={href} className="text-orange-600 dark:text-orange-400 underline underline-offset-2 hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
+          {linkText}
+        </Link>
+      );
+    } else {
+      parts.push(
+        <a key={key++} href={href} target="_blank" rel="noopener noreferrer" className="text-orange-600 dark:text-orange-400 underline underline-offset-2 hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
+          {linkText}
+        </a>
+      );
+    }
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+}
 
 const headingPrefixes = [
   "What Changed:",
@@ -24,6 +57,85 @@ const headingPrefixes = [
   "Indian Case Studies:",
   "Statistical Overview",
   "Conclusion & Call to Action",
+  "What Is a Return Load",
+  "Top Return Load Corridors",
+  "How LoadSaathi Finds Return Loads",
+  "5 Ways to Price Return Loads",
+  "What Is PTL Transport",
+  "2026 PTL Freight Rates",
+  "How to Book PTL Transport",
+  "Why LoadSaathi Is the Best PTL Platform",
+  "Why Steel Transport from Rourkela",
+  "Choosing the Right Truck",
+  "2026 Steel Freight Rates",
+  "Steel Transport Compliance",
+  "How LoadSaathi Connects Steel Shippers",
+  "What Do Truckers Actually Earn",
+  "Detailed Profit-and-Loss",
+  "Running Costs Per Kilometre",
+  "Why Return Loads Are the Key",
+  "New Truck Buyers",
+  "Transporter Obligations Under 2026",
+  "Step-by-Step Guide for Transporters",
+  "Indian Case Study: How One Fleet",
+  "Call to Action: Stay Compliant",
+  "Why East India freight corridors matter",
+  "Important East India freight corridors",
+  "What freight moves through these corridors?",
+  "How to choose between PTL, LTL, and FTL on an East India route",
+  "How return-load planning affects corridor economics",
+  "How to request a useful route quote",
+  "What should a corridor guide contain?",
+  "How are truck transport charges calculated in India?",
+  "The main factors behind the rate",
+  "What information should you provide for an accurate estimate?",
+  "Example calculation",
+  "Questions to ask before accepting a freight quote",
+  "What is a return load or backhaul?",
+  "Why do trucks return empty?",
+  "Five practical ways to find return loads",
+  "Backhaul KPIs every fleet should track",
+  "How to verify a return load before accepting it",
+  "A simple return-load decision rule",
+  "What is digital freight matching?",
+  "Traditional freight matching versus digital matching",
+  "How AI-assisted freight matching works",
+  "Benefits for shippers",
+  "Benefits for truckers and fleet owners",
+  "What makes a freight-matching platform trustworthy?",
+  "What are PTL freight rates?",
+  "How PTL pricing is usually assessed",
+  "A simple PTL rate framework",
+  "Example: what information changes a PTL quote?",
+  "PTL versus FTL: which is more economical?",
+  "How shippers can improve PTL pricing",
+  "Questions to ask before booking PTL",
+  "Why Kolkata Return Loads Matter",
+  "The Cost of Driving Back Empty",
+  "Top Return Load Corridors from Kolkata",
+  "How LoadSaathi Finds Return Loads from Kolkata",
+  "5 Pricing Strategies for Kolkata Return Loads",
+  "Kolkata to Northeast Connection",
+  "Monthly Salary Ranges by Vehicle Type",
+  "Owner-Operator Earnings",
+  "Round-Trip Profitability:",
+  "How LoadSaathi Helps Jharkhand Truckers",
+  "Cost: Brokers Add",
+  "Trust: Phone Calls vs Verified Profiles",
+  "Speed: Days vs Minutes",
+  "Visibility: In the Dark vs Real-Time GPS",
+  "Payment: 30-45 Days vs 24 Hours",
+  "When Brokers Still Make Sense",
+  "Distance and Transit Time",
+  "PTL Rates:",
+  "FTL Rates by Vehicle Type",
+  "Return Load Opportunities",
+  "How to Get the Best Rate",
+  "Carrier Liability vs Cargo Insurance",
+  "Types of Cargo Insurance Coverage",
+  "How Much Does Cargo Insurance Cost",
+  "Claims Process",
+  "How Digital Freight Platforms Handle Insurance",
 ];
 
 const sectionImages: Record<number, { icon: React.ReactNode; label: string }> = {
@@ -97,105 +209,33 @@ export default function BlogArticle() {
         articleSection: article.category,
         wordCount: article.content.join(" ").split(/\s+/).length,
         image: coverImage,
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://loadsaathi.in" },
-          { "@type": "ListItem", position: 2, name: "Blog", item: "https://loadsaathi.in/blog" },
-          { "@type": "ListItem", position: 3, name: article.title, item: `https://loadsaathi.in/blog/${slug}` },
-        ],
+        keywords: article.keywords,
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: ["h1", ".prose p:first-of-type"],
+        },
+        isPartOf: {
+          "@type": "WebSite",
+          "@id": "https://loadsaathi.in/#website",
+        },
       },
     ],
   };
 
-  const faqSchemas: Record<string, Record<string, unknown>> = {
-    "indian-logistics-eway-bill-gst-2026": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
+  const faqSchema = article.faq
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: article.faq.map((item) => ({
           "@type": "Question",
-          name: "What is the Ship-To GSTIN requirement in 2026?",
+          name: item.question,
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Starting August 1, 2026, all Bill-To / Ship-To e-Way Bill transactions must capture the exact Ship-To GSTIN. If the recipient is unregistered, mark the field as URP (Unregistered Person).",
+            text: item.answer,
           },
-        },
-        {
-          "@type": "Question",
-          name: "Can I still use a single GSTIN for multi-location shipments?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. The new rules require the actual destination entity's GSTIN. Using your headquarters GSTIN for goods shipped to a branch will trigger a mismatch flag in the GST analytics engine.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What happens if my e-Way Bill data doesn't match my GSTR-3B filing?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "The GST department's tri-party cross-matching system will flag the discrepancy automatically. This can result in ITC blockage, detention notices, and penalties of up to 200% of the tax amount.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does voluntary e-Way Bill closure work?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "After physical delivery is confirmed, any authorized party can close the e-Way Bill on the portal. A closed e-Way Bill prevents unauthorized reuse and eliminates transit audit discrepancies.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What is the penalty for non-compliance with 2026 e-Way Bill rules?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Penalties can reach up to 200% of the tax amount for invoice-to-cargo mismatches. Detention notices are issued in real-time when the analytics engine detects discrepancies.",
-          },
-        },
-      ],
-    },
-    "gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026": {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "Does GST Advisory 668 mean e-Way Bills are no longer required for goods transport?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No! E-Way Bills remain strictly mandatory for all movement of goods exceeding ₹50,000 in consignment value. Advisory 668 only puts on hold the new proposed enhancements (mandatory 'Ship-To' GSTIN field and voluntary online closure). Standard e-Way Bill rules continue as before.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Should our business update its ERP software for 'Ship-To' GSTIN fields now?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "No. GSTN explicitly advises that taxpayers and ERP vendors do not need to make changes to their production environments at this time. All previous advisories regarding mandatory 'Ship-To' fields have been withdrawn.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does LoadSaathi protect MSMEs from transport compliance penalties?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "LoadSaathi works with verified carriers and automatically links your e-Way Bill Part-A with the carrier's valid Transporter ID (TRANS ID) for Part-B compliance. Combined with real-time FASTag tracking, your cargo moves seamlessly without check-post delays.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can an MSME save money on freight during regulatory changes?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes! By booking Part Truckload (PTL) shared freight on LoadSaathi, MSMEs pay only for the exact volume or weight they use. This eliminates the financial waste of booking full truckloads (FTL) for small shipments.",
-          },
-        },
-      ],
-    },
-  };
-  const faqSchema = slug ? faqSchemas[slug] ?? null : null;
+        })),
+      }
+    : null;
 
   const relatedRoutes = article.relatedRoutes
     ? routes.filter((r) => article.relatedRoutes?.includes(r.slug))
@@ -210,10 +250,11 @@ export default function BlogArticle() {
     <SeoMeta
       title={article.title}
       description={article.summary.substring(0, 160)}
-      canonical={`/blog/${slug}`}
+      canonical={`${article.canonicalUrl ?? `/blog/${slug}`}`}
       type="article"
       image={coverImage}
       publishedTime={isoDate}
+      dateModified={isoLastUpdated}
       author={article.author}
       jsonLd={faqSchema ? [articleSchema, faqSchema] : articleSchema}
       breadcrumbs={[
@@ -222,6 +263,47 @@ export default function BlogArticle() {
         { name: article.title, url: `/blog/${slug}` },
       ]}
     />
+
+    <noscript>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
+        <h1>{article.title}</h1>
+        <p><strong>{article.category}</strong> | {article.author} | {article.date} | {article.readTime}</p>
+        {article.lastUpdated && <p>Last updated: {article.lastUpdated}</p>}
+        <p>{article.summary}</p>
+        <hr />
+        {article.content.map((paragraph, i) => {
+          const isH2 = paragraph.startsWith("## ");
+          return isH2 ? (
+            <h2 key={i} style={{ marginTop: "1.5rem" }}>{paragraph.replace(/^## /, "")}</h2>
+          ) : (
+            <p key={i} style={{ marginBottom: "1rem", lineHeight: 1.7 }}>{paragraph}</p>
+          );
+        })}
+        {article.faq && article.faq.length > 0 && (
+          <>
+            <h2>Frequently Asked Questions</h2>
+            {article.faq.map((item, i) => (
+              <div key={i} style={{ marginBottom: "1.5rem" }}>
+                <p><strong>Q: {item.question}</strong></p>
+                <p>A: {item.answer}</p>
+              </div>
+            ))}
+          </>
+        )}
+        {relatedRoutes.length > 0 && (
+          <>
+            <h2>Freight Routes Mentioned in This Article</h2>
+            <ul>
+              {relatedRoutes.map((r) => (
+                <li key={r.slug}><a href={`https://loadsaathi.in/routes/${r.slug}`}>{r.from} → {r.to}</a> — {r.distanceKm} km · ~{r.transitTime} hrs</li>
+              ))}
+            </ul>
+          </>
+        )}
+        <p><em>About the Author: {article.author} — {article.authorBio}</em></p>
+      </div>
+    </noscript>
+
     <div className="min-h-screen bg-background dark:bg-[#050816]">
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-40" />
@@ -272,8 +354,10 @@ export default function BlogArticle() {
 
         <div className="prose prose-lg dark:prose-invert max-w-none">
           {article.content.map((paragraph, i) => {
-            const isHeading = headingPrefixes.some((p) => paragraph.startsWith(p));
+            const isH2Heading = paragraph.startsWith("## ");
+            const isHeading = isH2Heading || headingPrefixes.some((p) => paragraph.startsWith(p));
             const image = sectionImages[i];
+            const headingText = isH2Heading ? paragraph.replace(/^## /, "") : paragraph;
 
             return (
               <div key={i}>
@@ -285,17 +369,34 @@ export default function BlogArticle() {
                 )}
                 {isHeading ? (
                   <h2 className="text-2xl sm:text-3xl font-bold text-foreground mt-12 mb-4 leading-tight">
-                    {paragraph}
+                    {headingText}
                   </h2>
                 ) : (
                   <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6">
-                    {paragraph}
+                    {parseInlineLinks(paragraph)}
                   </p>
                 )}
               </div>
             );
           })}
         </div>
+
+        {/* FAQ Section */}
+        {article.faq && article.faq.length > 0 && (
+          <div className="mt-12 pt-8 border-t border-border">
+            <h3 className="text-xl font-bold text-foreground mb-6">
+              Frequently Asked Questions
+            </h3>
+            <div className="space-y-6">
+              {article.faq.map((item, i) => (
+                <div key={i} className="glass-card p-5 rounded-xl border border-border">
+                  <h4 className="font-bold text-foreground mb-2">{item.question}</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Related Routes */}
         {relatedRoutes.length > 0 && (

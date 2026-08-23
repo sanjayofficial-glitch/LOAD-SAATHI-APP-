@@ -6,26 +6,27 @@
 
 ## 1. SYSTEM ARCHITECTURE & TECH STACK
 
-| Layer | Technology | Version | Purpose |
-|-------|-----------|---------|---------|
-| Framework | React + TypeScript | React 19.2, TS 5.5 | SPA with strict typing |
-| Build Tool | Vite | 6.3 | Dev server + production build |
-| UI Library | shadcn/ui + Radix UI | Radix latest | Accessible component primitives |
-| Styling | Tailwind CSS | 3.4 | Utility-first CSS |
-| State/Data | TanStack React Query | 5.56 | Server state caching + mutations |
-| Auth | Clerk | 5.61 | Authentication + user management |
-| Database | Supabase (PostgreSQL) | 2.99 | Database + Realtime subscriptions |
-| Maps | Leaflet + React-Leaflet | 1.9 / 5.0 | Map rendering + GPS tracking |
-| Charts | Recharts | 3.9 | Dashboard visualizations |
-| Forms | React Hook Form + Zod | 7.53 / 3.23 | Form state + validation |
-| Animation | Framer Motion | 12.43 | Page transitions + micro-interactions |
-| Analytics | PostHog + Vercel Analytics + GA | — | Event tracking + web vitals |
-| Mobile | Capacitor | 8.4 | Android hybrid app wrapper |
-| Hosting | Vercel | — | Static hosting + edge functions |
-| Routing | React Router DOM | 7.6 | Client-side routing |
-| SEO | React Helmet Async | 3.0 | Dynamic meta tags + JSON-LD |
+| Layer      | Technology                      | Version            | Purpose                               |
+| ---------- | ------------------------------- | ------------------ | ------------------------------------- |
+| Framework  | React + TypeScript              | React 19.2, TS 5.5 | SPA with strict typing                |
+| Build Tool | Vite                            | 6.3                | Dev server + production build         |
+| UI Library | shadcn/ui + Radix UI            | Radix latest       | Accessible component primitives       |
+| Styling    | Tailwind CSS                    | 3.4                | Utility-first CSS                     |
+| State/Data | TanStack React Query            | 5.56               | Server state caching + mutations      |
+| Auth       | Clerk                           | 5.61               | Authentication + user management      |
+| Database   | Supabase (PostgreSQL)           | 2.99               | Database + Realtime subscriptions     |
+| Maps       | Leaflet + React-Leaflet         | 1.9 / 5.0          | Map rendering + GPS tracking          |
+| Charts     | Recharts                        | 3.9                | Dashboard visualizations              |
+| Forms      | React Hook Form + Zod           | 7.53 / 3.23        | Form state + validation               |
+| Animation  | Framer Motion                   | 12.43              | Page transitions + micro-interactions |
+| Analytics  | PostHog + Vercel Analytics + GA | —                  | Event tracking + web vitals           |
+| Mobile     | Capacitor                       | 8.4                | Android hybrid app wrapper            |
+| Hosting    | Vercel                          | —                  | Static hosting + edge functions       |
+| Routing    | React Router DOM                | 7.6                | Client-side routing                   |
+| SEO        | React Helmet Async              | 3.0                | Dynamic meta tags + JSON-LD           |
 
 ### Key Services
+
 - **Clerk:** Handles sign-up, sign-in, JWT issuance, user profile management
 - **Supabase:** PostgreSQL database with Row Level Security (RLS), Realtime subscriptions, Edge Functions
 - **OSRM:** Open Source Routing Machine for truck route calculation
@@ -112,13 +113,27 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │   │   ├── BlogList.tsx       # Blog listing page
 │   │   │   └── BlogArticle.tsx    # Individual blog post
 │   │   │
-│   │   └── screens/               # App preview screenshots (marketing)
-│   │       ├── DashboardPreview.tsx
-│   │       ├── MatchingPreview.tsx
-│   │       ├── ChatPreview.tsx
-│   │       ├── CreditScorePreview.tsx
-│   │       ├── ReviewsPreview.tsx
-│   │       └── AdminPreview.tsx
+│   │
+│   ├── features/                  # Feature-scoped modules
+│   │   ├── home/sections/         # Landing page sections
+│   │   │   ├── HeroSection.tsx
+│   │   │   ├── BentoGrid.tsx
+│   │   │   ├── SectionNav.tsx
+│   │   │   ├── HowItWorksSection.tsx
+│   │   │   ├── PlatformTabs.tsx
+│   │   │   ├── AppPreview.tsx
+│   │   │   ├── FaqSection.tsx
+│   │   │   └── CtaSection.tsx
+│   │   ├── marketing/screens/     # Public app previews
+│   │   │   ├── DashboardPreview.tsx
+│   │   │   ├── MatchingPreview.tsx
+│   │   │   ├── ChatPreview.tsx
+│   │   │   ├── CreditScorePreview.tsx
+│   │   │   ├── ReviewsPreview.tsx
+│   │   │   └── AdminPreview.tsx
+│   │   └── shipper/components/    # Shipper-dashboard widgets
+│   │       ├── LiveTruckMap.tsx
+│   │       └── TruckDetailsPanel.tsx
 │   │
 │   ├── components/                # Shared reusable components
 │   │   ├── Layout.tsx             # Authenticated app layout (sidebar + nav)
@@ -290,6 +305,7 @@ LOAD-SAATHI-APP-1-OSRM/
 ## 3. CORE SYSTEM FLOWS
 
 ### Flow 1: Authentication (Clerk → Supabase)
+
 ```
 User → Clerk Sign-in/Sign-up
   → Clerk issues JWT
@@ -301,6 +317,7 @@ User → Clerk Sign-in/Sign-up
 ```
 
 ### Flow 2: Post Trip (Trucker)
+
 ```
 TruckerDashboard → PostTrip form
   → Geocode origin/dest cities → get lat/lng coordinates
@@ -311,6 +328,7 @@ TruckerDashboard → PostTrip form
 ```
 
 ### Flow 3: Post Shipment (Shipper)
+
 ```
 ShipperDashboard → PostShipments form
   → Geocode origin/dest cities → get lat/lng coordinates
@@ -321,6 +339,7 @@ ShipperDashboard → PostShipments form
 ```
 
 ### Flow 4: Smart Matching (AI Algorithm)
+
 ```
 useSmartMatch hook → fetch active trips/shipments from Supabase
   → calculateMatchScore() for each potential pair:
@@ -335,6 +354,7 @@ useSmartMatch hook → fetch active trips/shipments from Supabase
 ```
 
 ### Flow 5: Request & Accept
+
 ```
 Shipper clicks "Request" on trip
   → INSERT INTO requests (trip_id, shipper_id, status='pending')
@@ -345,6 +365,7 @@ Shipper clicks "Request" on trip
 ```
 
 ### Flow 6: Real-time Chat
+
 ```
 Chat component → Supabase Realtime subscription on messages table
   → User types message → INSERT INTO messages
@@ -353,6 +374,7 @@ Chat component → Supabase Realtime subscription on messages table
 ```
 
 ### Flow 7: GPS Tracking
+
 ```
 AutoGpsTracker → navigator.geolocation.watchPosition() every 30 seconds
   → Supabase UPDATE trips SET origin_lat = lat, origin_lng = lng
@@ -361,6 +383,7 @@ AutoGpsTracker → navigator.geolocation.watchPosition() every 30 seconds
 ```
 
 ### Flow 8: Credit Score Calculation
+
 ```
 useCreditScore hook → Supabase RPC function (calculate_credit_score)
   → Factors:
@@ -373,6 +396,7 @@ useCreditScore hook → Supabase RPC function (calculate_credit_score)
 ```
 
 ### Flow 9: AI Price Prediction
+
 ```
 usePricePrediction hook → Supabase edge function (gemini-proxy)
   → Sends: origin, destination, weight, goods type, date
@@ -381,6 +405,7 @@ usePricePrediction hook → Supabase edge function (gemini-proxy)
 ```
 
 ### Flow 10: SEO/AEO Content Delivery
+
 ```
 Each page → SeoMeta component → Helmet injects:
   - <title> tag
@@ -413,6 +438,7 @@ public/pricing.md:
 ## 4. STATE MANAGEMENT & DATA MODELS
 
 ### State Management
+
 ```
 NO Redux, NO Zustand, NO Jotai
 
@@ -437,17 +463,18 @@ NO Redux, NO Zustand, NO Jotai
 ```
 
 ### Data Models (Supabase Tables)
+
 ```typescript
 // users table
 interface User {
-  id: string;           // Clerk user ID
+  id: string; // Clerk user ID
   email: string;
   user_type: 'shipper' | 'trucker';
   full_name: string;
   phone: string;
   company_name?: string;
-  vehicle_type?: string;  // truckers only
-  rating: number;         // 0-5
+  vehicle_type?: string; // truckers only
+  rating: number; // 0-5
   total_trips: number;
   verified: boolean;
   created_at: string;
@@ -455,8 +482,8 @@ interface User {
 
 // trips table
 interface Trip {
-  id: string;             // UUID
-  trucker_id: string;     // FK → users.id
+  id: string; // UUID
+  trucker_id: string; // FK → users.id
   origin_city: string;
   origin_state: string;
   origin_lat: number;
@@ -476,8 +503,8 @@ interface Trip {
 
 // shipments table
 interface Shipment {
-  id: string;             // UUID
-  shipper_id: string;     // FK → users.id
+  id: string; // UUID
+  shipper_id: string; // FK → users.id
   origin_city: string;
   origin_state: string;
   origin_lat: number;
@@ -496,10 +523,10 @@ interface Shipment {
 // requests table (shipper → trucker trip request)
 interface Request {
   id: string;
-  trip_id: string;        // FK → trips.id
-  shipment_id: string;    // FK → shipments.id
-  shipper_id: string;     // FK → users.id
-  receiver_id: string;    // FK → users.id (trucker)
+  trip_id: string; // FK → trips.id
+  shipment_id: string; // FK → shipments.id
+  shipper_id: string; // FK → users.id
+  receiver_id: string; // FK → users.id (trucker)
   status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
   created_at: string;
 }
@@ -507,9 +534,9 @@ interface Request {
 // shipment_requests table (trucker → shipper shipment request)
 interface ShipmentRequest {
   id: string;
-  shipment_id: string;    // FK → shipments.id
-  trucker_id: string;     // FK → users.id
-  shipper_id: string;     // FK → users.id
+  shipment_id: string; // FK → shipments.id
+  trucker_id: string; // FK → users.id
+  shipper_id: string; // FK → users.id
   proposed_price: number;
   status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
   created_at: string;
@@ -522,7 +549,7 @@ interface Review {
   trucker_id: string;
   shipper_id: string;
   reviewer_role: 'shipper' | 'trucker';
-  rating: number;         // 1-5
+  rating: number; // 1-5
   comment: string;
   created_at: string;
 }
@@ -533,7 +560,7 @@ interface Message {
   sender_id: string;
   recipient_id: string;
   content: string;
-  request_id: string;     // FK → requests.id
+  request_id: string; // FK → requests.id
   is_read: boolean;
   created_at: string;
 }
@@ -558,57 +585,68 @@ interface Notification {
 ## 5. CODING STANDARDS & RULES
 
 ### Language & Framework
+
 - **TypeScript strict mode** — no `any` types allowed
 - **React 19** functional components only — no class components
 - **React hooks** only — no lifecycle methods
 
 ### Styling
+
 - **Tailwind CSS exclusively** — no inline styles, no CSS modules, no styled-components
 - Use `cn()` helper from `lib/utils.ts` for conditional classes
 - Color tokens defined in `globals.css` CSS custom properties
 
 ### Components
+
 - **shadcn/ui** from `./components/ui/` — never edit ui/ files directly
 - Use `lucide-react` for all icons
 - New components go in `src/components/`
 
 ### Forms
+
 - **React Hook Form** for all forms
 - **Zod** for validation schemas
 - Pattern: `useForm<ZodType>()` with `zodResolver`
 
 ### Data Fetching
+
 - **TanStack React Query** for all database operations
 - Never use raw `fetch()` for Supabase calls
 - Pattern: `useQuery({ queryKey: [...], queryFn: () => supabase.from('table').select() })`
 
 ### Authentication
+
 - Always use `useSupabase()` hook for authenticated DB operations
 - Never create Supabase clients directly in components
 - Clerk JWT is automatically attached via `createClerkSupabaseClient()`
 
 ### Realtime
+
 - Use anonymous Supabase client from `integrations/supabase/client.ts`
 - Never use authenticated client for Realtime subscriptions
 - Pattern: `supabase.channel('channel-name').on('postgres_changes', {...}).subscribe()`
 
 ### Routing
+
 - All routes defined in `src/App.tsx`
 - Public routes wrapped in `<PublicLayout>`
 - Protected routes wrapped in `<Layout>` + role checks
 - Lazy-loaded via `React.lazy()` + `Suspense`
 
 ### File Naming
+
 - **PascalCase** for components (`.tsx`): `UserProfile.tsx`
 - **camelCase** for utils/hooks (`.ts`): `useSupabase.ts`, `matching.ts`
 - **kebab-case** for config (`.ts`): `tailwind.config.ts`
 
 ### SEO Requirements
+
 - Every public page MUST use `<SeoMeta>` component
 - Required props: `title`, `description`, `canonical`
 - Optional: `jsonLd`, `breadcrumbs`, `author`, `publishedTime`
 
 ### Environment Variables
+
 - All env vars validated in `config/env.ts` via Zod
 - Access via `import { env } from '@/config/env'`
 - Never access `import.meta.env` directly outside `env.ts`
@@ -620,15 +658,18 @@ interface Notification {
 ### Build & Dev Issues
 
 **"Failed to fetch dynamically imported module"**
+
 - Cause: Stale index.html references deleted JS bundle
 - Fix: Run `pnpm run build` to regenerate
 
 **"Clerk key missing" or auth not working**
+
 - Cause: Missing or invalid Clerk publishable key
 - Fix: Check `VITE_CLERK_PUBLISHABLE_KEY` in `.env`
 - Must start with `pk_test_` or `pk_live_`
 
 **"Supabase RLS policy violation"**
+
 - Cause: Row Level Security blocking queries
 - Fix: Check `final-schema.sql` policies — all tables have RLS enabled
 - Ensure user is authenticated and has correct `user_type`
@@ -636,36 +677,43 @@ interface Notification {
 ### Geolocation & Maps
 
 **Geocoding returns null coordinates**
+
 - Cause: Nominatim rate limiting or invalid city name
 - Fix: Check origin/dest state fields as fallback
 - Rate limit: 1 request/second
 
 **OSRM returns no route**
+
 - Cause: Coordinates may be inverted
 - Fix: Verify lat/lng order (OSRM expects lng,lat)
 - Note: Geocoding returns lat first, OSRM needs lng first
 
 **GPS tracker not updating**
+
 - Cause: Browser requires HTTPS for geolocation
 - Fix: Check Capacitor config for Android, ensure Vercel HTTPS
 
 ### UI & Theme
 
 **Dark mode flash on page load**
+
 - Cause: localStorage read happening after React mount
 - Fix: Check theme.tsx reads `localStorage` in `useState` initializer
 
 **Theme toggle not persisting**
+
 - Cause: localStorage write failing
 - Fix: Check `localStorage.setItem('loadsaathi-theme', ...)` in theme.tsx
 
 ### Data & Matching
 
 **Match score always shows 0%**
+
 - Cause: Trips/shipments missing lat/lng coordinates
 - Fix: Ensure geocoding runs on form submit — proximity score requires coordinates
 
 **Realtime not receiving updates**
+
 - Cause: Channel subscription failing silently
 - Fix: Check Supabase Realtime is enabled for the table in dashboard
 - Ensure using anonymous client, not authenticated client
@@ -673,14 +721,17 @@ interface Notification {
 ### Blog & SEO
 
 **Blog content not rendering**
+
 - Cause: slug mismatch between route and blog.ts data
 - Fix: Check `BlogArticle.tsx` maps slug → entry from `blog.ts`
 
 **SEO meta tags not appearing**
+
 - Cause: Helmet not wrapping the app
 - Fix: Ensure `<HelmetProvider>` is in `main.tsx`
 
 **JSON-LD not showing in page source**
+
 - Cause: Dynamic JSON-LD not being server-rendered
 - Fix: Add static JSON-LD to `index.html` for global schemas
 - Dynamic schemas injected by `SeoMeta` component
@@ -688,10 +739,12 @@ interface Notification {
 ### Capacitor (Mobile)
 
 **OAuth login fails on Android**
+
 - Cause: Deep link not configured
 - Fix: Check `capacitor.config.ts` allowNavigation list includes all auth domains
 
 **App crashes on launch**
+
 - Cause: Missing Capacitor sync
 - Fix: Run `npx cap sync` after build
 
@@ -700,6 +753,7 @@ interface Notification {
 ## 7. AEO/GEO CONTENT RULES
 
 ### Purpose
+
 These rules ensure all content is optimized for AI Answer Engines (GPT, Perplexity, Claude, Gemini) while maintaining human readability.
 
 ### Rules for Content Creation
@@ -752,6 +806,7 @@ Blog Post Structure:
 ### JSON-LD Schema Templates
 
 **BlogPosting:**
+
 ```json
 {
   "@context": "https://schema.org",
@@ -779,6 +834,7 @@ Blog Post Structure:
 ```
 
 **FAQPage:**
+
 ```json
 {
   "@context": "https://schema.org",
@@ -797,6 +853,7 @@ Blog Post Structure:
 ```
 
 **HowTo:**
+
 ```json
 {
   "@context": "https://schema.org",
@@ -819,6 +876,7 @@ Blog Post Structure:
 ## 8. DEPLOYMENT & ENVIRONMENT
 
 ### Environment Variables Required
+
 ```
 # Clerk
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -836,6 +894,7 @@ VITE_GA_MEASUREMENT_ID=G-...
 ```
 
 ### Build Commands
+
 ```bash
 pnpm install          # Install dependencies
 pnpm run dev          # Start dev server (http://localhost:5173)
@@ -846,6 +905,7 @@ npx cap run android   # Run on Android emulator
 ```
 
 ### Vercel Configuration
+
 - Framework: Vite
 - Build command: `pnpm run build`
 - Output directory: `dist`
@@ -857,6 +917,7 @@ npx cap run android   # Run on Android emulator
 ## 9. QUICK REFERENCE
 
 ### Adding a New Public Page
+
 1. Create file in `src/pages/public/YourPage.tsx`
 2. Add `<SeoMeta>` component with title, description, canonical, jsonLd
 3. Add `<noscript>` block with full page content
@@ -865,12 +926,14 @@ npx cap run android   # Run on Android emulator
 6. Test: `pnpm run build` → no errors
 
 ### Adding a New Protected Page
+
 1. Create file in `src/pages/trucker/YourPage.tsx` or `src/pages/shipper/YourPage.tsx`
 2. Add route in `src/App.tsx` inside `<Layout>` route group
 3. Wrap with `<RoleProtectedRoute allowedRoles={['trucker']}>` if role-restricted
 4. Test: `pnpm run build` → no errors
 
 ### Modifying Database Schema
+
 1. Edit `src/integrations/supabase/final-schema.sql`
 2. Create migration in `supabase/migrations/`
 3. Update types in `src/types/index.ts`
@@ -878,6 +941,7 @@ npx cap run android   # Run on Android emulator
 5. Test: `pnpm run build` → no errors
 
 ### Common Patterns
+
 ```tsx
 // Authenticated Supabase query
 const supabase = useSupabase();
@@ -905,7 +969,7 @@ const channel = supabase
     { name: 'Home', url: '/' },
     { name: 'Page Title', url: '/page-slug' },
   ]}
-/>
+/>;
 ```
 
 ---

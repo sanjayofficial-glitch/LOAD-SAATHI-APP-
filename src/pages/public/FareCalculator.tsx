@@ -1,6 +1,6 @@
 
-import { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { useState, useCallback, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { Truck, ArrowRight, IndianRupee, TrendingUp, TrendingDown, Minus, Loader2, MapPin, Weight, Sparkles, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import SeoMeta from "@/components/SeoMeta";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { posthog } from "@/utils/posthog";
+import QuoteLeadCard from "@/components/QuoteLeadCard";
+import { trackCalculatorStarted, trackEstimateGenerated } from "@/utils/analytics";
 
 interface FareResult {
   avgPrice: number;
@@ -20,12 +22,27 @@ interface FareResult {
 }
 
 export default function FareCalculator() {
+  const [searchParams] = useSearchParams();
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [weight, setWeight] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FareResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Pre-fill from URL params (?from=Mumbai&to=Delhi) and fire calculator_started
+  useEffect(() => {
+    const from = searchParams.get("from");
+    const to = searchParams.get("to");
+    if (from) setOrigin(from);
+    if (to) setDestination(to);
+    if (from || to) {
+      trackCalculatorStarted({
+        origin: from || undefined,
+        destination: to || undefined,
+      });
+    }
+  }, [searchParams]);
 
   const calculateFare = useCallback(async () => {
     if (!origin.trim() || !destination.trim() || !weight || Number(weight) <= 0) {
@@ -76,6 +93,16 @@ export default function FareCalculator() {
         historical_loads: data.historicalLoads || 0,
         estimate_source: "market_data",
       });
+      trackEstimateGenerated({
+        origin: origin.trim(),
+        destination: destination.trim(),
+        route: `${origin.trim()} → ${destination.trim()}`,
+        weight: weightNum,
+        avg_price: data.recommendedPrice || 0,
+        min_price: data.range?.min || 0,
+        max_price: data.range?.max || 0,
+        source: "market_data",
+      });
     } catch (_err) {
       // Fallback: simple distance-based estimate
       setError(null);
@@ -102,6 +129,16 @@ export default function FareCalculator() {
         recommended_price_per_tonne: Math.round(avgPrice),
         historical_loads: 0,
         estimate_source: "fallback",
+      });
+      trackEstimateGenerated({
+        origin: origin.trim(),
+        destination: destination.trim(),
+        route: `${origin.trim()} → ${destination.trim()}`,
+        weight: weightNum,
+        avg_price: Math.round(avgPrice),
+        min_price: minPrice,
+        max_price: maxPrice,
+        source: "fallback",
       });
     } finally {
       setLoading(false);
@@ -334,6 +371,17 @@ export default function FareCalculator() {
                 </div>
               </CardContent>
             </Card>
+          )}
+
+          {/* Quote Lead Card — shown after estimate is generated */}
+          {result && (
+            <QuoteLeadCard
+              origin={origin.trim()}
+              destination={destination.trim()}
+              weight={Number(weight)}
+              avgPrice={result.avgPrice}
+              route={`${origin.trim()} → ${destination.trim()}`}
+            />
           )}
 
           {/* Info Cards */}

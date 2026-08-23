@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu } from "lucide-react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -46,14 +45,11 @@ const ACCENTS: Record<NavAccent, { text: string; pill: string }> = {
   },
 };
 
-// Dock-style spring so the active pill glides between buttons like the desktop dock.
-const ACTIVE_SPRING = { type: "spring" as const, stiffness: 420, damping: 32 };
-
 /**
  * Mobile-only bottom navigation. Replaces the animated desktop dock on phones:
  * every button is equal size (including the center action) and the active item
- * gets a spring-animated pill that slides between buttons — the same feel as the
- * desktop dock. A three-line "Menu" button opens a bottom sheet with the full navigation.
+ * gets a CSS-transition pill that slides between buttons — no Framer Motion
+ * layoutId needed, avoiding layout thrashing on every navigation.
  */
 const MobileTabBar = React.memo(
   ({ tabs, menuItems, centerAction, visible, footer, accent = "orange", className }: MobileTabBarProps) => {
@@ -89,10 +85,11 @@ const MobileTabBar = React.memo(
         )}
       >
         {active && (
-          <motion.span
-            layoutId="mobile-active-pill"
-            className={cn("absolute inset-0 rounded-2xl", a.pill)}
-            transition={ACTIVE_SPRING}
+          <span
+            className={cn(
+              "absolute inset-0 rounded-2xl transition-all duration-200 ease-out",
+              a.pill
+            )}
           />
         )}
         <span className="relative flex items-center justify-center">{children}</span>
@@ -101,11 +98,11 @@ const MobileTabBar = React.memo(
 
     return (
       <>
-        <div className={cn("fixed inset-x-0 bottom-0 z-[100] md:hidden", className)}>
+        <div className={cn("fixed inset-x-0 bottom-2 z-[100] md:hidden contain-[layout_style] px-2", className)}>
           <nav
             aria-label="Mobile navigation"
             className={cn(
-              "flex items-stretch border-t border-gray-200/70 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-gray-950/85 safe-area-bottom"
+              "flex items-stretch border border-gray-200/70 bg-white/90 backdrop-blur-xl dark:border-white/10 dark:bg-gray-950/90 rounded-2xl shadow-lg safe-area-bottom"
             )}
           >
             {tabs.map((tab) => (
@@ -148,7 +145,7 @@ const MobileTabBar = React.memo(
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetContent
             side="bottom"
-            className="z-[110] max-h-[75dvh] overflow-y-auto rounded-t-3xl border-t border-gray-200/70 bg-white/95 p-0 pb-[max(env(safe-area-inset-bottom),1rem)] backdrop-blur-xl dark:border-white/10 dark:bg-gray-950/95"
+            className="z-[110] max-h-[75dvh] overflow-y-auto rounded-t-3xl border-t border-gray-200/70 bg-white/95 p-0 pb-[max(env(safe-area-inset-bottom),1rem)] backdrop-blur-lg dark:border-white/10 dark:bg-gray-950/95"
           >
             <SheetHeader className="px-5 pb-1 pt-5 text-left">
               <SheetTitle className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">

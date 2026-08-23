@@ -2,7 +2,6 @@
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,8 +45,7 @@ interface DriverLocationRow {
 }
 
 const TruckerDashboard = () => {
-  const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { userProfile, getSupabaseToken } = useAuth();
   const { isOnline } = useNetworkStatus();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -67,7 +65,7 @@ const TruckerDashboard = () => {
     if (!userProfile?.id) return;
 
     try {
-      const supabaseToken = await getToken({ template: 'supabase' });
+      const supabaseToken = await getSupabaseToken();
       if (!supabaseToken) throw new Error('No Supabase token');
       
       const supabase = createClerkSupabaseClient(supabaseToken);
@@ -162,7 +160,7 @@ const TruckerDashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [userProfile?.id, getToken]);
+  }, [userProfile?.id, getSupabaseToken]);
 
   useEffect(() => { fetchDashboardData(); }, [fetchDashboardData]);
 

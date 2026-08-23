@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import {
   Loader2,
   MapPin,
@@ -37,10 +36,7 @@ function loadDistanceKm(position: GpsPoint, load: LoadLocation): number | null {
 }
 
 export default function NearbyLoadsMap() {
-  const { getToken } = useClerkAuth();
-  const { loads, isLoading: loadsLoading } = useLiveLoadLocations(() =>
-    getToken({ template: 'supabase' }),
-  );
+  const { loads, isLoading: loadsLoading } = useLiveLoadLocations();
   const [gps, setGps] = useState<GpsState>({ status: 'locating' });
   const [radiusKm, setRadiusKm] = useState<number>(100);
 

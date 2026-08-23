@@ -45,7 +45,8 @@ export async function geocodeCity(
     }
     // Don't cache null/miss results — allow retries for misspelled cities
     return null;
-  } catch {
+  } catch (err) {
+    console.warn('[geocode] Nominatim request failed:', err);
     return null;
   }
 }

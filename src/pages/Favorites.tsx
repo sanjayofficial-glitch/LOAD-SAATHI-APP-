@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useAuth as useClerkAuth } from "@clerk/clerk-react";
 import { createClerkSupabaseClient } from "@/utils/supabaseClient";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,8 +20,7 @@ interface FavoriteItem {
 }
 
 const Favorites = () => {
-  const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { userProfile, getSupabaseToken } = useAuth();
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [shipments, setShipments] = useState<Shipment[]>([]);
@@ -32,7 +30,7 @@ const Favorites = () => {
   const loadFavorites = useCallback(async () => {
     if (!userProfile?.id) return;
     try {
-      const token = await getToken({ template: "supabase" });
+      const token = await getSupabaseToken();
       if (!token) throw new Error("No auth token");
       const supabase = createClerkSupabaseClient(token);
 
@@ -78,7 +76,7 @@ const Favorites = () => {
     } finally {
       setLoading(false);
     }
-  }, [userProfile?.id, getToken]);
+  }, [userProfile?.id, getSupabaseToken]);
 
   useEffect(() => {
     loadFavorites();
@@ -87,7 +85,7 @@ const Favorites = () => {
   const handleRemoveAll = async (entityType: string) => {
     if (!userProfile?.id) return;
     try {
-      const token = await getToken({ template: "supabase" });
+      const token = await getSupabaseToken();
       if (!token) return;
       const supabase = createClerkSupabaseClient(token);
       await supabase

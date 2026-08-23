@@ -2,7 +2,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { useAuth as useClerkAuth } from "@clerk/clerk-react";
 import { createClerkSupabaseClient } from "@/utils/supabaseClient";
 import { supabase as supabaseAnon } from "@/integrations/supabase/client";
 import { authorizeRealtime } from "@/utils/realtime";
@@ -42,6 +41,7 @@ import VerificationBadge from "./VerificationBadge";
 import AutoGpsTracker from "./AutoGpsTracker";
 import DockNav, { type NavAccent } from "./DockNav";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
+import ScrollToTopFab from "./ScrollToTopFab";
 import { DockItem, DockIcon, DockLabel } from "@/components/ui/dock";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
@@ -165,8 +165,7 @@ const FooterSocialLinks = React.memo(() => (
 FooterSocialLinks.displayName = "FooterSocialLinks";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { userProfile, signOut } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { userProfile, signOut, getSupabaseToken } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -176,7 +175,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     if (!userProfile?.id) return;
 
     const fetchUnread = async () => {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return;
       const supabase = createClerkSupabaseClient(token);
       const { count } = await supabase
@@ -195,7 +194,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     void (async () => {
       // Authorize the shared realtime socket with the Clerk JWT — RLS on
       // `messages` is `TO authenticated`, anon is denied.
-      await authorizeRealtime(getToken);
+      await authorizeRealtime(getSupabaseToken);
       if (cancelled) return;
 
       channel = supabaseAnon
@@ -225,7 +224,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       cancelled = true;
       if (channel) supabaseAnon.removeChannel(channel);
     };
-  }, [userProfile?.id, getToken]);
+  }, [userProfile?.id, getSupabaseToken]);
 
   const navItems = useMemo(() => {
     if (userProfile?.user_type === 'admin') {
@@ -338,7 +337,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       
       {userProfile?.user_type !== 'admin' && <AutoGpsTracker />}
       
-      <nav className="bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-[100] shadow-sm backdrop-blur-xl pt-[env(safe-area-inset-top)]">
+      <nav className="bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-[100] shadow-sm backdrop-blur-lg pt-[env(safe-area-inset-top)]" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between h-14 sm:h-16">
             <div className="flex items-center gap-4 sm:gap-8">
@@ -430,7 +429,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
 
         {mobileNavOpen && (
-          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 px-4 py-3 space-y-1 animate-fade-in-up shadow-lg backdrop-blur-xl">
+          <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 px-4 py-3 space-y-1 animate-fade-in-up shadow-lg backdrop-blur-lg" style={{ contain: 'layout style' }}>
             <NavLinks navItems={navItems} currentPath={currentPath} onClick={() => setMobileNavOpen(false)} mobile />
           </div>
         )}
@@ -464,8 +463,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Button>
         }
       />
+      <ScrollToTopFab />
 
-      <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-xl">
+      <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-lg" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <LogoMark size="h-8 w-8" />

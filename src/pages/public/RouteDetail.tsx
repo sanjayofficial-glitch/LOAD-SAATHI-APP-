@@ -1,10 +1,13 @@
 
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowRight, MapPin, Clock, Route, Truck, Package, Search, Shield, TrendingUp, CheckCircle, BookOpen, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SeoMeta from "@/components/SeoMeta";
 import { routes } from "@/data/routes";
 import { articles } from "@/data/blog";
+import QuoteLeadCard from "@/components/QuoteLeadCard";
+import { trackRouteView } from "@/utils/analytics";
 
 const benefits = [
   {
@@ -64,6 +67,17 @@ export default function RouteDetail() {
   const { slug } = useParams<{ slug: string }>();
   const route = slug ? routes.find((r) => r.slug === slug) : null;
 
+  useEffect(() => {
+    if (route) {
+      trackRouteView({
+        route_slug: route.slug,
+        origin: route.from,
+        destination: route.to,
+        distance_km: route.distanceKm,
+      });
+    }
+  }, [route]);
+
   if (!route) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background dark:bg-[#050816]">
@@ -111,38 +125,39 @@ export default function RouteDetail() {
         }
       },
       {
-        "@type": "FAQPage",
+        "@type": "QAPage",
+        "name": `Frequently Asked Questions — ${route.from} to ${route.to} Freight`,
         "mainEntity": [
           {
             "@type": "Question",
-            "name": `How much does it cost to ship PTL freight from ${route.from} to ${route.to}?`,
+            "name": `What is the freight cost from ${route.from} to ${route.to}?`,
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": `Pricing depends on cargo weight, dimensions, vehicle type, and current market demand. On the ${route.from}–${route.to} corridor (${route.distanceKm} km), PTL rates typically range based on per-kg or per-CBM pricing. Use LoadSaathi's fare calculator to get an instant estimate, or post your shipment to receive competitive bids from available truckers.`
+              "text": `FTL truck rates from ${route.from} to ${route.to} (${route.distanceKm} km) range from ₹${Math.round(route.distanceKm * 85)} to ₹${Math.round(route.distanceKm * 120)} depending on truck type (Open 9MT, Container 20ft, Trailer 25MT). PTL rates are ₹${Math.round(route.distanceKm * 0.08)}–${Math.round(route.distanceKm * 0.12)} per kg. Use LoadSaathi's freight rate calculator for a precise quote based on your cargo weight and truck preference.`
             }
           },
           {
             "@type": "Question",
-            "name": `How long does it take to ship from ${route.from} to ${route.to}?`,
+            "name": `How long does delivery take from ${route.from} to ${route.to}?`,
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": `The average transit time on the ${route.from}–${route.to} corridor is approximately ${route.transitTime} hours, depending on road conditions, traffic, and the specific pickup and delivery locations.`
+              "text": `Delivery from ${route.from} to ${route.to} takes approximately ${route.transitTime} hours for direct FTL shipments. PTL shipments may take ${Math.round(Number(route.transitTime) * 1.3)}–${Math.round(Number(route.transitTime) * 1.5)} hours due to consolidation stops. LoadSaathi's GPS tracking provides real-time ETAs and milestone notifications.`
             }
           },
           {
             "@type": "Question",
-            "name": `What types of trucks are available on the ${route.from}–${route.to} route?`,
+            "name": `What truck types operate on the ${route.from}–${route.to} route?`,
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": `LoadSaathi's network includes pickup vans, 7-ton trucks, 9-ton trucks, 14-ton trucks, 17-ton trucks, 21-ton trucks, 25-ton trailer trucks, and container trucks on this corridor.`
+              "text": `Available truck types on the ${route.from}–${route.to} corridor include: Open trucks (9MT, 16MT), Container trucks (20ft, 32ft), Flatbed trailers (20MT, 25MT), and Tankers (for liquid cargo). The best truck type depends on your cargo weight, dimensions, and special requirements. LoadSaathi's AI matcher recommends the optimal truck for your shipment.`
             }
           },
           {
             "@type": "Question",
-            "name": `Is PTL freight available on the ${route.from}–${route.to} route?`,
+            "name": `Is PTL shipping available on the ${route.from}–${route.to} route?`,
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": `Yes. LoadSaathi specializes in PTL (Part Truck Load) and LTL (Less Than Truck Load) freight, making it cost-effective to ship smaller loads on the ${route.from}–${route.to} corridor.`
+              "text": `Yes. LoadSaathi specializes in PTL (Part Truck Load) and LTL (Less Than Truck Load) freight on the ${route.from}–${route.to} corridor. PTL lets you share truck space with other shippers, saving up to 40% compared to hiring a full truck. Ideal for shipments under 3 tonnes.`
             }
           }
         ]
@@ -241,6 +256,17 @@ export default function RouteDetail() {
                     Check Estimated Fare
                   </Button>
                 </Link>
+              </div>
+
+              {/* Inline quote card — converts visitors who want to talk to a specialist */}
+              <div className="mt-8 max-w-lg">
+                <QuoteLeadCard
+                  origin={route.from}
+                  destination={route.to}
+                  weight={10}
+                  avgPrice={Math.round(route.distanceKm * 100)}
+                  route={`${route.from} → ${route.to}`}
+                />
               </div>
             </div>
           </div>
@@ -359,24 +385,24 @@ export default function RouteDetail() {
             <div className="space-y-4">
               {[
                 {
-                  q: `How much does it cost to ship PTL freight from ${route.from} to ${route.to}?`,
-                  a: `Pricing depends on cargo weight, dimensions, vehicle type, and current market demand. On the ${route.from}–${route.to} corridor (${route.distanceKm} km), PTL rates typically range based on per-kg or per-CBM pricing. Use LoadSaathi's fare calculator to get an instant estimate, or post your shipment to receive competitive bids from available truckers.`,
+                  q: `What is the freight cost from ${route.from} to ${route.to}?`,
+                  a: `FTL truck rates from ${route.from} to ${route.to} (${route.distanceKm} km) range from ₹${Math.round(route.distanceKm * 85).toLocaleString()} to ₹${Math.round(route.distanceKm * 120).toLocaleString()} depending on truck type (Open 9MT, Container 20ft, Trailer 25MT). PTL rates are ₹${Math.round(route.distanceKm * 0.08)}–${Math.round(route.distanceKm * 0.12)} per kg. Use LoadSaathi's freight rate calculator for a precise quote based on your cargo weight and truck preference.`,
                 },
                 {
-                  q: `How long does it take to ship from ${route.from} to ${route.to}?`,
-                  a: `The average transit time on the ${route.from}–${route.to} corridor is approximately ${route.transitTime} hours, depending on road conditions, traffic, and the specific pickup and delivery locations within each city. LoadSaathi's GPS tracking gives you real-time ETAs so you always know when your shipment will arrive.`,
+                  q: `How long does delivery take from ${route.from} to ${route.to}?`,
+                  a: `Delivery from ${route.from} to ${route.to} takes approximately ${route.transitTime} hours for direct FTL shipments. PTL shipments may take ${Math.round(Number(route.transitTime) * 1.3)}–${Math.round(Number(route.transitTime) * 1.5)} hours due to consolidation stops. LoadSaathi's GPS tracking provides real-time ETAs and milestone notifications.`,
                 },
                 {
-                  q: `What types of trucks are available on the ${route.from}–${route.to} route?`,
-                  a: `LoadSaathi's network includes a wide range of trucks operating on this corridor: pickup vans, 7-ton trucks, 9-ton trucks, 14-ton trucks, 17-ton trucks, 21-ton trucks, 25-ton trailer trucks, and container trucks. The right vehicle depends on your cargo type and volume. Post your shipment and our AI will match you with the most suitable truck.`,
+                  q: `What truck types operate on the ${route.from}–${route.to} route?`,
+                  a: `Available truck types on the ${route.from}–${route.to} corridor include: Open trucks (9MT, 16MT), Container trucks (20ft, 32ft), Flatbed trailers (20MT, 25MT), and Tankers (for liquid cargo). The best truck type depends on your cargo weight, dimensions, and special requirements. LoadSaathi's AI matcher recommends the optimal truck for your shipment.`,
+                },
+                {
+                  q: `Is PTL shipping available on the ${route.from}–${route.to} route?`,
+                  a: `Yes. LoadSaathi specializes in PTL (Part Truck Load) and LTL (Less Than Truck Load) freight on the ${route.from}–${route.to} corridor. PTL lets you share truck space with other shippers, saving up to 40% compared to hiring a full truck. Ideal for shipments under 3 tonnes.`,
                 },
                 {
                   q: `Can I track my ${route.from} to ${route.to} shipment in real time?`,
                   a: `Yes. Every LoadSaathi shipment comes with live GPS tracking. You can see your truck's location on a map, receive estimated time of arrival updates, and get notified at pickup confirmation, in-transit milestones, and delivery completion. Share the tracking link with your supply chain partners automatically.`,
-                },
-                {
-                  q: `Is PTL freight available on the ${route.from}–${route.to} route?`,
-                  a: `Absolutely. LoadSaathi specializes in PTL (Part Truck Load) and LTL (Less Than Truck Load) freight, making it cost-effective to ship smaller loads on the ${route.from}–${route.to} corridor. Instead of paying for a full truck, you share the space and save up to 40% compared to exclusive truck hire.`,
                 },
               ].map((item, i) => (
                 <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08]">

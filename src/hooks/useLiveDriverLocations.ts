@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { authorizeRealtime } from '@/utils/realtime';
+import { useAuth } from '@/contexts/AuthContext';
 import type { TruckLocation } from '@/components/maps/TruckMarker';
 
 /**
@@ -15,25 +16,16 @@ import type { TruckLocation } from '@/components/maps/TruckMarker';
  */
 const FIVE_MINUTES_MS = 5 * 60 * 1000;
 
-export function useLiveDriverLocations(
-  getToken?: (options?: { template?: string }) => Promise<string | null>,
-) {
+export function useLiveDriverLocations() {
+  const { getSupabaseToken } = useAuth();
   const [locations, setLocations] = useState<Map<string, TruckLocation>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch initial positions with Clerk-authenticated client
   const fetchInitial = useCallback(async () => {
     try {
-      let client = supabase;
-      if (getToken) {
-        // The 'supabase' template is required — the default Clerk session
-        // token fails Supabase JWT verification (wrong aud claim), so reads
-        // would 401 and return nothing.
-        const token = await getToken({ template: 'supabase' });
-        if (token) {
-          client = createClerkSupabaseClient(token);
-        }
-      }
+      const token = await getSupabaseToken();
+      const client = token ? createClerkSupabaseClient(token) : supabase;
 
       const fiveMinAgo = new Date(Date.now() - FIVE_MINUTES_MS).toISOString();
       const { data } = await client
@@ -46,6 +38,7 @@ export function useLiveDriverLocations(
 
       // Fetch driver names
       const driverIds = [...new Set(data.map((d) => d.driver_id))];
+      if (driverIds.length === 0) { setLocations(new Map()); setIsLoading(false); return; }
       const { data: users } = await client
         .from('users')
         .select('id, full_name')
@@ -80,7 +73,7 @@ export function useLiveDriverLocations(
     } finally {
       setIsLoading(false);
     }
-  }, [getToken]);
+  }, [getSupabaseToken]);
 
   // Subscribe to real-time changes
   const subscribe = useCallback(async () => {
@@ -89,7 +82,7 @@ export function useLiveDriverLocations(
     // the backend (401 "permission denied for table driver_locations"). Set
     // the Clerk JWT on the realtime connection BEFORE the first subscribe so
     // postgres_changes events actually flow.
-    if (getToken) await authorizeRealtime(getToken);
+    if (getSupabaseToken) await authorizeRealtime(getSupabaseToken);
 
     const channel = supabase
       .channel('driver-locations-realtime')
@@ -127,8 +120,8 @@ export function useLiveDriverLocations(
             // `TO authenticated`), so look the name up with the
             // Clerk-authenticated client.
             let fullName: string | undefined;
-            if (getToken) {
-              const token = await getToken({ template: 'supabase' });
+            if (getSupabaseToken) {
+              const token = await getSupabaseToken();
               if (token) {
                 const authClient = createClerkSupabaseClient(token);
                 const { data: user } = await authClient
@@ -168,7 +161,7 @@ export function useLiveDriverLocations(
       .subscribe();
 
     return channel;
-  }, [getToken]);
+  }, [getSupabaseToken]);
 
   useEffect(() => {
     let cancelled = false;

@@ -21,7 +21,6 @@ const Layout = lazy(() => import("./components/Layout"));
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
-const AuthSync = lazy(() => import("./components/AuthSync"));
 const ChooseRole = lazy(() => import("./pages/ChooseRole"));
 const OnboardingFlow = lazy(() => import("./pages/OnboardingFlow"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
@@ -40,12 +39,12 @@ const Privacy = lazy(() => import("./pages/public/Privacy"));
 const Terms = lazy(() => import("./pages/public/Terms"));
 const ShipperSolution = lazy(() => import("./pages/public/ShipperSolution"));
 const TruckerSolution = lazy(() => import("./pages/public/TruckerSolution"));
-const DashboardPreview = lazy(() => import("./pages/screens/DashboardPreview"));
-const MatchingPreview = lazy(() => import("./pages/screens/MatchingPreview"));
-const ChatPreview = lazy(() => import("./pages/screens/ChatPreview"));
-const CreditScorePreview = lazy(() => import("./pages/screens/CreditScorePreview"));
-const ReviewsPreview = lazy(() => import("./pages/screens/ReviewsPreview"));
-const AdminPreview = lazy(() => import("./pages/screens/AdminPreview"));
+const DashboardPreview = lazy(() => import("./features/marketing/screens/DashboardPreview"));
+const MatchingPreview = lazy(() => import("./features/marketing/screens/MatchingPreview"));
+const ChatPreview = lazy(() => import("./features/marketing/screens/ChatPreview"));
+const CreditScorePreview = lazy(() => import("./features/marketing/screens/CreditScorePreview"));
+const ReviewsPreview = lazy(() => import("./features/marketing/screens/ReviewsPreview"));
+const AdminPreview = lazy(() => import("./features/marketing/screens/AdminPreview"));
 const BlogList = lazy(() => import("./pages/blog/BlogList"));
 const BlogArticle = lazy(() => import("./pages/blog/BlogArticle"));
 const LocationPage = lazy(() => import("./pages/public/locations/LocationPage"));
@@ -79,6 +78,19 @@ const Moderation = lazy(() => import("./pages/admin/Moderation"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const CreditScore = lazy(() => import("./pages/CreditScore"));
 const Gallery = lazy(() => import("./pages/public/Gallery"));
+const ReturnLoad = lazy(() => import("./pages/public/commercial/ReturnLoad"));
+const PtlTransport = lazy(() => import("./pages/public/commercial/PtlTransport"));
+const LtlTransport = lazy(() => import("./pages/public/commercial/LtlTransport"));
+const TruckLoadBooking = lazy(() => import("./pages/public/commercial/TruckLoadBooking"));
+const FreightMarketplace = lazy(() => import("./pages/public/commercial/FreightMarketplace"));
+const TransportCostCalculator = lazy(() => import("./pages/public/tools/TransportCostCalculator"));
+const TruckLoadCalculator = lazy(() => import("./pages/public/tools/TruckLoadCalculator"));
+const PtlVsFtlCalculator = lazy(() => import("./pages/public/tools/PtlVsFtlCalculator"));
+const FreightRateCalculator = lazy(() => import("./pages/public/tools/FreightRateCalculator"));
+const ReturnLoadCalculator = lazy(() => import("./pages/public/tools/ReturnLoadCalculator"));
+const ForMsmes = lazy(() => import("./pages/public/ForMsmes"));
+const AiLogistics = lazy(() => import("./pages/public/AiLogistics"));
+const Data = lazy(() => import("./pages/public/Data"));
 const GalleryManager = lazy(() => import("./pages/admin/GalleryManager"));
 const TeamManager = lazy(() => import("./pages/admin/TeamManager"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -117,9 +129,9 @@ function App() {
       <PostHogProvider>
       <ClerkProvider
         publishableKey={CLERK_PUBLISHABLE_KEY}
-        allowedRedirectOrigins={['https://localhost', 'https://in.loadsaathi.app', 'capacitor://localhost', 'https://clerk.loadsaathi.in']}
+        allowedRedirectOrigins={['https://localhost', 'https://loadsaathi.in', 'https://www.loadsaathi.in', 'https://in.loadsaathi.app', 'capacitor://localhost', 'https://clerk.loadsaathi.in']}
         signUpFallbackRedirectUrl="/register"
-        signInFallbackRedirectUrl="/auth-sync"
+        signInFallbackRedirectUrl="/choose-role"
       >
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
@@ -134,7 +146,6 @@ function App() {
                   {/* Public routes with individual error boundaries */}
                   <Route path="/login" element={<ErrorBoundary><Login /></ErrorBoundary>} />
                   <Route path="/register" element={<ErrorBoundary><Register /></ErrorBoundary>} />
-                  <Route path="/auth-sync" element={<ErrorBoundary><AuthSync /></ErrorBoundary>} />
                   <Route path="/choose-role" element={<ErrorBoundary><ChooseRole /></ErrorBoundary>} />
                   <Route path="/onboarding" element={<ErrorBoundary><OnboardingFlow /></ErrorBoundary>} />
                   <Route path="/forgot-password" element={<ErrorBoundary><ForgotPassword /></ErrorBoundary>} />
@@ -182,6 +193,31 @@ function App() {
 
                     {/* Gallery */}
                     <Route path="/gallery" element={<Gallery />} />
+
+                    {/* Commercial Hub Pages */}
+                    <Route path="/return-load" element={<ReturnLoad />} />
+                    <Route path="/ptl-transport" element={<PtlTransport />} />
+                    <Route path="/ltl-transport" element={<LtlTransport />} />
+                    <Route path="/truck-load-booking" element={<TruckLoadBooking />} />
+                    <Route path="/freight-marketplace" element={<FreightMarketplace />} />
+
+                    {/* Tool Calculators */}
+                    <Route path="/transport-cost-calculator" element={<TransportCostCalculator />} />
+                    <Route path="/truck-load-calculator" element={<TruckLoadCalculator />} />
+                    <Route path="/ptl-vs-ftl-calculator" element={<PtlVsFtlCalculator />} />
+                    <Route path="/freight-rate-calculator" element={<FreightRateCalculator />} />
+                    <Route path="/return-load-calculator" element={<ReturnLoadCalculator />} />
+
+                    {/* Cluster Pages */}
+                    <Route path="/for-msmes" element={<ForMsmes />} />
+                    <Route path="/ai-logistics" element={<AiLogistics />} />
+
+                    {/* Data Intelligence Hub */}
+                    <Route path="/data" element={<Data />} />
+                    <Route path="/freight-intelligence" element={<Data />} />
+
+                    {/* Transport by City (alias for /location/:city) */}
+                    <Route path="/transport/:city" element={<LocationPage />} />
                   </Route>
 
                   {/* Authenticated routes wrapped with Layout */}

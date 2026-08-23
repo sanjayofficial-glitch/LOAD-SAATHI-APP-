@@ -157,14 +157,6 @@ export default function GuidePage() {
           text: step.text,
         })),
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://loadsaathi.in" },
-          { "@type": "ListItem", position: 2, name: "Guides", item: "https://loadsaathi.in/blog" },
-          { "@type": "ListItem", position: 3, name: guide.title, item: `https://loadsaathi.in/guide/${slug}` },
-        ],
-      },
     ],
   };
 

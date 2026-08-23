@@ -14,6 +14,7 @@ interface AuthContextType {
   setProfile: (profile: User) => void;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   isLoaded: boolean;
+  getSupabaseToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const fetchRetryRef = useRef(0);
   const fetchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const profileJustSetRef = useRef(false);
 
   const fetchProfile = useCallback(async () => {
     if (!user) {
@@ -44,6 +46,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
       return null;
     }
+
+    setLoading(true);
 
     try {
       const supabaseToken = await session?.getToken({ template: 'supabase' });
@@ -84,20 +88,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       fetchRetryRef.current = 0;
 
       if (data) {
-        const profile: User = {
-          id: data.id,
-          user_type: data.user_type || null,
-          full_name: data.full_name || '',
-          phone: data.phone || '',
-          company_name: data.company_name || undefined,
-          rating: data.rating || 0,
-          total_trips: data.total_trips || 0,
-          is_verified: data.is_verified || false,
-          created_at: data.created_at || new Date().toISOString(),
-        };
-        setUserProfile(profile);
+        // Guard: if setProfile was called (e.g. from ChooseRole role selection),
+        // don't overwrite it with a stale in-flight fetch.
+        if (!profileJustSetRef.current) {
+          const profile: User = {
+            id: data.id,
+            user_type: data.user_type || null,
+            full_name: data.full_name || '',
+            phone: data.phone || '',
+            company_name: data.company_name || undefined,
+            rating: data.rating || 0,
+            total_trips: data.total_trips || 0,
+            is_verified: data.is_verified || false,
+            created_at: data.created_at || new Date().toISOString(),
+          };
+          setUserProfile(profile);
+        }
         setLoading(false);
-        return profile;
+        return data as unknown as User;
       }
 
       setUserProfile(null);
@@ -129,6 +137,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [clerkLoaded, fetchProfile]);
 
+  // Reset the profileJustSet guard when the Clerk user ID changes
+  // (e.g. sign-out → different user signs in) so fetchProfile can run normally
+  useEffect(() => {
+    profileJustSetRef.current = false;
+  }, [user?.id]);
+
   useEffect(() => {
     if (!user?.id) return;
 
@@ -155,6 +169,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [fetchProfile]);
 
   const setProfile = useCallback((profile: User) => {
+    profileJustSetRef.current = true;
     setUserProfile(profile);
     setLoading(false);
   }, []);
@@ -181,6 +196,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [clerk.client]);
 
+  // Cached Supabase token — avoids redundant Clerk token mints across
+  // NotificationBell, AutoGpsTracker, realtime, useCreditScore, etc.
+  const supabaseTokenRef = useRef<string | null>(null);
+  const supabaseTokenExpiryRef = useRef(0);
+
+  const getSupabaseToken = useCallback(async (): Promise<string | null> => {
+    const now = Date.now();
+    // Reuse cached token if it hasn't expired (with 30s safety margin)
+    if (supabaseTokenRef.current && now < supabaseTokenExpiryRef.current - 30_000) {
+      return supabaseTokenRef.current;
+    }
+    const token = await session?.getToken({ template: 'supabase' });
+    if (token) {
+      supabaseTokenRef.current = token;
+      // Clerk tokens expire in 60s; refresh at 45s
+      supabaseTokenExpiryRef.current = now + 45_000;
+    }
+    return token ?? null;
+  }, [session]);
+
   const value = useMemo<AuthContextType>(
     () => ({
       user,
@@ -192,6 +227,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setProfile,
       resetPassword,
       isLoaded: clerkLoaded,
+      getSupabaseToken,
     }),
     [
       user,
@@ -203,6 +239,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       refreshProfile,
       setProfile,
       resetPassword,
+      getSupabaseToken,
     ]
   );
 

@@ -87,37 +87,45 @@
 @layer base {
   * {
     @apply border-border;
+    /* GPU-accelerate all animated properties by default — moving, scaling, and
+       opacity changes are promoted to their own compositor layer so they never
+       trigger main-thread layout or paint. */
+    will-change: auto;
   }
 
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
-    /* Prevent iOS Safari from inflating text when rotating to landscape. */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    /* The consent manager (CookieHub) sets body{overflow:hidden} while its dialog is open
-       and can leave it stuck when the dialog is dismissed, which propagates to the viewport
-       and makes the whole app unscrollable (with a phantom second scrollbar). An explicit
-       non-visible overflow on <html> keeps the document scrollable (overflow-y: auto) and
-       horizontally clipped (overflow-x: hidden) regardless of body's inline lock. */
     overflow-y: auto;
     overflow-x: hidden;
+    /* Hint the browser this is the root scrolling container. */
+    overflow-clip: clip;
   }
 
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   body {
     @apply bg-background text-foreground;
-    /* App-like feel on phones: don't pull-to-refresh or chain overscroll past the page edge. */
     overscroll-behavior-y: none;
-    /* Remove the grey flash on tap in Chrome/Safari for snappier taps. */
     -webkit-tap-highlight-color: transparent;
-    /* Smoothly cross-fade background/text when the theme is toggled. */
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    /* contain: style only — layout containment on body breaks position:fixed
+       for all descendants (body becomes the containing block instead of the
+       viewport). Removed layout to restore bottom-anchored fixed elements
+       like DockNav and MobileTabBar. */
+    contain: style;
   }
 
   /* Kill the legacy 300ms tap delay and double-tap zoom jank on interactive
@@ -136,19 +144,30 @@
 /* Custom styles for LoadSaathi */
 @layer components {
   .btn-primary {
-    @apply bg-orange-600 hover:bg-orange-700 text-white font-medium transition-all duration-200;
+    @apply bg-orange-600 hover:bg-orange-700 text-white font-medium;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    will-change: transform;
+  }
+  .btn-primary:active {
+    transform: scale(0.97);
   }
   
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    will-change: transform;
+  }
+  .card-hover:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
   }
 
-  /* Glass morphism panels */
+  /* Glass morphism panels — use lighter blur on mobile */
   .glass-panel {
     background: hsl(var(--card) / 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
     border: 1px solid hsl(var(--border));
+    contain: layout style paint;
   }
   .dark .glass-panel {
     background: hsl(var(--card) / 0.6);
@@ -157,14 +176,16 @@
   .glass-card {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--border));
+    contain: layout style;
   }
   .dark .glass-card {
     background: hsl(var(--card));
   }
 
-  /* Animated floating */
+  /* Animated floating — GPU accelerated */
   .animate-float {
     animation: floatAnim 6s ease-in-out infinite;
+    will-change: transform;
   }
 
   /* Route line animation for hero SVG */
@@ -179,12 +200,13 @@
   }
   .tab-content.active {
     display: flex;
-    animation: tabFadeIn 0.4s ease;
+    animation: tabFadeIn 0.25s ease-out;
   }
 
   /* Pulse ring effect */
   .animate-pulse-ring {
     animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    will-change: box-shadow;
   }
 
   /* Text gradient */
@@ -210,7 +232,7 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    transition: color 0.3s;
+    transition: color 0.15s ease;
   }
   .nav-link::after {
     content: '';
@@ -220,18 +242,20 @@
     width: 0;
     height: 2px;
     background: #f97316;
-    transition: width 0.3s;
+    transition: width 0.2s ease-out;
+    will-change: width;
   }
   .nav-link:hover::after,
   .nav-link.active::after {
     width: 100%;
   }
 
-  /* Scroll-triggered fade-in */
+  /* Scroll-triggered fade-in — faster, GPU accelerated */
   .fade-section {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    will-change: opacity, transform;
   }
   .fade-section.visible {
     opacity: 1;
@@ -241,6 +265,7 @@
   /* Globe pulse dot */
   .globe-pulse {
     animation: globePulse 3s ease-in-out infinite;
+    will-change: transform, opacity;
   }
 
   /* Globe canvas */
@@ -293,15 +318,16 @@
   50% { opacity: 1; transform: scale(1.05); }
 }
 
-/* Smooth page transitions */
+/* Smooth page transitions — fast 200ms with GPU layers */
 .page-enter {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(6px);
 }
 .page-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 300ms ease-out, transform 300ms ease-out;
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+  will-change: opacity, transform;
 }
 
 /* Scrollbar styling */
@@ -382,15 +408,25 @@
 
 /* Leaflet CSS fixes for Tailwind preflight */
 /* Contain Leaflet's internal z-index so maps never escape their container
-   and cover the nav bar, dock, or other page-level elements on scroll. */
+   and cover the nav bar, dock, or other page-level elements on scroll.
+   Added `contain` for layout/paint isolation and GPU hints for tile layers. */
 .leaflet-container {
   width: 100%;
   height: 100%;
   isolation: isolate;
   z-index: 0;
+  contain: layout style;
 }
 .leaflet-container img {
   max-width: none !important;
+  /* GPU-accelerate tile images — they move on pan/zoom. */
+  will-change: transform;
+}
+.leaflet-container .leaflet-pane {
+  will-change: transform;
+}
+.leaflet-container .leaflet-tile-pane {
+  will-change: transform;
 }
 .leaflet-container .leaflet-control-zoom {
   border: none !important;
@@ -408,6 +444,7 @@
 .leaflet-container .leaflet-popup-content-wrapper {
   border-radius: var(--radius) !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  will-change: transform;
 }
 .dark .leaflet-container .leaflet-popup-content-wrapper,
 .dark .leaflet-container .leaflet-popup-tip {
@@ -456,4 +493,62 @@
 .ch2-dialog,
 .ch2-settings {
   pointer-events: auto !important;
+}
+
+/* ─── Dock nav performance ─── */
+/* The macOS-style dock uses Framer Motion springs that re-measure
+   getBoundingClientRect on every mouse-move frame. Promote the dock
+   and its children to compositor layers so width/transform changes
+   never trigger layout on the main thread. */
+.dock-nav {
+  contain: layout style;
+  will-change: height;
+}
+.dock-nav .dock-item {
+  will-change: width, transform;
+  contain: layout style;
+}
+
+/* ─── Bottom sheet performance ─── */
+/* Sheet overlays and content animate via CSS transitions. Promote them
+   so slides and fades don't trigger repaints on the whole page. */
+[data-state="open"][data-sheet-overlay],
+[data-state="closed"][data-sheet-overlay] {
+  will-change: opacity;
+}
+[data-sheet-content] {
+  will-change: transform;
+  contain: layout style;
+}
+
+/* ─── Switch / toggle performance ─── */
+.switch-thumb {
+  will-change: transform;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Backdrop blur performance ─── */
+/* On mobile GPUs, backdrop-filter: blur() is extremely expensive when the
+   blurred region overlaps large areas. Use a lighter blur value and contain
+   the element so the browser can cache the blurred backdrop. */
+@supports (backdrop-filter: blur(1px)) {
+  .backdrop-blur-heavy {
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    contain: layout style paint;
+  }
+}
+
+/* ─── Dropdown / popover performance ─── */
+[data-radix-popper-content-wrapper] {
+  will-change: transform, opacity;
+  contain: layout style;
+}
+
+/* ─── Toast / notification performance ─── */
+[data-sonner-toaster] {
+  contain: layout style;
+}
+[data-sonner-toast] {
+  will-change: transform, opacity;
 }

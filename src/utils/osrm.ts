@@ -66,7 +66,8 @@ export async function getRoute(
     evictOldest();
     routeCache.set(key, { result, ts: Date.now() });
     return result;
-  } catch {
+  } catch (err) {
+    console.warn('[osrm] Route request failed:', err);
     return null;
   }
 }

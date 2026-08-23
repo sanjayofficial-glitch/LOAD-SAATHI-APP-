@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
-import LiveTruckMap from '@/components/shipper/LiveTruckMap';
+import LiveTruckMap from '@/features/shipper/components/LiveTruckMap';
 
 const LazyBarChart = React.lazy(() => import('./ShipperSpendingChart'));
 
@@ -243,7 +243,7 @@ const ShipperDashboard = () => {
 
       {/* Live Truck Map — hero for first-time & returning shippers */}
       <div className="mb-8 sm:mb-10 animate-fade-in">
-        <LiveTruckMap getToken={getToken} />
+        <LiveTruckMap />
       </div>
 
       {/* Onboarding Checklist */}

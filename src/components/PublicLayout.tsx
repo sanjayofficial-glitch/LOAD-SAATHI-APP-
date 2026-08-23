@@ -21,6 +21,7 @@ import { Button } from "./ui/button";
 import LogoMark from "./LogoMark";
 import MobileMenu from "./MobileMenu";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
+import ScrollToTopFab from "./ScrollToTopFab";
 import type { BottomNavItem } from "./DockNav";
 
 // Desktop-only animated dock. Lazy so framer-motion (~130KB) is never
@@ -50,6 +51,8 @@ const publicMobileTabs: MobileTabItem[] = [
 const publicMobileMenuItems: MobileTabItem[] = [
   { label: "How It Works", path: "/how-it-works", icon: <BookOpen className="h-5 w-5" /> },
   { label: "Fare Calculator", path: "/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
+  { label: "Freight Rate Calculator", path: "/freight-rate-calculator", icon: <Calculator className="h-5 w-5" /> },
+  { label: "Return Load Calculator", path: "/return-load-calculator", icon: <Calculator className="h-5 w-5" /> },
   { label: "About", path: "/about", icon: <Info className="h-5 w-5" /> },
   { label: "FAQ", path: "/faq", icon: <HelpCircle className="h-5 w-5" /> },
   { label: "Blog", path: "/blog", icon: <Newspaper className="h-5 w-5" /> },
@@ -66,14 +69,22 @@ const footerLinks = {
   Solutions: [
     { label: "For Shippers", path: "/solutions/shippers" },
     { label: "For Truckers", path: "/solutions/truckers" },
-    { label: "Safety & Trust", path: "/safety-trust" },
+    { label: "For MSMEs", path: "/for-msmes" },
+    { label: "AI Logistics", path: "/ai-logistics" },
+  ],
+  Tools: [
     { label: "Fare Calculator", path: "/fare-calculator" },
+    { label: "Freight Rate Calculator", path: "/freight-rate-calculator" },
+    { label: "Return Load Calculator", path: "/return-load-calculator" },
+    { label: "Truck Load Calculator", path: "/truck-load-calculator" },
+    { label: "PTL vs FTL", path: "/ptl-vs-ftl-calculator" },
   ],
   Freight: [
     { label: "All Routes", path: "/routes" },
-    { label: "Rourkela–Ranchi", path: "/routes/rourkela-to-ranchi" },
-    { label: "Ranchi–Kolkata", path: "/routes/ranchi-to-kolkata" },
-    { label: "Bhubaneswar–Kolkata", path: "/routes/bhubaneswar-to-kolkata" },
+    { label: "Return Loads", path: "/return-load" },
+    { label: "PTL Transport", path: "/ptl-transport" },
+    { label: "LTL Transport", path: "/ltl-transport" },
+    { label: "Freight Data", path: "/data" },
   ],
   Company: [
     { label: "About", path: "/about" },
@@ -116,7 +127,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   return (
     <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       <OfflineBanner />
-      <nav className="fixed top-0 w-full z-[100] bg-background/70 dark:bg-[#050816]/70 backdrop-blur-xl border-b border-border dark:border-white/10 pt-[env(safe-area-inset-top)]">
+      <nav className="fixed top-0 w-full z-[100] bg-background/70 dark:bg-[#050816]/70 backdrop-blur-lg border-b border-border dark:border-white/10 pt-[env(safe-area-inset-top)]" style={{ contain: 'layout style' }}>
         <div className="flex justify-between items-center w-full px-6 sm:px-12 max-w-[1440px] mx-auto h-16">
           <Link to="/" className="flex items-center gap-2">
             <LogoMark size="h-11 w-11" />
@@ -206,13 +217,37 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
           </TooltipProvider>
           <div className="text-center">
-            <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} LoadSaathi. All rights reserved.</p>
+            <p className="text-xs text-muted-foreground">
+              &copy; {new Date().getFullYear()} LoadSaathi. All rights reserved.{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    if (window.cookiehub) {
+                      window.cookiehub.open();
+                    } else {
+                      // CookieHub script was skipped (consent already given).
+                      // Load it on-demand so the settings panel can open.
+                      const s = document.createElement('script');
+                      s.async = true;
+                      s.src = 'https://cdn.cookiehub.eu/c2/ca96bc89.js';
+                      s.onload = () => { try { window.cookiehub?.open(); } catch (_) {} };
+                      document.head.appendChild(s);
+                    }
+                  } catch (e) {}
+                }}
+                className="underline hover:text-foreground dark:hover:text-orange-400 transition-colors ml-1"
+              >
+                Cookie settings
+              </button>
+            </p>
           </div>
         </div>
       </footer>
       <MobileMenu open={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
       {isDesktopView && <DockNav items={publicBottomNavItems} className="hidden md:flex" />}
       <MobileTabBar tabs={publicMobileTabs} menuItems={publicMobileMenuItems} />
+      <ScrollToTopFab />
     </div>
   );
 }

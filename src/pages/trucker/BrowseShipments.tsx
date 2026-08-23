@@ -3,7 +3,6 @@ import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -84,7 +83,7 @@ const toLoadLocation = (s: Shipment): LoadLocation => ({
 
 const BrowseShipments = () => {
   const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
+  const { getSupabaseToken } = useAuth();
   const navigate = useNavigate();
   
   const [searchTerm, setSearchTerm] = useState('');
@@ -114,7 +113,7 @@ const BrowseShipments = () => {
     queryKey: ['myActiveTrip', userProfile?.id],
     queryFn: async () => {
       if (!userProfile?.id || userProfile.user_type !== 'trucker') return null;
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) return null;
       const supabase = createClerkSupabaseClient(token);
       const { data } = await supabase
@@ -135,7 +134,7 @@ const BrowseShipments = () => {
   const { data: shipments = [], isLoading, error, refetch } = useQuery({
     queryKey: ['pendingShipments'],
     queryFn: async () => {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) throw new Error('No auth token');
       const supabase = createClerkSupabaseClient(token);
       const { data, error } = await supabase
@@ -250,7 +249,7 @@ const BrowseShipments = () => {
   );
 
   // Live driver positions for map overlay
-  const { driverLocations } = useLiveDriverLocations(getToken);
+  const { driverLocations } = useLiveDriverLocations();
 
   const handleAiSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -288,7 +287,7 @@ const BrowseShipments = () => {
 
     setSendingOffer(true);
     try {
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token) throw new Error('No auth token');
       const supabaseClient = createClerkSupabaseClient(token);
       
@@ -310,7 +309,7 @@ const BrowseShipments = () => {
         weightTonnes: selectedShipment.weight_tonnes,
         originCity: selectedShipment.origin_city,
         destinationCity: selectedShipment.destination_city,
-        getToken: () => getToken({ template: 'supabase' }),
+        getToken: getSupabaseToken,
       });
 
       showSuccess('Offer sent to shipper!');

@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignIn, useUser } from "@clerk/clerk-react";
 import { Capacitor } from "@capacitor/core";
 import ThemeToggle from "@/components/ThemeToggle";
 import LogoMark from "@/components/LogoMark";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useUser();
+  const { userProfile } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,10 +18,14 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  if (isSignedIn) {
-    navigate("/auth-sync", { replace: true });
-    return null;
-  }
+  useEffect(() => {
+    if (isSignedIn) {
+      if (userProfile?.user_type === "shipper") navigate("/shipper/dashboard", { replace: true });
+      else if (userProfile?.user_type === "trucker") navigate("/trucker/dashboard", { replace: true });
+      else if (userProfile?.user_type === "admin") navigate("/admin/monitoring", { replace: true });
+      else navigate("/choose-role", { replace: true });
+    }
+  }, [isSignedIn, userProfile, navigate]);
 
   const handleGoogleSignIn = async () => {
     if (!isLoaded) return;
@@ -27,12 +33,13 @@ const Login = () => {
     setError("");
     try {
       // In Capacitor Android, use full URL for redirect so the intent filter captures it
-      const isNative = Capacitor.isNativePlatform();
-      const redirectBase = isNative ? "https://in.loadsaathi.app" : "";
+      const redirectBase = Capacitor.isNativePlatform()
+        ? "https://in.loadsaathi.app"
+        : window.location.origin;
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
-        redirectUrl: `${redirectBase}/auth-sync`,
-        redirectUrlComplete: `${redirectBase}/auth-sync`,
+        redirectUrl: `${redirectBase}/choose-role`,
+        redirectUrlComplete: `${redirectBase}/choose-role`,
       });
     } catch (err) {
       console.error("Google sign-in error:", err);
@@ -50,7 +57,7 @@ const Login = () => {
       const result = await signIn.create({ identifier: email, password });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        navigate("/auth-sync", { replace: true });
+        navigate("/choose-role", { replace: true });
       } else {
         setError("Additional verification required.");
       }

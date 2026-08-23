@@ -1,18 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 import SeoMeta from '@/components/SeoMeta';
-import HeroSection from '@/components/home/HeroSection';
-import ProofBar from '@/components/home/ProofBar';
-import BentoGrid from '@/components/home/BentoGrid';
-import WhatIsLoadSaathi from '@/components/home/WhatIsLoadSaathi';
-import HowItWorksSection from '@/components/home/HowItWorksSection';
-import WhyLoadSaathi from '@/components/home/WhyLoadSaathi';
-import PlatformTabs from '@/components/home/PlatformTabs';
-import TrustedAcrossEastIndia from '@/components/home/TrustedAcrossEastIndia';
-import VisionSection from '@/components/home/VisionSection';
-import AppPreview from '@/components/home/AppPreview';
-import SafetyTrust from '@/components/home/SafetyTrust';
-import FaqSection from '@/components/home/FaqSection';
-import CtaSection from '@/components/home/CtaSection';
+import HeroSection from '@/features/home/sections/HeroSection';
+import SectionNav from '@/features/home/sections/SectionNav';
+import ProofBar from '@/features/home/sections/ProofBar';
+import BentoGrid from '@/features/home/sections/BentoGrid';
+import WhatIsLoadSaathi from '@/features/home/sections/WhatIsLoadSaathi';
+import HowItWorksSection from '@/features/home/sections/HowItWorksSection';
+import WhyLoadSaathi from '@/features/home/sections/WhyLoadSaathi';
+import PlatformTabs from '@/features/home/sections/PlatformTabs';
+import TrustedAcrossEastIndia from '@/features/home/sections/TrustedAcrossEastIndia';
+import VisionSection from '@/features/home/sections/VisionSection';
+import AppPreview from '@/features/home/sections/AppPreview';
+import SafetyTrust from '@/features/home/sections/SafetyTrust';
+import FaqSection from '@/features/home/sections/FaqSection';
+import CtaSection from '@/features/home/sections/CtaSection';
 import IndexSkeleton from '@/components/IndexSkeleton';
 import { useTheme } from '@/theme/theme';
 
@@ -359,17 +360,16 @@ const Index = () => {
         }}
       />
       <HeroSection />
-      <ProofBar />
-      <BentoGrid />
-      <WhatIsLoadSaathi />
-      <HowItWorksSection />
-      <WhyLoadSaathi />
-      <PlatformTabs />
-      <TrustedAcrossEastIndia />
+      <SectionNav />
+      <div id="problems"><ProofBar /><BentoGrid /></div>
+      <div id="what-is"><WhatIsLoadSaathi /></div>
+      <div id="how-it-works"><HowItWorksSection /><WhyLoadSaathi /></div>
+      <div id="platform"><PlatformTabs /></div>
+      <div id="locations"><TrustedAcrossEastIndia /></div>
       <VisionSection globeRef={globeRef} />
       <AppPreview />
       <SafetyTrust />
-      <FaqSection />
+      <div id="faq"><FaqSection /></div>
       <CtaSection />
     </>
   );

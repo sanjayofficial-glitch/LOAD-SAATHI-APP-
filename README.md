@@ -1,12 +1,26 @@
 <div align="center">
 
-<img src="docs/assets/load-saathi-logo.svg" alt="LoadSaathi Logo" width="160" />
+<img src="docs/assets/load-saathi-logo.svg" alt="LoadSaathi Logo" width="140" />
 
 # LoadSaathi
 
 **India's AI-Powered Shared Freight Marketplace**
 
 Connecting shippers and truckers for PTL / LTL loads across East India — with AI matching, real-time GPS tracking, and digital credit scores.
+
+[loadsaathi.in](https://loadsaathi.in) · [support@loadsaathi.in](mailto:support@loadsaathi.in)
+
+![React](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_3-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=for-the-badge&logo=clerk&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
+[![CI](https://img.shields.io/github/actions/workflow/status/loadsaathi/load-saathi/ci.yml?style=flat-square&label=CI)](https://github.com/loadsaathi/load-saathi/actions)
+[![License](https://img.shields.io/badge/license-Proprietary-cc0000?style=flat-square)](LICENSE)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)
 
 </div>
 
@@ -15,12 +29,16 @@ Connecting shippers and truckers for PTL / LTL loads across East India — with 
 ## Table of Contents
 
 - [What is LoadSaathi?](#what-is-loadsaathi)
+- [Screenshots](#screenshots)
 - [Features](#features)
+- [Architecture](#architecture)
 - [Tech Stack](#tech-stack)
 - [Repository Layout](#repository-layout)
 - [Getting Started](#getting-started)
+- [Development Workflow](#development-workflow)
 - [Documentation](#documentation)
 - [Project Status](#project-status)
+- [Contributing](#contributing)
 - [License](#license)
 
 ---
@@ -50,6 +68,22 @@ including Rourkela–Ranchi–Burdwan, Rourkela–Kolkata, and Bhubaneswar–Kol
 
 ---
 
+## Screenshots
+
+|                           Trucker & Shipper Dashboard                           |                                AI Smart Matching                                 |
+| :-----------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
+| <img src="docs/assets/screenshots/dashboard.png" alt="Dashboard" width="420" /> | <img src="docs/assets/screenshots/matching.png" alt="AI Matching" width="420" /> |
+
+|                              In-App Chat                              |                                 Digital Credit Score                                  |
+| :-------------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
+| <img src="docs/assets/screenshots/chat.png" alt="Chat" width="420" /> | <img src="docs/assets/screenshots/credit-score.png" alt="Credit Score" width="420" /> |
+
+|                            Bidirectional Reviews                            |                                  Landing Page                                  |
+| :-------------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
+| <img src="docs/assets/screenshots/reviews.png" alt="Reviews" width="420" /> | <img src="docs/assets/screenshots/home-hero.png" alt="Homepage" width="420" /> |
+
+---
+
 ## Features
 
 - **AI-Powered Matching** — A multi-factor scoring engine (route, capacity, price, reliability) that matches shippers with truckers in seconds.
@@ -65,25 +99,69 @@ including Rourkela–Ranchi–Burdwan, Rourkela–Kolkata, and Bhubaneswar–Kol
 
 ---
 
+## Architecture
+
+```
+┌─────────────────────── Clients ───────────────────────┐
+│  Web SPA (Vercel)            Android App (Capacitor)   │
+│  React 19 + TS + Vite        Same web build            │
+└───────────────────────┬───────────────────────────────┘
+                        │  HTTPS
+┌───────────────────────▼───────────────────────────────┐
+│                      Services                          │
+│  ┌───────────┐   ┌──────────────┐   ┌───────────────┐ │
+│  │  Clerk    │   │  Supabase    │   │     OSRM      │ │
+│  │ Auth+JWT  │──▶│ Postgres+RLS │   │  Routing      │ │
+│  │           │   │ Realtime     │   │               │ │
+│  │           │   │ Edge Fns     │   │               │ │
+│  └───────────┘   └──────┬───────┘   └──────┬────────┘ │
+│                         │                  │          │
+└─────────────────────────┼──────────────────┼──────────┘
+                          ▼                  ▼
+                 ┌──────────────┐   ┌─────────────────┐
+                 │   Gemini AI  │   │   Nominatim     │
+                 │ NL search    │   │   Geocoding     │
+                 └──────────────┘   └─────────────────┘
+```
+
+### Core Flows
+
+```mermaid
+flowchart LR
+  A[Shipper / Trucker] -->|Clerk JWT| B[React SPA]
+  B -->|createClerkSupabaseClient| C[Supabase Postgres]
+  B -->|getRoute| D[OSRM Router]
+  B -->|geocode| E[Nominatim]
+  B -->|nl-search| F[Gemini AI]
+  C -->|Realtime| B
+  C -->|Edge Functions| F
+```
+
+- **Auth:** Clerk issues a JWT → `AuthContext` syncs the profile from Supabase → role-based routes are guarded.
+- **Matching:** `useSmartMatch` scores every trip/shipment pair on route overlap, capacity, price, date, and rating → sorted match % shown to users.
+- **Realtime:** Anonymous Supabase client subscribes to `trips`, `shipments`, `requests`, `messages`, and `notifications` for instant updates.
+
+---
+
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | React 19 + TypeScript (strict) |
-| Build Tool | Vite 6 |
-| UI Library | shadcn/ui + Radix UI |
-| Styling | Tailwind CSS 3.4 |
-| State/Data | TanStack React Query 5 |
-| Auth | Clerk 5 |
-| Database | Supabase (PostgreSQL + RLS + Realtime) |
-| Maps | Leaflet + React-Leaflet |
-| Charts | Recharts 3 |
-| Forms | React Hook Form + Zod |
-| Animation | Framer Motion |
-| Analytics | PostHog, Vercel Analytics, GA |
-| Routing | React Router DOM 7 |
-| Mobile | Capacitor 8 (Android) |
-| Hosting | Vercel |
+| Layer      | Technology                             |
+| ---------- | -------------------------------------- |
+| Framework  | React 19 + TypeScript (strict)         |
+| Build Tool | Vite 6                                 |
+| UI Library | shadcn/ui + Radix UI                   |
+| Styling    | Tailwind CSS 3.4                       |
+| State/Data | TanStack React Query 5                 |
+| Auth       | Clerk 5                                |
+| Database   | Supabase (PostgreSQL + RLS + Realtime) |
+| Maps       | Leaflet + React-Leaflet                |
+| Charts     | Recharts 3                             |
+| Forms      | React Hook Form + Zod                  |
+| Animation  | Framer Motion                          |
+| Analytics  | PostHog, Vercel Analytics, GA          |
+| Routing    | React Router DOM 7                     |
+| Mobile     | Capacitor 8 (Android)                  |
+| Hosting    | Vercel                                 |
 
 ### Key Services
 
@@ -99,31 +177,37 @@ including Rourkela–Ranchi–Burdwan, Rourkela–Kolkata, and Bhubaneswar–Kol
 
 ```
 .
-├── src/                  # React application source
-│   ├── components/       # Shared UI components (shadcn/ui)
-│   ├── pages/            # Route-level pages
-│   │   ├── public/       # Marketing pages (PublicLayout)
-│   │   ├── trucker/      # Trucker dashboard pages
-│   │   ├── shipper/      # Shipper dashboard pages
-│   │   ├── admin/        # Admin-only pages
-│   │   ├── blog/         # Blog system
-│   │   └── screens/      # Marketing app previews
-│   ├── hooks/            # Custom React hooks
-│   ├── contexts/         # React context providers (Auth, Theme)
-│   ├── data/             # Static data (routes, blog, locations)
-│   ├── lib/              # Utilities (cn, logger, gemini)
-│   ├── utils/            # Business logic (matching, osrm, geocode)
-│   ├── types/            # TypeScript type definitions
-│   └── test/             # Test files
-├── supabase/             # Database + Edge Functions
-│   ├── functions/        # Deno Edge Functions (Gemini proxy, price predict, etc.)
-│   └── migrations/       # SQL migration files
-├── android/              # Capacitor Android project
-├── public/               # Static assets (served as-is)
-├── docs/                 # Project documentation
-├── scripts/              # Utility scripts
-├── index.html            # SPA entry point (JSON-LD schemas)
-└── vercel.json           # Vercel deployment config
+├── src/                          # React application source
+│   ├── features/                 # Feature-scoped modules
+│   │   ├── home/sections/        #   Landing page sections
+│   │   ├── marketing/screens/    #   Public app previews
+│   │   └── shipper/components/   #   Shipper-dashboard widgets
+│   ├── components/               # Shared UI components
+│   │   ├── ui/                   #   shadcn/ui primitives
+│   │   └── maps/                 #   Leaflet map widgets
+│   ├── pages/                    # Route-level pages
+│   │   ├── public/               #   Marketing pages (PublicLayout)
+│   │   ├── trucker/              #   Trucker dashboard pages
+│   │   ├── shipper/              #   Shipper dashboard pages
+│   │   ├── admin/                #   Admin-only pages
+│   │   └── blog/                 #   Blog system
+│   ├── hooks/                    # Custom React hooks
+│   ├── contexts/                 # Auth + Theme providers
+│   ├── data/                     # Static data (routes, blog, locations)
+│   ├── lib/                      # Utilities (cn, logger, gemini)
+│   ├── utils/                    # Business logic (matching, osrm, geocode)
+│   ├── types/                    # TypeScript type definitions
+│   └── test/                     # Vitest test files
+├── supabase/                     # Database + Edge Functions
+│   ├── functions/                #   Deno Edge Functions
+│   └── migrations/               #   SQL migration files
+├── android/                      # Capacitor Android project
+├── public/                       # Static assets (served as-is)
+├── docs/                         # Project documentation
+├── scripts/                      # Utility scripts
+├── .github/workflows/            # CI pipeline
+├── index.html                    # SPA entry point (JSON-LD schemas)
+└── vercel.json                   # Vercel deployment config
 ```
 
 ---
@@ -151,15 +235,32 @@ cp .env.example .env
 pnpm dev
 ```
 
+> **Security note:** Never commit real `.env.*` values. Only `.env.example`
+> is tracked; local `.env.development` / `.env.production` files are gitignored.
+
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start Vite dev server |
-| `pnpm build` | Production build |
-| `pnpm preview` | Preview production build |
-| `pnpm lint` | Run ESLint |
-| `pnpm test` | Run Vitest tests |
+| Command          | Description                         |
+| ---------------- | ----------------------------------- |
+| `pnpm dev`       | Start Vite dev server               |
+| `pnpm build`     | Production build                    |
+| `pnpm preview`   | Preview production build            |
+| `pnpm lint`      | Run ESLint                          |
+| `pnpm typecheck` | Run TypeScript type checking        |
+| `pnpm format`    | Format code with Prettier           |
+| `pnpm test`      | Run Vitest tests                    |
+| `pnpm check`     | Run lint + typecheck + test + build |
+
+---
+
+## Development Workflow
+
+1. **Branch** — Work on a feature branch (e.g. `feat/xxx`).
+2. **Check** — Run `pnpm check` locally before pushing (lint, typecheck, tests, build).
+3. **Format** — Run `pnpm format` to keep the codebase consistent.
+4. **PR** — Open a pull request against `main`; CI runs the full quality gate automatically.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the complete contribution guide.
 
 ---
 
@@ -167,19 +268,19 @@ pnpm dev
 
 Detailed documentation lives in [`docs/`](docs/README.md):
 
-| Document | Description |
-|----------|-------------|
-| [Architecture](docs/architecture.md) | System architecture deep-dive |
-| [Getting Started](docs/getting-started.md) | Full local setup guide |
-| [Data Models](docs/data-models.md) | Database schema reference |
-| [Authentication](docs/authentication.md) | Clerk ↔ Supabase auth flow |
-| [Matching Algorithm](docs/matching.md) | AI smart-matching scoring |
-| [Realtime](docs/realtime.md) | Supabase Realtime subscriptions |
-| [Edge Functions](docs/edge-functions.md) | Supabase Edge Functions reference |
-| [Deployment](docs/deployment.md) | Vercel + Capacitor deployment |
-| [Mobile (Android)](docs/mobile-android.md) | Android build guide |
-| [SEO / GEO](docs/seo/README.md) | SEO & AI-engine optimization |
-| [Analytics](docs/analytics/posthog-setup.md) | Analytics instrumentation |
+| Document                                     | Description                       |
+| -------------------------------------------- | --------------------------------- |
+| [Architecture](docs/architecture.md)         | System architecture deep-dive     |
+| [Getting Started](docs/getting-started.md)   | Full local setup guide            |
+| [Data Models](docs/data-models.md)           | Database schema reference         |
+| [Authentication](docs/authentication.md)     | Clerk ↔ Supabase auth flow        |
+| [Matching Algorithm](docs/matching.md)       | AI smart-matching scoring         |
+| [Realtime](docs/realtime.md)                 | Supabase Realtime subscriptions   |
+| [Edge Functions](docs/edge-functions.md)     | Supabase Edge Functions reference |
+| [Deployment](docs/deployment.md)             | Vercel + Capacitor deployment     |
+| [Mobile (Android)](docs/mobile-android.md)   | Android build guide               |
+| [SEO / GEO](docs/seo/README.md)              | SEO & AI-engine optimization      |
+| [Analytics](docs/analytics/posthog-setup.md) | Analytics instrumentation         |
 
 ---
 
@@ -203,6 +304,7 @@ We welcome contributions. Please read:
 
 - [Contributing Guidelines](CONTRIBUTING.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
+- [AI Coding Agent Rules](AI_RULES.md)
 
 ---
 

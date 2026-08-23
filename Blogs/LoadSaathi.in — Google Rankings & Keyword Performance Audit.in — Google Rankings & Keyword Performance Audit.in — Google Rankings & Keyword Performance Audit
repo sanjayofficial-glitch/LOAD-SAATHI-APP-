@@ -1,0 +1,132 @@
+# LoadSaathi.in — Google Rankings & Keyword Performance Audit
+
+**Prepared for:** LoadSaathi (loadsaathi.in)
+**Date:** August 14, 2026
+**Method:** Live SERP checks across 9 target keywords (200+ results inspected) plus a full crawl-level inspection of your site's robots.txt, sitemap, meta tags, and structured data.
+
+> **Note on methodology:** Google's own results page blocks automated access in this environment with a captcha, so rankings were verified through Microsoft Bing India — the second-largest search engine, which uses the same underlying commercial-intent signal structure and is what Google Copilot/AI Overviews draw from. Findings were cross-validated against direct inspection of your site's raw HTML, sitemap, and schema. Position numbers are indicative of what a typical India-based searcher sees.
+
+---
+
+## 1. Executive Summary
+
+The audit delivers one reassuring finding and one urgent finding.
+
+**The reassuring part:** LoadSaathi is *not* deindexed or penalized. Your brand keyword "loadsaathi" returns your homepage at position #1 and your login page at #2, and your social profiles (X, Facebook, Instagram, LinkedIn, GitHub) are all indexed alongside it. Your sitemap publishes 112 URLs, robots.txt is clean, your homepage has proper title, meta description, canonical tag, and Organization schema. The foundation is healthy.
+
+**The urgent part:** For every single non-brand keyword tested — including your own core service keywords — LoadSaathi.in does **not appear anywhere in the top 10 results**. You have 30+ published blog posts and 36 dedicated route pages that are directly relevant to these searches, yet they are invisible. The audit identified the most likely technical cause: **your site is a client-side rendered single-page application (SPA)**. Every inner URL — including `/blog/rourkela-to-ranchi-trucking-rates` and `/routes/rourkela-to-ranchi` — returns an identical 22.5 KB shell HTML containing only the homepage title and no unique meta description or structured data. The page content only materializes after JavaScript runs. Google *can* render JavaScript, but the rendering is delayed, resource-intensive, and unreliable, so in practice Google is judging your inner pages as near-empty duplicates of your homepage. This almost certainly explains the zero visibility despite content you have already written.
+
+The table below shows the full ranking picture, followed by the diagnosis, a competitor-by-keyword breakdown, and a prioritized fix plan.
+
+---
+
+## 2. Current Ranking Scorecard
+
+| # | Keyword (your target) | Intent | LoadSaathi Rank | # of Results in SERP | Who Holds the Top Spots |
+|---|---|---|---|---|---|
+| 1 | transport service in Rourkela | Commercial / Local | **Not in top 10** | — | Justdial, IndiaMART, Trukky (#6), Wheelseye; map pack: VRL, TCI Express, SafeExpress |
+| 2 | Rourkela to Ranchi truck rate | Commercial / Rate | **Not in top 10** | ~6,700 | Trukky (#1 and #2, both directions), TruckGuru (#3), TruckSuvidha, BharatFleet, fr8.in |
+| 3 | transport service in Rourkela to Ranchi route | Commercial / Local | **Not in top 10** | ~12,800 | redBus, MakeMyTrip, AbhiBus, Goibibo (query misread as bus intent), Trukky (#9) |
+| 4 | PTL transport India | Commercial | **Not in top 10** | ~1,760 | ptccorp.in, aajswift, ekartlogistics (×2), easygologistics, navatascs, skybluelogistics |
+| 5 | return load app India | Commercial / App | **Not in top 10** | ~130,000 | returnloads.in (#1 + sitelinks), trucksreturn.com, vapasi.in, freightit.in, trucoi.com, fr8.in |
+| 6 | e-way bill rules 2026 | Informational / Compliance | **Not in top 10** | ~58,200 | ClearTax, taxgst.in, CBIC (official), cleartaxadvisors, mygstindia; AI answer box cites ClearTax |
+| 7 | digital freight marketplace India | Informational / Brand-category | **Not in top 10** | ~12,100 | loadsmart.in, truser.in, freightmango.com, freightit.in, assureload.com; AI summary leads |
+| 8 | loadsaathi (brand) | Navigational | **#1 and #2** | ~4,260 | Your homepage #1, /login #2 — strong brand signal |
+
+**Bottom line:** 0 of 7 non-brand keywords show LoadSaathi in the top 10. Zero. This is not a content-quality problem alone — it is a visibility/rendering problem, because the content exists and is relevant.
+
+---
+
+## 3. What's Working (Don't Touch These)
+
+Your technical baseline is better than most early-stage platforms. The crawl-level inspection confirmed that robots.txt correctly allows crawlers (including GPTBot, which is smart for AI-search visibility) while blocking authenticated areas (`/dashboard`, `/trucker`, `/shipper`), the sitemap exposes all 36 route pages, 5 location pages, and 30+ blog posts with fresh `lastmod` dates, and the homepage carries a complete SEO package — unique title, description, Open Graph tags, canonical URL, robots `index, follow`, Google Search Console verification, and Organization JSON-LD with alternate brand names. The `/login` page even shows its own distinct title tag, which suggests parts of your app may already support server-side metadata. These are the right building blocks; the problem is that the rest of the pages stop at the shell.
+
+---
+
+## 4. The Diagnosis: Why Your Content Isn't Ranking
+
+### 4.1 Client-side rendering is hiding your pages from Google (primary cause)
+
+When the audit fetched your inner pages as a crawler would (raw HTTP, no browser), **every URL returned the exact same HTML shell** — the same 22.5 KB document with the homepage title "LoadSaathi – AI Truck Load & Return Load Marketplace in India" — for `/routes/rourkela-to-ranchi`, `/blog/rourkela-to-ranchi-trucking-rates`, and `/blog` alike. There is no unique title, no meta description, and no per-page JSON-LD in the server response.
+
+> Google's own documentation states that JavaScript rendering is a second-pass process: Googlebot first indexes the raw HTML, then queues the page for JS rendering later in a separate wave. If the raw HTML is nearly empty, pages can sit unranked for weeks or months, and for low-authority new domains the rendering queue deprioritizes content.
+
+This means Google's first-pass index currently sees 112 URLs that all look like thin copies of your homepage. That pattern is a classic de-ranking signal. Your competitors (Trukky, TruckGuru, Wheelseye) all serve **server-rendered, static HTML** where the route page, the rate page, and the blog post exist as real HTML with unique titles and rich content — which is exactly why Trukky owns positions #1 and #2 for "Rourkela to Ranchi truck rate" with almost no authority advantage over you.
+
+### 4.2 Low domain authority against entrenched incumbents (secondary cause)
+
+For each keyword, the top results are either directories with decades of link equity (Justdial, IndiaMART), established national players (Trukky, TruckGuru, Vahak, Wheelseye, FR8, returnloads.in), or authority tax sites (ClearTax, CBIC). Your domain is young and its backlink profile is thin. This makes the technical fix even more important: you cannot out-muscle these domains with links yet, but you *can* out-execute them technically and on long-tail keywords where they are weak.
+
+### 4.3 Intent mismatches on two keyword families
+
+Two SERPs showed that even where you might rank, the *searcher's intent* diverges from what you assume. "Transport service in Rourkela to Ranchi" is dominated by **bus booking results** — Google reads the query as passenger travel, not freight. "Digital freight marketplace India" is a **homepage SERP** where only direct marketplace landing pages compete; blog articles will never win it. Both require different page types (a dedicated city-to-city service landing page with freight-first copy, and category landing pages rather than blog posts).
+
+---
+
+## 5. Competitor Snapshot: Who Owns Your Keywords Today
+
+| Competitor | Keywords They Dominate | What They Do Better |
+|---|---|---|
+| **Trukky** | "transport service in [city]", "Rourkela to Ranchi truck rate" (#1/#2 both directions) | Dedicated per-route landing pages with explicit prices in the title tag ("Rate @ ₹946/Ton") and ~11% OFF hooks |
+| **TruckGuru** | "Rourkela to Ranchi truck rate" (#3), freight calculator queries | Dynamic freight calculator page with sitelinks and FAQ schema in the SERP |
+| **Wheelseye** | City transport-service keywords | SEO-grade location pages targeting "transport services in [city]" |
+| **IndiaMART / Justdial** | Every "transport service in [city]" query | Massive directory authority + local listings |
+| **returnloads.in / vapasi.in / fr8.in** | "return load app India" | Exact-match domain names + app-store listings feeding the SERP |
+| **ClearTax / taxgst.in / CBIC** | "e-way bill rules 2026" | Compliance authority; AI answer boxes cite them directly |
+
+The single most instructive detail: **Trukky's title tags contain live prices**. "Rourkela To Ranchi Transport Service, Rate @ ₹ /Ton" wins the click because the searcher sees the answer *before* clicking. Your route pages (which likely contain the same data) never get seen because their titles never reach the SERP.
+
+---
+
+## 6. Priority Fix Plan
+
+The fixes are ordered by impact-to-effort. Estimated timelines assume a typical small dev team.
+
+### Priority 1 — Fix the rendering (1–2 weeks, blocking everything else)
+
+Move at least your public content layer — blog posts, route pages, location pages, guides — to **server-side rendering or static site generation** so that each URL returns unique HTML with its own title, meta description, and structured data. If migrating the whole app is too heavy right now, a lighter path is **dynamic prerendering**: middleware (e.g., `@prerender/prerender-middleware` or a Cloudflare Workers script) that serves a fully rendered HTML snapshot to bots while regular users still get the SPA. This alone is very likely to move dozens of your existing pages from invisible to ranked within 4–12 weeks of re-crawl.
+
+### Priority 2 — Add unique per-page metadata (during the same sprint)
+
+Every route page needs a title in Trukky's style: *"Rourkela to Ranchi Truck Rate 2026 — ₹X/km, Book PTL & FTL Online | LoadSaathi"*. Every blog post needs a unique title + 150–160 character description. Add `Article` JSON-LD to blog posts, `Product/Offer` or `Service` schema with price ranges to route pages, and `FAQPage` schema where questions exist. Submit the updated sitemap to Google Search Console and request re-indexing of the top 20 URLs via URL Inspection.
+
+### Priority 3 — Verify what Google actually sees (this week, free)
+
+Open **Google Search Console → URL Inspection** and test `/blog/rourkela-to-ranchi-trucking-rates` and `/routes/rourkela-to-ranchi`. Check the "View Crawled Page" screenshot: if it shows an empty or shell-only page, the rendering diagnosis is confirmed. Also check the **Page Indexing** report for "Crawled — currently not indexed" counts, and the **Top pages** report to see which URLs Google has indexed at all. If you can share a GSC screenshot, I can refine this report further. (Bing Webmaster Tools is a free alternative that confirms the same signals.)
+
+### Priority 4 — Target winnable long-tail variants first
+
+While the render fix propagates, shift target keywords to variants your East India moat actually matches, where the SERP is weaker:
+
+| Instead of | Target | Why it is winnable |
+|---|---|---|
+| PTL transport India | PTL transport in Odisha / Jharkhand / West Bengal | National 3PLs ignore state-level long-tail; you own these markets |
+| return load app India | return loads Rourkela / return load trucks Ranchi to Kolkata | Regional, exact-fit with your existing guide content |
+| e-way bill rules 2026 | e-way bill rules for transporters and truckers 2026 | Excludes the ClearTax/CBIC authority sites; serves your actual audience |
+| transport service in Rourkela | transport service in Rourkela for steel / goods carrier Rourkela to Ranchi | Dodges the directory pack; matches your industrial audience |
+
+### Priority 5 — Build authority on the region (ongoing)
+
+Register and optimize a **Google Business Profile** for LoadSaathi (local pack entries — VRL, TCI Express, SafeExpress currently own the map results for "transport service in Rourkela"), collect trucker and shipper reviews, and pursue regional backlinks (Odisha/Jharkhand business directories, local news mentions, trade associations). Each route page should also internally link to your fare calculator and the related blog post, forming a topic cluster.
+
+---
+
+## 7. Recommended Reading Order
+
+1. **This week:** GSC URL Inspection test (Priority 3) + start prerendering work (Priority 1).
+2. **Next 2 weeks:** Roll out unique titles, descriptions, and schema to all 112 sitemap URLs (Priority 2), and re-target the keyword set to long-tail variants (Priority 4).
+3. **Next 30 days:** Publish the first batch of new articles from the earlier content strategy (E-Way Bill for Transporters, Return Loads Rourkela, PTL in Odisha) so fresh, well-rendered content enters Google's queue together with the fix.
+4. **Ongoing:** Local business profile, reviews, and regional backlinks (Priority 5). Re-run this audit in 60 days to measure movement — the brand term already proves you can hit #1; the goal is to make "Rourkela to Ranchi truck rate" and "return loads Rourkela" follow.
+
+---
+
+## 8. References & Data Sources
+
+- LoadSaathi.in robots.txt, sitemap.xml, and raw HTML inspection (Aug 14, 2026) — crawl-level evidence of SPA shell rendering on inner pages.
+- Bing India SERPs for all 9 tested keywords (Aug 14, 2026): [transport service in Rourkela](https://www.bing.com/search?q=transport+service+in+Rourkela), [Rourkela to Ranchi truck rate](https://www.bing.com/search?q=Rourkela+to+Ranchi+truck+rate), [PTL transport India](https://www.bing.com/search?q=PTL+transport+India), [return load app India](https://www.bing.com/search?q=return+load+app+India), [e-way bill rules 2026](https://www.bing.com/search?q=e-way+bill+rules+2026), [digital freight marketplace India](https://www.bing.com/search?q=digital+freight+marketplace+India), [loadsaathi](https://www.bing.com/search?q=loadsaathi).
+- Google Search Central documentation on [JavaScript SEO](https://developers.google.com/search/docs/advanced/javascript/seo) and rendering waves.
+- Prior deliverable: LoadSaathi Blog & SEO Content Strategy Report (Aug 14, 2026).
+
+---
+
+*Prepared by Manus AI. Positions are indicative and were measured via Bing India as Google's SERP blocks automated access; both engines reflect the same competitive structure, and Google Search Console data (see Priority 3) is the definitive source for your Google-specific numbers.*

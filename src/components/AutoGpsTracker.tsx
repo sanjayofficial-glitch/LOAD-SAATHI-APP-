@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 
@@ -16,8 +15,7 @@ import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 const LOCATION_UPDATE_INTERVAL_MS = 30 * 1000;
 
 export default function AutoGpsTracker() {
-  const { getToken } = useClerkAuth();
-  const { userProfile } = useAuth();
+  const { userProfile, getSupabaseToken } = useAuth();
   const watchIdRef = useRef<number | null>(null);
   const lastUpdateRef = useRef<number>(0);
   const tripRefreshRef = useRef<number | null>(null);
@@ -42,7 +40,7 @@ export default function AutoGpsTracker() {
       // Get Clerk JWT for authenticated Supabase client. MUST use the
       // 'supabase' template — the default session token fails Supabase JWT
       // verification (wrong aud), so writes silently 401 otherwise.
-      const token = await getToken({ template: 'supabase' });
+      const token = await getSupabaseToken();
       if (!token || !mounted) return;
 
       // Fetch active trip context for truckers (for map display). Both
@@ -50,7 +48,7 @@ export default function AutoGpsTracker() {
       // monitoring the truck the moment a trip is started.
       const refreshTripContext = async () => {
         if (ut !== 'trucker' || !mounted) return;
-        const freshToken = await getToken({ template: 'supabase' });
+        const freshToken = await getSupabaseToken();
         if (!freshToken) return;
         const client = createClerkSupabaseClient(freshToken);
         const { data: trip } = await client
@@ -94,7 +92,7 @@ export default function AutoGpsTracker() {
           const tripCtx = activeTripRef.current;
 
           // Refresh token if needed (Clerk tokens expire ~60s)
-          const freshToken = await getToken({ template: 'supabase' });
+          const freshToken = await getSupabaseToken();
           if (!freshToken) return;
           const client = createClerkSupabaseClient(freshToken);
 
@@ -157,7 +155,7 @@ export default function AutoGpsTracker() {
         tripRefreshRef.current = null;
       }
     };
-  }, [userProfile, getToken]);
+  }, [userProfile, getSupabaseToken]);
 
   // This component renders nothing
   return null;

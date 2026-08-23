@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { authorizeRealtime } from '@/utils/realtime';
+import { useAuth } from '@/contexts/AuthContext';
 import type { LoadLocation } from '../components/maps/LoadMarker';
 
 /**
@@ -13,24 +14,15 @@ import type { LoadLocation } from '../components/maps/LoadMarker';
  * 3. Return LoadLocation[] for map consumption
  * 4. Auto-unsubscribe on unmount
  */
-export function useLiveLoadLocations(
-  getToken?: (options?: { template?: string }) => Promise<string | null>,
-) {
+export function useLiveLoadLocations() {
+  const { getSupabaseToken } = useAuth();
   const [loads, setLoads] = useState<LoadLocation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchInitial = useCallback(async () => {
     try {
-      let client = supabase;
-      if (getToken) {
-        // The 'supabase' template is required — the default Clerk session
-        // token fails Supabase JWT verification (wrong aud claim), so reads
-        // would 401 and return nothing.
-        const token = await getToken({ template: 'supabase' });
-        if (token) {
-          client = createClerkSupabaseClient(token);
-        }
-      }
+      const token = await getSupabaseToken();
+      const client = token ? createClerkSupabaseClient(token) : supabase;
 
       const { data } = await client
         .from('load_locations')
@@ -64,14 +56,14 @@ export function useLiveLoadLocations(
     } finally {
       setIsLoading(false);
     }
-  }, [getToken]);
+  }, [getSupabaseToken]);
 
   const subscribe = useCallback(async () => {
     // Authorize the shared realtime socket with the Clerk JWT before
     // subscribing — RLS on load_locations is `TO authenticated` and the
     // anon role is denied (verified live: 401 "permission denied for table
     // load_locations"), so postgres_changes events would never arrive.
-    if (getToken) await authorizeRealtime(getToken);
+    if (getSupabaseToken) await authorizeRealtime(getSupabaseToken);
 
     const channel = supabase
       .channel('load-locations-realtime')
@@ -118,7 +110,7 @@ export function useLiveLoadLocations(
       .subscribe();
 
     return channel;
-  }, [getToken]);
+  }, [getSupabaseToken]);
 
   useEffect(() => {
     let cancelled = false;

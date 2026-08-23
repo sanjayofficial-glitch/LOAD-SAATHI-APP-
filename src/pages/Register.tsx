@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSignUp, useUser } from "@clerk/clerk-react";
 import { Capacitor } from "@capacitor/core";
 import ThemeToggle from "@/components/ThemeToggle";
 import LogoMark from "@/components/LogoMark";
 import { Loader2, Eye, EyeOff, ArrowLeft, Package, Truck, CheckCircle2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { trackRegisterStarted } from "@/utils/analytics";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const { isSignedIn } = useUser();
+  const { userProfile } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const roleType = searchParams.get("type");
@@ -24,15 +27,27 @@ const Register = () => {
   const [verifying, setVerifying] = useState(false);
   const [code, setCode] = useState("");
 
-  if (isSignedIn) {
-    navigate("/auth-sync", { replace: true });
-    return null;
-  }
+  useEffect(() => {
+    if (isSignedIn) {
+      if (userProfile?.user_type === "shipper") navigate("/shipper/dashboard", { replace: true });
+      else if (userProfile?.user_type === "trucker") navigate("/trucker/dashboard", { replace: true });
+      else if (userProfile?.user_type === "admin") navigate("/admin/monitoring", { replace: true });
+      else navigate("/choose-role", { replace: true });
+    }
+  }, [isSignedIn, userProfile, navigate]);
 
-  if (roleType && step === "role") {
-    setSelectedRole(roleType as "trucker" | "shipper");
-    setStep("sign");
-  }
+  useEffect(() => {
+    if (roleType && step === "role") {
+      setSelectedRole(roleType as "trucker" | "shipper");
+      setStep("sign");
+    }
+  }, [roleType]);
+
+  // Track register page view
+  useEffect(() => {
+    const source = searchParams.get("source") || "direct";
+    trackRegisterStarted({ source, role: roleType as "shipper" | "trucker" | undefined });
+  }, []);
 
   const handleRoleSelect = (role: "trucker" | "shipper") => {
     setSelectedRole(role);
@@ -50,12 +65,13 @@ const Register = () => {
     setError("");
     try {
       // In Capacitor Android, use full URL for redirect so the intent filter captures it
-      const isNative = Capacitor.isNativePlatform();
-      const redirectBase = isNative ? "https://in.loadsaathi.app" : "";
+      const redirectBase = Capacitor.isNativePlatform()
+        ? "https://in.loadsaathi.app"
+        : window.location.origin;
       await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
-        redirectUrl: `${redirectBase}/auth-sync`,
-        redirectUrlComplete: `${redirectBase}/auth-sync`,
+        redirectUrl: `${redirectBase}/choose-role`,
+        redirectUrlComplete: `${redirectBase}/choose-role`,
       });
     } catch (err) {
       console.error("Google sign-up error:", err);
@@ -96,7 +112,7 @@ const Register = () => {
       const result = await signUp.attemptEmailAddressVerification({ code });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        navigate("/auth-sync", { replace: true });
+        navigate("/choose-role", { replace: true });
       } else {
         setError("Invalid verification code.");
       }

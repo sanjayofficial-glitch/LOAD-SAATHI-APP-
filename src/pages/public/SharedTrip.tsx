@@ -66,10 +66,11 @@ export default function SharedTrip() {
   if (loading) {
     return (
       <>
-        <SeoMeta title="Loading Trip Details" description="Loading shared trip information from LoadSaathi." />
+        <SeoMeta title="Loading Trip Details" description="Loading shared trip information from LoadSaathi." canonical={`/share/trip/${id}`} />
         <div className="min-h-screen bg-gradient-to-b from-orange-50/50 to-background dark:from-orange-950/10 dark:to-background flex items-center justify-center px-6">
           <Card className="w-full max-w-lg">
             <CardContent className="p-8 space-y-4">
+              <h1 className="sr-only">LoadSaathi Trip</h1>
               <Skeleton className="h-8 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-20 w-full" />
@@ -83,7 +84,7 @@ export default function SharedTrip() {
   if (error || !trip) {
     return (
       <>
-        <SeoMeta title="Trip Not Found" description="This shared trip link is invalid or no longer available on LoadSaathi." />
+        <SeoMeta title="Trip Not Found" description="This shared trip link is invalid or no longer available on LoadSaathi." canonical={`/share/trip/${id}`} />
         <div className="min-h-screen bg-gradient-to-b from-orange-50/50 to-background dark:from-orange-950/10 dark:to-background flex items-center justify-center px-6">
           <Card className="w-full max-w-lg text-center">
             <CardContent className="p-8">
