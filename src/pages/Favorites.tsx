@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Heart, Truck, Package, MapPin, Calendar, IndianRupee, User, Trash2 } from "lucide-react";
+import { Heart, Truck, Package, MapPin, Calendar, IndianRupee, User, Trash2, Loader2 } from "lucide-react";
 import { showError, showSuccess } from "@/utils/toast";
 import FavoriteButton from "@/components/FavoriteButton";
 import type { Trip, Shipment, User as UserType } from "@/types";
@@ -26,6 +26,7 @@ const Favorites = () => {
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [removeLoading, setRemoveLoading] = useState<string | null>(null);
 
   const loadFavorites = useCallback(async () => {
     if (!userProfile?.id) return;
@@ -84,6 +85,7 @@ const Favorites = () => {
 
   const handleRemoveAll = async (entityType: string) => {
     if (!userProfile?.id) return;
+    setRemoveLoading(entityType);
     try {
       const token = await getSupabaseToken();
       if (!token) return;
@@ -97,6 +99,8 @@ const Favorites = () => {
       loadFavorites();
     } catch {
       showError("Failed to remove favorites");
+    } finally {
+      setRemoveLoading(null);
     }
   };
 
@@ -142,8 +146,19 @@ const Favorites = () => {
           ) : (
             <div className="space-y-3">
               <div className="flex justify-end">
-                <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onClick={() => handleRemoveAll("trip")}>
-                  <Trash2 className="h-3.5 w-3.5 mr-1" /> Remove All
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={removeLoading === "trip"}
+                  onClick={() => handleRemoveAll("trip")}
+                >
+                  {removeLoading === "trip" ? (
+                    <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-3.5 w-3.5 mr-1" />
+                  )}{" "}
+                  Remove All
                 </Button>
               </div>
               {trips.map((trip) => (
@@ -184,8 +199,19 @@ const Favorites = () => {
           ) : (
             <div className="space-y-3">
               <div className="flex justify-end">
-                <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onClick={() => handleRemoveAll("shipment")}>
-                  <Trash2 className="h-3.5 w-3.5 mr-1" /> Remove All
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={removeLoading === "shipment"}
+                  onClick={() => handleRemoveAll("shipment")}
+                >
+                  {removeLoading === "shipment" ? (
+                    <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-3.5 w-3.5 mr-1" />
+                  )}{" "}
+                  Remove All
                 </Button>
               </div>
               {shipments.map((shipment) => (
@@ -226,8 +252,19 @@ const Favorites = () => {
           ) : (
             <div className="space-y-3">
               <div className="flex justify-end">
-                <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onClick={() => handleRemoveAll("user")}>
-                  <Trash2 className="h-3.5 w-3.5 mr-1" /> Remove All
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-500 hover:text-red-600"
+                  disabled={removeLoading === "user"}
+                  onClick={() => handleRemoveAll("user")}
+                >
+                  {removeLoading === "user" ? (
+                    <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-3.5 w-3.5 mr-1" />
+                  )}{" "}
+                  Remove All
                 </Button>
               </div>
               {users.map((user) => (

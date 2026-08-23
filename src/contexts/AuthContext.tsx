@@ -221,7 +221,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       user,
       session,
       userProfile,
-      loading: !clerkLoaded || loading,
+      loading: clerkLoaded ? loading : true,
       signOut,
       refreshProfile,
       setProfile,
