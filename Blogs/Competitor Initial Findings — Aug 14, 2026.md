@@ -1,3 +1,4 @@
+
 # Competitor Initial Findings — Aug 14, 2026
 
 ## Confirmed business positioning from official pages

@@ -254,6 +254,7 @@ export default function BlogArticle() {
       type="article"
       image={coverImage}
       publishedTime={isoDate}
+      dateModified={isoLastUpdated}
       author={article.author}
       jsonLd={faqSchema ? [articleSchema, faqSchema] : articleSchema}
       breadcrumbs={[

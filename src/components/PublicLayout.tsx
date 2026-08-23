@@ -221,7 +221,21 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               &copy; {new Date().getFullYear()} LoadSaathi. All rights reserved.{' '}
               <button
                 type="button"
-                onClick={() => { try { window.cookiehub?.open(); } catch (e) {} }}
+                onClick={() => {
+                  try {
+                    if (window.cookiehub) {
+                      window.cookiehub.open();
+                    } else {
+                      // CookieHub script was skipped (consent already given).
+                      // Load it on-demand so the settings panel can open.
+                      const s = document.createElement('script');
+                      s.async = true;
+                      s.src = 'https://cdn.cookiehub.eu/c2/ca96bc89.js';
+                      s.onload = () => { try { window.cookiehub?.open(); } catch (_) {} };
+                      document.head.appendChild(s);
+                    }
+                  } catch (e) {}
+                }}
                 className="underline hover:text-foreground dark:hover:text-orange-400 transition-colors ml-1"
               >
                 Cookie settings
