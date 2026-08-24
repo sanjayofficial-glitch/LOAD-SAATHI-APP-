@@ -719,12 +719,6 @@
   </url>
   <!-- New Location Pages (Aug 2026) -->
   <url>
-    <loc>https://loadsaathi.in/location/burdwan</loc>
-    <lastmod>2026-08-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://loadsaathi.in/location/dhanbad</loc>
     <lastmod>2026-08-23</lastmod>
     <changefreq>monthly</changefreq>
@@ -743,7 +737,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://loadsaathi.in/location/vizag</loc>
+    <loc>https://loadsaathi.in/location/visakhapatnam</loc>
     <lastmod>2026-08-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
