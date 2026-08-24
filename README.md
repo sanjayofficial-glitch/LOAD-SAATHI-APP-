@@ -18,7 +18,7 @@ Connecting shippers and truckers for PTL / LTL loads across East India — with 
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-[![CI](https://img.shields.io/github/actions/workflow/status/loadsaathi/load-saathi/ci.yml?style=flat-square&label=CI)](https://github.com/loadsaathi/load-saathi/actions)
+[![CI](https://github.com/sanjayofficial-glitch/LOAD-SAATHI-APP-1-OSRM/actions/workflows/ci.yml/badge.svg)](https://github.com/sanjayofficial-glitch/LOAD-SAATHI-APP-1-OSRM/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Proprietary-cc0000?style=flat-square)](LICENSE)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)
 
@@ -28,6 +28,7 @@ Connecting shippers and truckers for PTL / LTL loads across East India — with 
 
 ## Table of Contents
 
+- [Start here](#start-here)
 - [What is LoadSaathi?](#what-is-loadsaathi)
 - [Screenshots](#screenshots)
 - [Features](#features)
@@ -40,6 +41,20 @@ Connecting shippers and truckers for PTL / LTL loads across East India — with 
 - [Project Status](#project-status)
 - [Contributing](#contributing)
 - [License](#license)
+
+---
+
+## Start here
+
+| Reader | Best starting point | Outcome |
+| --- | --- | --- |
+| Founder, stakeholder, or business partner | [Plain-language overview](docs/handbook/01-overview-non-technical.md) | Understand the problem, users, product value, and current capabilities |
+| New developer | [Architecture and stack](docs/handbook/02-architecture-and-stack.md) | Find the code, services, data boundaries, and route structure |
+| Product or engineering team | [Core Flows](docs/handbook/03-core-flows.md) | See the important journeys and data movement as diagrams |
+| AI coding agent | [AI Restructure Brief](docs/handbook/07-ai-restructure-brief.md) | Follow the repository constraints and safe improvement plan |
+| DevOps, hiring, or handover | [Handover checklist](docs/handbook/08-handover-checklist.md) | Set up, test, deploy, and troubleshoot the project |
+
+> **Core Flows are preserved.** The handbook reorganizes the explanation of the repository without changing business logic, route URLs, database tables, or external service integrations.
 
 ---
 
@@ -90,7 +105,7 @@ including Rourkela–Ranchi–Burdwan, Rourkela–Kolkata, and Bhubaneswar–Kol
 - **Real-Time GPS Tracking** — Live location sharing with ETAs, route visualization, and geofence alerts.
 - **Digital Freight Credit Score** — 300–900 score for every participant based on completion rates, on-time performance, and reviews.
 - **AI Price Prediction** — Market-aligned pricing suggestions based on route, demand, fuel costs, and historical data.
-- **Escrow Payments** — Secure milestone-based payment releases with dispute resolution.
+- **Trust and payment roadmap** — Escrow-backed payments and dispute resolution are documented as a future product direction unless the relevant implementation is present.
 - **Bidirectional Reviews** — Both shippers and truckers rate each other after every completed trip.
 - **In-App Chat & Negotiation** — Real-time messaging between matched parties.
 - **Smart Route Optimization** — OSRM-powered routing, distance, and duration estimation.
@@ -266,7 +281,20 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the complete contribution guide.
 
 ## Documentation
 
-Detailed documentation lives in [`docs/`](docs/README.md):
+Detailed documentation lives in [`docs/`](docs/README.md). For a guided, audience-specific reading order, start with the [Repository Handbook](REPO_HANDBOOK.md) or the [Handbook Index](docs/handbook/00-index.md).
+
+### Audience handbook
+
+| Reader | Document |
+| --- | --- |
+| Everyone | [Non-technical overview](docs/handbook/01-overview-non-technical.md) |
+| Developers | [Architecture and stack](docs/handbook/02-architecture-and-stack.md) · [Core Flows](docs/handbook/03-core-flows.md) |
+| Visual/product readers | [Screens and visual assets](docs/handbook/04-screens-and-visuals.md) |
+| AI agents | [AI restructure brief](docs/handbook/07-ai-restructure-brief.md) · [CONTEXT.md](CONTEXT.md) |
+| Handover and operations | [Handover checklist](docs/handbook/08-handover-checklist.md) |
+
+### Technical reference
+
 
 | Document                                     | Description                       |
 | -------------------------------------------- | --------------------------------- |

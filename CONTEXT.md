@@ -1,6 +1,7 @@
 # CONTEXT.md — LoadSaathi App Codebase Context
 
 > **Purpose:** This file provides AI coding agents (Cursor, Claude Engineer, Devin, Windsurf, etc.) with a comprehensive understanding of the LoadSaathi codebase. Read this before making any changes.
+> **Reader navigation:** For audience-specific explanations, screenshots, and preserved Core Flows, start with [`REPO_HANDBOOK.md`](REPO_HANDBOOK.md) and [`docs/handbook/00-index.md`](docs/handbook/00-index.md).
 
 ---
 
@@ -42,46 +43,60 @@
 ```
 LOAD-SAATHI-APP-1-OSRM/
 ├── src/
-│   ├── App.tsx                    # Root component: ALL route definitions + providers
+│   ├── App.tsx                    # Root component + provider composition
 │   ├── main.tsx                   # Entry point (React root)
 │   ├── globals.css                # Tailwind directives + CSS custom properties
 │   │
 │   ├── pages/                     # Route components (lazy-loaded via React.lazy)
-│   │   ├── Index.tsx              # Homepage (hero, tabs, corridors, FAQ — ~1039 lines)
-│   │   ├── Login.tsx              # Clerk sign-in
-│   │   ├── Register.tsx           # Clerk sign-up
-│   │   ├── ChooseRole.tsx         # Post-registration role selection (shipper/trucker)
-│   │   ├── ForgotPassword.tsx     # Password reset
-│   │   ├── Profile.tsx            # User profile page
-│   │   ├── TripDetail.tsx         # Public trip detail view
-│   │   ├── Favorites.tsx          # Saved trips/shipments
-│   │   ├── CreditScore.tsx        # Credit score display page
-│   │   ├── Chat.tsx               # Real-time messaging (per request)
-│   │   ├── ChatList.tsx           # Conversation list
+│   │   ├── auth/                  # Authentication pages
+│   │   │   ├── Login.tsx          # Clerk sign-in
+│   │   │   ├── Register.tsx       # Clerk sign-up
+│   │   │   ├── ChooseRole.tsx     # Post-registration role selection (shipper/trucker)
+│   │   │   └── ForgotPassword.tsx # Password reset
+│   │   │
+│   │   ├── messaging/             # Real-time chat
+│   │   │   ├── Chat.tsx           # Real-time messaging (per request)
+│   │   │   └── ChatList.tsx       # Conversation list
+│   │   │
+│   │   ├── account/               # User account pages
+│   │   │   ├── Profile.tsx        # User profile page
+│   │   │   ├── Favorites.tsx      # Saved trips/shipments
+│   │   │   └── CreditScore.tsx    # Credit score display page
+│   │   │
+│   │   ├── trips/                 # Trip detail views
+│   │   │   └── TripDetail.tsx     # Public trip detail view
+│   │   │
 │   │   ├── NotFound.tsx           # 404 page
 │   │   │
 │   │   ├── public/                # Marketing/info pages (PublicLayout wrapper)
+│   │   │   ├── Index.tsx          # Homepage (hero, tabs, corridors, FAQ — ~1039 lines)
 │   │   │   ├── About.tsx          # Company info + founding story
 │   │   │   ├── Contact.tsx        # Contact form + info
 │   │   │   ├── FAQ.tsx            # FAQ accordion
-│   │   │   ├── FareCalculator.tsx # Price estimation tool
 │   │   │   ├── Features.tsx       # Feature showcase (tabs)
 │   │   │   ├── Gallery.tsx        # App screenshots gallery
 │   │   │   ├── HowItWorks.tsx     # Step-by-step guide
-│   │   │   ├── Pricing.tsx        # Pricing tiers (Shipper/Trucker)
 │   │   │   ├── Privacy.tsx        # Privacy policy
 │   │   │   ├── SafetyTrust.tsx    # Safety features
 │   │   │   ├── SharedShipment.tsx # Public share links for shipments
 │   │   │   ├── SharedTrip.tsx     # Public share links for trips
-│   │   │   ├── ShipperSolution.tsx# Shipper-focused landing
-│   │   │   ├── TruckerSolution.tsx# Trucker-focused landing
 │   │   │   ├── Terms.tsx          # Terms of service
 │   │   │   ├── RoutesIndex.tsx    # All freight routes listing (30+)
 │   │   │   ├── RouteDetail.tsx    # Individual route detail page
-│   │   │   ├── locations/
-│   │   │   │   └── LocationPage.tsx  # Dynamic /location/:city
-│   │   │   └── guides/
-│   │   │       └── GuidePage.tsx  # Dynamic /guide/:slug
+│   │   │   │
+│   │   │   ├── commercial/        # Commercial/marketing pages
+│   │   │   │   ├── Pricing.tsx    # Pricing tiers (Shipper/Trucker)
+│   │   │   │   ├── ShipperSolution.tsx  # Shipper-focused landing
+│   │   │   │   └── TruckerSolution.tsx  # Trucker-focused landing
+│   │   │   │
+│   │   │   ├── tools/             # Interactive tools
+│   │   │   │   └── FareCalculator.tsx  # Price estimation tool
+│   │   │   │
+│   │   │   ├── guides/            # Dynamic guide pages
+│   │   │   │   └── GuidePage.tsx  # Dynamic /guide/:slug
+│   │   │   │
+│   │   │   └── locations/         # Dynamic location pages
+│   │   │       └── LocationPage.tsx  # Dynamic /location/:city
 │   │   │
 │   │   ├── trucker/               # Trucker role pages
 │   │   │   ├── Dashboard.tsx      # Trucker dashboard
@@ -109,10 +124,9 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │   │   ├── GalleryManager.tsx      # Screenshot manager
 │   │   │   └── TeamManager.tsx         # Team management
 │   │   │
-│   │   ├── blog/                  # Blog system
-│   │   │   ├── BlogList.tsx       # Blog listing page
-│   │   │   └── BlogArticle.tsx    # Individual blog post
-│   │   │
+│   │   └── blog/                  # Blog system
+│   │       ├── BlogList.tsx       # Blog listing page
+│   │       └── BlogArticle.tsx    # Individual blog post
 │   │
 │   ├── features/                  # Feature-scoped modules
 │   │   ├── home/sections/         # Landing page sections
@@ -628,7 +642,7 @@ interface Notification {
 
 ### Routing
 
-- All routes defined in `src/App.tsx`
+- Route definitions live in `src/routes.tsx` and are rendered by `src/App.tsx`
 - Public routes wrapped in `<PublicLayout>`
 - Protected routes wrapped in `<Layout>` + role checks
 - Lazy-loaded via `React.lazy()` + `Suspense`
