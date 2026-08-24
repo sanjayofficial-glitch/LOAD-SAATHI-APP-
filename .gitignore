@@ -56,3 +56,6 @@ graphify-out/.graphify_old.json
 graphify-out/.graphify_uncached.txt
 graphify-out/.graphify_chunk_list_*.json
 graphify-out/.graphify_chunk_*.json
+
+# Graphify analysis cache (generated, not app code)
+graphify-out/
