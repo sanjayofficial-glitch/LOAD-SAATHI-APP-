@@ -129,8 +129,8 @@ function App() {
       <PostHogProvider>
       <ClerkProvider
         publishableKey={CLERK_PUBLISHABLE_KEY}
-        allowedRedirectOrigins={['http://localhost', 'https://localhost', 'http://localhost:5173', 'https://loadsaathi.in', 'https://www.loadsaathi.in', 'https://in.loadsaathi.app', 'capacitor://localhost', 'https://clerk.loadsaathi.in']}
-        signUpFallbackRedirectUrl="/register"
+        allowedRedirectOrigins={['http://localhost', 'https://localhost', 'http://localhost:5173', 'https://localhost:5173', 'https://loadsaathi.in', 'https://www.loadsaathi.in', 'https://in.loadsaathi.app', 'capacitor://localhost', 'https://clerk.loadsaathi.in']}
+        signUpFallbackRedirectUrl="/choose-role"
         signInFallbackRedirectUrl="/choose-role"
       >
         <QueryClientProvider client={queryClient}>

@@ -43,7 +43,8 @@ const Login = () => {
       });
     } catch (err) {
       console.error("Google sign-in error:", err);
-      setError("Google sign-in failed. Please try again.");
+      const msg = (err as { message?: string })?.message || "Google sign-in failed. Please try again.";
+      setError(msg.includes("network") ? "Network error. Check your connection and try again." : msg);
       setLoading(false);
     }
   };
@@ -95,7 +96,7 @@ const Login = () => {
 
           <button
             onClick={handleGoogleSignIn}
-            disabled={loading}
+            disabled={loading || !isLoaded}
             className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all disabled:opacity-50 mb-6"
           >
             {loading ? (
@@ -150,7 +151,7 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              disabled={loading || !email || !password}
+              disabled={loading || !isLoaded || !email || !password}
               className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Sign In"}
