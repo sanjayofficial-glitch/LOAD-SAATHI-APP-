@@ -1,5 +1,24 @@
 # Supabase Edge Functions
 
+## Edge Function request path
+
+```mermaid
+sequenceDiagram
+    participant UI as React client
+    participant Hook as Feature hook
+    participant Edge as Supabase Edge Function
+    participant Model as Gemini or scoring logic
+    participant DB as Supabase data
+
+    UI->>Hook: User requests insight or prediction
+    Hook->>Edge: Send validated input
+    Edge->>DB: Read permitted context
+    Edge->>Model: Run server-side analysis
+    Model-->>Edge: Result and confidence
+    Edge-->>Hook: Structured response
+    Hook-->>UI: Render result
+```
+
 LoadSaathi runs a set of serverless **Edge Functions** (Deno runtime) on
 Supabase for AI-powered features that can't run client-side.
 

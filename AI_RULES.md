@@ -1,13 +1,25 @@
 # Tech Stack
 
+## AI coding guardrails
+
+```mermaid
+flowchart TB
+    REQUEST[User request] --> CONTEXT[Read CONTEXT and handbook]
+    CONTEXT --> PLAN[Make a scoped plan]
+    PLAN --> RULES[Follow TypeScript, React, Tailwind, and data rules]
+    RULES --> CHANGE[Implement change]
+    CHANGE --> CHECK[Run checks]
+    CHECK --> HANDOFF[Explain files changed and remaining risks]
+```
+
 - You are building a React application.
 - Use TypeScript.
-- Use React Router. KEEP the routes in src/App.tsx
+- Use React Router. Keep route definitions in `src/routes.tsx`; they are rendered by `src/App.tsx`
 - Always put source code in the src folder.
 - Put pages into src/pages/
 - Put components into src/components/
-- The main page (default page) is src/pages/Index.tsx
-- UPDATE the main page to include the new components. OTHERWISE, the user can NOT see any components!
+- The public homepage is `src/pages/public/Index.tsx`
+- Update the relevant route page or feature entry point when adding visible UI; otherwise, users will not see the new component.
 - ALWAYS try to use the shadcn/ui library.
 - Tailwind CSS: always use Tailwind CSS for styling components. Utilize Tailwind classes extensively for layout, spacing, colors, and other design aspects.
 

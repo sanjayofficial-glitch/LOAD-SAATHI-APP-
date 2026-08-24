@@ -69,10 +69,21 @@ This document outlines LoadSaathi's current status and planned direction.
 
 ## How to Contribute Ideas
 
-- Open a [Feature Request](../../.github/ISSUE_TEMPLATE/feature_request.yml)
+- Open a [Feature Request](../.github/ISSUE_TEMPLATE/feature_request.yml)
 - Email **support@loadsaathi.in**
 
 ---
+
+## Roadmap horizons
+
+```mermaid
+flowchart LR
+    NOW[Shipped MVP foundation] --> READY[Launch readiness]
+    READY --> GROWTH[Growth and scale]
+    GROWTH --> NETWORK[Network effects]
+    NETWORK --> EXPANSION[More cities and enterprise integrations]
+```
+
 
 _This roadmap is maintained by the LoadSaathi team and updated as priorities
 shift. Last updated: August 2026._

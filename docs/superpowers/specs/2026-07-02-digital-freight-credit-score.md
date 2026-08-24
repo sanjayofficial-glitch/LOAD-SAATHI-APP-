@@ -6,6 +6,17 @@
 
 ---
 
+## Credit-score concept map
+
+```mermaid
+flowchart TD
+    HISTORY[Trip and account history] --> FACTORS[Completion, timeliness, communication, reviews, tenure]
+    FACTORS --> WEIGHT[Weighted calculation]
+    WEIGHT --> SCORE[Score from 300 to 900]
+    SCORE --> INSIGHTS[Narrative insights and trust signal]
+```
+
+
 ## 1. Overview
 
 A **freight credit score** (300–900 range, CIBIL-like) for every user (shipper & trucker) on the Load Saathi platform. The score reflects trustworthiness and reliability based purely on platform-internal data. Visible to both parties — shippers use it to pick reliable truckers, truckers use it to evaluate shipper reliability.

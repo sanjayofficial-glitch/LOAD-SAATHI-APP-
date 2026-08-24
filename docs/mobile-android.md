@@ -1,5 +1,16 @@
 # Mobile (Android)
 
+## Web-to-Android build path
+
+```mermaid
+flowchart LR
+    SRC[React source] --> VITE[Vite production build]
+    VITE --> DIST[dist assets]
+    DIST --> SYNC[npx cap sync]
+    SYNC --> NATIVE[Android project]
+    NATIVE --> APK[APK or App Bundle]
+```
+
 LoadSaathi ships an Android app built with **Capacitor 8**, wrapping the same
 React web build in a native WebView.
 

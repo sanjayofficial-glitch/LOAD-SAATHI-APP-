@@ -9,6 +9,8 @@ architecture, deployment, and future improvements.
 The [Repository Handbook](../REPO_HANDBOOK.md) is the shortest orientation. The
 [Handbook Index](handbook/00-index.md) then routes each reader to the right depth.
 
+For a complete visual catalog, see the [Diagram Directory](DIAGRAMS.md).
+
 | Reader | Start with | Best for |
 | --- | --- | --- |
 | Non-technical reader | [Product overview](handbook/01-overview-non-technical.md) | Understanding the problem, users, and value |
@@ -21,6 +23,23 @@ The [Repository Handbook](../REPO_HANDBOOK.md) is the shortest orientation. The
 > The handbook is a navigation layer over the detailed technical references below. It does not replace the existing architecture, data-model, realtime, deployment, or SEO documents.
 
 ---
+
+## Documentation map
+
+```mermaid
+flowchart TB
+    HUB[Documentation hub] --> HANDBOOK[Audience handbook]
+    HUB --> TECH[Technical references]
+    HUB --> OPS[Operations and deployment]
+    HUB --> SEO[SEO, GEO, and analytics]
+    HANDBOOK --> PRODUCT[Product understanding]
+    HANDBOOK --> FLOWS[Core Flows]
+    TECH --> ARCH[Architecture and data]
+    TECH --> FEATURES[Feature deep-dives]
+    OPS --> WEB[Web and Android delivery]
+    SEO --> GROWTH[Discoverability and measurement]
+```
+
 
 ## Project Overview
 

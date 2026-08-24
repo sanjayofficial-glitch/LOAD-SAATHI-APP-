@@ -6,6 +6,19 @@
 
 ---
 
+## SEO/GEO implementation sequence
+
+```mermaid
+flowchart LR
+    P1[Fix deployment and indexing] --> P2[Improve schema]
+    P2 --> P3[Update robots and sitemap]
+    P3 --> P4[Strengthen core pages]
+    P4 --> P5[Add location and guide content]
+    P5 --> P6[Improve internal linking]
+    P6 --> MEASURE[Measure crawl, rankings, and citations]
+```
+
+
 ## Phase 1: Fix Broken Deployment (User Action Required)
 
 **Cannot be done by AI agent — you must run:**

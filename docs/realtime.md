@@ -1,5 +1,23 @@
 # Realtime Subscriptions
 
+## Realtime event loop
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Client as React client
+    participant RT as Supabase Realtime
+    participant DB as Postgres table
+
+    Client->>RT: Subscribe with channel and filters
+    RT-->>Client: Subscription ready
+    User->>Client: Create or update marketplace data
+    Client->>DB: Write authenticated mutation
+    DB-->>RT: Postgres change event
+    RT-->>Client: Broadcast matching event
+    Client-->>User: Refresh UI and notification state
+```
+
 LoadSaathi uses **Supabase Realtime** to push live updates to the UI —
 notifications, chat messages, and GPS location updates arrive without page
 refreshes.

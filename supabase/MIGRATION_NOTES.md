@@ -1,5 +1,16 @@
 # Supabase Auth → Clerk Migration Notes
 
+## Authentication migration path
+
+```mermaid
+flowchart LR
+    OLD[Supabase Auth triggers] --> CLEANUP[Remove legacy auth artifacts]
+    CLEANUP --> CLERK[Clerk sign-up and sign-in]
+    CLERK --> JWT[Clerk JWT with Supabase template]
+    JWT --> RLS[Supabase RLS validates Clerk subject]
+    RLS --> DATA[Application data access]
+```
+
 ## What Was Cleaned Up
 
 ### Deleted SQL Files

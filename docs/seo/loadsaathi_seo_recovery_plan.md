@@ -1,5 +1,17 @@
 # LoadSaathi SEO Traffic Recovery Plan
 
+## Recovery operating model
+
+```mermaid
+flowchart TB
+    DIAGNOSE[Diagnose indexing and CTR issues] --> P0[Priority 0: technical crawlability]
+    P0 --> P1[Priority 1: titles and internal links]
+    P1 --> P2[Priority 2: evidence-led content]
+    P2 --> P3[Priority 3: authority and demand]
+    P3 --> MEASURE[Measure Search Console and acquisition signals]
+    MEASURE --> DIAGNOSE
+```
+
 **Prepared:** August 16, 2026  
 **Site:** [loadsaathi.in](https://loadsaathi.in/)  
 **Author:** Manus AI

@@ -6,6 +6,25 @@
 
 ---
 
+## Visual map
+
+```mermaid
+flowchart LR
+    A[Choose your reader path] --> B[Product overview]
+    A --> C[Architecture and stack]
+    A --> D[Core Flows]
+    A --> E[Visual assets]
+    A --> F[AI agent context]
+    A --> G[Handover checklist]
+    B --> H[Shared understanding]
+    C --> H
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+```
+
+
 ## What This Is
 
 LoadSaathi is India's AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform matches shippers with truckers, tracks shipments via GPS, and builds digital credit scores for all participants.

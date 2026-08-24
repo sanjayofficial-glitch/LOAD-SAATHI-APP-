@@ -1,5 +1,18 @@
 # LoadSaathi — Directory Submission Backlinks
 
+## Authority-building funnel
+
+```mermaid
+flowchart TD
+    TARGET[Target freight and logistics audiences] --> T1[Tier 1: relevant directories]
+    TARGET --> T2[Tier 2: local and startup directories]
+    TARGET --> T3[Tier 3: broader business platforms]
+    T1 --> ENTITY[Consistent LoadSaathi entity signals]
+    T2 --> ENTITY
+    T3 --> ENTITY
+    ENTITY --> TRUST[Discovery and trust]
+```
+
 High-DR directories to submit LoadSaathi.in for backlinks and domain authority.
 
 ## Logistics / Transportation Directories

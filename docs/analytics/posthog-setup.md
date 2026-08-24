@@ -1,5 +1,19 @@
 # PostHog post-wizard report
 
+## Analytics signal path
+
+```mermaid
+flowchart LR
+    ACTION[User action] --> EVENT[Tracked event]
+    EVENT --> PH[PostHog]
+    EVENT --> GA[Google Analytics]
+    EVENT --> VERCEL[Vercel Analytics]
+    PH --> INSIGHT[Product insight]
+    GA --> INSIGHT
+    VERCEL --> INSIGHT
+    INSIGHT --> DECISION[Prioritized product decision]
+```
+
 The wizard completed a client-side PostHog integration for this Vite React marketplace. The existing SDK setup now requires configured environment variables, preserves autocapture and session replay defaults, enables automatic exception capture, identifies authenticated Clerk users with person properties, and resets identity on logout. Critical shipment, trip, booking, messaging, review, favorite, and fare-estimation actions now emit privacy-safe events. A production build passed, and targeted ESLint completed with no errors.
 
 | Event | Description | File |

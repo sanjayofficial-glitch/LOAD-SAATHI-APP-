@@ -1,5 +1,17 @@
 # Deployment
 
+## Delivery pipeline
+
+```mermaid
+flowchart LR
+    DEV[Developer branch] --> PR[Pull request]
+    PR --> CI[Lint, typecheck, test, build]
+    CI --> MAIN[main branch]
+    MAIN --> VERCEL[Vercel web deployment]
+    MAIN --> CAP[Capacitor sync]
+    CAP --> ANDROID[Android Studio or CLI build]
+```
+
 LoadSaathi deploys on **Vercel** (web) and **Google Play** (Android via
 Capacitor).
 

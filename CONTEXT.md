@@ -5,6 +5,25 @@
 
 ---
 
+## Visual map
+
+```mermaid
+flowchart TB
+    APP[LoadSaathi application context] --> SYS[Architecture and services]
+    APP --> FLOWS[Core system flows]
+    APP --> DATA[State and data models]
+    APP --> RULES[Coding standards]
+    APP --> DEBUG[Troubleshooting]
+    APP --> DEPLOY[Deployment and environment]
+    SYS --> SAFE[Safer AI-assisted changes]
+    FLOWS --> SAFE
+    DATA --> SAFE
+    RULES --> SAFE
+    DEBUG --> SAFE
+    DEPLOY --> SAFE
+```
+
+
 ## 1. SYSTEM ARCHITECTURE & TECH STACK
 
 | Layer      | Technology                      | Version            | Purpose                               |

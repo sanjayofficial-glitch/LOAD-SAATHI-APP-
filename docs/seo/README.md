@@ -1,5 +1,17 @@
 # SEO & GEO Optimization
 
+## Search visibility system
+
+```mermaid
+flowchart LR
+    CONTENT[Useful product and logistics content] --> SEO[Traditional SEO]
+    CONTENT --> GEO[Answer-engine optimization]
+    SEO --> CRAWL[Crawlable pages and sitemap]
+    GEO --> MACHINE[llms.txt and structured data]
+    CRAWL --> DISCOVER[Search discovery]
+    MACHINE --> ANSWERS[AI answer citations]
+```
+
 LoadSaathi is optimized for both traditional search engines (Google) and AI
 answer engines (ChatGPT, Perplexity, Claude, Gemini). This section documents
 the strategy.

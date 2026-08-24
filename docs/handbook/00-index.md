@@ -4,6 +4,30 @@
 
 ---
 
+## Handbook navigation map
+
+```mermaid
+mindmap
+  root((LoadSaathi handbook))
+    Non-technical
+      Product overview
+      Screens and visuals
+      Roadmap
+    Developer
+      Architecture
+      Core Flows
+      Handover
+    AI agent
+      Restructure brief
+      Context
+      Graphify memory
+    Operations
+      Environment
+      Deployment
+      Handover
+```
+
+
 ## Reading Paths
 
 ### Path A: Non-technical reader (founder, stakeholder, business partner)

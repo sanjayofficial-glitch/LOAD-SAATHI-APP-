@@ -4,6 +4,18 @@
 
 ---
 
+## Improvement prioritization
+
+```mermaid
+flowchart LR
+    AUDIT[Honest current-state audit] --> FREE[Free foundation fixes]
+    FREE --> LOW[Low-cost reliability improvements]
+    LOW --> PAID[Paid scale investments]
+    PAID --> IMPACT[Higher confidence and operating scale]
+    IMPACT --> AUDIT
+```
+
+
 ## Current State Assessment
 
 ### What's Strong

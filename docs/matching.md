@@ -1,5 +1,17 @@
 # Smart Matching Algorithm
 
+## Matching decision pipeline
+
+```mermaid
+flowchart TD
+    INPUT[Trip and shipment inputs] --> NORMALIZE[Normalize route, date, price, and capacity]
+    NORMALIZE --> SCORE[Calculate seven-factor score]
+    SCORE --> FILTER[Remove incompatible options]
+    FILTER --> AI[Optional AI confidence and reasoning]
+    AI --> SORT[Sort by match quality]
+    SORT --> UI[Show match label and explanation]
+```
+
 LoadSaathi's AI matching engine pairs shippers with truckers using a
 multi-factor scoring model. The core logic lives in `src/utils/matching.ts` and
 is consumed via the `useSmartMatch` hook.

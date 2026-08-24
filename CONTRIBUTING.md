@@ -1,5 +1,17 @@
 # Contributing to LoadSaathi
 
+## Contribution path
+
+```mermaid
+flowchart LR
+    IDEA[Issue or improvement idea] --> BRANCH[Create focused branch]
+    BRANCH --> CHANGE[Make small, documented change]
+    CHANGE --> CHECK[Run local quality checks]
+    CHECK --> PR[Open pull request]
+    PR --> REVIEW[Review and CI]
+    REVIEW --> MERGE[Merge when approved]
+```
+
 First off, thank you for taking the time to contribute! 🎉
 
 This project is a **proprietary, closed-source** application. Before contributing,

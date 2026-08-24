@@ -4,6 +4,19 @@
 
 ---
 
+## Product value loop
+
+```mermaid
+flowchart LR
+    SHIPPER[Shipper needs capacity] --> MARKET[LoadSaathi marketplace]
+    TRUCKER[Trucker has available capacity] --> MARKET
+    MARKET --> MATCH[Better route and capacity match]
+    MATCH --> MOVE[Confirmed movement]
+    MOVE --> TRUST[Tracking, reviews, and credit history]
+    TRUST --> MARKET
+```
+
+
 ## The Problem
 
 India has ~10 million trucks. On any given day, many of them return **empty** after delivering a load. This wastes fuel, time, and money. Meanwhile, small businesses (MSMEs) struggle to find reliable, affordable trucks for their goods — especially for smaller loads (PTL/LTL) that big logistics companies ignore.

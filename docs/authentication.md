@@ -1,5 +1,23 @@
 # Authentication
 
+## Authentication handoff
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Clerk
+    participant App as React app
+    participant Supabase
+
+    User->>Clerk: Sign in or sign up
+    Clerk-->>App: Session and JWT
+    App->>Clerk: Request Supabase token
+    Clerk-->>App: Supabase-compatible JWT
+    App->>Supabase: Read or create profile
+    Supabase-->>App: User role and profile
+    App->>Supabase: Authenticated data requests
+```
+
 LoadSaathi uses **Clerk** for authentication and **Supabase** for the database.
 The two are bridged using Clerk's custom JWT template feature.
 

@@ -1,5 +1,14 @@
 # Contributor Covenant Code of Conduct
 
+## Collaboration standard
+
+```mermaid
+flowchart LR
+    PARTICIPATE[Participate respectfully] --> FEEDBACK[Give constructive feedback]
+    FEEDBACK --> RESOLVE[Resolve concerns through maintainers]
+    RESOLVE --> IMPROVE[Improve the community]
+```
+
 ## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in our

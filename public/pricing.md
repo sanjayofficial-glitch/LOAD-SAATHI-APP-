@@ -1,5 +1,18 @@
 # LoadSaathi Pricing
 
+## Pricing model
+
+```mermaid
+flowchart TD
+    JOIN[Join for free] --> USE[Browse and use marketplace capabilities]
+    USE --> MOVE{Completed freight transaction?}
+    MOVE -->|No| NOFEE[No transaction fee]
+    MOVE -->|Yes| FEE[Transparent transaction fee]
+    FEE --> ENTERPRISE{Enterprise volume?}
+    ENTERPRISE -->|Yes| CUSTOM[Custom enterprise pricing]
+    ENTERPRISE -->|No| STANDARD[Standard plan fee]
+```
+
 LoadSaathi uses transparent, pay-per-transaction pricing. Free to join, pay only when you move freight.
 
 ## For Shippers

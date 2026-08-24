@@ -6,6 +6,20 @@ in this repository. It is the enforcement companion to the rules documented in
 
 ---
 
+## Change-quality loop
+
+```mermaid
+flowchart LR
+    CHANGE[Make a focused change] --> FORMAT[Format]
+    FORMAT --> LINT[Lint]
+    LINT --> TYPE[Typecheck]
+    TYPE --> TEST[Test]
+    TEST --> BUILD[Build]
+    BUILD --> REVIEW[Open pull request]
+    REVIEW --> CI[CI quality gate]
+```
+
+
 ## 1. Language & Framework
 
 - **TypeScript strict mode** — no `any` types. The `typecheck` script

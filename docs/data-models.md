@@ -1,5 +1,20 @@
 # Data Models & Database Schema
 
+## Core data relationships
+
+```mermaid
+erDiagram
+    USERS ||--o{ TRIPS : posts
+    USERS ||--o{ SHIPMENTS : creates
+    TRIPS ||--o{ REQUESTS : receives
+    SHIPMENTS ||--o{ REQUESTS : attracts
+    REQUESTS ||--o{ MESSAGES : contains
+    TRIPS ||--o{ REVIEWS : receives
+    SHIPMENTS ||--o{ REVIEWS : relates
+    USERS ||--o{ DRIVER_LOCATIONS : reports
+    USERS ||--o{ NOTIFICATIONS : receives
+```
+
 LoadSaathi uses **Supabase (PostgreSQL)** with Row Level Security (RLS) enabled
 on all tables. This document describes the data models used by the application.
 

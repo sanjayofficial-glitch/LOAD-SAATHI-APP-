@@ -1,5 +1,21 @@
 # LoadSaathi System Architecture
 
+## Architecture at a glance
+
+```mermaid
+flowchart TB
+    CLIENT[Web SPA and Android shell] --> ROUTER[React Router]
+    ROUTER --> UI[Pages, features, and shared components]
+    UI --> HOOKS[Hooks and React Query]
+    HOOKS --> AUTH[Clerk JWT]
+    HOOKS --> DB[Supabase Postgres + RLS]
+    DB --> RT[Supabase Realtime]
+    DB --> EDGE[Supabase Edge Functions]
+    UI --> MAPS[OSRM + Nominatim]
+    EDGE --> AI[Gemini]
+    RT --> UI
+```
+
 This document describes the system architecture of LoadSaathi, including the
 tech stack, system flows, and how the pieces fit together.
 

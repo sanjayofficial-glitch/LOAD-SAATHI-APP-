@@ -1,5 +1,16 @@
 # Security Policy
 
+## Vulnerability-reporting path
+
+```mermaid
+flowchart LR
+    FIND[Discover a vulnerability] --> PRIVATE[Report privately]
+    PRIVATE --> TRIAGE[Security triage]
+    TRIAGE --> FIX[Develop and verify fix]
+    FIX --> RELEASE[Release remediation]
+    RELEASE --> DISCLOSE[Coordinate responsible disclosure]
+```
+
 ## Reporting a Vulnerability
 
 We take security seriously. If you discover a security vulnerability, **please

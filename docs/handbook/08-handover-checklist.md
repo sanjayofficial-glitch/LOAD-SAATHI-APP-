@@ -4,6 +4,18 @@
 
 ---
 
+## Handover journey
+
+```mermaid
+flowchart LR
+    ACCESS[Get repository and service access] --> ENV[Configure environment]
+    ENV --> RUN[Run locally]
+    RUN --> CHECK[Run quality checks]
+    CHECK --> DEPLOY[Deploy web or Android]
+    DEPLOY --> OPERATE[Monitor and troubleshoot]
+```
+
+
 ## Quick Start (5 Minutes)
 
 ```bash

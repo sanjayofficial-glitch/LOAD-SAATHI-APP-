@@ -4,6 +4,21 @@
 
 ---
 
+## Visual asset system
+
+```mermaid
+flowchart LR
+    BRAND[Brand assets] --> PUBLIC[Public marketing surfaces]
+    SCREEN[Product screenshots] --> README[README and handbook]
+    PREVIEW[Live React previews] --> PUBLIC
+    TEAM[Team photography] --> PUBLIC
+    GRAPH[Knowledge graph exports] --> TECH[Technical exploration]
+    PUBLIC --> UNDERSTAND[Visual product understanding]
+    README --> UNDERSTAND
+    TECH --> UNDERSTAND
+```
+
+
 ## App Screenshots (6)
 
 Located in `docs/assets/screenshots/`:

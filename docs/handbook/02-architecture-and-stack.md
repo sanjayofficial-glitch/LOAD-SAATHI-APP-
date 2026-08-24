@@ -4,6 +4,19 @@
 
 ---
 
+## Layered system view
+
+```mermaid
+flowchart TB
+    PRESENTATION[Pages, features, shared components] --> STATE[Hooks, contexts, React Query]
+    STATE --> INTEGRATION[Clerk, Supabase, OSRM, Nominatim]
+    INTEGRATION --> FUNCTIONS[Supabase Edge Functions]
+    FUNCTIONS --> AI[Gemini-powered analysis]
+    INTEGRATION --> DATA[Postgres, RLS, and Realtime]
+    DATA --> PRESENTATION
+```
+
+
 ## Tech Stack
 
 | Layer | Technology | Version | Purpose |

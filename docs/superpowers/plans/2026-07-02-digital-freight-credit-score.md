@@ -18,6 +18,17 @@
 - Score is visible to all authenticated users (mutual trust signal) — RLS permits this
 
 ---
+
+## Delivery plan shape
+
+```mermaid
+flowchart LR
+    DISCOVERY[Understand scoring goals] --> DESIGN[Define factors and boundaries]
+    DESIGN --> IMPLEMENT[Build score calculation]
+    IMPLEMENT --> VERIFY[Validate with tests and examples]
+    VERIFY --> RELEASE[Release behind a controlled workflow]
+```
+
 ## File Structure
 
 | File | Purpose |

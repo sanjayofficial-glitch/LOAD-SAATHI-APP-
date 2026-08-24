@@ -4,6 +4,18 @@
 
 ---
 
+## Safe AI change loop
+
+```mermaid
+flowchart LR
+    READ[Read handbook and context] --> SCOPE[Choose a narrow improvement]
+    SCOPE --> PRESERVE[Preserve flows, routes, and integrations]
+    PRESERVE --> IMPLEMENT[Implement and document]
+    IMPLEMENT --> VERIFY[Lint, typecheck, test, and build]
+    VERIFY --> REVIEW[Human review and handoff]
+```
+
+
 ## Mission
 
 Restructure the LoadSaathi repository to be better organized, properly documented, and ready for team handoff. Fix known issues, reduce duplication, and set up quality infrastructure.

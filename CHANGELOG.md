@@ -42,5 +42,16 @@ maintained rigorously once the first tagged release is cut.
 
 ---
 
+## Release history flow
+
+```mermaid
+flowchart LR
+    CHANGE[Change implemented] --> NOTE[Document under Unreleased]
+    NOTE --> VERIFY[Verify with checks]
+    VERIFY --> RELEASE[Tag or publish release]
+    RELEASE --> HISTORY[Preserve user-facing history]
+```
+
+
 _Changelog entries are added per meaningful change. For a full commit history,
 see `git log`._

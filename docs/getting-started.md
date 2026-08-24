@@ -1,5 +1,16 @@
 # Getting Started
 
+## First-run journey
+
+```mermaid
+flowchart LR
+    CLONE[Clone repository] --> INSTALL[pnpm install]
+    INSTALL --> ENV[Create .env]
+    ENV --> DEV[pnpm dev]
+    DEV --> CHECK[Run checks]
+    CHECK --> FEATURE[Start a focused change]
+```
+
 This guide walks you through setting up the LoadSaathi codebase on your local
 machine.
 

@@ -10,6 +10,20 @@
 
 ---
 
+## Migration decision path
+
+```mermaid
+flowchart LR
+    CURRENT[Supabase Realtime chat] --> ASSESS[Assess gaps and migration need]
+    ASSESS --> PROTOTYPE[Prototype Firebase path]
+    PROTOTYPE --> PARALLEL[Run validation in parallel]
+    PARALLEL --> DECIDE{Meets reliability and product needs?}
+    DECIDE -->|No| CURRENT
+    DECIDE -->|Yes| CUTOVER[Plan controlled cutover]
+    CUTOVER --> FALLBACK[Keep rollback path]
+```
+
+
 ## 1. Firebase Realtime Database Structure
 
 ```

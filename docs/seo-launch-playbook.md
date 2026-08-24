@@ -5,6 +5,18 @@
 
 ---
 
+## Launch playbook sequence
+
+```mermaid
+flowchart LR
+    ENTITY[Disambiguate the LoadSaathi entity] --> INDEX[Submit and verify indexation]
+    INDEX --> SIGNALS[Build relevant directory signals]
+    SIGNALS --> CONTENT[Publish useful freight content]
+    CONTENT --> INTERNAL[Strengthen internal linking]
+    INTERNAL --> MEASURE[Measure discovery and demand]
+```
+
+
 ## 1. WIKIDATA ENTRY — the single biggest off-site disambiguation lever
 
 Google's Knowledge Graph pulls entity type, aliases, and website linkage from Wikidata. A Loan-Saathi style finance entity already exists there; we need a clearly typed *trucking* entity.

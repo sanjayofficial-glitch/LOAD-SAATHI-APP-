@@ -4,6 +4,20 @@
 
 ---
 
+## Code-memory pipeline
+
+```mermaid
+flowchart TD
+    FILES[Source files and documentation] --> AST[AST extraction]
+    FILES --> SEMANTIC[Semantic extraction]
+    AST --> MERGE[Merge structural and semantic knowledge]
+    SEMANTIC --> MERGE
+    MERGE --> CLUSTER[Cluster related communities]
+    CLUSTER --> EXPORT[HTML, JSON, report, and graph formats]
+    EXPORT --> AGENT[Human and AI codebase navigation]
+```
+
+
 ## What Is Graphify?
 
 Graphify is an AI-powered tool that converts a folder of files (code, docs, images) into a **navigable knowledge graph**. It reads your source code, extracts entities (functions, classes, components), maps relationships (calls, imports, references), and clusters them into communities.

@@ -1,5 +1,17 @@
 # Environment Variables
 
+## Configuration boundary
+
+```mermaid
+flowchart TB
+    TEMPLATE[.env.example] --> LOCAL[Local .env]
+    LOCAL --> VITE[Vite client variables]
+    VITE --> PUBLIC[Browser-safe configuration]
+    SERVER[Supabase secret variables] --> EDGE[Edge Function runtime]
+    EDGE --> PRIVATE[Server-side integrations]
+    PUBLIC -. never contains . .-> PRIVATE
+```
+
 All environment variables in LoadSaathi are validated at runtime via **Zod** in
 `src/config/env.ts`. Access them only through the validated `env` object:
 
