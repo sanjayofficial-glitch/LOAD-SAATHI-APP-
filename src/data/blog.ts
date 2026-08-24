@@ -5,10 +5,12 @@ export interface BlogArticle {
   lastUpdated?: string;
   readTime: string;
   author: string;
-  authorBio: string;
+  authorBio?: string;
   summary: string;
   content: string[];
   relatedRoutes?: string[];
+  relatedPosts?: string[];
+  keywords?: string[];
   coverImage?: string;
   canonicalUrl?: string;
   faq?: { question: string; answer: string }[];

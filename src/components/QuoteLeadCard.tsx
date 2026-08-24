@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { MessageSquare, ArrowRight, Phone, Loader2, CheckCircle } from "lucide-react";
+import { MessageSquare, ArrowRight, Phone, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { trackQuoteRequested, trackWhatsappClicked, trackRegisterStarted } from "@/utils/analytics";

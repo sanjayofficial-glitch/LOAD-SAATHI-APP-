@@ -224,7 +224,7 @@ describe('Agentic Readiness: index.html noscript content', () => {
     // Find the main noscript (not the GTM iframe one) — it's the one with <div inside
     const allNoscriptMatches = [...content.matchAll(/<noscript>([\s\S]*?)<\/noscript>/g)];
     const mainNoscript = allNoscriptMatches.find(
-      (m) => m[1].includes('<div') && m[1].includes('<h1')
+      (m) => m[1]?.includes('<div') && m[1]?.includes('<h1')
     );
     expect(mainNoscript).toBeDefined();
     expect(mainNoscript![1]).toContain('<h1>');
