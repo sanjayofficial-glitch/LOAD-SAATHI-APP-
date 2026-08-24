@@ -395,10 +395,10 @@ export default function ReturnLoad() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               { from: 'Ranchi', to: 'Rourkela', slug: 'ranchi-to-rourkela' },
-              { from: 'Bhubaneswar', to: 'Rourkela', slug: 'bhubaneswar-to-rourkela' },
-              { from: 'Kolkata', to: 'Ranchi', slug: 'kolkata-to-ranchi' },
+              { from: 'Rourkela', to: 'Bhubaneswar', slug: 'rourkela-to-bhubaneswar' },
+              { from: 'Ranchi', to: 'Kolkata', slug: 'ranchi-to-kolkata' },
               { from: 'Jamshedpur', to: 'Rourkela', slug: 'jamshedpur-to-rourkela' },
-              { from: 'Burdwan', to: 'Ranchi', slug: 'burdwan-to-ranchi' },
+              { from: 'Rourkela', to: 'Burdwan', slug: 'rourkela-to-burdwan' },
               { from: 'Dhanbad', to: 'Jamshedpur', slug: 'dhanbad-to-jamshedpur' },
             ].map((route, i) => (
               <Link key={i} to={`/routes/${route.slug}`} className="glass-card p-5 rounded-xl hover:border-green-500/30 transition-all group">

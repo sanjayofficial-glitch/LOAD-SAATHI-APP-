@@ -136,6 +136,7 @@ const MyShipments = () => {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const handleDeleteShipment = async (id: string) => {
+    setActionLoading(id);
     try {
       const supabase = await getAuthenticatedClient();
       const { error } = await supabase.from('shipments').delete().eq('id', id);
@@ -144,6 +145,8 @@ const MyShipments = () => {
       fetchData();
     } catch {
       showError('Failed to delete shipment');
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -318,8 +321,16 @@ const MyShipments = () => {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => handleDeleteShipment(shipment.id)} className="bg-red-600 hover:bg-red-700">
-                                    Delete
+                                  <AlertDialogAction
+                                    onClick={() => { if (!actionLoading) handleDeleteShipment(shipment.id); }}
+                                    disabled={!!actionLoading}
+                                    className="bg-red-600 hover:bg-red-700"
+                                  >
+                                    {actionLoading === shipment.id ? (
+                                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                    ) : (
+                                      'Delete'
+                                    )}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>

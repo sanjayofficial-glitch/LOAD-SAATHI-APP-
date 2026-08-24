@@ -3,7 +3,6 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -52,7 +51,7 @@
     },
     {
       "src": "^/((?!assets/|.*\\..*).*)$",
-      "dest": "/api/agent.js"
+      "dest": "/index.html"
     }
   ]
 }

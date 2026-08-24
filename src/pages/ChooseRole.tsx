@@ -48,7 +48,13 @@ const ChooseRole = () => {
 
     try {
       const supabaseToken = await session.getToken({ template: 'supabase' });
-      if (!supabaseToken) throw new Error('No Supabase token available');
+      if (!supabaseToken) {
+        throw new Error(
+          'Authentication configuration error: Could not obtain a Supabase token. ' +
+          'This usually means the "supabase" JWT template is not configured in your Clerk Dashboard. ' +
+          'Please contact support or check the Clerk Dashboard → JWT Templates settings.'
+        );
+      }
 
       const supabase = createClerkSupabaseClient(supabaseToken);
 

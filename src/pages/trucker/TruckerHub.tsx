@@ -141,6 +141,7 @@ const TruckerHub = () => {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const handleDeleteTrip = async (tripId: string) => {
+    setActionLoading(tripId);
     try {
       const supabase = await getAuthenticatedClient();
       const { error } = await supabase.from('trips').delete().eq('id', tripId);
@@ -149,6 +150,8 @@ const TruckerHub = () => {
       fetchData();
     } catch (_err) {
       showError('Failed to delete trip');
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -343,7 +346,11 @@ const TruckerHub = () => {
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleCompleteTrip(trip.id)} className="bg-orange-600 hover:bg-orange-700">
+                                <AlertDialogAction
+                                  onClick={() => { if (!actionLoading) handleCompleteTrip(trip.id); }}
+                                  disabled={!!actionLoading}
+                                  className="bg-orange-600 hover:bg-orange-700"
+                                >
                                   {actionLoading === trip.id ? (
                                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
                                   ) : (
@@ -372,8 +379,16 @@ const TruckerHub = () => {
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDeleteTrip(trip.id)} className="bg-red-600 hover:bg-red-700">
-                                  Delete
+                                <AlertDialogAction
+                                  onClick={() => { if (!actionLoading) handleDeleteTrip(trip.id); }}
+                                  disabled={!!actionLoading}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  {actionLoading === trip.id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                  ) : (
+                                    'Delete'
+                                  )}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>

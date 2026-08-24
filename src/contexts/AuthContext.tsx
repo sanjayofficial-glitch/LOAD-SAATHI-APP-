@@ -52,11 +52,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const supabaseToken = await session?.getToken({ template: 'supabase' });
       if (!supabaseToken) {
-        console.warn('[AuthContext] No Supabase token returned from Clerk');
+        console.error(
+          '[AuthContext] No Supabase token returned from Clerk. ' +
+          'This means the "supabase" JWT template is missing or misconfigured in your Clerk Dashboard. ' +
+          'Go to Clerk Dashboard → JWT Templates → New Template → name it "supabase" and add claims: ' +
+          '{"sub": "{{user.id}}", "email": "{{user.primary_email_address}}", "role": "authenticated"}. ' +
+          'Retrying...'
+        );
         // Retry once after a short delay — token may not be ready yet
         if (fetchRetryRef.current < 1) {
           fetchRetryRef.current += 1;
-          fetchTimeoutRef.current = setTimeout(() => fetchProfile(), 1500);
+          fetchTimeoutRef.current = setTimeout(() => fetchProfile(), 2000);
           return null;
         }
         setUserProfile(null);
@@ -221,7 +227,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       user,
       session,
       userProfile,
-      loading: !clerkLoaded || loading,
+      loading: clerkLoaded ? loading : true,
       signOut,
       refreshProfile,
       setProfile,
