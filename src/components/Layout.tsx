@@ -354,8 +354,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <ThemeToggle />
               <NotificationBell />
 
-              <Link to="/messages">
-                <Button variant="ghost" size="icon" className="relative text-gray-600 dark:text-gray-400 h-11 w-11">
+              <Link to="/messages" aria-label="Messages">
+                <Button variant="ghost" size="icon" className="relative text-gray-600 dark:text-gray-400 h-11 w-11" aria-label="Messages">
                   <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-orange-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
@@ -379,7 +379,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-gray-600 dark:text-gray-400 h-11 w-11 rounded-full">
+                  <Button variant="ghost" size="icon" className="text-gray-600 dark:text-gray-400 h-11 w-11 rounded-full" aria-label="Account menu">
                     <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
                       {(userProfile?.full_name || 'U').charAt(0).toUpperCase()}
                     </div>

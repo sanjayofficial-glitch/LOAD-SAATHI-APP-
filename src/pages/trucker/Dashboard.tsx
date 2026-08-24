@@ -222,14 +222,14 @@ const TruckerDashboard = () => {
           </div>
           <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
             Welcome, {userProfile?.full_name || 'Partner'}! {isOnline ? (
-              <>You have <span className="text-orange-600 dark:text-orange-400 font-bold">{stats.activeTrips}</span> active trips.</>
+              <>You have <span className="text-orange-600 dark:text-orange-400 font-bold">{stats.activeTrips}</span> active trip{stats.activeTrips !== 1 ? 's' : ''}.</>
             ) : (
               <span className="text-yellow-600 dark:text-yellow-400">You are offline. Showing cached data.</span>
             )}
           </p>
         </div>
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 px-3 sm:px-4 py-2 rounded-2xl border border-yellow-100 dark:border-yellow-800 flex items-center gap-2 self-start sm:self-auto">
-          <StarIcon className="h-4 w-4 text-yellow-500 fill-current" />
+        <div role="status" className="bg-yellow-50 dark:bg-yellow-900/30 px-3 sm:px-4 py-2 rounded-2xl border border-yellow-200 dark:border-yellow-800 flex items-center gap-2 self-start sm:self-auto">
+            <StarIcon className="h-4 w-4 text-yellow-500 fill-current" aria-hidden="true" />
           <span className="text-sm font-black text-yellow-700 dark:text-yellow-400">{userProfile?.rating?.toFixed(1) || '0.0'} Rating</span>
         </div>
       </div>
@@ -314,7 +314,7 @@ const TruckerDashboard = () => {
         <Card className="border-orange-200 dark:border-orange-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
           <CardHeader className="bg-orange-50/50 dark:bg-orange-900/10 px-4 sm:px-6">
-            <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">Quick Actions</CardTitle>
+            <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-6 px-4 sm:px-6">
             <Link to="/trucker/post-trip" className="block">

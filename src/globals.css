@@ -219,6 +219,7 @@
 
   /* Grid pattern background */
   .bg-grid-pattern {
+    pointer-events: none;
     background-image: 
       linear-gradient(to right, hsl(var(--border) / 0.4) 1px, transparent 1px),
       linear-gradient(to bottom, hsl(var(--border) / 0.4) 1px, transparent 1px);

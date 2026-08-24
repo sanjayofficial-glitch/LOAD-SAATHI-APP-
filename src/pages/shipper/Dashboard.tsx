@@ -304,7 +304,7 @@ const ShipperDashboard = () => {
         <Card className="border-blue-200 dark:border-blue-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <div className="h-1 bg-gradient-to-r from-blue-500 to-blue-400" />
           <CardHeader className="bg-blue-50/50 dark:bg-blue-900/10 px-4 sm:px-6">
-            <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">Quick Actions</CardTitle>
+            <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-6 px-4 sm:px-6">
             <Link to="/shipper/post-shipment" className="block">
