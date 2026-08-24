@@ -1,5 +1,5 @@
 import { useSession } from "@clerk/clerk-react";
-import { createClerkSupabaseClient } from "@/utils/supabaseClient";
+import { createClerkSupabaseClient } from "@/lib/supabase";
 import { useCallback, useMemo } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
