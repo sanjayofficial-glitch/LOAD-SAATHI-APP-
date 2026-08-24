@@ -1,5 +1,5 @@
 allowBuilds:
-  "@clerk/shared@3.47.8(react-dom@19.2.7(react@19.2.7))(react": false # dyad-auto-denied
+  "@clerk/shared": false # dyad-auto-denied
   # dyad-default-allow-builds begin
   # dyad-default-allow-builds-schema=v1
   # dyad-default-allow-builds-data-version=2026-07-08.1
