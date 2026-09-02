@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import SeoMeta from '@/components/SeoMeta';
 import HeroSection from '@/features/home/sections/HeroSection';
 import SectionNav from '@/features/home/sections/SectionNav';
@@ -34,7 +34,7 @@ const Index = () => {
   const globeObserverRef = useRef<IntersectionObserver | null>(null);
   const cleanupFnsRef = useRef<(() => void)[]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setReady(true);
   }, []);
 
@@ -260,8 +260,10 @@ const Index = () => {
       }
       if (renderer) {
         renderer.dispose();
-        if (renderer.domElement && renderer.domElement.parentNode) {
-          renderer.domElement.parentNode.removeChild(renderer.domElement);
+        try {
+          renderer.domElement?.parentNode?.removeChild(renderer.domElement);
+        } catch {
+          // DOM already cleaned up by React during concurrent unmount
         }
       }
     };

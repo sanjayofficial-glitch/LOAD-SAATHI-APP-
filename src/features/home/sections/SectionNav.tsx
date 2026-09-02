@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useLayoutEffect, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 interface SectionItem {
@@ -24,7 +24,7 @@ export default function SectionNav() {
   const [visible, setVisible] = useState(false);
   const [activeId, setActiveId] = useState(SECTIONS[0]?.id ?? '');
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const onScroll = () => {
       // Show after scrolling past the hero (~80vh)
       setVisible(window.scrollY > window.innerHeight * 0.6);

@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import { createContext, useContext, useLayoutEffect, useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useUser, useSession, useClerk } from '@clerk/clerk-react';
 import { User } from '@/types';
 import { showError } from '@/utils/toast';
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user, session]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!clerkLoaded) return;
     fetchRetryRef.current = 0;
     fetchProfile();
