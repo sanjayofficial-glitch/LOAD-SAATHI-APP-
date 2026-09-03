@@ -1,0 +1,1852 @@
+{
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "LoadSaathi",
+      "file_type": "concept",
+      "source_file": "README.md"
+    },
+    {
+      "id": "n2",
+      "label": "Shared Freight Marketplace",
+      "file_type": "concept",
+      "source_file": "REPO_HANDBOOK.md"
+    },
+    {
+      "id": "n3",
+      "label": "PTL (Part Truckload)",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n4",
+      "label": "FTL (Full Truckload)",
+      "file_type": "concept",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n5",
+      "label": "LTL (Less Than Truckload)",
+      "file_type": "concept",
+      "source_file": "README.md"
+    },
+    {
+      "id": "n6",
+      "label": "AI-Powered Matching",
+      "file_type": "feature",
+      "source_file": "CHANGELOG.md"
+    },
+    {
+      "id": "n7",
+      "label": "GPS Tracking",
+      "file_type": "feature",
+      "source_file": "CHANGELOG.md"
+    },
+    {
+      "id": "n8",
+      "label": "Credit Score System",
+      "file_type": "feature",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n9",
+      "label": "Real-Time Chat",
+      "file_type": "feature",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n10",
+      "label": "Smart Matching Algorithm",
+      "file_type": "feature",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n11",
+      "label": "Fare Calculator",
+      "file_type": "tool",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n12",
+      "label": "Route Optimization",
+      "file_type": "feature",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n13",
+      "label": "Zero Empty Miles",
+      "file_type": "concept",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n14",
+      "label": "Verified Truckers",
+      "file_type": "feature",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n15",
+      "label": "React 19",
+      "file_type": "dependency",
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "n16",
+      "label": "TypeScript 5.5",
+      "file_type": "dependency",
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "n17",
+      "label": "Vite 6.3",
+      "file_type": "dependency",
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "n18",
+      "label": "shadcn/ui",
+      "file_type": "dependency",
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "n19",
+      "label": "Tailwind CSS 3.4",
+      "file_type": "dependency",
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "n20",
+      "label": "Radix UI",
+      "file_type": "dependency",
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "n21",
+      "label": "TanStack React Query 5.56",
+      "file_type": "dependency",
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "n22",
+      "label": "Clerk",
+      "file_type": "service",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n23",
+      "label": "Supabase",
+      "file_type": "service",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n24",
+      "label": "Leaflet",
+      "file_type": "dependency",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n25",
+      "label": "React-Leaflet",
+      "file_type": "dependency",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n26",
+      "label": "Recharts",
+      "file_type": "dependency",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n27",
+      "label": "React Hook Form",
+      "file_type": "dependency",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n28",
+      "label": "Zod",
+      "file_type": "dependency",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n29",
+      "label": "Framer Motion",
+      "file_type": "dependency",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n30",
+      "label": "Capacitor",
+      "file_type": "dependency",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n31",
+      "label": "OSRM",
+      "file_type": "service",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n32",
+      "label": "Nominatim",
+      "file_type": "service",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n33",
+      "label": "Gemini",
+      "file_type": "service",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n34",
+      "label": "PostHog",
+      "file_type": "service",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n35",
+      "label": "Vercel",
+      "file_type": "service",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n36",
+      "label": "Porter",
+      "file_type": "entity",
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "n37",
+      "label": "BlackBuck",
+      "file_type": "entity",
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "n38",
+      "label": "Rivigo",
+      "file_type": "entity",
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "n39",
+      "label": "Mahindra Logistics",
+      "file_type": "entity",
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "n40",
+      "label": "Letstransport",
+      "file_type": "entity",
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "n41",
+      "label": "Vahak",
+      "file_type": "entity",
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "n42",
+      "label": "East India Logistics",
+      "file_type": "concept",
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "n43",
+      "label": "Odisha Freight",
+      "file_type": "concept",
+      "source_file": "Blogs/PTL Transport in Odisha & Jharkhand.md"
+    },
+    {
+      "id": "n44",
+      "label": "Jharkhand Freight",
+      "file_type": "concept",
+      "source_file": "Blogs/PTL Transport in Odisha & Jharkhand.md"
+    },
+    {
+      "id": "n45",
+      "label": "West Bengal Freight",
+      "file_type": "concept",
+      "source_file": "Blogs/PTL Transport in Odisha & Jharkhand.md"
+    },
+    {
+      "id": "n46",
+      "label": "Jamshedpur to Bhubaneswar Route",
+      "file_type": "entity",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n47",
+      "label": "Rourkela to Ranchi Route",
+      "file_type": "entity",
+      "source_file": "Blogs/Return Loads in Rourkela.md"
+    },
+    {
+      "id": "n48",
+      "label": "Rourkela to Kolkata Route",
+      "file_type": "entity",
+      "source_file": "Blogs/Return Loads in Rourkela.md"
+    },
+    {
+      "id": "n49",
+      "label": "Bhubaneswar to Kolkata Route",
+      "file_type": "entity",
+      "source_file": "Blogs/Return Loads in Rourkela.md"
+    },
+    {
+      "id": "n50",
+      "label": "Ranchi to Dhanbad Route",
+      "file_type": "entity",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n51",
+      "label": "Bhubaneswar to Vizag Route",
+      "file_type": "entity",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n52",
+      "label": "E-Way Bill Rules",
+      "file_type": "concept",
+      "source_file": "Blogs/E-Way Bill Rules.md"
+    },
+    {
+      "id": "n53",
+      "label": "GST Advisory 668",
+      "file_type": "concept",
+      "source_file": "Blogs/E-Way Bill Rules.md"
+    },
+    {
+      "id": "n54",
+      "label": "Steel Transport",
+      "file_type": "concept",
+      "source_file": "Blogs/Steel Transport from Rourkela.md"
+    },
+    {
+      "id": "n55",
+      "label": "Trucker Earnings",
+      "file_type": "concept",
+      "source_file": "Blogs/Trucker Earnings in Odisha.md"
+    },
+    {
+      "id": "n56",
+      "label": "Return Loads",
+      "file_type": "concept",
+      "source_file": "Blogs/Return Loads in Rourkela.md"
+    },
+    {
+      "id": "n57",
+      "label": "users table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n58",
+      "label": "trips table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n59",
+      "label": "shipments table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n60",
+      "label": "requests table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n61",
+      "label": "shipment_requests table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n62",
+      "label": "reviews table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n63",
+      "label": "messages table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n64",
+      "label": "notifications table",
+      "file_type": "entity",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n65",
+      "label": "Acquisition Growth Plan",
+      "file_type": "concept",
+      "source_file": "Blogs/1/LoadSaathi Acquisition Growth Plan.md"
+    },
+    {
+      "id": "n66",
+      "label": "SEO Content System",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n67",
+      "label": "Hub-and-Spoke Model",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n68",
+      "label": "MSMEs",
+      "file_type": "entity",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n69",
+      "label": "Zero-Click Commercial Pages",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n70",
+      "label": "Keyword Cannibalization",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n71",
+      "label": "Route Page Template",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n72",
+      "label": "Internal Linking Rules",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n73",
+      "label": "Social-to-SEO Pipeline",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n74",
+      "label": "Empty Miles",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n75",
+      "label": "PTL vs FTL",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n76",
+      "label": "GSC Data",
+      "file_type": "concept",
+      "source_file": "Blogs/1/LoadSaathi Acquisition Growth Plan.md"
+    },
+    {
+      "id": "n77",
+      "label": "301 Redirects",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n78",
+      "label": "Fare Calculator URL Consolidation",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n79",
+      "label": "Truck Transport Cost Per KM",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n80",
+      "label": "PTL Rate per KG",
+      "file_type": "concept",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n81",
+      "label": "FTL Rate by Truck Size",
+      "file_type": "concept",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n82",
+      "label": "Steel & Heavy Engineering",
+      "file_type": "concept",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n83",
+      "label": "Automotive Parts",
+      "file_type": "concept",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n84",
+      "label": "FMCG & Retail",
+      "file_type": "concept",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n85",
+      "label": "North East India",
+      "file_type": "concept",
+      "source_file": "README.md"
+    },
+    {
+      "id": "n86",
+      "label": "Skilled Verification",
+      "file_type": "feature",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n87",
+      "label": "24/7 Booking",
+      "file_type": "feature",
+      "source_file": "REPO_HANDBOOK.md"
+    },
+    {
+      "id": "n88",
+      "label": "Instant Fare Calculation",
+      "file_type": "feature",
+      "source_file": "REPO_HANDBOOK.md"
+    },
+    {
+      "id": "n89",
+      "label": "AI Price Prediction",
+      "file_type": "feature",
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "n90",
+      "label": "Clerk SOC 2",
+      "file_type": "concept",
+      "source_file": "SECURITY.md"
+    },
+    {
+      "id": "n91",
+      "label": "Supabase RLS",
+      "file_type": "concept",
+      "source_file": "SECURITY.md"
+    },
+    {
+      "id": "n92",
+      "label": "Clerk JWT Exchange",
+      "file_type": "concept",
+      "source_file": "SECURITY.md"
+    },
+    {
+      "id": "n93",
+      "label": "Digital Freight Credit Score",
+      "file_type": "feature",
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "n94",
+      "label": "Truck Load Calculator",
+      "file_type": "tool",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n95",
+      "label": "Freight Rate Calculator",
+      "file_type": "tool",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n96",
+      "label": "Blog Publishing",
+      "file_type": "concept",
+      "source_file": "Blogs/How to Publish.md"
+    },
+    {
+      "id": "n97",
+      "label": "JSON-LD Schema Snippets",
+      "file_type": "concept",
+      "source_file": "Blogs/JSON-LD Schema Snippets.md"
+    },
+    {
+      "id": "n98",
+      "label": "Route Page Optimization",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n99",
+      "label": "Meta Title",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "n100",
+      "label": "Meta Description",
+      "file_type": "concept",
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    }
+  ],
+  "edges": [
+    {
+      "source": "n1",
+      "target": "n2",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "weight": 1.0
+    },
+    {
+      "source": "n1",
+      "target": "n3",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n4",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n5",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n6",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CHANGELOG.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n1",
+      "target": "n7",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CHANGELOG.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n8",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n9",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n10",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n11",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n12",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n13",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n14",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n22",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n1",
+      "target": "n23",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n1",
+      "target": "n31",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n32",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n33",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n34",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n35",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n15",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n16",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n17",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n18",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n19",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n20",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n21",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n1",
+      "target": "n24",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n25",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n26",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n27",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n28",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n29",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n30",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n1",
+      "target": "n65",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/1/LoadSaathi Acquisition Growth Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n1",
+      "target": "n66",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n6",
+      "target": "n10",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n6",
+      "target": "n13",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n7",
+      "target": "n12",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n8",
+      "target": "n14",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n8",
+      "target": "n93",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n9",
+      "target": "n63",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n10",
+      "target": "n3",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n10",
+      "target": "n4",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n11",
+      "target": "n79",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n11",
+      "target": "n94",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n11",
+      "target": "n95",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n13",
+      "target": "n56",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Return Loads in Rourkela.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n13",
+      "target": "n74",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n22",
+      "target": "n23",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "SECURITY.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n22",
+      "target": "n92",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "SECURITY.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n22",
+      "target": "n90",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "SECURITY.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n23",
+      "target": "n91",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "SECURITY.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n23",
+      "target": "n57",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n23",
+      "target": "n58",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n23",
+      "target": "n59",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n23",
+      "target": "n60",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n23",
+      "target": "n61",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n23",
+      "target": "n62",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n23",
+      "target": "n64",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n36",
+      "target": "n37",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n36",
+      "target": "n38",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n36",
+      "target": "n40",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.75
+    },
+    {
+      "source": "n36",
+      "target": "n41",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.75
+    },
+    {
+      "source": "n36",
+      "target": "n1",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.7
+    },
+    {
+      "source": "n37",
+      "target": "n38",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n37",
+      "target": "n39",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.75
+    },
+    {
+      "source": "n38",
+      "target": "n39",
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n42",
+      "target": "n43",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n42",
+      "target": "n44",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n42",
+      "target": "n45",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n42",
+      "target": "n85",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n46",
+      "target": "n47",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n46",
+      "target": "n48",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n46",
+      "target": "n49",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n46",
+      "target": "n50",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.75
+    },
+    {
+      "source": "n46",
+      "target": "n51",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.75
+    },
+    {
+      "source": "n52",
+      "target": "n53",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/E-Way Bill Rules.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n54",
+      "target": "n48",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Steel Transport from Rourkela.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n54",
+      "target": "n82",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Steel Transport from Rourkela.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n55",
+      "target": "n56",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Trucker Earnings in Odisha.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n56",
+      "target": "n47",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Return Loads in Rourkela.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n56",
+      "target": "n48",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Return Loads in Rourkela.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n56",
+      "target": "n49",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Return Loads in Rourkela.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n57",
+      "target": "n58",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n57",
+      "target": "n59",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n57",
+      "target": "n60",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n57",
+      "target": "n61",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n57",
+      "target": "n62",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n57",
+      "target": "n63",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n57",
+      "target": "n64",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n58",
+      "target": "n59",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n58",
+      "target": "n60",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n59",
+      "target": "n61",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n60",
+      "target": "n63",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n65",
+      "target": "n76",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/1/LoadSaathi Acquisition Growth Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n65",
+      "target": "n68",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/1/LoadSaathi Acquisition Growth Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n66",
+      "target": "n67",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n66",
+      "target": "n69",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n66",
+      "target": "n71",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n66",
+      "target": "n72",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n66",
+      "target": "n73",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n67",
+      "target": "n72",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n69",
+      "target": "n70",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n70",
+      "target": "n78",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n78",
+      "target": "n77",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n79",
+      "target": "n80",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n79",
+      "target": "n81",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n80",
+      "target": "n81",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n82",
+      "target": "n83",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n82",
+      "target": "n84",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n83",
+      "target": "n84",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md",
+      "weight": 0.8
+    },
+    {
+      "source": "n86",
+      "target": "n14",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n86",
+      "target": "n93",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n87",
+      "target": "n88",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REPO_HANDBOOK.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n88",
+      "target": "n11",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REPO_HANDBOOK.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n89",
+      "target": "n33",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n89",
+      "target": "n11",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n96",
+      "target": "n97",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/How to Publish.md",
+      "weight": 0.9
+    },
+    {
+      "source": "n97",
+      "target": "n99",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/JSON-LD Schema Snippets.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n97",
+      "target": "n100",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/JSON-LD Schema Snippets.md",
+      "weight": 0.85
+    },
+    {
+      "source": "n98",
+      "target": "n71",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.95
+    },
+    {
+      "source": "n99",
+      "target": "n100",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md",
+      "weight": 0.9
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "h1",
+      "label": "LoadSaathi Core Product Architecture",
+      "nodes": ["n1", "n2", "n3", "n4", "n5", "n6", "n7", "n8", "n9", "n10", "n11", "n12", "n13", "n14"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "h2",
+      "label": "LoadSaathi Technology Stack",
+      "nodes": ["n15", "n16", "n17", "n18", "n19", "n20", "n21", "n22", "n23", "n24", "n25", "n26", "n27", "n28", "n29", "n30"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AI_RULES.md"
+    },
+    {
+      "id": "h3",
+      "label": "LoadSaathi External Services",
+      "nodes": ["n22", "n23", "n31", "n32", "n33", "n34", "n35"],
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "h4",
+      "label": "Competitor Landscape",
+      "nodes": ["n36", "n37", "n38", "n39", "n40", "n41"],
+      "relation": "semantically_similar_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "h5",
+      "label": "East India Logistics Corridor",
+      "nodes": ["n42", "n43", "n44", "n45", "n85"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/LoadSaathi Competitor Keyword and SEO Strategy Report.md"
+    },
+    {
+      "id": "h6",
+      "label": "Key Freight Routes",
+      "nodes": ["n46", "n47", "n48", "n49", "n50", "n51"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "h7",
+      "label": "Supabase Database Schema",
+      "nodes": ["n57", "n58", "n59", "n60", "n61", "n62", "n63", "n64"],
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "h8",
+      "label": "SEO Content Strategy Components",
+      "nodes": ["n66", "n67", "n69", "n71", "n72", "n73"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "h9",
+      "label": "Calculator URL Consolidation",
+      "nodes": ["n11", "n94", "n95", "n70", "n78", "n77"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    },
+    {
+      "id": "h10",
+      "label": "Jamshedpur-Bhubaneswar Route Content",
+      "nodes": ["n46", "n80", "n81", "n82", "n83", "n84"],
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/Jamshedpur to Bhubaneswar Freight Rates & Truck Transport.md"
+    },
+    {
+      "id": "h11",
+      "label": "Security Architecture",
+      "nodes": ["n22", "n23", "n90", "n91", "n92"],
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "SECURITY.md"
+    },
+    {
+      "id": "h12",
+      "label": "Trucker Features Ecosystem",
+      "nodes": ["n7", "n8", "n14", "n55", "n56", "n86", "n93"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CONTEXT.md"
+    },
+    {
+      "id": "h13",
+      "label": "Return Loads & Empty Miles Concept",
+      "nodes": ["n13", "n56", "n74"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/Return Loads in Rourkela.md"
+    },
+    {
+      "id": "h14",
+      "label": "Blog Content & Publishing",
+      "nodes": ["n96", "n97", "n99", "n100"],
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/How to Publish.md"
+    },
+    {
+      "id": "h15",
+      "label": "Freight Rate Pricing Concepts",
+      "nodes": ["n11", "n79", "n80", "n81"],
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Blogs/2/LoadSaathi SEO Content System & Publishing Plan.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

@@ -4,7 +4,8 @@ import tailwindcssAnimate from "tailwindcss-animate";
 export default {
   darkMode: ["class"],
   content: [
-    "./src/**/*.{ts,tsx}",
+    "./supabase/src/**/*.{ts,tsx}",
+    "./index.html",
   ],
   prefix: "",
   theme: {

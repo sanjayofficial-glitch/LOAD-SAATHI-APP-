@@ -19,11 +19,13 @@ CREATE INDEX IF NOT EXISTS idx_driver_locations_updated_at ON public.driver_loca
 
 ALTER TABLE public.driver_locations ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Anyone can read driver_locations"
+DROP POLICY IF EXISTS "Anyone can read driver_locations" ON public.driver_locations;
+
+CREATE POLICY "Users can see own location or admin"
   ON public.driver_locations
   FOR SELECT
   TO authenticated
-  USING (true);
+  USING (auth.jwt()->>'sub' = driver_id OR public.is_admin());
 
 CREATE POLICY "Driver can insert own location"
   ON public.driver_locations

@@ -18,8 +18,8 @@
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./supabase/src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["supabase/src"]
 }

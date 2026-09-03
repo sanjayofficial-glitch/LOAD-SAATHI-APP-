@@ -22,7 +22,11 @@ const config: CapacitorConfig = {
     backgroundColor: "#ffffff",
     captureInput: true,
   },
-  plugins: {},
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 0,
+    },
+  },
 };
 
 export default config;

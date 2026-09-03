@@ -38,6 +38,7 @@ dist-ssr
 skills-lock.json
 ruvector.db
 ruvector.db-*
+.mcp.json
 
 # Android build cache
 android/.gradle_home
