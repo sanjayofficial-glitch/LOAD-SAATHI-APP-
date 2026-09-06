@@ -77,6 +77,14 @@ export function setTourEntryFlag(userId: string) {
   }
 }
 
+export function isReturningUser(userId: string): boolean {
+  try {
+    return localStorage.getItem(`loadsaathi-onboarded-${userId}`) === '1';
+  } catch {
+    return false;
+  }
+}
+
 export function consumeTourEntryFlag(userId: string): boolean {
   try {
     const v = localStorage.getItem(tourEntryFlagKey(userId));

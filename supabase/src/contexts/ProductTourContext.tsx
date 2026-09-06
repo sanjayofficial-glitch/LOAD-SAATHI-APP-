@@ -16,6 +16,7 @@ import {
   buildDriverConfig,
   consumeTourEntryFlag,
   filterPresentSteps,
+  isReturningUser,
   isTourDone,
   markTourDone,
   matchSpecForPath,
@@ -133,6 +134,7 @@ export function ProductTourProvider({ children }: ProductTourProviderProps) {
     }
 
     if (isEntryPage) return;
+    if (isReturningUser(userId)) return;
 
     const spec = matchSpecForPath(pathname, userType);
     if (!spec) return;
@@ -145,6 +147,7 @@ export function ProductTourProvider({ children }: ProductTourProviderProps) {
   useEffect(() => {
     if (authLoading || !userId || !userType || isTourActive) return;
     if (!pathname) return;
+    if (isReturningUser(userId)) return;
 
     let cancelled = false;
     const chromeSpec = TOUR_REGISTRY.find((s) => s.id === 'chrome.universal');
