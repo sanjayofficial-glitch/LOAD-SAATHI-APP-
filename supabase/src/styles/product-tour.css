@@ -1,0 +1,152 @@
+/* Driver.js product tour theme — overrides driver.css defaults.
+ * Driver.js ships with dist/driver.css (imported below). Our overrides
+ * are scoped to per-role wrapper classes applied via the `popoverClass`
+ * config option so truckers get orange and shippers get blue. */
+
+@import "driver.js/dist/driver.css";
+
+/* Trucker accent — orange */
+.driver-popover.driver-trucker {
+  --driver-popover-bg: #ffffff;
+  --driver-popover-text: #111827;
+  --driver-popover-title-text: #c2410c;
+  --driver-popover-description-text: #374151;
+  --driver-popover-footer-text: #6b7280;
+  --driver-popover-progress-bar-color: #f97316;
+  --driver-popover-progress-bar-fill-color: #ea580c;
+  --driver-popover-border-color: #fed7aa;
+  --driver-popover-arrow-color: #ffffff;
+  --driver-popover-btn-close-bg: transparent;
+  --driver-popover-btn-close-color: #6b7280;
+}
+
+.driver-popover.driver-trucker button.driver-next-btn,
+.driver-popover.driver-trucker button.driver-done-btn {
+  background: #ea580c;
+  color: #ffffff;
+  border: 0;
+  text-shadow: none;
+}
+
+.driver-popover.driver-trucker button.driver-next-btn:hover,
+.driver-popover.driver-trucker button.driver-done-btn:hover {
+  background: #c2410c;
+}
+
+.driver-popover.driver-trucker button.driver-prev-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 0;
+  text-shadow: none;
+}
+
+.driver-popover.driver-trucker button.driver-prev-btn:hover {
+  background: #e5e7eb;
+}
+
+/* Shipper accent — blue */
+.driver-popover.driver-shipper {
+  --driver-popover-bg: #ffffff;
+  --driver-popover-text: #111827;
+  --driver-popover-title-text: #1d4ed8;
+  --driver-popover-description-text: #374151;
+  --driver-popover-footer-text: #6b7280;
+  --driver-popover-progress-bar-color: #3b82f6;
+  --driver-popover-progress-bar-fill-color: #2563eb;
+  --driver-popover-border-color: #bfdbfe;
+  --driver-popover-arrow-color: #ffffff;
+  --driver-popover-btn-close-bg: transparent;
+  --driver-popover-btn-close-color: #6b7280;
+}
+
+.driver-popover.driver-shipper button.driver-next-btn,
+.driver-popover.driver-shipper button.driver-done-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: 0;
+  text-shadow: none;
+}
+
+.driver-popover.driver-shipper button.driver-next-btn:hover,
+.driver-popover.driver-shipper button.driver-done-btn:hover {
+  background: #1d4ed8;
+}
+
+.driver-popover.driver-shipper button.driver-prev-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 0;
+  text-shadow: none;
+}
+
+.driver-popover.driver-shipper button.driver-prev-btn:hover {
+  background: #e5e7eb;
+}
+
+/* Dark mode — auto via .dark ancestor */
+.dark .driver-popover.driver-trucker,
+.dark .driver-popover.driver-shipper {
+  --driver-popover-bg: #0f172a;
+  --driver-popover-text: #e5e7eb;
+  --driver-popover-title-text: #fb923c;
+  --driver-popover-description-text: #cbd5e1;
+  --driver-popover-footer-text: #94a3b8;
+  --driver-popover-border-color: #1e293b;
+  --driver-popover-arrow-color: #0f172a;
+}
+
+.dark .driver-popover.driver-shipper {
+  --driver-popover-title-text: #60a5fa;
+}
+
+.dark .driver-popover.driver-trucker button.driver-prev-btn,
+.dark .driver-popover.driver-shipper button.driver-prev-btn {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.dark .driver-popover.driver-trucker button.driver-prev-btn:hover,
+.dark .driver-popover.driver-shipper button.driver-prev-btn:hover {
+  background: #334155;
+}
+
+/* Highlight ring — matches role accent */
+.driver-trucker-highlight {
+  box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.35), 0 0 0 9999px rgba(0, 0, 0, 0.55) !important;
+  border-radius: 12px;
+}
+
+.driver-shipper-highlight {
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35), 0 0 0 9999px rgba(0, 0, 0, 0.55) !important;
+  border-radius: 12px;
+}
+
+/* Popover polish */
+.driver-popover {
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+  max-width: 360px;
+}
+
+.driver-popover-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.driver-popover-description {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.driver-popover-footer {
+  margin-top: 14px;
+}
+
+.driver-popover-progress-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

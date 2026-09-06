@@ -144,11 +144,101 @@ export function parseAIResponse(text: string): { recommendedPrice: number; range
 }
 
 export const DEFAULT_CONFIG: PricingConfig[] = [
-  { vehicle_type: "mini_truck", rate_per_km: 14, min_price: 1800, max_price: 3500, base_capacity_tonnes: 2 },
-  { vehicle_type: "pickup", rate_per_km: 16, min_price: 2000, max_price: 4000, base_capacity_tonnes: 3 },
-  { vehicle_type: "14ft", rate_per_km: 18, min_price: 2200, max_price: 4500, base_capacity_tonnes: 5 },
-  { vehicle_type: "17ft", rate_per_km: 20, min_price: 2500, max_price: 5000, base_capacity_tonnes: 8 },
-  { vehicle_type: "22ft", rate_per_km: 22, min_price: 2800, max_price: 5500, base_capacity_tonnes: 12 },
-  { vehicle_type: "container", rate_per_km: 25, min_price: 3000, max_price: 6000, base_capacity_tonnes: 16 },
-  { vehicle_type: "trailer", rate_per_km: 28, min_price: 3200, max_price: 7000, base_capacity_tonnes: 25 },
+  { vehicle_type: "mini_truck", rate_per_km: 26, min_price: 1500, max_price: 4500, base_capacity_tonnes: 0.75 },
+  { vehicle_type: "pickup", rate_per_km: 28, min_price: 1800, max_price: 5500, base_capacity_tonnes: 1.5 },
+  { vehicle_type: "14ft", rate_per_km: 32, min_price: 2500, max_price: 7500, base_capacity_tonnes: 5 },
+  { vehicle_type: "17ft", rate_per_km: 40, min_price: 3500, max_price: 10000, base_capacity_tonnes: 7 },
+  { vehicle_type: "22ft", rate_per_km: 52, min_price: 5000, max_price: 14000, base_capacity_tonnes: 12 },
+  { vehicle_type: "container", rate_per_km: 68, min_price: 7000, max_price: 18000, base_capacity_tonnes: 16 },
+  { vehicle_type: "trailer", rate_per_km: 82, min_price: 9000, max_price: 24000, base_capacity_tonnes: 25 },
 ];
+
+// ─── Fuel Surcharge ─────────────────────────────────────────
+
+export interface SurchargeConfig {
+  base_diesel_price: number;
+  surcharge_per_rupee: number;
+}
+
+export const DEFAULT_SURCHARGE_CONFIG: SurchargeConfig = {
+  base_diesel_price: 95.20,
+  surcharge_per_rupee: 0.0065,
+};
+
+/**
+ * Calculate fuel surcharge: 0.65% per ₹1 diesel rise over base price.
+ * Returns surcharge amount rounded to nearest ₹10.
+ */
+export function applyFuelSurcharge(
+  basePrice: number,
+  currentDiesel: number,
+  cfg: SurchargeConfig,
+): number {
+  const rise = currentDiesel - cfg.base_diesel_price;
+  if (rise <= 0) return 0;
+  const surcharge = basePrice * rise * cfg.surcharge_per_rupee;
+  return Math.round(surcharge / 10) * 10;
+}
+
+// ─── Return-Leg Factor ──────────────────────────────────────
+
+/**
+ * Get the return-leg multiplier for a state pair.
+ * Interior Odisha/Jharkhand → 1.4–1.5x; major corridors → 1.1–1.2x.
+ * Unknown pairs default to 1.4.
+ */
+export function getReturnFactor(
+  originState: string,
+  destState: string,
+  routeFactorMap: Record<string, number>,
+): number {
+  const key = `${originState.toLowerCase()}|${destState.toLowerCase()}`;
+  if (routeFactorMap[key] !== undefined) return routeFactorMap[key];
+  // Also try default entry
+  if (routeFactorMap["default|default"] !== undefined) return routeFactorMap["default|default"];
+  return 1.4;
+}
+
+// ─── PTL Calculation ─────────────────────────────────────────
+
+export interface PtlResult {
+  chargeableKg: number;
+  freight: number;
+  perKg: number;
+}
+
+export interface Dimensions {
+  l: number;
+  b: number;
+  h: number;
+}
+
+/**
+ * Calculate PTL (Partial Truckload) freight.
+ * Applies volumetric rule: volumetricKg = (L*B*H) / 6000 (dimensions in cm).
+ * chargeableKg = max(weightKg, volumetricKg) when dimensions provided.
+ * freight = chargeableKg * distanceKm * ratePerKg, minimum minCharge.
+ */
+export function calculatePtl(
+  weightKg: number,
+  distanceKm: number,
+  ratePerKg: number,
+  minCharge: number,
+  dimensions?: Dimensions,
+): PtlResult {
+  let chargeableKg = weightKg;
+
+  if (dimensions) {
+    const volumetricKg = (dimensions.l * dimensions.b * dimensions.h) / 6000;
+    chargeableKg = Math.max(weightKg, volumetricKg);
+  }
+
+  const freight = Math.max(
+    Math.round(chargeableKg * distanceKm * ratePerKg),
+    minCharge,
+  );
+
+  const perKg = chargeableKg > 0 ? Math.round((freight / chargeableKg) * 100) / 100 : 0;
+
+  return { chargeableKg: Math.round(chargeableKg), freight, perKg };
+}

@@ -1,14 +1,15 @@
 import {
-  getCorsHeaders,
-  checkRateLimit,
-  getRequestIp,
-  extractBearerToken,
-  verifyJwt,
-  errorResponse,
-  optionsResponse,
-  generateRequestId,
-} from "../_shared/edgeHelpers.ts";
+  applyFuelSurcharge,
+  getReturnFactor,
+  calculatePtl,
+  DEFAULT_CONFIG,
+  DEFAULT_SURCHARGE_CONFIG,
+  type SurchargeConfig,
+  type PricingConfig,
+} from "./pricing.ts";
+import { getCorsHeaders, checkRateLimit, getRequestIp, extractBearerToken, verifyJwt, errorResponse, optionsResponse, generateRequestId } from "../_shared/edgeHelpers.ts";
 import { fetchOsrmDistance } from "../_shared/osrm.ts";
+import { getLatestFuelPrice } from "../_shared/fuel.ts";
 
 function getEnv(name: string): string {
   return Deno.env.get(name) ?? "";
@@ -23,6 +24,10 @@ interface PricePredictRequest {
   destinationState?: string;
   weightTonnes: number;
   vehicleType?: string;
+  vehicleClass?: string;
+  shipmentMode?: "ptl" | "ftl";
+  dimensions?: { l: number; b: number; h: number };
+  includeFuelSurcharge?: boolean;
   originLat?: number;
   originLng?: number;
   destLat?: number;
@@ -48,18 +53,25 @@ interface PriceResult {
   reasoning: string;
 }
 
+interface PriceBreakdown {
+  baseFreight: number;
+  fuel: number;
+  toll: number;
+  driver: number;
+  returnAdjustment: number;
+}
+
+interface ExtendedPriceResult extends PriceResult {
+  fuelSurcharge?: number;
+  returnFactor?: number;
+  perKmRate?: number;
+  breakdown?: PriceBreakdown;
+}
+
 interface ProviderResult {
   success: boolean;
   data?: PriceResult & { provider?: string };
   rateLimited?: boolean;
-}
-
-interface PricingConfig {
-  vehicle_type: string;
-  rate_per_km: number;
-  min_price: number;
-  max_price: number;
-  base_capacity_tonnes: number | null;
 }
 
 interface PricingFlags {
@@ -69,6 +81,8 @@ interface PricingFlags {
   enable_config: boolean;
   enable_seasonal: boolean;
   enable_blending: boolean;
+  enable_fuel_surcharge: boolean;
+  enable_return_factor: boolean;
 }
 
 // ─── Defaults ───────────────────────────────────────────────
@@ -80,17 +94,9 @@ const DEFAULT_FLAGS: PricingFlags = {
   enable_config: true,
   enable_seasonal: true,
   enable_blending: true,
+  enable_fuel_surcharge: true,
+  enable_return_factor: true,
 };
-
-const DEFAULT_CONFIG: PricingConfig[] = [
-  { vehicle_type: "mini_truck", rate_per_km: 14, min_price: 1800, max_price: 3500, base_capacity_tonnes: 2 },
-  { vehicle_type: "pickup", rate_per_km: 16, min_price: 2000, max_price: 4000, base_capacity_tonnes: 3 },
-  { vehicle_type: "14ft", rate_per_km: 18, min_price: 2200, max_price: 4500, base_capacity_tonnes: 5 },
-  { vehicle_type: "17ft", rate_per_km: 20, min_price: 2500, max_price: 5000, base_capacity_tonnes: 8 },
-  { vehicle_type: "22ft", rate_per_km: 22, min_price: 2800, max_price: 5500, base_capacity_tonnes: 12 },
-  { vehicle_type: "container", rate_per_km: 25, min_price: 3000, max_price: 6000, base_capacity_tonnes: 16 },
-  { vehicle_type: "trailer", rate_per_km: 28, min_price: 3200, max_price: 7000, base_capacity_tonnes: 25 },
-];
 
 const SEASONAL_DEFAULTS: Record<number, number> = {
   1: 1.02, 2: 0.98, 3: 1.0, 4: 0.97, 5: 0.96, 6: 1.08,
@@ -117,6 +123,8 @@ async function loadFeatureFlags(
       enable_config: map.enable_config ?? true,
       enable_seasonal: map.enable_seasonal ?? true,
       enable_blending: map.enable_blending ?? true,
+      enable_fuel_surcharge: map.enable_fuel_surcharge ?? true,
+      enable_return_factor: map.enable_return_factor ?? true,
     };
   } catch {
     return DEFAULT_FLAGS;
@@ -178,6 +186,50 @@ async function loadSeasonalMultiplier(
     return rows.length > 0 ? rows[0].multiplier : SEASONAL_DEFAULTS[month] ?? 1.0;
   } catch {
     return SEASONAL_DEFAULTS[month] ?? 1.0;
+  }
+}
+
+// ─── Fuel Surcharge & Return Factor Loaders ──────────────────
+
+async function loadSurchargeConfig(
+  supabaseUrl: string,
+  supabaseKey: string,
+): Promise<SurchargeConfig> {
+  try {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/pricing_surcharge_config?select=base_diesel_price,surcharge_per_rupee,base_diesel_date&limit=1`,
+      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+    );
+    if (!res.ok) return DEFAULT_SURCHARGE_CONFIG;
+    const rows: SurchargeConfig[] = await res.json();
+    return rows.length > 0 ? {
+      base_diesel_price: Number(rows[0].base_diesel_price),
+      surcharge_per_rupee: Number(rows[0].surcharge_per_rupee),
+    } : DEFAULT_SURCHARGE_CONFIG;
+  } catch {
+    return DEFAULT_SURCHARGE_CONFIG;
+  }
+}
+
+async function loadReturnFactors(
+  supabaseUrl: string,
+  supabaseKey: string,
+): Promise<Record<string, number>> {
+  try {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/route_return_factor?select=origin_state,destination_state,factor`,
+      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } },
+    );
+    if (!res.ok) return {};
+    const rows: { origin_state: string; destination_state: string; factor: number }[] = await res.json();
+    const map: Record<string, number> = {};
+    for (const r of rows) {
+      const key = `${r.origin_state.toLowerCase()}|${r.destination_state.toLowerCase()}`;
+      map[key] = Number(r.factor);
+    }
+    return map;
+  } catch {
+    return {};
   }
 }
 
@@ -266,7 +318,7 @@ Given the following shipment details, suggest a fair price per tonne in INR.
 
 Route: ${body.originCity}${body.originState ? `, ${body.originState}` : ""} → ${body.destinationCity}${body.destinationState ? `, ${body.destinationState}` : ""}
 Weight: ${body.weightTonnes} tonnes
-Vehicle Type: ${body.vehicleType || "Not specified"}
+  Vehicle Type: ${body.vehicleType || body.vehicleClass || "Not specified"}
 ${distanceInfo}
 ${historyInfo}
 
@@ -383,6 +435,16 @@ async function openRouterProvider(body: PricePredictRequest, prompt: string): Pr
 
 // ─── Local Fallback (upgraded) ──────────────────────────────
 
+function estimateToll(distanceKm: number, perKmRate: number): number {
+  const est = Math.round(distanceKm * perKmRate * 0.08);
+  return Math.max(est, 500);
+}
+
+function estimateDriverBhatta(distanceKm: number): number {
+  const est = Math.round(distanceKm * 2);
+  return Math.max(est, 300);
+}
+
 function localFallback(
   body: PricePredictRequest,
   history: HistoryStats,
@@ -390,36 +452,112 @@ function localFallback(
   vehicleConfig: PricingConfig | null,
   corridorMultiplier: number,
   seasonalMultiplier: number,
-): PriceResult & { provider: string } {
+  surchargeConfig: SurchargeConfig,
+  returnFactorMap: Record<string, number>,
+  currentDiesel: number | null,
+  flags: PricingFlags,
+): ExtendedPriceResult & { provider: string } {
   const weight = body.weightTonnes;
+  const weightKg = weight * 1000;
+  const originState = body.originState ?? "";
+  const destState = body.destinationState ?? "";
+  const returnFactor = flags.enable_return_factor
+    ? getReturnFactor(originState, destState, returnFactorMap)
+    : 1.0;
 
   // Tier 1: Historical median with multipliers
   if (history.median && history.loads > 5) {
-    const base = history.median * corridorMultiplier * seasonalMultiplier;
-    const spread = history.iqr ? Math.round(history.iqr / 2) : Math.round(base * 0.15);
+    let perTonneBase = history.median * corridorMultiplier * seasonalMultiplier;
+    perTonneBase = perTonneBase * returnFactor;
+
+    let fuelSurcharge = 0;
+    let toll = 0;
+    let driver = 0;
+    if (flags.enable_fuel_surcharge && body.includeFuelSurcharge !== false && currentDiesel) {
+      const totalBase = perTonneBase * weight;
+      fuelSurcharge = applyFuelSurcharge(totalBase, currentDiesel, surchargeConfig);
+      toll = distanceKm ? estimateToll(distanceKm, vehicleConfig?.rate_per_km ?? 30) : 0;
+      driver = distanceKm ? estimateDriverBhatta(distanceKm) : 0;
+    }
+
+    const finalPerTonne = perTonneBase + (fuelSurcharge / (weight || 1));
+    const spread = history.iqr ? Math.round(history.iqr / 2) : Math.round(finalPerTonne * 0.15);
+
     return {
-      recommendedPrice: Math.round(base),
-      range: { min: Math.round(base - spread), max: Math.round(base + spread) },
+      recommendedPrice: Math.round(finalPerTonne),
+      range: { min: Math.round(finalPerTonne - spread), max: Math.round(finalPerTonne + spread) },
       confidence: history.loads >= 50 ? "high" : "medium",
       trend: "stable",
-      reasoning: `Based on ${history.loads} recent shipments. Median ₹${history.median}/t, adjusted for corridor and season.`,
+      reasoning: `Based on ${history.loads} recent shipments. Median ₹${history.median}/t, adjusted for corridor, season, and return factor.`,
       provider: "data",
+      fuelSurcharge,
+      returnFactor,
+      perKmRate: vehicleConfig?.rate_per_km,
+      breakdown: {
+        baseFreight: Math.round(perTonneBase * weight),
+        fuel: fuelSurcharge,
+        toll,
+        driver,
+        returnAdjustment: Math.round(perTonneBase * weight * (returnFactor - 1)),
+      },
     };
   }
 
-  // Tier 2: Distance-based with vehicle config
+  // Tier 2: Distance-based with vehicle config (FTL / PTL split)
   if (distanceKm && vehicleConfig) {
-    const base = (vehicleConfig.rate_per_km * distanceKm) / (weight || 1);
-    const clamped = Math.max(vehicleConfig.min_price, Math.min(vehicleConfig.max_price, base));
-    const adjusted = clamped * corridorMultiplier * seasonalMultiplier;
-    const spread = Math.round(adjusted * 0.2);
+    const perKmRate = vehicleConfig.rate_per_km;
+    const capacity = vehicleConfig.base_capacity_tonnes ?? 10;
+    const mode: "ftl" | "ptl" = body.shipmentMode ?? "ftl";
+
+    let totalFreight: number;
+    let baseFreight: number;
+
+    if (mode === "ftl") {
+      baseFreight = distanceKm * perKmRate;
+      totalFreight = baseFreight * returnFactor;
+    } else {
+      const ratePerKg = perKmRate / capacity / 100;
+      const ptl = calculatePtl(
+        weightKg,
+        distanceKm,
+        ratePerKg,
+        vehicleConfig.min_price,
+        body.dimensions,
+      );
+      baseFreight = ptl.freight;
+      totalFreight = baseFreight * returnFactor;
+    }
+
+    let fuelSurcharge = 0;
+    let toll = 0;
+    let driver = 0;
+    if (flags.enable_fuel_surcharge && body.includeFuelSurcharge !== false && currentDiesel) {
+      fuelSurcharge = applyFuelSurcharge(totalFreight, currentDiesel, surchargeConfig);
+      toll = estimateToll(distanceKm, perKmRate);
+      driver = estimateDriverBhatta(distanceKm);
+    }
+
+    const totalPrice = totalFreight + fuelSurcharge;
+    const perTonnePrice = Math.round(totalPrice / (weight || 1));
+    const spread = Math.round(perTonnePrice * 0.2);
+
     return {
-      recommendedPrice: Math.round(adjusted),
-      range: { min: Math.round(adjusted - spread), max: Math.round(adjusted + spread) },
+      recommendedPrice: perTonnePrice,
+      range: { min: Math.round(perTonnePrice - spread), max: Math.round(perTonnePrice + spread) },
       confidence: "medium",
       trend: "stable",
-      reasoning: `${distanceKm}km route, ${vehicleConfig.vehicle_type} at ₹${vehicleConfig.rate_per_km}/km. Adjusted for corridor and season.`,
+      reasoning: `${distanceKm}km route, ${vehicleConfig.vehicle_type} at ₹${perKmRate}/km (${mode.toUpperCase()}). Return factor ${returnFactor}x${currentDiesel ? `, fuel surcharge from ₹${currentDiesel}/L diesel` : ""}.`,
       provider: "config",
+      fuelSurcharge,
+      returnFactor,
+      perKmRate,
+      breakdown: {
+        baseFreight: Math.round(baseFreight),
+        fuel: fuelSurcharge,
+        toll,
+        driver,
+        returnAdjustment: Math.round(baseFreight * (returnFactor - 1)),
+      },
     };
   }
 
@@ -437,6 +575,8 @@ function localFallback(
     trend: "stable",
     reasoning: `Estimated at ₹${price}/t based on typical rates for ${weight}t load.`,
     provider: "data",
+    returnFactor,
+    perKmRate: vehicleConfig?.rate_per_km,
   };
 }
 
@@ -555,7 +695,7 @@ Deno.serve(async (req: Request) => {
     const flags = hasDb ? await loadFeatureFlags(supabaseUrl, supabaseKey) : DEFAULT_FLAGS;
 
     // Load remaining config in parallel
-    const [allConfig, corridorMult, seasonalMult, history] = await Promise.all([
+    const [allConfig, corridorMult, seasonalMult, history, surchargeConfig, returnFactorMap, fuelPrice] = await Promise.all([
       hasDb ? loadPricingConfig(supabaseUrl, supabaseKey) : Promise.resolve(DEFAULT_CONFIG),
       flags.enable_corridor && hasDb
         ? loadCorridorMultiplier(supabaseUrl, supabaseKey, body.originState ?? "", body.destinationState ?? "")
@@ -566,11 +706,22 @@ Deno.serve(async (req: Request) => {
       flags.enable_history && hasDb
         ? fetchHistory(supabaseUrl, supabaseKey, body.originCity, body.destinationCity)
         : Promise.resolve(emptyHistory()),
+      (flags.enable_fuel_surcharge && hasDb)
+        ? loadSurchargeConfig(supabaseUrl, supabaseKey)
+        : Promise.resolve(DEFAULT_SURCHARGE_CONFIG),
+      flags.enable_return_factor && hasDb
+        ? loadReturnFactors(supabaseUrl, supabaseKey)
+        : Promise.resolve({}),
+      (flags.enable_fuel_surcharge && body.originState && body.includeFuelSurcharge !== false && hasDb)
+        ? getLatestFuelPrice(supabaseUrl, supabaseKey, body.originState)
+        : Promise.resolve(null),
     ]);
 
-    // Resolve vehicle config
-    const vehicleConfig = body.vehicleType
-      ? allConfig.find((c) => c.vehicle_type === body.vehicleType) ?? null
+    const currentDiesel = fuelPrice ? Number(fuelPrice.diesel_price) : null;
+
+    // Resolve vehicle config — prefer vehicleClass, fall back to vehicleType
+    const vehicleConfig = (body.vehicleClass ?? body.vehicleType)
+      ? allConfig.find((c) => c.vehicle_type === (body.vehicleClass ?? body.vehicleType)) ?? null
       : null;
 
     // Fetch OSRM distance if coordinates available
@@ -620,6 +771,7 @@ Deno.serve(async (req: Request) => {
     let recommendedPrice: number;
     let range: { min: number; max: number };
     let provider: string;
+    let fb: (ExtendedPriceResult & { provider: string }) | null = null;
 
     if (flags.enable_blending && history.median && aiResult) {
       // Blend historical median (70%) with AI prediction (30%)
@@ -633,15 +785,24 @@ Deno.serve(async (req: Request) => {
       provider = aiResult.provider;
     } else {
       // Local fallback with corridor fallback
-      const fallbackInput = { ...body };
-      const fb = localFallback(fallbackInput, history, distanceKm, vehicleConfig, corridorMult, seasonalMult);
+      fb = localFallback(body, history, distanceKm, vehicleConfig, corridorMult, seasonalMult, surchargeConfig, returnFactorMap, currentDiesel, flags);
 
       // If no route history but corridor average exists, use it
       if (history.loads === 0 && corridorAvg) {
-        const adjusted = corridorAvg * seasonalMult;
+        const returnFactor = flags.enable_return_factor
+          ? getReturnFactor(body.originState ?? "", body.destinationState ?? "", returnFactorMap)
+          : 1.0;
+        let adjusted = corridorAvg * seasonalMult * returnFactor;
+        let fuelSurcharge = 0;
+        if (flags.enable_fuel_surcharge && body.includeFuelSurcharge !== false && currentDiesel) {
+          fuelSurcharge = applyFuelSurcharge(adjusted * weight, currentDiesel, surchargeConfig);
+          adjusted = adjusted + fuelSurcharge / (weight || 1);
+        }
         const spread = Math.round(adjusted * 0.15);
         recommendedPrice = Math.round(adjusted);
         range = { min: Math.round(adjusted - spread), max: Math.round(adjusted + spread) };
+        // Don't use fb extended fields in corridor path
+        fb = null;
       } else {
         recommendedPrice = fb.recommendedPrice;
         range = fb.range;
@@ -663,11 +824,27 @@ Deno.serve(async (req: Request) => {
       historicalLoads: history.loads,
       historicalMedian: history.median,
       distanceKm,
-      vehicleType: body.vehicleType ?? null,
+       vehicleType: body.vehicleType ?? body.vehicleClass ?? null,
       corridorMultiplier: corridorMult,
       seasonalMultiplier: seasonalMult,
       provider,
     });
+
+    const fbExtended: ExtendedPriceResult | null = fb;
+
+    // Compute surcharge/return factor fields for non-local-fallback paths
+    const returnFactorField = flags.enable_return_factor
+      ? getReturnFactor(body.originState ?? "", body.destinationState ?? "", returnFactorMap)
+      : undefined;
+
+    let fuelSurchargeField: number | undefined;
+    if (flags.enable_fuel_surcharge && body.includeFuelSurcharge !== false && currentDiesel) {
+      if (aiResult) {
+        fuelSurchargeField = applyFuelSurcharge(recommendedPrice * weight, currentDiesel, surchargeConfig);
+      }
+    }
+
+    const perKmRateField = vehicleConfig ? vehicleConfig.rate_per_km : undefined;
 
     return new Response(
       JSON.stringify({
@@ -679,6 +856,11 @@ Deno.serve(async (req: Request) => {
         historicalLoads: history.loads,
         historicalAvgPrice: history.median ?? history.avg,
         provider,
+        fuelSurcharge: fbExtended?.fuelSurcharge ?? fuelSurchargeField,
+        returnFactor: fbExtended?.returnFactor ?? returnFactorField,
+        perKmRate: fbExtended?.perKmRate ?? perKmRateField,
+        breakdown: fbExtended?.breakdown,
+        dieselPrice: currentDiesel,
       }),
       { status: 200, headers },
     );

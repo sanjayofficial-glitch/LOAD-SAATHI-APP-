@@ -9,6 +9,10 @@ export interface PricePredictionInput {
   destinationState?: string
   weightTonnes: number
   vehicleType?: string
+  vehicleClass?: string
+  shipmentMode?: 'ftl' | 'ptl'
+  dimensions?: { length: number; width: number; height: number }
+  includeFuelSurcharge?: boolean
 }
 
 export interface PricePrediction {
@@ -20,6 +24,11 @@ export interface PricePrediction {
   historicalLoads?: number | null
   historicalAvgPrice?: number | null
   provider: string
+  fuelSurcharge?: number
+  returnFactor?: number
+  perKmRate?: number
+  breakdown?: Array<{ label: string; value: number; detail?: string }>
+  dieselPrice?: number
 }
 
 function useDebounce<T>(value: T, delay: number): T {

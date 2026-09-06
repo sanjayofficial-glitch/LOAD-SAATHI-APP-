@@ -4,7 +4,7 @@ import { Truck, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CtaSection = React.memo(() => (
-  <section className="fade-section py-32 relative overflow-hidden flex items-center justify-center">
+  <section className="fade-section py-16 sm:py-24 lg:py-32 relative overflow-hidden flex items-center justify-center">
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
     <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
       <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">

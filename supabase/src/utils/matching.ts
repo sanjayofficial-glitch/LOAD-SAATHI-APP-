@@ -173,11 +173,11 @@ export function getMatchLabel(score: number): {
   label: string;
   color: string;
 } {
-  if (score >= 80) return { label: `${score}% Excellent Match`, color: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' };
-  if (score >= 60) return { label: `${score}% Good Match`, color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' };
-  if (score >= 40) return { label: `${score}% Fair Match`, color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300' };
-  if (score >= 20) return { label: `${score}% Weak Match`, color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300' };
-  return { label: `${score}% No Match`, color: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' };
+  if (score >= 80) return { label: `${score}% strong fit`, color: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300' };
+  if (score >= 60) return { label: `${score}% decent fit`, color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' };
+  if (score >= 40) return { label: `${score}% partial fit`, color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300' };
+  if (score >= 20) return { label: `${score}% limited fit`, color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300' };
+  return { label: `${score}% poor fit`, color: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' };
 }
 
 export interface AIMatchInfo {
@@ -195,7 +195,7 @@ export function getAIMatchBadge(info: AIMatchInfo): {
     : score >= 60 ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300'
     : score >= 40 ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300'
     : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-  return { label: `AI ${score}%`, color: base }
+  return { label: `Suggestion: ${score}%`, color: base }
 }
 
 

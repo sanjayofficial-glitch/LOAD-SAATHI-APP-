@@ -13,26 +13,26 @@ flowchart TD
     ENTERPRISE -->|No| STANDARD[Standard plan fee]
 ```
 
-LoadSaathi uses transparent, pay-per-transaction pricing. Free to join, pay only when you move freight.
+LoadSaathi uses transparent, pay-per-transaction pricing. Free to join, pay only when you move freight. Escrow-backed payments protect funds until delivery confirmation.
 
 ## For Shippers
 
 - **Price**: Free to join
-- **Transaction Fee**: 3–5% of shipment value
+- **Transaction Fee**: 1.5–3% of shipment value
 - **What's Included**:
   - Free account registration and profile setup
   - AI-powered transporter matching
   - Real-time shipment tracking with GPS
   - Digital documentation and e-way bill integration
   - Access to verified transporter network
-  - Escrow-backed payment protection
+  - Escrow-backed payment protection (live)
   - Analytics dashboard and reports
-- **Fee Details**: Varies by shipment size and route complexity. Exact fee displayed before confirming any transaction.
+- **Fee Details**: Varies by shipment size, route complexity, and credit score. Exact fee displayed before confirming any transaction.
 
 ## For Truckers & Fleet Owners
 
 - **Price**: Free to join
-- **Transaction Fee**: 2–4% of trip value
+- **Transaction Fee**: 1.5–2.5% of trip value
 - **What's Included**:
   - Free account and fleet registration
   - AI-matched load discovery
@@ -81,4 +81,4 @@ LoadSaathi uses transparent, pay-per-transaction pricing. Free to join, pay only
 | Matching Speed | AI match in seconds | Hours of phone calls |
 | Payment Protection | Escrow-backed | Cash/credit dependent |
 | Real-Time Tracking | Live GPS tracking | Phone call updates |
-| Platform Fee | 2–5% per transaction | 10–20% broker margin |
+| Platform Fee | 1.5–3% per transaction | 10–20% broker margin |

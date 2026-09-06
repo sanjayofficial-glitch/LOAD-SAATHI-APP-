@@ -11,7 +11,7 @@ const HeroSection = React.memo(() => {
   ];
 
   return (
-    <section className="min-h-[95vh] flex items-center relative overflow-hidden pt-16 sm:pt-0">
+    <section className="min-h-[85vh] sm:min-h-[95vh] flex items-center relative overflow-hidden pt-16 sm:pt-0">
       <div className="absolute inset-0 z-0">
         <img
           src="/hero-bg.webp"
@@ -25,12 +25,12 @@ const HeroSection = React.memo(() => {
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+          <div className="space-y-6 sm:space-y-8 lg:space-y-10">
             <div className="flex items-center gap-2 bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800/50 text-orange-700 dark:text-orange-300 px-4 py-2 rounded-full text-sm w-max">
               <Star className="h-4 w-4 fill-orange-500" /> Early Access Program for East India
             </div>
-            <h1 className="text-5xl sm:text-7xl font-black text-foreground dark:text-white tracking-tighter leading-none">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-foreground dark:text-white tracking-tighter leading-none">
               The OS for<br />
               <span className="text-orange-600 dark:text-orange-500">India's Freight</span>
             </h1>

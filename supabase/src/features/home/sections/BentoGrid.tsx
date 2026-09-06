@@ -24,13 +24,13 @@ const BentoGrid = React.memo(() => (
     <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
       style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)', filter: 'blur(60px)' }} />
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
-      <div className="mb-16">
+      <div className="mb-8 sm:mb-12 lg:mb-16">
         <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">The Utilization Crisis</h2>
         <p className="text-lg text-muted-foreground max-w-2xl">India doesn&apos;t have a truck shortage. India has a utilization problem. Legacy systems create friction, leaving capacity stranded.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {cards.map((card, i) => (
-          <div key={i} className={`glass-card p-8 rounded-xl min-h-[260px] flex flex-col ${card.colSpan || ''} hover:border-orange-500/30 transition-all duration-300 group`}>
+          <div key={i} className={`glass-card p-6 sm:p-8 rounded-xl min-h-[180px] sm:min-h-[220px] md:min-h-[260px] flex flex-col ${card.colSpan || ''} hover:border-orange-500/30 transition-all duration-300 group`}>
             <card.icon className={`${card.iconColor} text-3xl mb-4 group-hover:scale-110 transition-transform duration-300 shrink-0`} />
             <h3 className="text-lg font-bold text-foreground mb-2">{card.title}</h3>
             <p className="text-sm text-muted-foreground flex-grow">{card.desc}</p>

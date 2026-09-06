@@ -93,6 +93,15 @@ const OnboardingFlow = () => {
     } catch {
       // ignore — never crash on storage failure
     }
+    // Set the product-tour auto-start flag so the dashboard kicks off
+    // the first-time tour on mount. Only for non-admin roles.
+    if (user && role && role !== 'admin') {
+      try {
+        localStorage.setItem(`loadsaathi-tour-entry-${user.id}`, '1');
+      } catch {
+        // ignore
+      }
+    }
     navigate(target || dashboardPath(), { replace: true });
   };
 

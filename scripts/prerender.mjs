@@ -23,7 +23,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
 
-const PUBLIC_ROUTES = [
+const STATIC_ROUTES = [
   "/",
   "/features",
   "/how-it-works",
@@ -54,6 +54,54 @@ const PUBLIC_ROUTES = [
   "/for-msmes",
   "/ai-logistics",
   "/data",
+];
+
+/**
+ * Extract slugs from a TypeScript/JavaScript source file by matching
+ * a quoted string pattern after a given key (e.g., slug: "xxx" or "xxx": {).
+ */
+function extractSlugs(filePath, pattern) {
+  if (!fs.existsSync(filePath)) return [];
+  const content = fs.readFileSync(filePath, "utf-8");
+  const regex = new RegExp(pattern, "g");
+  const slugs = [];
+  let match;
+  while ((match = regex.exec(content)) !== null) {
+    slugs.push(match[1]);
+  }
+  return [...new Set(slugs)];
+}
+
+// Dynamic routes: 28 freight corridors
+const ROUTE_SLUGS = extractSlugs(
+  path.join(ROOT, "supabase/src/data/routes.ts"),
+  /slug:\s*"([^"]+)"/g
+);
+
+// Dynamic routes: blog articles
+const BLOG_SLUGS = extractSlugs(
+  path.join(ROOT, "supabase/src/data/blog.ts"),
+  /^\s+"([a-z0-9-]+)":\s*\{/gm
+);
+
+// Dynamic routes: guide pages
+const GUIDE_SLUGS = extractSlugs(
+  path.join(ROOT, "supabase/src/pages/public/guides/GuidePage.tsx"),
+  /^\s+"([a-z0-9-]+)":\s*\{/gm
+);
+
+// Dynamic routes: location pages
+const LOCATION_SLUGS = extractSlugs(
+  path.join(ROOT, "supabase/src/pages/public/locations/LocationPage.tsx"),
+  /^\s+([a-z]+):\s*\{$/gm
+);
+
+const PUBLIC_ROUTES = [
+  ...STATIC_ROUTES,
+  ...ROUTE_SLUGS.map((s) => `/routes/${s}`),
+  ...BLOG_SLUGS.map((s) => `/blog/${s}`),
+  ...GUIDE_SLUGS.map((s) => `/guide/${s}`),
+  ...LOCATION_SLUGS.map((s) => `/location/${s}`),
 ];
 
 const TIMEOUT_MS = 20_000;
@@ -157,6 +205,7 @@ function main() {
     return;
   }
   console.log(`[prerender] Using Chrome: ${chromePath}`);
+  console.log(`[prerender] Discovered ${PUBLIC_ROUTES.length} routes to pre-render (${ROUTE_SLUGS.length} routes, ${BLOG_SLUGS.length} blog, ${GUIDE_SLUGS.length} guides, ${LOCATION_SLUGS.length} locations)`);
 
   const spaIndex = path.join(DIST, "index.html");
   if (!fs.existsSync(spaIndex)) {

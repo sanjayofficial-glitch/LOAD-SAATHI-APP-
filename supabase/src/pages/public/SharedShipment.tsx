@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,6 +32,8 @@ interface ShipmentData {
 
 export default function SharedShipment() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [shipment, setShipment] = useState<ShipmentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -186,11 +189,20 @@ export default function SharedShipment() {
             </div>
 
             {/* CTA */}
-            <Link to="/register" className="block">
-              <Button className="w-full h-12 text-base font-bold bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg">
-                Offer Your Truck <ArrowRight className="ml-2 h-4 w-4" />
+            {user ? (
+              <Button
+                className="w-full h-12 text-base font-bold bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg"
+                onClick={() => navigate(-1)}
+              >
+                Back to Browse <ArrowRight className="ml-2 h-4 w-4 rotate-180" />
               </Button>
-            </Link>
+            ) : (
+              <Link to="/register" className="block">
+                <Button className="w-full h-12 text-base font-bold bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg">
+                  Offer Your Truck <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            )}
           </CardContent>
         </Card>
 

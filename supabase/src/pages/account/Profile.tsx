@@ -223,7 +223,7 @@ const Profile = () => {
   if (authLoading) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+      <div id="profile-header" className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
           <div className="flex items-center gap-4">
             <Skeleton className="h-16 w-16 rounded-full" />
             <div className="space-y-2">
@@ -297,7 +297,7 @@ const Profile = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-6">
+      <Tabs id="profile-tabs" defaultValue="overview" className="space-y-6">
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-[500px] lg:grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
@@ -305,7 +305,7 @@ const Profile = () => {
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview">
+        <TabsContent id="profile-overview" value="overview">
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="border-orange-100 dark:border-orange-800 shadow-sm overflow-hidden">
               <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />

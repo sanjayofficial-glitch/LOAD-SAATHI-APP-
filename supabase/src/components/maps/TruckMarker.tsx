@@ -29,14 +29,16 @@ interface TruckMarkerProps {
   selected?: boolean;
 }
 
-/** A truck is considered in transit when it has an active trip or live trip context. */
+/**
+ * A truck is in transit only when its underlying trip is `in_transit`.
+ * `trip_id`/`origin_city` are populated for *posted* trips too, so we cannot
+ * use them as a "in transit" signal — they just mean a trip exists.
+ * `AutoGpsTracker` keeps `trip_status` in sync with the trips row, so once
+ * the driver calls `start_trip` (RPC) the next 30s ping flips the marker.
+ */
 export function isTruckInTransit(truck: TruckLocation): boolean {
-  // Posted-trip pins (no live GPS) are standing/available, not confirmed moving.
   if (truck.is_live === false) return false;
-  return (
-    truck.trip_status === 'in_transit' ||
-    (truck.trip_id != null && truck.origin_city != null)
-  );
+  return truck.trip_status === 'in_transit';
 }
 
 export function formatTimeAgo(iso: string): string {

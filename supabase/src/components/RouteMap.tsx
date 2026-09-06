@@ -11,14 +11,17 @@
  *             distanceKm={1400} durationMin={1200} />
  */
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON, Polyline, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { geocodeCity } from '@/utils/geocode';
 import { getRoute, RouteResult } from '@/utils/osrm';
 import ZoomControls from '@/components/maps/ZoomControls';
 import TileLayerSwitcher, { type TileLayerId, getTileLayer } from '@/components/maps/TileLayerSwitcher';
+import MapSizeHandler from '@/components/maps/MapSizeHandler';
+import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { useTheme } from '@/theme/theme';
 
 // Fix Leaflet's default marker icon (broken in Vite builds)
@@ -28,16 +31,6 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
-
-// Fix 0×0 map pane: invalidateSize on mount
-function MapSizeHandler() {
-  const map = useMap();
-  useEffect(() => {
-    const t = setTimeout(() => map.invalidateSize(), 150);
-    return () => clearTimeout(t);
-  }, [map]);
-  return null;
-}
 
 const originIcon = new L.Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -94,8 +87,8 @@ const RouteMap = React.memo(({
 
   const tile = getTileLayer(tileLayerId);
 
-  const hasPreStoredCoords = propOriginLat !== undefined && propOriginLng !== undefined &&
-                             propDestLat !== undefined && propDestLng !== undefined;
+  const hasPreStoredCoords = propOriginLat != null && propOriginLng != null &&
+                             propDestLat != null && propDestLng != null;
 
   useEffect(() => {
     let cancelled = false;
@@ -147,8 +140,22 @@ const RouteMap = React.memo(({
   if (loading) return <Skeleton className="w-full rounded-lg" style={{ height }} />;
   if (error || !origin || !destination) {
     return (
-      <div className="flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm" style={{ height }}>
-        Map unavailable for these cities
+      <div
+        className="flex flex-col items-center justify-center gap-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm"
+        style={{ minHeight: 'min(200px, 30vh)', height }}
+      >
+        <span>Map unavailable for these cities</span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            // Re-run the loader effect by toggling a key prop would be heavy;
+            // simplest: reload the page — the geocoder caches are warm now.
+            window.location.reload();
+          }}
+        >
+          Retry
+        </Button>
       </div>
     );
   }
@@ -169,8 +176,12 @@ const RouteMap = React.memo(({
   // Note: computed after the loading/error early-returns, so no hooks here.
 
   return (
-    <div>
-      <div className="relative rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 isolate" style={{ height }}>
+    <MapErrorBoundary minHeight={typeof height === 'string' ? height : '300px'}>
+      <div>
+        <div
+          className="relative rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 isolate"
+          style={{ minHeight: 'min(200px, 30vh)', height }}
+        >
         <MapContainer center={center} zoom={5} style={{ height: '100%', width: '100%', position: 'relative' }} scrollWheelZoom={interactive} touchZoom={interactive} dragging={interactive} zoomControl={false}>
           <MapSizeHandler />
           <ZoomControls positions={positions} />
@@ -212,6 +223,7 @@ const RouteMap = React.memo(({
         </div>
       )}
     </div>
+    </MapErrorBoundary>
   );
 });
 

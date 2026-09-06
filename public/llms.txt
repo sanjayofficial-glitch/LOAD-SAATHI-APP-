@@ -1,6 +1,7 @@
 # LoadSaathi
 
-Last updated: August 2026.
+Last updated: September 2026.
+Full detailed site summary: https://loadsaathi.in/llms-full.txt
 
 LoadSaathi is India's AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%.
 
@@ -21,8 +22,8 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 ## Pricing
 
 - Free to join for both shippers and truckers.
-- Transaction fee: 2–5% per completed shipment (varies by role, volume, and credit score).
-- No subscriptions, no hidden fees, no minimum commitments.
+- Transaction fee: 1.5–3% per completed shipment for shippers, 1.5–2.5% for truckers (varies by role, volume, and credit score).
+- No subscriptions, no hidden fees, no minimum commitments. Escrow-backed payments protect funds until delivery confirmation.
 - Enterprise pricing available for 50+ loads/month.
 
 ## Key Pages
@@ -37,32 +38,55 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 - [LoadSaathi vs Traditional Brokers](https://loadsaathi.in/compare)
 - [About](https://loadsaathi.in/about)
 - [Contact](https://loadsaathi.in/contact)
+
+## Tools & Calculators
+
+- [Fare Calculator](https://loadsaathi.in/fare-calculator) — AI-powered PTL/LTL rate estimates
+- [Transport Cost Calculator](https://loadsaathi.in/transport-cost-calculator) — Estimate freight costs by route
+- [Freight Rate Calculator](https://loadsaathi.in/freight-rate-calculator) — Calculate freight rates with cost per km
+- [Truck Load Calculator](https://loadsaathi.in/truck-load-calculator) — Find the right truck for your cargo
+- [PTL vs FTL Calculator](https://loadsaathi.in/ptl-vs-ftl-calculator) — Decide between PTL and FTL
+- [Return Load Calculator](https://loadsaathi.in/return-load-calculator) — Find return loads for your route
+
+## Routes & Locations
+
 - [All Freight Routes](https://loadsaathi.in/routes)
 - [Location: Rourkela](https://loadsaathi.in/location/rourkela)
 - [Location: Ranchi](https://loadsaathi.in/location/ranchi)
 - [Location: Kolkata](https://loadsaathi.in/location/kolkata)
 - [Location: Bhubaneswar](https://loadsaathi.in/location/bhubaneswar)
 - [Location: Jamshedpur](https://loadsaathi.in/location/jamshedpur)
+- [Location: Cuttack](https://loadsaathi.in/location/cuttack)
+- [Location: Durgapur](https://loadsaathi.in/location/durgapur)
+- [Location: Asansol](https://loadsaathi.in/location/asansol)
+- [Location: Burdwan](https://loadsaathi.in/location/burdwan)
+
+## Guides
+
 - [Guide: PTL vs FTL](https://loadsaathi.in/guide/ptl-vs-ftl)
 - [Guide: Freight Rates East India](https://loadsaathi.in/guide/freight-rates-east-india)
 - [Guide: Shipping Steel](https://loadsaathi.in/guide/shipping-steel)
-- [Blog: Finding Return Loads from Rourkela](https://loadsaathi.in/blog/return-loads-rourkela)
-- [Blog: PTL Transport in Odisha and Jharkhand](https://loadsaathi.in/blog/ptl-transport-odisha-jharkhand-2026)
-- [Blog: Steel Transport from Rourkela](https://loadsaathi.in/blog/steel-transport-rourkela-2026)
-- [Blog: Trucker Salary and Earnings in Odisha 2026](https://loadsaathi.in/blog/trucker-earnings-odisha-2026)
-- [Blog: e-Way Bill Rules 2026 for Transporters](https://loadsaathi.in/blog/indian-logistics-eway-bill-gst-2026)
-- [Blog: Truck Transport Charges Per Km India 2026](https://loadsaathi.in/blog/truck-transport-charges-per-km-india)
-- [Blog: Digital Freight Matching India](https://loadsaathi.in/blog/digital-freight-matching-india)
-- [Blog: East India Freight Corridors](https://loadsaathi.in/blog/east-india-freight-corridors)
-- [Blog: PTL vs FTL When to Use Each](https://loadsaathi.in/blog/ptl-vs-ftl-when-to-use-each)
-- [Blog: Steel Transport India Guide](https://loadsaathi.in/blog/steel-transport-india-guide)
-- [Blog: How to Find Return Loads India](https://loadsaathi.in/blog/how-to-find-return-loads-india)
-- [Blog: Monsoon Logistics Tips](https://loadsaathi.in/blog/monsoon-logistics-tips)
-- [Blog: Finding Return Loads from Kolkata](https://loadsaathi.in/blog/return-loads-kolkata)
-- [Blog: Trucker Earnings Jharkhand 2026](https://loadsaathi.in/blog/trucker-earnings-jharkhand-2026)
-- [Blog: LoadSaathi vs Traditional Brokers](https://loadsaathi.in/blog/loadsaathi-vs-brokers)
-- [Blog: Bhubaneswar to Kolkata Freight Rates](https://loadsaathi.in/blog/bhubaneswar-to-kolkata-freight-rates)
-- [Blog: Cargo Insurance Guide India](https://loadsaathi.in/blog/cargo-insurance-guide-india)
+
+## Blog
+
+- [All Blog Posts](https://loadsaathi.in/blog)
+- [Truck Transport Cost Per Km India 2026](https://loadsaathi.in/blog/truck-transport-cost-per-km-india-2026)
+- [Return Loads from Rourkela](https://loadsaathi.in/blog/return-loads-rourkela)
+- [PTL Transport Odisha Jharkhand](https://loadsaathi.in/blog/ptl-transport-odisha-jharkhand-2026)
+- [Steel Transport Rourkela 2026](https://loadsaathi.in/blog/steel-transport-rourkela-2026)
+- [Trucker Earnings Odisha 2026](https://loadsaathi.in/blog/trucker-earnings-odisha-2026)
+- [e-Way Bill Rules 2026](https://loadsaathi.in/blog/indian-logistics-eway-bill-gst-2026)
+- [Digital Freight Matching India](https://loadsaathi.in/blog/digital-freight-matching-india)
+- [East India Freight Corridors](https://loadsaathi.in/blog/east-india-freight-corridors)
+- [PTL vs FTL When to Use Each](https://loadsaathi.in/blog/ptl-vs-ftl-when-to-use-each)
+- [Steel Transport India Guide](https://loadsaathi.in/blog/steel-transport-india-guide)
+- [How to Find Return Loads India](https://loadsaathi.in/blog/how-to-find-return-loads-india)
+- [Monsoon Logistics Tips](https://loadsaathi.in/blog/monsoon-logistics-tips)
+- [Return Loads from Kolkata](https://loadsaathi.in/blog/return-loads-kolkata)
+- [Trucker Earnings Jharkhand 2026](https://loadsaathi.in/blog/trucker-earnings-jharkhand-2026)
+- [LoadSaathi vs Traditional Brokers](https://loadsaathi.in/blog/loadsaathi-vs-brokers)
+- [Bhubaneswar to Kolkata Freight Rates](https://loadsaathi.in/blog/bhubaneswar-to-kolkata-freight-rates)
+- [Cargo Insurance Guide India](https://loadsaathi.in/blog/cargo-insurance-guide-india)
 
 ## Social Media
 
@@ -84,7 +108,7 @@ Q: Which cities does LoadSaathi serve?
 A: LoadSaathi covers Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal with 25+ active freight corridors including Rourkela–Ranchi–Burdwan, Rourkela–Kolkata, and Bhubaneswar–Kolkata.
 
 Q: How much does LoadSaathi cost?
-A: LoadSaathi is free to join for both shippers and truckers. A transaction fee of 2–5% per completed shipment applies, with no subscriptions or hidden fees.
+A: LoadSaathi is free to join for both shippers and truckers. A transaction fee of 1.5–3% per completed shipment applies (1.5–2.5% for truckers), with no subscriptions or hidden fees. Escrow-backed payments protect funds until delivery confirmation.
 
 Q: How does LoadSaathi's AI matching work?
 A: LoadSaathi's AI scoring engine analyzes route alignment, capacity fit, price compatibility, timeliness, historical performance, communication responsiveness, and tenure to match shippers with the best-suited truckers in seconds.

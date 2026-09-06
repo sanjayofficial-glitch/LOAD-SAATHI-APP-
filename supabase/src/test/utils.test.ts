@@ -84,29 +84,30 @@ describe('calculateMatchScore', () => {
 });
 
 describe('getMatchLabel', () => {
-  it('returns Excellent for score >= 80', () => {
-    expect(getMatchLabel(85).label).toContain('Excellent');
+  it('returns strong fit for score >= 80', () => {
+    expect(getMatchLabel(85).label).toContain('strong');
   });
 
-  it('returns Good for score >= 60', () => {
-    expect(getMatchLabel(65).label).toContain('Good');
+  it('returns decent fit for score >= 60', () => {
+    expect(getMatchLabel(65).label).toContain('decent');
   });
 
-  it('returns Fair for score >= 40', () => {
-    expect(getMatchLabel(45).label).toContain('Fair');
+  it('returns partial fit for score >= 40', () => {
+    expect(getMatchLabel(45).label).toContain('partial');
   });
 
-  it('returns Weak for score >= 20', () => {
-    expect(getMatchLabel(25).label).toContain('Weak');
+  it('returns limited fit for score >= 20', () => {
+    expect(getMatchLabel(25).label).toContain('limited');
   });
 
-  it('returns No Match for score < 20', () => {
-    expect(getMatchLabel(10).label).toContain('No Match');
+  it('returns poor fit for score < 20', () => {
+    expect(getMatchLabel(10).label).toContain('poor');
   });
 });
 
 describe('getAIMatchBadge', () => {
   it('returns AI label with score', () => {
-    expect(getAIMatchBadge({ aiScore: 75, confidence: 'high', reasoning: 'test' }).label).toBe('AI 75%');
+    expect(getAIMatchBadge({ aiScore: 75, confidence: 'high', reasoning: 'test' }).label).toBe('Suggestion: 75%');
   });
 });
+

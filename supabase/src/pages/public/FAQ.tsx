@@ -230,7 +230,7 @@ const FAQ = () => {
     />
     <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       {/* HERO */}
-      <section className="relative min-h-[400px] flex items-center overflow-hidden">
+      <section className="relative min-h-[280px] sm:min-h-[350px] lg:min-h-[400px] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-50" />
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 -left-32 w-[600px] h-[600px] rounded-full opacity-[0.12] dark:opacity-[0.15]"

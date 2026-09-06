@@ -295,12 +295,14 @@ const TripList = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <div id="browse-trips-header" className="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Browse Trips</div>
+      <p className="text-sm text-gray-500 dark:text-gray-400">Find verified truckers moving goods on routes you need.</p>
       {/* Search and Filters */}
       <Card className="border-orange-100 dark:border-orange-800 shadow-sm overflow-hidden">
         <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
         <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
+             <div id="browse-trips-search" className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input
                 placeholder="Search by city, trucker name..."
@@ -349,6 +351,7 @@ const TripList = () => {
                 Clear
               </Button>
               <Button 
+                id="browse-trips-filters-btn"
                 variant="outline" 
                 onClick={() => setShowFilters(!showFilters)}
                 className={`${hasActiveFilters ? 'border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950' : 'border-gray-200 dark:border-gray-700'}`}
@@ -415,7 +418,7 @@ const TripList = () => {
       </Card>
 
       {/* Results */}
-      <div className="grid gap-4">
+      <div id="browse-trips-results" className="grid gap-4">
         {filteredTrips.length === 0 ? (
           <EmptyState
             accent="blue"

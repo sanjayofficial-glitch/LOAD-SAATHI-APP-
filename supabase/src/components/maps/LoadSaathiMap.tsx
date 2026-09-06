@@ -10,6 +10,8 @@ import MapLegend from './MapLegend';
 import ZoomControls, { fitPositionsToBounds } from './ZoomControls';
 import TileLayerSwitcher, { type TileLayerId, getTileLayer } from './TileLayerSwitcher';
 import { useMapUserInteraction } from './useMapUserInteraction';
+import MapSizeHandler from './MapSizeHandler';
+import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { myLocationIcon } from './icons';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/theme/theme';
@@ -19,16 +21,6 @@ function MapClickHandler({ onClick }: { onClick?: (e: L.LeafletMouseEvent) => vo
   useMapEvents({
     click: (e) => onClick?.(e),
   });
-  return null;
-}
-
-// ── Fix 0×0 map pane: invalidateSize on mount ──────────────────────────────
-function MapSizeHandler() {
-  const map = useMap();
-  useEffect(() => {
-    const t = setTimeout(() => map.invalidateSize(), 150);
-    return () => clearTimeout(t);
-  }, [map]);
   return null;
 }
 
@@ -194,10 +186,11 @@ export default React.memo(function LoadSaathiMap({
   );
 
   return (
-    <div
-      className={cn('relative w-full rounded-lg overflow-hidden border isolate', className)}
-      style={{ height }}
-    >
+    <MapErrorBoundary minHeight={typeof height === 'string' ? height : '500px'}>
+      <div
+        className={cn('relative w-full rounded-lg overflow-hidden border isolate', className)}
+        style={{ minHeight: 'min(200px, 30vh)', height }}
+      >
       <MapContainer
         center={center}
         zoom={zoom}
@@ -235,5 +228,6 @@ export default React.memo(function LoadSaathiMap({
       )}
       <TileLayerSwitcher currentLayer={tileLayerId} onLayerChange={setTileLayerId} />
     </div>
+    </MapErrorBoundary>
   );
 });

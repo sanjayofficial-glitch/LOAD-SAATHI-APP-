@@ -18,6 +18,7 @@ const Pricing = lazy(() => import("./pages/public/Pricing"));
 const Faq = lazy(() => import("./pages/public/FAQ"));
 const FareCalculator = lazy(() => import("./pages/public/FareCalculator"));
 const SharedTrip = lazy(() => import("./pages/public/SharedTrip"));
+const ApiKeys = lazy(() => import("./pages/admin/ApiKeys"));
 const SharedShipment = lazy(() => import("./pages/public/SharedShipment"));
 const Contact = lazy(() => import("./pages/public/Contact"));
 const SafetyTrust = lazy(() => import("./pages/public/SafetyTrust"));
@@ -220,6 +221,11 @@ export const AppRoutes = () => (
         </RoleProtectedRoute>
       } />
       {/* Trucker routes */}
+      <Route path="/admin/api-keys" element={
+        <RoleProtectedRoute allowedRole="admin">
+          <ApiKeys />
+        </RoleProtectedRoute>
+      } />
       <Route path="/trucker/dashboard" element={
         <RoleProtectedRoute allowedRole="trucker">
           <TruckerDashboard />
@@ -253,6 +259,11 @@ export const AppRoutes = () => (
       <Route path="/trucker/browse-shipments" element={
         <RoleProtectedRoute allowedRole="trucker">
           <BrowseShipments />
+        </RoleProtectedRoute>
+      } />
+      <Route path="/trucker/shipments/:id" element={
+        <RoleProtectedRoute allowedRole="trucker">
+          <ShipmentDetail />
         </RoleProtectedRoute>
       } />
 

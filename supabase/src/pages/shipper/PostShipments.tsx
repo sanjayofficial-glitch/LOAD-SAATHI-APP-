@@ -37,6 +37,8 @@ const PostShipments = () => {
     import('@/data/locations.json').then(mod => setLocationData(mod.default.data));
   }, []);
 
+
+
   const form = useForm<ShipmentFormValues>({
     resolver: zodResolver(shipmentSchema),
     defaultValues: {
@@ -127,7 +129,7 @@ const PostShipments = () => {
         }
       }
 
-      posthog.capture('shipment_posted', {
+posthog.capture('shipment_posted', {
         shipment_id: shipmentData.id,
         origin_state: formData.origin_state,
         destination_state: formData.destination_state,
@@ -188,7 +190,7 @@ const PostShipments = () => {
       )}
 
       <Card className="border-blue-100 dark:border-blue-800 shadow-lg">
-        <CardHeader className="bg-blue-50/50 dark:bg-blue-950/50 border-b border-blue-100 dark:border-blue-800 px-4 sm:px-6">
+<CardHeader id="post-shipment-header" className="bg-blue-50/50 dark:bg-blue-950/50 border-b border-blue-100 dark:border-blue-800 px-4 sm:px-6">
           <CardTitle className="flex items-center text-blue-900 dark:text-blue-100 text-lg sm:text-xl">
             <Package className="mr-2 text-blue-600 dark:text-blue-400 h-5 w-5 sm:h-6 sm:w-6" />
             Post a New Shipment
@@ -214,7 +216,7 @@ const PostShipments = () => {
                 }}
               />
             )}
-            <div className="space-y-2">
+<div id="post-shipment-origin" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
                 <LocationSelector
                   label="Origin"
@@ -224,7 +226,7 @@ const PostShipments = () => {
                 {form.formState.errors.origin_city?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.origin_city.message}</p>}
               </div>
 
-              <div className="space-y-2">
+              <div id="post-shipment-destination" className="space-y-2">
                 <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
                 <LocationSelector
                   label="Destination"
@@ -359,7 +361,8 @@ const PostShipments = () => {
                   disabled={loading || form.formState.isSubmitting}
                 />
               )}
-              <Button
+<Button
+                id="post-shipment-submit"
                 type="submit"
                 className="flex-1 bg-blue-600 hover:bg-blue-700 h-12 text-base sm:text-lg font-bold shadow-md transition-all hover:shadow-lg"
                 disabled={loading || !isOnline || form.formState.isSubmitting}

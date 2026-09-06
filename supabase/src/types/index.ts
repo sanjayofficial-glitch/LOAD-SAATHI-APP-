@@ -1,4 +1,4 @@
-export interface User {
+﻿export interface User {
   id: string;
   user_type: 'trucker' | 'shipper' | 'admin';
   full_name: string;
@@ -160,6 +160,14 @@ export interface Notification {
   type?: string;
   title?: string;
   action_url?: string;
+}
+
+
+export interface AIMatchResult {
+  aiScore: number;
+  confidence: 'high' | 'medium' | 'low';
+  reasoning: string;
+  provider?: string;
 }
 
 export interface AuditLogEntry {

@@ -6,7 +6,11 @@ import {
   buildFactualReasoning,
   localFallback,
   parseAIResponse,
+  applyFuelSurcharge,
+  getReturnFactor,
+  calculatePtl,
   DEFAULT_CONFIG,
+  DEFAULT_SURCHARGE_CONFIG,
   type HistoryStats,
 } from "./pricing.ts";
 
@@ -158,8 +162,8 @@ Deno.test("localFallback uses vehicle config with distance", () => {
   };
   const config = DEFAULT_CONFIG.find((c) => c.vehicle_type === "22ft")!;
   const result = localFallback(10, history, 300, config, 1.0, 1.0);
-  // 22 * 300 / 10 = 660, clamped to [2800, 5500] = 2800
-  assertEquals(result.recommendedPrice, 2800);
+  // 52 * 300 / 10 = 1560, clamped to [5000, 14000] = 5000
+  assertEquals(result.recommendedPrice, 5000);
   assertEquals(result.confidence, "medium");
   assertEquals(result.provider, "config");
 });
@@ -176,8 +180,8 @@ Deno.test("localFallback applies corridor and seasonal multipliers", () => {
   };
   const config = DEFAULT_CONFIG.find((c) => c.vehicle_type === "22ft")!;
   const result = localFallback(10, history, 300, config, 1.05, 1.1);
-  // 22 * 300 / 10 = 660, clamped to 2800, then * 1.05 * 1.1 = 3234
-  assertEquals(result.recommendedPrice, 3234);
+  // 52 * 300 / 10 = 1560, clamped to [5000, 14000] = 5000, then * 1.05 * 1.1 = 5775
+  assertEquals(result.recommendedPrice, 5775);
 });
 
 Deno.test("localFallback uses weight tiers as last resort", () => {
@@ -237,6 +241,93 @@ Deno.test("parseAIResponse returns null for invalid JSON", () => {
 
 Deno.test("parseAIResponse returns null for empty string", () => {
   assertEquals(parseAIResponse(""), null);
+});
+
+// ─── applyFuelSurcharge ───────────────────────────────────────
+
+Deno.test("applyFuelSurcharge returns 0 when diesel at base price", () => {
+  const result = applyFuelSurcharge(20000, 95.20, DEFAULT_SURCHARGE_CONFIG);
+  assertEquals(result, 0);
+});
+
+Deno.test("applyFuelSurcharge returns 0 when diesel below base price", () => {
+  const result = applyFuelSurcharge(20000, 90.0, DEFAULT_SURCHARGE_CONFIG);
+  assertEquals(result, 0);
+});
+
+Deno.test("applyFuelSurcharge calculates correctly for Odisha diesel ₹101.61", () => {
+  const result = applyFuelSurcharge(20000, 101.61, DEFAULT_SURCHARGE_CONFIG);
+  // (101.61 - 95.20) * 0.0065 * 20000 = 833.3 → rounded to 830
+  assertEquals(result, 830);
+});
+
+Deno.test("applyFuelSurcharge calculates correctly for diesel ₹110", () => {
+  const result = applyFuelSurcharge(20000, 110, DEFAULT_SURCHARGE_CONFIG);
+  // (110 - 95.20) * 0.0065 * 20000 = 1924 → rounded to 1920
+  assertEquals(result, 1920);
+});
+
+Deno.test("applyFuelSurcharge rounds to nearest ₹10", () => {
+  const result = applyFuelSurcharge(15000, 101.61, DEFAULT_SURCHARGE_CONFIG);
+  // 15000 * (101.61 - 95.20) * 0.0065 = 624.975 → rounded to 620
+  assertEquals(result, 620);
+});
+
+// ─── getReturnFactor ─────────────────────────────────────────
+
+Deno.test("getReturnFactor returns seeded value for known pair", () => {
+  const map: Record<string, number> = {
+    "odisha|odisha": 1.5,
+    "west bengal|odisha": 1.2,
+    "default|default": 1.4,
+  };
+  assertEquals(getReturnFactor("Odisha", "Odisha", map), 1.5);
+  assertEquals(getReturnFactor("West Bengal", "Odisha", map), 1.2);
+});
+
+Deno.test("getReturnFactor returns 1.4 for unknown pair", () => {
+  const map: Record<string, number> = {};
+  assertEquals(getReturnFactor("Maharashtra", "Karnataka", map), 1.4);
+});
+
+Deno.test("getReturnFactor is case-insensitive", () => {
+  const map: Record<string, number> = {
+    "odisha|jharkhand": 1.4,
+  };
+  assertEquals(getReturnFactor("ODISHA", "Jharkhand", map), 1.4);
+});
+
+// ─── calculatePtl ────────────────────────────────────────────
+
+Deno.test("calculatePtl computes freight from weight and distance", () => {
+  const result = calculatePtl(400, 320, 0.05, 5000);
+  // 400 * 320 * 0.05 = 6400
+  assertEquals(result.chargeableKg, 400);
+  assertEquals(result.freight, 6400);
+  assertEquals(result.perKg, 16);
+});
+
+Deno.test("calculatePtl uses min charge floor when freight is below minimum", () => {
+  const result = calculatePtl(100, 50, 0.05, 5000);
+  // 100 * 50 * 0.05 = 250 < 5000 → freight = 5000
+  assertEquals(result.freight, 5000);
+  assertEquals(result.chargeableKg, 100);
+});
+
+Deno.test("calculatePtl applies volumetric rule when dimensions provided", () => {
+  // Box: 200cm x 150cm x 100cm → volumetric = 200*150*100/6000 = 500kg
+  // Actual weight: 300kg → chargeable = 500
+  const result = calculatePtl(300, 320, 0.05, 5000, { l: 200, b: 150, h: 100 });
+  assertEquals(result.chargeableKg, 500);
+  assertEquals(result.freight, 8000); // 500 * 320 * 0.05 = 8000
+  assertEquals(result.perKg, 16);   // 8000 / 500
+});
+
+Deno.test("calculatePtl uses actual weight when it exceeds volumetric", () => {
+  const result = calculatePtl(400, 320, 0.05, 5000, { l: 100, b: 100, h: 100 });
+  // volumetric = 100*100*100/6000 = 166.67 → chargeable = 400 (actual)
+  assertEquals(result.chargeableKg, 400);
+  assertEquals(result.freight, 6400);
 });
 
 // ─── DEFAULT_CONFIG ─────────────────────────────────────────

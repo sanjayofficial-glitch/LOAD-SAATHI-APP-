@@ -19,6 +19,8 @@ interface FreightResult {
   truckRecommendation: { name: string; capacity: string; type: string };
   shipmentType: "PTL" | "LTL" | "FTL";
   suitability: string;
+  vehicleClass?: string;
+  perKmRate?: number;
 }
 
 const truckTypes = [
@@ -83,12 +85,30 @@ export default function FreightRateCalculator() {
       // Price-predict
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       let freightRange = { min: 0, max: 0, recommended: 0 };
+      let perKmRate: number | undefined;
       if (supabaseUrl) {
         try {
+          const truckClassMap: Record<string, string> = {
+            mini: 'mini_truck',
+            pickup: 'pickup',
+            lcv: '14ft',
+            mlcv: '17ft',
+            hcv: '22ft',
+          };
+          const vehicleClass = truckType !== 'any' ? truckClassMap[truckType] : undefined;
+          const modeMap: Record<string, string> = { PTL: 'ptl', LTL: 'ptl', FTL: 'ftl' };
+
           const response = await fetch(`${supabaseUrl}/functions/v1/price-predict`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ originCity: origin.trim(), destinationCity: destination.trim(), weightTonnes: w }),
+            body: JSON.stringify({
+              originCity: origin.trim(),
+              destinationCity: destination.trim(),
+              weightTonnes: w,
+              vehicleClass,
+              shipmentMode: modeMap[shipmentType],
+              includeFuelSurcharge: true,
+            }),
             signal: AbortSignal.timeout(10000),
           });
           if (response.ok) {
@@ -98,6 +118,7 @@ export default function FreightRateCalculator() {
               max: data.range?.max ?? 0,
               recommended: data.recommendedPrice ?? 0,
             };
+            perKmRate = data.perKmRate;
           }
         } catch {
           // Price-predict unavailable — use distance-based estimate
@@ -111,11 +132,11 @@ export default function FreightRateCalculator() {
       }
 
       const totalFreight = freightRange.recommended * w;
-      const costPerKm = route.distance_km > 0 ? Math.round(totalFreight / route.distance_km) : 0;
+      const costPerKm = perKmRate ?? (route.distance_km > 0 ? Math.round(totalFreight / route.distance_km) : 0);
       const truckRec = getTruckRec(w);
       const suitability = getShipmentAdvice(shipmentType, w);
 
-      setResult({
+       setResult({
         distanceKm: route.distance_km,
         transitHours: Math.round((route.duration_min / 60) * 10) / 10,
         freightRange,
@@ -123,6 +144,8 @@ export default function FreightRateCalculator() {
         truckRecommendation: { name: truckRec!.name, capacity: truckRec!.capacity, type: truckRec!.type },
         shipmentType,
         suitability,
+        vehicleClass: truckType !== 'any' ? truckType : undefined,
+        perKmRate,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not calculate freight rate. Please try again.");
@@ -276,7 +299,7 @@ export default function FreightRateCalculator() {
                   <div className="text-center">
                     <IndianRupee className="h-4 w-4 mx-auto text-green-400 mb-1" />
                     <p className="text-2xl font-black text-green-400">₹{result.costPerKm}</p>
-                    <p className="text-xs text-muted-foreground">per km</p>
+                    <p className="text-xs text-muted-foreground">per km {result.perKmRate ? '(rated)' : ''}</p>
                   </div>
                   <div className="text-center">
                     <Clock className="h-4 w-4 mx-auto text-green-400 mb-1" />

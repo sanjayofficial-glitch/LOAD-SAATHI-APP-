@@ -85,10 +85,51 @@ const Contact = () => {
         keywords="contact LoadSaathi, freight support India, logistics help, trucking platform support"
         canonical="/contact"
         breadcrumbs={[{ name: "Contact", url: "/contact" }]}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "name": "Contact LoadSaathi",
+          "description": "Reach out to LoadSaathi's support team for shipments, account issues, or partnership inquiries.",
+          "url": "https://loadsaathi.in/contact",
+          "mainEntity": {
+            "@type": "Organization",
+            "name": "LoadSaathi",
+            "url": "https://loadsaathi.in",
+            "email": "support@loadsaathi.com",
+            "telephone": "+91-8328998031",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Foundation for Technology and Business Incubation (FTBI), First Floor, T1-109",
+              "addressLocality": "Rourkela",
+              "addressRegion": "Odisha",
+              "postalCode": "769008",
+              "addressCountry": "IN"
+            },
+            "contactPoint": [
+              {
+                "@type": "ContactPoint",
+                "contactType": "customer support",
+                "email": "support@loadsaathi.com",
+                "telephone": "+91-8328998031",
+                "availableLanguage": ["English", "Hindi"]
+              },
+              {
+                "@type": "ContactPoint",
+                "contactType": "sales",
+                "email": "sales@loadsaathi.in"
+              },
+              {
+                "@type": "ContactPoint",
+                "contactType": "partnerships",
+                "email": "partnerships@loadsaathi.in"
+              }
+            ]
+          }
+        }}
       />
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       {/* HERO */}
-      <section className="relative min-h-[400px] flex items-center overflow-hidden">
+      <section className="relative min-h-[280px] sm:min-h-[350px] lg:min-h-[400px] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-50" />
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 -left-32 w-[600px] h-[600px] rounded-full opacity-[0.12] dark:opacity-[0.15]"

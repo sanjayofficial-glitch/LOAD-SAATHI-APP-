@@ -220,11 +220,11 @@ const TruckerHistory = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Activity History</h1>
+        <h1 id="trucker-history-header" className="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Activity History</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">Review all your past trips and sent offers in one place.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div id="trucker-history-stat-cards" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {statCards.map((card, i) => {
           const val = stats[card.key];
           return (
@@ -241,7 +241,7 @@ const TruckerHistory = () => {
         })}
       </div>
 
-      <Card className="mb-8 border-gray-100 dark:border-gray-800">
+      <Card id="trucker-history-filters" className="mb-8 border-gray-100 dark:border-gray-800">
         <CardContent className="p-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 space-y-2">
@@ -277,7 +277,7 @@ const TruckerHistory = () => {
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
+      <div id="trucker-history-list" className="space-y-4">
         {filteredActivities.length === 0 ? (
           activities.length === 0 ? (
             <EmptyState
@@ -349,7 +349,7 @@ const TruckerHistory = () => {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          onClick={() => navigate(activity.type === 'trip' ? `/trucker/trips/${activity.relatedId}` : `/shipper/shipments/${activity.relatedId}`)}
+                          onClick={() => navigate(activity.type === 'trip' ? `/trucker/trips/${activity.relatedId}` : `/trucker/shipments/${activity.relatedId}`)}
                           className="text-orange-600 dark:text-orange-400 font-black text-xs hover:bg-orange-50 dark:hover:bg-orange-950/30 group-hover:translate-x-1 transition-transform"
                         >
                           VIEW <Eye className="h-3.5 w-3.5 ml-2" />

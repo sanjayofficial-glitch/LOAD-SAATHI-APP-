@@ -79,13 +79,6 @@ const HowItWorks = () => {
             <li><strong>Secure Payments:</strong> Milestone-based escrow for safety.</li>
             <li><strong>Verified Network:</strong> KYC-verified transporters only.</li>
           </ul>
-          <h2>Frequently Asked Questions</h2>
-          <h3>How long does it take to get matched?</h3>
-          <p>The AI matching engine runs in real-time. Shippers typically receive transporter bids within minutes.</p>
-          <h3>Is the platform safe for new truckers?</h3>
-          <p>Yes. Features like KYC verification, freight credit scores, secure payments, and ratings ensure a safe environment.</p>
-          <h3>What happens if there is a dispute?</h3>
-          <p>LoadSaathi provides a dispute resolution system with support teams and secure payment escrow for fair handling.</p>
         </div>
       </noscript>
       <SeoMeta
@@ -130,7 +123,7 @@ const HowItWorks = () => {
       />
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       {/* HERO */}
-      <section className="relative min-h-[450px] flex items-center overflow-hidden">
+      <section className="relative min-h-[300px] sm:min-h-[380px] lg:min-h-[450px] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-50" />
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 -left-32 w-[600px] h-[600px] rounded-full opacity-[0.12] dark:opacity-[0.15]"
@@ -167,7 +160,7 @@ const HowItWorks = () => {
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl">From posting a shipment to delivery confirmation — a seamless journey powered by intelligent matching.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {shipperSteps.map((step, i) => (
               <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-orange-500/30 transition-all duration-300 group relative">
                 <div className="text-5xl font-black text-orange-600/10 dark:text-orange-500/10 absolute top-3 right-4 select-none">{step.step}</div>
@@ -201,7 +194,7 @@ const HowItWorks = () => {
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl">Turn empty kilometers into profit. From declaring availability to getting paid — we handle the logistics so you can focus on the road.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {truckerSteps.map((step, i) => (
               <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-blue-500/30 transition-all duration-300 group relative">
                 <div className="text-5xl font-black text-blue-600/10 dark:text-blue-500/10 absolute top-3 right-4 select-none">{step.step}</div>

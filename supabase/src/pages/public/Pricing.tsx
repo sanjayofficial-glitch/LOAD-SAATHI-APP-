@@ -49,10 +49,10 @@ const plans = [
 
 const transactionFee = {
   title: "Transaction Fee",
-  desc: "A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure.",
+  desc: "A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure. Funds are held in escrow until delivery confirmation.",
   items: [
-    { label: "Shippers", value: "3-5% of shipment value", detail: "Varies by shipment size and route complexity" },
-    { label: "Truckers", value: "2-4% of trip value", detail: "Reduced rates for repeat performers with high credit scores" },
+    { label: "Shippers", value: "1.5–3% of shipment value", detail: "Varies by shipment size, route complexity, and credit score" },
+    { label: "Truckers", value: "1.5–2.5% of trip value", detail: "Reduced rates for repeat performers with high credit scores" },
   ],
 };
 
@@ -95,7 +95,7 @@ const pricingSchema = {
       "name": "Shipper Plan",
       "price": "0",
       "priceCurrency": "INR",
-      "description": "Free to join. 3-5% transaction fee per completed shipment.",
+      "description": "Free to join. 1.5–3% transaction fee per completed shipment. Escrow-backed payments.",
       "availability": "https://schema.org/InStock",
       "seller": { "@type": "Organization", "name": "LoadSaathi" },
     },
@@ -104,7 +104,7 @@ const pricingSchema = {
       "name": "Trucker Plan",
       "price": "0",
       "priceCurrency": "INR",
-      "description": "Free to join. 2-4% transaction fee per completed trip. Reduced rates for high credit scores.",
+      "description": "Free to join. 1.5–2.5% transaction fee per completed trip. Reduced rates for high credit scores.",
       "availability": "https://schema.org/InStock",
       "seller": { "@type": "Organization", "name": "LoadSaathi" },
     },
@@ -160,13 +160,13 @@ const Pricing = () => {
           <h2>For Truckers &amp; Fleet Owners</h2>
           <p>Free to join. Fill every kilometer with profit. Includes free account and fleet registration, AI-matched load discovery, route optimization and planning, live GPS tracking integration, milestone-based payment releases, digital freight credit score building, and an earnings dashboard with trip history.</p>
           <h2>Transaction Fee Breakdown</h2>
-          <p>A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure.</p>
+          <p>A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure. Funds are held in escrow until delivery confirmation.</p>
           <ul>
-            <li>Shippers: 3-5% of shipment value, varies by shipment size and route complexity</li>
-            <li>Truckers: 2-4% of trip value, reduced for repeat performers with high credit scores</li>
+            <li>Shippers: 1.5-3% of shipment value, varies by shipment size, route complexity, and credit score</li>
+            <li>Truckers: 1.5-2.5% of trip value, reduced for repeat performers with high credit scores</li>
           </ul>
           <h2>LoadSaathi vs Traditional Brokers</h2>
-          <p>LoadSaathi charges a 2-5% transaction fee per completed shipment, compared to 10-20% broker margins from traditional intermediaries.</p>
+          <p>LoadSaathi charges a 1.5-3% transaction fee per completed shipment, compared to 10-20% broker margins from traditional intermediaries.</p>
           <h2>Frequently Asked Questions</h2>
           <h3>Is it really free to join?</h3>
           <p>Absolutely. There are no registration fees, subscription charges, or monthly minimums. You only pay when you complete a transaction through the platform.</p>
@@ -182,8 +182,8 @@ const Pricing = () => {
       </noscript>
       <SeoMeta
         title="Pricing — Transparent Freight Rates"
-        description="LoadSaathi's transparent pricing: free registration, pay only 2-5% on completed shipments. No hidden fees, no subscriptions. Compare plans for shippers and truckers."
-        keywords="LoadSaathi pricing, freight platform fees, logistics commission rates, trucking platform pricing India"
+        description="LoadSaathi's transparent pricing: free registration, pay only 1.5–3% on completed shipments. No hidden fees, no subscriptions. Escrow-backed payments. Compare plans for shippers and truckers."
+        keywords="LoadSaathi pricing, freight platform fees, logistics commission rates, trucking platform pricing India, escrow freight"
         canonical="/pricing"
         jsonLd={[pricingSchema, pricingFaqSchema]}
         breadcrumbs={[{ name: "Pricing", url: "/pricing" }]}
@@ -249,15 +249,15 @@ const Pricing = () => {
                     <div className="text-3xl font-black text-orange-600 dark:text-orange-400 mb-1">{plan.price}</div>
                     <p className="text-sm text-muted-foreground">{plan.description}</p>
                   </div>
-                  <ul className="space-y-3 mb-8">
+                      <ul className="space-y-3 mb-8">
                     {plan.features.map((feat, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
                         <span className="text-muted-foreground">
                           {feat}
                           {feat === "Escrow-backed payment protection" && (
-                            <span className="ml-2 inline-block align-middle text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-                              Coming soon
+                            <span className="ml-2 inline-block align-middle text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
+                              Live
                             </span>
                           )}
                         </span>
@@ -316,8 +316,8 @@ const Pricing = () => {
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">LoadSaathi vs Traditional Brokers</h2>
             <p className="text-lg text-muted-foreground">See how we compare to the old way of doing logistics.</p>
           </div>
-          <p className="text-sm text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
-            LoadSaathi charges a 2-5% transaction fee per completed shipment, compared to 10-20% broker margins from traditional intermediaries. The platform offers AI-powered matching in seconds, escrow-backed payments, live GPS tracking, and a digital credit score system — all features absent from the broker model.
+            <p className="text-sm text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
+            LoadSaathi charges a 1.5–3% transaction fee per completed shipment, compared to 10-20% broker margins from traditional intermediaries. The platform offers AI-powered matching in seconds, escrow-backed payments, live GPS tracking, and a digital credit score system — all features absent from the broker model.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -337,7 +337,7 @@ const Pricing = () => {
                   { feature: "Real-Time Tracking", us: "Live GPS tracking", them: "Phone call updates" },
                   { feature: "Credit Scoring", us: "Digital 300-900 score", them: "No standardized system" },
                   { feature: "Reviews & Ratings", us: "Bidirectional reviews", them: "Word of mouth" },
-                  { feature: "Platform Fee", us: "2-5% per transaction", them: "10-20% broker margin" },
+                   { feature: "Platform Fee", us: "1.5–3% per transaction", them: "10-20% broker margin" },
                 ].map((row, i) => (
                   <tr key={i} className="border-b border-border/50 hover:bg-muted/30 dark:hover:bg-white/[0.02] transition-colors">
                     <td className="py-4 pr-6 text-foreground font-medium">{row.feature}</td>

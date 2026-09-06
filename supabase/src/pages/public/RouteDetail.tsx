@@ -40,6 +40,43 @@ const benefits = [
   },
 ];
 
+const CITY_COORDS: Record<string, { lat: number; lng: number }> = {
+  "Rourkela": { lat: 22.2604, lng: 84.8536 },
+  "Ranchi": { lat: 23.3441, lng: 85.3096 },
+  "Bhubaneswar": { lat: 20.2961, lng: 85.8245 },
+  "Kolkata": { lat: 22.5726, lng: 88.3639 },
+  "Jamshedpur": { lat: 22.8046, lng: 86.2029 },
+  "Cuttack": { lat: 20.4625, lng: 85.8830 },
+  "Durgapur": { lat: 23.5204, lng: 87.3119 },
+  "Asansol": { lat: 23.6739, lng: 86.9524 },
+  "Burdwan": { lat: 23.2324, lng: 87.8615 },
+  "Howrah": { lat: 22.5726, lng: 88.2663 },
+  "Kharagpur": { lat: 22.3460, lng: 87.2320 },
+  "Jharsuguda": { lat: 21.8557, lng: 84.0067 },
+  "Sambalpur": { lat: 21.4704, lng: 83.9709 },
+  "Angul": { lat: 20.8430, lng: 84.0067 },
+  "Balasore": { lat: 21.4934, lng: 86.9324 },
+  "Delhi": { lat: 28.7041, lng: 77.1025 },
+  "Mumbai": { lat: 19.0760, lng: 72.8777 },
+  "Pune": { lat: 18.5204, lng: 73.8567 },
+  "Nagpur": { lat: 21.1458, lng: 79.0882 },
+  "Raipur": { lat: 21.2514, lng: 81.6296 },
+  "Patna": { lat: 25.6093, lng: 85.1376 },
+  "Bokaro": { lat: 23.6693, lng: 86.1511 },
+  "Paradip": { lat: 20.2662, lng: 86.6163 },
+  "Vizag": { lat: 17.6868, lng: 83.2185 },
+  "Bhilai": { lat: 21.2187, lng: 81.4297 },
+};
+
+function citySchema(name: string) {
+  const coords = CITY_COORDS[name];
+  const schema: Record<string, unknown> = { "@type": "City", name };
+  if (coords) {
+    schema.geo = { "@type": "GeoCoordinates", latitude: coords.lat, longitude: coords.lng };
+  }
+  return schema;
+}
+
 const howItWorks = [
   {
     step: "1",
@@ -104,6 +141,14 @@ export default function RouteDetail() {
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://loadsaathi.in" },
+          { "@type": "ListItem", "position": 2, "name": "Freight Routes", "item": "https://loadsaathi.in/routes" },
+          { "@type": "ListItem", "position": 3, "name": `${route.from} to ${route.to}`, "item": `https://loadsaathi.in/routes/${route.slug}` }
+        ]
+      },
+      {
         "@type": "Service",
         "name": `PTL Freight ${route.from} to ${route.to}`,
         "description": route.metaDescription,
@@ -111,16 +156,24 @@ export default function RouteDetail() {
         "provider": {
           "@type": "Organization",
           "name": "LoadSaathi",
-          "url": "https://loadsaathi.in"
+          "url": "https://loadsaathi.in",
+          "logo": "https://loadsaathi.in/logo.png"
         },
         "areaServed": [
-          { "@type": "City", "name": route.from },
-          { "@type": "City", "name": route.to }
+          { ...citySchema(route.from), containedInPlace: { "@type": "State", name: route.fromState } },
+          { ...citySchema(route.to), containedInPlace: { "@type": "State", name: route.toState } }
         ],
         "serviceType": "PTL/LTL Freight Shipping",
         "offers": {
           "@type": "Offer",
           "priceCurrency": "INR",
+          "price": Math.round(route.distanceKm * 100),
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": Math.round(route.distanceKm * 100),
+            "priceCurrency": "INR",
+            "description": `Estimated freight cost for ${route.distanceKm}km route`
+          },
           "availability": "https://schema.org/InStock"
         }
       },
@@ -196,7 +249,7 @@ export default function RouteDetail() {
 
       <div className="min-h-screen bg-background dark:bg-[#050816]">
         {/* Hero */}
-        <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-20 overflow-hidden">
+        <section className="relative pt-20 pb-10 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 via-transparent to-transparent dark:from-orange-500/10" />
           <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
             <div className="max-w-3xl">
@@ -221,7 +274,7 @@ export default function RouteDetail() {
               </p>
 
               {/* Route stats */}
-              <div className="flex flex-wrap gap-6 mb-10">
+              <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-6 mb-10">
                 <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-card/50 border border-border">
                   <Route className="h-5 w-5 text-orange-400" />
                   <div>

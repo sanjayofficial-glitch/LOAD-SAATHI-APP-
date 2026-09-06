@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,6 +36,8 @@ interface TripData {
 
 export default function SharedTrip() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [trip, setTrip] = useState<TripData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -197,11 +200,20 @@ export default function SharedTrip() {
 
             {/* CTA */}
             <div className="space-y-3">
-              <Link to="/register" className="block">
-                <Button className="w-full h-12 text-base font-bold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 shadow-lg">
-                  Book This Load <ArrowRight className="ml-2 h-4 w-4" />
+              {user ? (
+                <Button
+                  className="w-full h-12 text-base font-bold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 shadow-lg"
+                  onClick={() => navigate(-1)}
+                >
+                  Back to Browse <ArrowRight className="ml-2 h-4 w-4 rotate-180" />
                 </Button>
-              </Link>
+              ) : (
+                <Link to="/register" className="block">
+                  <Button className="w-full h-12 text-base font-bold bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 shadow-lg">
+                    Book This Load <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              )}
               {whatsAppUrl && (
                 <a href={whatsAppUrl} target="_blank" rel="noopener noreferrer" className="block">
                   <Button variant="outline" className="w-full h-12 text-base font-bold border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950">

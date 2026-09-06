@@ -2,6 +2,7 @@
 import React, { Suspense, useState, useMemo, useCallback, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupabase } from "@/hooks/useSupabase";
+import { useProductTour } from "@/contexts/ProductTourContext";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase as supabaseAnon } from "@/integrations/supabase/client";
 import { authorizeRealtime } from "@/utils/realtime";
@@ -34,15 +35,18 @@ import {
   Phone,
   Info,
   Calculator,
+  Key,
   Trophy,
   Lock,
   FileText,
+  HelpCircle,
 } from "lucide-react";
 import LogoMark from "./LogoMark";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import NotificationBell from "./NotificationBell";
 import OfflineBanner from "./OfflineBanner";
+import LocationPermissionBanner from "./LocationPermissionBanner";
 import ThemeToggle from "./ThemeToggle";
 import VerificationBadge from "./VerificationBadge";
 import AutoGpsTracker from "./AutoGpsTracker";
@@ -60,6 +64,16 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
+function navLinkId(path: string): string {
+  if (path.endsWith('/dashboard')) return 'nav-dashboard';
+  if (path.endsWith('/post-trip') || path.endsWith('/post-shipment')) return 'nav-post';
+  if (path.endsWith('/browse-shipments') || path.endsWith('/browse-trucks')) return 'nav-find';
+  if (path.endsWith('/my-trips') || path.endsWith('/my-shipments')) return 'nav-my-trips';
+  if (path.endsWith('/history')) return 'nav-history';
+  if (path.endsWith('/favorites')) return 'nav-favorites';
+  return `nav-${path.split('/').filter(Boolean).join('-')}`;
+}
+
 const NavLinks = React.memo(({ navItems, currentPath, onClick, mobile }: { navItems: NavItem[]; currentPath: string; onClick?: () => void; mobile?: boolean }) => (
   <>
     {navItems.map((item) => {
@@ -69,6 +83,7 @@ const NavLinks = React.memo(({ navItems, currentPath, onClick, mobile }: { navIt
       return (
         <Link
           key={item.path}
+          id={navLinkId(item.path)}
           to={item.path}
           onClick={onClick}
           className={cn(
@@ -155,10 +170,30 @@ FooterSocialLinks.displayName = "FooterSocialLinks";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { userProfile, signOut, getSupabaseToken } = useAuth();
   const { getAuthenticatedClient } = useSupabase();
+  const { role: tourRole } = useProductTour();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const currentPath = location.pathname;
+  // for multi-page handoff (dashboard tour → form page) without doing a
+  // full reload. The tour's onNextClick on the last dashboard step sets
+  // the next-path localStorage flag and invokes this helper if available.
+  useEffect(() => {
+    const w = window as Window & { __loadsaathiNav?: (p: string) => void };
+    w.__loadsaathiNav = (p: string) => navigate(p);
+    return () => {
+      try {
+        const ww = window as Window & { __loadsaathiNav?: (p: string) => void };
+        delete ww.__loadsaathiNav;
+      } catch {
+        /* ignore */
+      }
+    };
+  }, [navigate]);
+
+
 
   useEffect(() => {
     if (!userProfile?.id) return;
@@ -231,6 +266,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         { label: "Audit Log", path: "/admin/audit", icon: <FileText className="h-4 w-4" /> },
         { label: "Gallery", path: "/admin/gallery", icon: <ImageIcon className="h-4 w-4" /> },
         { label: "Team", path: "/admin/team", icon: <Users className="h-4 w-4" /> },
+        { label: "API Keys", path: "/admin/api-keys", icon: <Key className="h-4 w-4" /> },
         { label: "Messages", path: "/messages", icon: <MessageSquare className="h-4 w-4" /> },
       ];
     }
@@ -250,8 +286,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       { label: "History", path: "/shipper/history", icon: <History className="h-4 w-4" /> },
     ];
   }, [userProfile?.user_type]);
-
-  const currentPath = location.pathname;
 
   const dockNavItems = useMemo(
     () => navItems.filter((item) => item.path !== "/messages"),
@@ -354,14 +388,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         Skip to content
       </a>
       <OfflineBanner />
+
+      {userProfile?.user_type !== 'admin' && (
+        <>
+          <LocationPermissionBanner />
+          <AutoGpsTracker />
+        </>
+      )}
       
-      {userProfile?.user_type !== 'admin' && <AutoGpsTracker />}
-      
-      <nav className="bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-[100] shadow-sm backdrop-blur-lg pt-[env(safe-area-inset-top)]" style={{ contain: 'layout style' }}>
+      <nav id="app-sidebar" className="bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-[100] shadow-sm backdrop-blur-lg pt-[env(safe-area-inset-top)]" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between h-14 sm:h-16">
             <div className="flex items-center gap-4 sm:gap-8">
-              <Link to="/" className="flex items-center gap-2 shrink-0">
+              <Link id="layout-brand" to="/" className="flex items-center gap-2 shrink-0">
                 <LogoMark size="h-8 w-8 sm:h-9 sm:w-9" />
                 <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
                   <span className="sm:hidden">LS</span>
@@ -371,10 +410,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-3">
-              <ThemeToggle />
-              <NotificationBell />
+              <span id="layout-theme-toggle"><ThemeToggle /></span>
+              <span id="app-notifications"><NotificationBell /></span>
 
-              <Link to="/messages" aria-label="Messages">
+              <Link id="layout-messages" to="/messages" aria-label="Messages">
                 <Button variant="ghost" size="icon" className="relative text-gray-600 dark:text-gray-400 h-11 w-11" aria-label="Messages">
                   <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
                   {unreadCount > 0 && (
@@ -399,11 +438,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-gray-600 dark:text-gray-400 h-11 w-11 rounded-full" aria-label="Account menu">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
-                      {(userProfile?.full_name || 'U').charAt(0).toUpperCase()}
-                    </div>
-                  </Button>
+                  <div id="app-profile-menu">
+                    <Button id="layout-account-menu" variant="ghost" size="icon" className="text-gray-600 dark:text-gray-400 h-11 w-11 rounded-full" aria-label="Account menu">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
+                        {(userProfile?.full_name || 'U').charAt(0).toUpperCase()}
+                      </div>
+                    </Button>
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>
@@ -434,8 +475,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       Home
                     </Link>
                   </DropdownMenuItem>
+                  {tourRole && (
+                    <DropdownMenuItem
+                      onClick={() => {}}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <HelpCircle className="h-4 w-4" />
+                      Take a product tour
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={handleSignOut}
                     className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400 focus:bg-red-50 dark:focus:bg-red-950"
                   >

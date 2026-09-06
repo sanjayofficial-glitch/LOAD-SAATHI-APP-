@@ -44,7 +44,8 @@ function removeStaleStaticSeoTags() {
     'meta[name="keywords"]:not([data-rh]):not([data-ls-seo]),' +
     'meta[property^="og:"]:not([data-rh]):not([data-ls-seo]),' +
     'meta[name^="twitter:"]:not([data-rh]):not([data-ls-seo]),' +
-    'meta[property="article:modified_time"]:not([data-rh]):not([data-ls-seo])'
+    'meta[property="article:modified_time"]:not([data-rh]):not([data-ls-seo]),' +
+    'link[hreflang]:not([data-rh]):not([data-ls-seo])'
   );
   stale.forEach((el) => el.remove());
 }
@@ -139,6 +140,8 @@ export default function SeoMeta({
     appendManaged("meta", { name: "description", content: description });
     if (keywords) appendManaged("meta", { name: "keywords", content: keywords });
     appendManaged("link", { rel: "canonical", href: url });
+    appendManaged("link", { rel: "alternate", hreflang: "en-in", href: url });
+    appendManaged("link", { rel: "alternate", hreflang: "x-default", href: url });
 
     appendManaged("meta", { property: "og:type", content: type });
     appendManaged("meta", { property: "og:url", content: url });

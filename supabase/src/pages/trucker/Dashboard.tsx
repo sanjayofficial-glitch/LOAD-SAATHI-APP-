@@ -2,7 +2,6 @@
 import React, { Suspense, useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +21,7 @@ import {
   Shield,
 } from 'lucide-react';
 import { showError } from '@/utils/toast';
+import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { useCreditScore, useCreditInsights } from '@/hooks/useCreditScore';
 import CreditScoreBadge from '@/components/CreditScoreBadge';
 import CreditScoreGauge from '@/components/CreditScoreGauge';
@@ -171,6 +171,8 @@ const TruckerDashboard = () => {
 
   useEffect(() => { fetchDashboardData(); }, [fetchDashboardData]);
 
+
+
   const statCards = useMemo(() => [
     {
       title: 'Live Trips',
@@ -235,7 +237,7 @@ const TruckerDashboard = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <LogoMark size="h-8 w-8" />
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Trucker Dashboard</h1>
+            <h1 id="trucker-dashboard-header" className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Trucker Dashboard</h1>
           </div>
           <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
             Welcome, {userProfile?.full_name || 'Partner'}! {isOnline ? (
@@ -287,8 +289,8 @@ const TruckerDashboard = () => {
         </div>
       )}
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+{/* Stats Grid */}
+      <div id="trucker-stat-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {statCards.map((card, i) => (
           <Link key={card.title} to={statCardLinks[i] ?? '/'} className="block group">
             <Card className={`${card.border} shadow-sm group-hover:shadow-md group-hover:scale-[1.02] transition-all duration-200 animate-fade-in-up`} style={{ animationDelay: `${i * 80}ms` }}>
@@ -321,14 +323,14 @@ const TruckerDashboard = () => {
         ))}
       </div>
 
-      {/* Nearby Loads Map */}
-      <div className="mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '180ms' }}>
+{/* Nearby Loads Map */}
+      <div id="nearby-loads-map" className="mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '180ms' }}>
         <NearbyLoadsMap />
       </div>
 
       {/* Action Cards */}
       <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
-        <Card className="border-orange-200 dark:border-orange-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+        <Card id="trucker-quick-actions" className="border-orange-200 dark:border-orange-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
           <CardHeader className="bg-orange-50/50 dark:bg-orange-900/10 px-4 sm:px-6">
             <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</CardTitle>
@@ -390,9 +392,9 @@ const TruckerDashboard = () => {
         </Card>
       </div>
 
-      {/* Driver Risk & Credit Score */}
+{/* Driver Risk & Credit Score */}
       {creditScore && (
-        <div className="mb-6 sm:mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div id="trucker-credit-score" className="mb-6 sm:mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <Card className="border-orange-200 dark:border-orange-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '350ms' }}>
             <div className="h-1 bg-gradient-to-r from-red-500 to-orange-400" />
             <CardHeader className="px-4 sm:px-6 pb-2">

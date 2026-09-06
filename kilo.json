@@ -1,0 +1,11 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "skills": {
+    "paths": [
+      "C:\\Users\\sanja\\.agents\\skills",
+      "C:\\Users\\sanja\\.claude\\skills",
+      "C:\\Users\\sanja\\.kilocode\\skills",
+      ".claude\\skills"
+    ]
+  }
+}

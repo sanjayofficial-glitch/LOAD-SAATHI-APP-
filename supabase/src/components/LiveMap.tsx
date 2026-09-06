@@ -5,6 +5,8 @@ import "leaflet/dist/leaflet.css";
 import ZoomControls, { fitPositionsToBounds } from "@/components/maps/ZoomControls";
 import TileLayerSwitcher, { type TileLayerId, getTileLayer } from "@/components/maps/TileLayerSwitcher";
 import { useMapUserInteraction } from "@/components/maps/useMapUserInteraction";
+import MapSizeHandler from "@/components/maps/MapSizeHandler";
+import MapErrorBoundary from "@/components/MapErrorBoundary";
 import { useTheme } from "@/theme/theme";
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -13,16 +15,6 @@ L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
-
-// Fix 0×0 map pane: invalidateSize on mount
-function MapSizeHandler() {
-  const map = useMap();
-  useEffect(() => {
-    const t = setTimeout(() => map.invalidateSize(), 150);
-    return () => clearTimeout(t);
-  }, [map]);
-  return null;
-}
 
 export interface TruckLocation {
   id: string;
@@ -95,10 +87,11 @@ export default React.memo(function LiveMap({ trucks, className = "", height = "m
   const boundsKey = useMemo(() => trucks.map((t) => t.id).sort().join(","), [trucks]);
 
   return (
-    <div
-      className={`relative w-full rounded-lg overflow-hidden border isolate ${className}`}
-      style={{ height }}
-    >
+    <MapErrorBoundary minHeight={typeof height === 'string' ? height : 'min(500px, 55dvh)'}>
+      <div
+        className={`relative w-full rounded-lg overflow-hidden border isolate ${className}`}
+        style={{ minHeight: 'min(200px, 30vh)', height }}
+      >
       <MapContainer
         center={[20.5937, 78.9629]}
         zoom={5}
@@ -134,5 +127,6 @@ export default React.memo(function LiveMap({ trucks, className = "", height = "m
       </MapContainer>
       <TileLayerSwitcher currentLayer={tileLayerId} onLayerChange={setTileLayerId} />
     </div>
+    </MapErrorBoundary>
   );
 });

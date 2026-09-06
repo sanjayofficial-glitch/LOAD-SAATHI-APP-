@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useAuth } from '@clerk/clerk-react';
+import { useLocation } from '@/contexts/LocationContext';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { logger } from '@/lib/logger';
 
@@ -33,22 +34,17 @@ export default function GpsTracker({
 }: GpsTrackerProps) {
   const { isOnline } = useNetworkStatus();
   const { getToken } = useAuth();
+  const { locationPermission, requestLocationPermission } = useLocation();
   const [isTracking, setIsTracking] = useState(false);
   const [currentPosition, setCurrentPosition] = useState<GpsPosition | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [permissionState, setPermissionState] = useState<PermissionState | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const lastPersistRef = useRef<number>(0);
-  const permissionHandlerRef = useRef<(() => void) | null>(null);
 
   const clearTracking = useCallback(() => {
     if (watchIdRef.current !== null) {
       navigator.geolocation.clearWatch(watchIdRef.current);
       watchIdRef.current = null;
-    }
-    if (permissionHandlerRef.current) {
-      permissionHandlerRef.current();
-      permissionHandlerRef.current = null;
     }
   }, []);
 
@@ -119,22 +115,20 @@ export default function GpsTracker({
     clearTracking();
   }, [clearTracking]);
 
-  const startTracking = useCallback(() => {
+  const startTracking = useCallback(async () => {
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser');
       return;
     }
 
-    setError(null);
-
-    if (navigator.permissions) {
-      navigator.permissions.query({ name: 'geolocation' }).then((status) => {
-        setPermissionState(status.state);
-        const handleChange = () => setPermissionState(status.state);
-        status.addEventListener('change', handleChange);
-        permissionHandlerRef.current = () => status.removeEventListener('change', handleChange);
-      });
+    if (locationPermission !== 'granted') {
+      const granted = await requestLocationPermission();
+      if (!granted) {
+        return;
+      }
     }
+
+    setError(null);
 
     watchIdRef.current = navigator.geolocation.watchPosition(
       handlePosition,
@@ -147,7 +141,7 @@ export default function GpsTracker({
     );
 
     setIsTracking(true);
-  }, [handlePosition, handleError]);
+  }, [handlePosition, handleError, locationPermission, requestLocationPermission]);
 
   const stopTracking = useCallback(() => {
     clearTracking();
@@ -199,7 +193,7 @@ export default function GpsTracker({
         </div>
       )}
 
-      {permissionState === 'denied' && !error && (
+      {locationPermission === 'denied' && !error && (
         <div className="mb-3 p-2 rounded bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 text-xs">
           Location permission was denied. Please enable location access in your browser settings and try again.
         </div>

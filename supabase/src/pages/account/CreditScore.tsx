@@ -35,7 +35,7 @@ export default function CreditScorePage() {
         <ArrowLeft className="h-4 w-4" /> Back
       </button>
 
-      <div className="flex items-center gap-3">
+      <div id="credit-score-header" className="flex items-center gap-3">
         <Shield className="h-6 w-6 text-primary" />
         <div>
           <h1 className="text-2xl font-bold">Credit Score</h1>
@@ -45,7 +45,7 @@ export default function CreditScorePage() {
         </div>
       </div>
 
-      <div className="flex justify-center py-4">
+      <div id="credit-score-gauge" className="flex justify-center py-4">
         <CreditScoreGauge score={creditScore?.score ?? 550} size="lg" />
       </div>
 

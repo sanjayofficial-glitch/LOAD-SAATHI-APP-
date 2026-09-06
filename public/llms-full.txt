@@ -1,0 +1,146 @@
+# LoadSaathi — Full Site Summary for AI Crawlers
+
+Last updated: September 2026.
+
+## What is LoadSaathi?
+
+LoadSaathi is India's AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload), FTL (Full Truckload), and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores (300–900), and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%.
+
+## Target Users
+
+- **Shippers**: SMEs and enterprises in Odisha, Jharkhand, and West Bengal who need to move goods on the Rourkela–Ranchi–Burdwan corridor and beyond.
+- **Truckers & Fleet Owners**: Independent truckers and fleet operators looking to fill empty capacity, find return loads, and build a digital reputation.
+
+## How It Works
+
+1. Post a shipment or trip with origin, destination, cargo details, and price.
+2. AI matches you with the best-suited partner based on route, capacity, price, reliability, and timeliness.
+3. Accept a match, track the shipment in real-time with GPS, and confirm delivery.
+4. Escrow-backed payment is released upon delivery confirmation.
+5. Both parties leave a review, building their digital freight credit score.
+
+## Tools and Calculators
+
+| Tool | URL | What It Does |
+|------|-----|--------------|
+| Fare Calculator | https://loadsaathi.in/fare-calculator | AI-powered PTL/LTL rate estimates with vehicle-specific rates, fuel surcharge, and live diesel prices |
+| Transport Cost Calculator | https://loadsaathi.in/transport-cost-calculator | Estimate freight costs by origin, destination, and weight |
+| Freight Rate Calculator | https://loadsaathi.in/freight-rate-calculator | Calculate freight rates with distance, cost per km, and truck recommendations |
+| Truck Load Calculator | https://loadsaathi.in/truck-load-calculator | Find the right truck type for your cargo weight (Tata Ace to tractor-trailers) |
+| PTL vs FTL Calculator | https://loadsaathi.in/ptl-vs-ftl-calculator | Decide between PTL and FTL based on weight and urgency |
+| Return Load Calculator | https://loadsaathi.in/return-load-calculator | Find return loads for your route to eliminate empty trips |
+
+## Freight Routes (28 Active Corridors)
+
+All routes with distances and starting prices:
+
+| Route | Distance (km) | Starting Price (₹/tonne) | Popular Goods |
+|-------|---------------|--------------------------|---------------|
+| Rourkela to Ranchi | 180 | ₹18 | Steel, Cement, Machinery |
+| Rourkela to Kolkata | 440 | ₹22 | Steel, Iron Ore, Coal |
+| Rourkela to Bhubaneswar | 480 | ₹24 | Steel, FMCG, Textiles |
+| Rourkela to Jamshedpur | 115 | ₹12 | Steel, Automotive Parts |
+| Rourkela to Cuttack | 320 | ₹18 | Steel, Rice, Provisions |
+| Rourkela to Durgapur | 245 | ₹16 | Steel, Cement, Chemicals |
+| Rourkela to Asansol | 270 | ₹17 | Steel, Coal, Machinery |
+| Rourkela to Burdwan | 320 | ₹19 | Steel, Rice, FMCG |
+| Ranchi to Kolkata | 350 | ₹20 | Coal, FMCG, Textiles |
+| Ranchi to Bhubaneswar | 450 | ₹22 | Coal, Machinery, Cement |
+| Ranchi to Jamshedpur | 110 | ₹10 | Coal, Steel, Automotive |
+| Ranchi to Durgapur | 220 | ₹15 | Coal, Cement, Chemicals |
+| Ranchi to Asansol | 210 | ₹14 | Coal, Steel, Machinery |
+| Ranchi to Burdwan | 290 | ₹18 | Coal, FMCG, Rice |
+| Kolkata to Bhubaneswar | 470 | ₹22 | FMCG, Textiles, Electronics |
+| Kolkata to Jamshedpur | 240 | ₹16 | FMCG, Steel, Provisions |
+| Kolkata to Cuttack | 430 | ₹20 | FMCG, Rice, Textiles |
+| Kolkata to Durgapur | 170 | ₹12 | FMCG, Steel, Cement |
+| Kolkata to Asansol | 200 | ₹13 | FMCG, Coal, Machinery |
+| Kolkata to Burdwan | 100 | ₹8 | FMCG, Rice, Textiles |
+| Bhubaneswar to Jamshedpur | 340 | ₹18 | Textiles, Rice, FMCG |
+| Bhubaneswar to Cuttack | 25 | ₹5 | FMCG, Provisions, Rice |
+| Bhubaneswar to Durgapur | 380 | ₹20 | Textiles, Cement, Steel |
+| Bhubaneswar to Asansol | 410 | ₹21 | Textiles, Machinery, FMCG |
+| Bhubaneswar to Burdwan | 430 | ₹22 | Textiles, Rice, Provisions |
+| Jamshedpur to Durgapur | 140 | ₹10 | Steel, Cement, Coal |
+| Jamshedpur to Asansol | 130 | ₹10 | Steel, Coal, Machinery |
+| Jamshedpur to Burdwan | 195 | ₹13 | Steel, FMCG, Rice |
+
+## Key Locations
+
+- [Rourkela](https://loadsaathi.in/location/rourkela) — Steel city, Odisha. Major freight hub.
+- [Ranchi](https://loadsaathi.in/location/ranchi) — Capital of Jharkhand. Coal and mining hub.
+- [Kolkata](https://loadsaathi.in/location/kolkata) — Capital of West Bengal. Major port city.
+- [Bhubaneswar](https://loadsaathi.in/location/bhubaneswar) — Capital of Odisha. Growing logistics hub.
+- [Jamshedpur](https://loadsaathi.in/location/jamshedpur) — Steel city, Jharkhand. Industrial corridor.
+- [Cuttack](https://loadsaathi.in/location/cuttack) — Commercial capital of Odisha.
+- [Durgapur](https://loadsaathi.in/location/durgapur) — Steel city, West Bengal.
+- [Asansol](https://loadsaathi.in/location/asansol) — Industrial city, West Bengal.
+- [Burdwan](https://loadsaathi.in/location/burdwan) — Rice bowl of West Bengal.
+
+## Guides
+
+- [PTL vs FTL Guide](https://loadsaathi.in/guide/ptl-vs-ftl) — When to use Partial vs Full Truckload.
+- [Freight Rates East India](https://loadsaathi.in/guide/freight-rates-east-india) — Rate cards and pricing for East India corridors.
+- [Shipping Steel](https://loadsaathi.in/guide/shipping-steel) — Complete guide to steel transport in India.
+
+## Pricing
+
+- **Free to join** for both shippers and truckers.
+- **Transaction fee**: 1.5–3% per completed shipment for shippers, 1.5–2.5% for truckers.
+- **No subscriptions**, no hidden fees, no minimum commitments.
+- **Enterprise pricing**: Custom rates for 50+ loads/month. Contact sales@loadsaathi.in.
+- Escrow-backed payments protect funds until delivery confirmation.
+- See full pricing details: https://loadsaathi.in/pricing
+- Machine-readable pricing: https://loadsaathi.in/pricing.md
+
+## Key Blog Posts
+
+| Title | URL | Topic |
+|-------|-----|-------|
+| Truck Transport Cost Per Km India 2026 | https://loadsaathi.in/blog/truck-transport-cost-per-km-india-2026 | Cost per km rates by truck type |
+| Return Loads from Rourkela | https://loadsaathi.in/blog/return-loads-rourkela | How to find return loads |
+| PTL Transport Odisha Jharkhand | https://loadsaathi.in/blog/ptl-transport-odisha-jharkhand-2026 | PTL services in East India |
+| Steel Transport Rourkela 2026 | https://loadsaathi.in/blog/steel-transport-rourkela-2026 | Steel freight from Rourkela |
+| Trucker Earnings Odisha 2026 | https://loadsaathi.in/blog/trucker-earnings-odisha-2026 | Truck driver salary data |
+| e-Way Bill Rules 2026 | https://loadsaathi.in/blog/indian-logistics-eway-bill-gst-2026 | GST and e-Way Bill compliance |
+| Digital Freight Matching India | https://loadsaathi.in/blog/digital-freight-matching-india | Digital freight marketplace overview |
+| East India Freight Corridors | https://loadsaathi.in/blog/east-india-freight-corridors | Major freight routes |
+| PTL vs FTL When to Use Each | https://loadsaathi.in/blog/ptl-vs-ftl-when-to-use-each | Decision guide for PTL vs FTL |
+| Steel Transport India Guide | https://loadsaathi.in/blog/steel-transport-india-guide | Steel freight best practices |
+| How to Find Return Loads India | https://loadsaathi.in/blog/how-to-find-return-loads-india | Return load strategies |
+| Monsoon Logistics Tips | https://loadsaathi.in/blog/monsoon-logistics-tips | Monsoon season logistics |
+| Cargo Insurance Guide India | https://loadsaathi.in/blog/cargo-insurance-guide-india | Cargo insurance explained |
+
+## Key Features
+
+- AI-Powered Matching: Multi-factor scoring engine (route, capacity, price, reliability) matching shippers with truckers in seconds.
+- Real-Time GPS Tracking: Live location sharing with ETAs, route visualization, and geofence alerts.
+- Digital Freight Credit Score: 300–900 score based on completion rates, on-time performance, and reviews.
+- AI Price Prediction: Market-aligned pricing suggestions based on route, demand, fuel costs, and historical data.
+- Escrow Payments: Secure milestone-based payment releases with dispute resolution.
+- Bidirectional Reviews: Both shippers and truckers rate each other after every completed trip.
+- Mobile App: Available on Google Play Store for Android.
+
+## Technology
+
+- React 19 + TypeScript SPA
+- Vercel hosting
+- Supabase (PostgreSQL) database
+- Clerk authentication
+- Leaflet maps for GPS tracking
+- OSRM for truck route calculation
+- Nominatim for geocoding
+- Gemini AI for natural language freight search
+- PostHog analytics
+- Capacitor for Android app
+
+## Contact
+
+- Website: https://loadsaathi.in
+- Email: support@loadsaathi.in
+- Phone: +91 83289 98031
+- Play Store: https://play.google.com/store/apps/details?id=in.loadsaathi.app
+- LinkedIn: https://www.linkedin.com/company/loadsaathi
+- X/Twitter: https://x.com/LoadSaathi
+- Facebook: https://www.facebook.com/people/Load-Saathi/61590859902405/
+- Instagram: https://www.instagram.com/loadsaathi/

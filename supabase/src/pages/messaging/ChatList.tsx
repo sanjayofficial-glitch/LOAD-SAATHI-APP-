@@ -205,7 +205,7 @@ const ChatList = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 animate-fade-in">
-      <div className="mb-8">
+      <div id="messages-header" className="mb-8">
         <div className="flex items-center gap-2 mb-1">
           <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-1.5 rounded-lg shadow-sm">
             <Mail className="h-5 w-5 text-white" />
@@ -227,7 +227,7 @@ const ChatList = () => {
           }}
         />
       ) : (
-        <div className="grid gap-3">
+        <div id="messages-list" className="grid gap-3">
           {conversations.map((conv, i) => (
             <Card 
               key={conv.id} 

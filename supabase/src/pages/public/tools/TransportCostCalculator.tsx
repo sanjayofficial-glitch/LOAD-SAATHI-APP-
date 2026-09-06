@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { Truck, IndianRupee, Loader2, MapPin, Weight, Info, ArrowLeft } from "lucide-react";
+import { Truck, IndianRupee, Loader2, MapPin, Weight, Info, ArrowLeft, Fuel } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +15,9 @@ interface FareResult {
   totalEstimate: number;
   trend: "rising" | "falling" | "stable";
   dataPoints: number;
+  dieselPrice?: number;
+  fuelSurcharge?: number;
+  perKmRate?: number;
 }
 
 export default function TransportCostCalculator() {
@@ -52,6 +55,9 @@ export default function TransportCostCalculator() {
         totalEstimate: (data.recommendedPrice || 0) * w,
         trend: data.trend || "stable",
         dataPoints: data.historicalLoads || 0,
+        dieselPrice: data.dieselPrice,
+        fuelSurcharge: data.fuelSurcharge,
+        perKmRate: data.perKmRate,
       });
     } catch {
       setError("Could not fetch pricing data. Please try again.");
@@ -68,15 +74,48 @@ export default function TransportCostCalculator() {
         keywords="transport cost calculator, freight rate calculator, truck transport cost, shipping cost calculator India"
         canonical="/transport-cost-calculator"
         breadcrumbs={[{ name: "Transport Cost Calculator", url: "/transport-cost-calculator" }]}
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          "name": "LoadSaathi Transport Cost Calculator",
-          "url": "https://loadsaathi.in/transport-cost-calculator",
-          "applicationCategory": "BusinessApplication",
-          "description": "Estimate freight costs for PTL, LTL, and FTL shipments across East India corridors."
-        }}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "LoadSaathi Transport Cost Calculator",
+            "url": "https://loadsaathi.in/transport-cost-calculator",
+            "applicationCategory": "BusinessApplication",
+            "description": "Estimate freight costs for PTL, LTL, and FTL shipments across East India corridors."
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "QAPage",
+            "mainEntity": {
+              "@type": "Question",
+              "name": "How much does truck transport cost per km in India?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Truck transport cost per km in India ranges from ₹8–30 per km depending on the truck type, route, and cargo weight. Mini trucks cost ₹8–14/km, LCVs cost ₹12–18/km, and MGVs cost ₹18–30/km. For a specific route estimate, enter your origin, destination, and weight in LoadSaathi's transport cost calculator above."
+              }
+            }
+          }
+        ]}
       />
+      <noscript>
+        <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
+          <h1>Transport Cost Calculator — Estimate Freight Rates | LoadSaathi</h1>
+          <p>Calculate estimated transport costs for PTL, LTL, and FTL shipments across India. Enter your origin city, destination city, and cargo weight to get an instant freight rate estimate.</p>
+          <h2>How Transport Costs Are Calculated</h2>
+          <p>Transport costs in India depend on distance (km), cargo weight (tonnes), shipment type (PTL/LTL/FTL), and market conditions. Typical rates range from ₹8–30 per km per tonne on East India corridors.</p>
+          <h2>Popular East India Routes</h2>
+          <ul>
+            <li>Rourkela to Ranchi — approximately 180 km, ₹20–28 per km</li>
+            <li>Rourkela to Kolkata — approximately 440 km, ₹18–25 per km</li>
+            <li>Ranchi to Bhubaneswar — approximately 450 km, ₹19–26 per km</li>
+            <li>Bhubaneswar to Jamshedpur — approximately 340 km, ₹20–27 per km</li>
+          </ul>
+          <h2>Frequently Asked Questions</h2>
+          <h3>How much does truck transport cost per km in India?</h3>
+          <p>Truck transport cost per km in India ranges from ₹8–30 per km depending on the truck type, route, and cargo weight. Mini trucks cost ₹8–14/km, LCVs cost ₹12–18/km, and MGVs cost ₹18–30/km. Use LoadSaathi's transport cost calculator above for an exact estimate on your route.</p>
+          <p><strong>Need help?</strong> Call LoadSaathi freight support at <a href="tel:+918328998031">+91 83289 98031</a> or <a href="https://loadsaathi.in">visit loadsaathi.in</a>.</p>
+        </div>
+      </noscript>
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased">
         <div className="max-w-3xl mx-auto px-6 py-24">
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">
@@ -127,6 +166,22 @@ export default function TransportCostCalculator() {
                   <p className="text-3xl font-black text-green-400">₹{result.minPrice.toLocaleString()} – ₹{result.maxPrice.toLocaleString()}</p>
                   <p className="text-sm text-muted-foreground">Per tonne · Recommended: ₹{result.avgPrice.toLocaleString()}/tonne</p>
                   <p className="text-sm font-semibold text-foreground">Total Estimate: ₹{result.totalEstimate.toLocaleString()}</p>
+                  {(result.dieselPrice || result.fuelSurcharge !== undefined || result.perKmRate) && (
+                    <div className="flex items-center gap-4 flex-wrap text-xs">
+                      {result.dieselPrice && (
+                        <span className="flex items-center gap-1 text-blue-400">
+                          <Fuel className="h-3 w-3" />
+                          Diesel: ₹{result.dieselPrice}/L
+                        </span>
+                      )}
+                      {result.fuelSurcharge !== undefined && (
+                        <span className="text-muted-foreground">Fuel surcharge: ₹{result.fuelSurcharge}</span>
+                      )}
+                      {result.perKmRate && (
+                        <span className="text-muted-foreground">Rate: ₹{result.perKmRate}/km</span>
+                      )}
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mt-2">
                     <Info className="h-3 w-3" />
                     <span>Based on {result.dataPoints} historical data points. Rates may vary by season, fuel, and availability.</span>

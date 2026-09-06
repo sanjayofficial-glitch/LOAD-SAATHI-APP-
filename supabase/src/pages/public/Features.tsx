@@ -133,7 +133,7 @@ const Features = () => {
       />
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       {/* HERO */}
-      <section className="relative min-h-[500px] flex items-center overflow-hidden">
+      <section className="relative min-h-[320px] sm:min-h-[400px] lg:min-h-[500px] flex items-center overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-50" />
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 -left-32 w-[600px] h-[600px] rounded-full opacity-[0.12] dark:opacity-[0.15]"
@@ -171,7 +171,7 @@ const Features = () => {
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">A powerful control center for shippers to manage, track, and optimize every shipment from posting to delivery.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {shipperFeatures.map((feature, i) => (
               <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 transition-all duration-300 group border-border dark:border-white/[0.08]">
                 <div className="w-12 h-12 rounded-lg bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -197,7 +197,7 @@ const Features = () => {
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">An intelligent platform for truckers to find profitable loads, optimize routes, and grow their business.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {truckerFeatures.map((feature, i) => (
               <div key={i} className="glass-card p-8 rounded-xl hover:border-blue-500/30 transition-all duration-300 group border-border dark:border-white/[0.08]">
                 <div className="w-12 h-12 rounded-lg bg-blue-600/10 dark:bg-blue-500/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -229,7 +229,7 @@ const Features = () => {
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">AI Command Center</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Three proprietary AI engines work together to eliminate inefficiency and maximize value across the network.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {aiFeatures.map((feature, i) => (
               <div key={i} className="glass-card p-10 rounded-xl border border-orange-500/10 hover:border-orange-500/30 transition-all duration-300 group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-[0.06] pointer-events-none"

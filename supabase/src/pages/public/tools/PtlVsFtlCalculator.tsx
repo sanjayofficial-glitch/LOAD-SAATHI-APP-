@@ -31,15 +31,45 @@ export default function PtlVsFtlCalculator() {
         keywords="PTL vs FTL calculator, partial truckload vs full truckload, which freight option, PTL or FTL, freight decision tool"
         canonical="/ptl-vs-ftl-calculator"
         breadcrumbs={[{ name: "PTL vs FTL Calculator", url: "/ptl-vs-ftl-calculator" }]}
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          "name": "LoadSaathi PTL vs FTL Calculator",
-          "url": "https://loadsaathi.in/ptl-vs-ftl-calculator",
-          "applicationCategory": "BusinessApplication",
-          "description": "Decide between PTL (Partial Truckload) and FTL (Full Truckload) based on shipment weight and urgency."
-        }}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "LoadSaathi PTL vs FTL Calculator",
+            "url": "https://loadsaathi.in/ptl-vs-ftl-calculator",
+            "applicationCategory": "BusinessApplication",
+            "description": "Decide between PTL (Partial Truckload) and FTL (Full Truckload) based on shipment weight and urgency."
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "QAPage",
+            "mainEntity": {
+              "@type": "Question",
+              "name": "Should I choose PTL or FTL for my shipment?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Choose PTL (Partial Truckload) if your shipment is under 3 tonnes with flexible delivery — it saves 30–40% compared to FTL. Choose FTL (Full Truckload) if your shipment exceeds 7 tonnes, is urgent, or requires exclusive handling. For 3–7 tonnes, PTL is cheaper but adds 1–2 extra days for consolidation. Use LoadSaathi's calculator above for a personalized recommendation."
+              }
+            }
+          }
+        ]}
       />
+      <noscript>
+        <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
+          <h1>PTL vs FTL Calculator — Which Freight Option is Right for You? | LoadSaathi</h1>
+          <p>Decide between PTL (Partial Truckload) and FTL (Full Truckload) based on your shipment weight and delivery urgency. PTL saves 30–40% for shipments under 3 tonnes. FTL is best for urgent or heavy loads over 7 tonnes.</p>
+          <h2>When to Choose PTL (Partial Truckload)</h2>
+          <p>PTL is ideal when your shipment is under 3 tonnes and you have flexible delivery timelines. You share truck space with other shippers, reducing your freight cost by 30–40% compared to booking an entire truck. Transit time adds 1–2 days for consolidation.</p>
+          <h2>When to Choose FTL (Full Truckload)</h2>
+          <p>FTL is best when your shipment exceeds 7 tonnes, requires exclusive vehicle use, or needs urgent direct point-to-point delivery. FTL provides the fastest transit with no consolidation stops.</p>
+          <h2>Frequently Asked Questions</h2>
+          <h3>What is the difference between PTL and FTL freight?</h3>
+          <p>PTL (Partial Truck Load) means your cargo shares truck space with other shipments. FTL (Full Truck Load) means you book the entire truck exclusively. PTL saves 30–40% for small loads under 3 tonnes. FTL is faster and better for loads over 7 tonnes.</p>
+          <h3>Is PTL safe for fragile goods?</h3>
+          <p>Yes. PTL shipments are handled with standard freight safety protocols. However, FTL provides more control over handling since there is no loading/unloading at consolidation points. For high-value fragile goods, FTL is recommended.</p>
+          <p><strong>Need help?</strong> Call LoadSaathi freight support at <a href="tel:+918328998031">+91 83289 98031</a> or <a href="https://loadsaathi.in">visit loadsaathi.in</a>.</p>
+        </div>
+      </noscript>
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased">
         <div className="max-w-3xl mx-auto px-6 py-24">
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">

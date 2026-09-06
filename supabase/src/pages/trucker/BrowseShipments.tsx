@@ -1,4 +1,4 @@
-﻿import { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -256,11 +256,13 @@ const BrowseShipments = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <div id="browse-shipments-header" className="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">Browse Shipments</div>
+      <p className="text-sm text-gray-500 dark:text-gray-400">Find loads posted by shippers that match your route and capacity.</p>
       <Card className="border-orange-100 dark:border-orange-800 shadow-sm overflow-hidden">
         <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
         <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
+             <div id="browse-shipments-search" className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input
                 placeholder="Search by city, goods, or shipper..."
@@ -310,6 +312,7 @@ const BrowseShipments = () => {
                 Clear
               </Button>
               <Button
+                id="browse-shipments-filters-btn"
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
                 className={`${hasActiveFilters ? 'border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950' : 'border-gray-200 dark:border-gray-700'}`}
@@ -388,7 +391,7 @@ const BrowseShipments = () => {
                 loads={liveLoads}
                 height="100%"
                 showClusters
-                onLoadClick={(load) => navigate(`/shipments/${load.shipment_id || load.id}`)}
+                onLoadClick={(load) => navigate(`/trucker/shipments/${load.shipment_id || load.id}`)}
               />
             </div>
             <div className="w-full max-h-[45vh] lg:max-h-none lg:w-80 overflow-y-auto overflow-x-hidden space-y-2">
@@ -396,7 +399,7 @@ const BrowseShipments = () => {
                 <Card
                   key={s.id}
                   className="border-orange-100 dark:border-orange-800 hover:shadow-md transition-all duration-200 cursor-pointer"
-                  onClick={() => navigate(`/shipments/${s.id}`)}
+                  onClick={() => navigate(`/trucker/shipments/${s.id}`)}
                 >
                   <CardContent className="p-3">
                     <div className="flex items-center justify-between">
@@ -421,7 +424,7 @@ const BrowseShipments = () => {
                       <Button
                         size="sm"
                         className="ml-1 bg-orange-500 hover:bg-orange-600 text-white h-7 px-2"
-                        onClick={(e) => { e.stopPropagation(); navigate(`/shipments/${s.id}`); }}
+                        onClick={(e) => { e.stopPropagation(); navigate(`/trucker/shipments/${s.id}`); }}
                       >
                         View
                       </Button>
@@ -432,13 +435,13 @@ const BrowseShipments = () => {
             </div>
           </div>
         ) : (
-          <div className="grid gap-4">
+      <div id="browse-shipments-results" className="grid gap-4">
             {filteredShipments.map((s, i) => (
               <Card
                 key={s.id}
                 className="border-orange-100 dark:border-orange-800 hover:shadow-md transition-all duration-300 cursor-pointer hover:-translate-y-0.5 animate-fade-in-up"
                 style={{ animationDelay: `${i * 60}ms` }}
-                onClick={() => navigate(`/shipments/${s.id}`)}
+                onClick={() => navigate(`/trucker/shipments/${s.id}`)}
               >
                 <CardContent className="p-5 sm:p-6">
                   <div className="flex flex-col md:flex-row justify-between gap-6">
@@ -530,7 +533,7 @@ const BrowseShipments = () => {
                         className="flex-1 md:w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 shadow-sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/shipments/${s.id}`);
+                          navigate(`/trucker/shipments/${s.id}`);
                         }}
                       >
                         Send Offer

@@ -26,11 +26,11 @@ Supabase for AI-powered features that can't run client-side.
 
 | Function | Purpose |
 |----------|---------|
-| `gemini-proxy` | Proxies calls to Google Gemini API (keeps the API key server-side) |
+| `gemini-proxy` | Multi-provider AI search proxy (Gemini, Groq, OpenRouter with fallback; in-memory cache + latency logging) |
 | `price-predict` | AI price prediction engine |
 | `credit-score` | Calculates digital freight credit scores |
 | `credit-insights` | Generates natural-language credit insights |
-| `match-ml` | Machine-learning match scoring + logging |
+| `match-ml` | Multi-provider match scoring (Gemini, Groq, OpenRouter, local fallback) with in-memory cache + observability logging |
 | `demand-forecast` | Route/demand forecasting |
 | `fraud-detect` | Fraud detection heuristics |
 
@@ -60,20 +60,39 @@ const { data, error } = await supabase.functions.invoke('price-predict', {
 });
 ```
 
-## gemini-proxy
+## gemini-proxy & match-ml — Multi-Provider AI Stack
 
-The Gemini API key is stored as a Supabase **secret** — it never reaches the
-client. The edge function:
+Both functions use the same **provider fallback chain**:
 
-1. Verifies the incoming JWT (unless the function is explicitly public).
-2. Reads `GEMINI_API_KEY` from the function secrets.
-3. Forwards the request to Google's Gemini API.
-4. Returns the parsed response.
+**Provider chain:**
+1. **Gemini** (gemini-2.0-flash-lite) — primary
+2. **Groq** (llama-3.3-70b-versaatile) — fallback
+3. **OpenRouter** (dolphin3.0-mistral-24b → phi-3-mini-4k) — secondary fallback
+4. **Local heuristic** — deterministic fallback when all AI providers are unavailable
 
-### Deploying Secrets
+If any provider returns 429 (rate limited), the function automatically tries the next provider. If all AI providers fail, a deterministic local heuristic produces a score so the UI never breaks.
+
+### In-Memory Caching
+
+Both functions cache successful results in a module-level `Map` with a 5-minute TTL:
+- Cache key: `JSON.stringify(requestBody)`
+- TTL: 300_000 ms (5 minutes)
+- Max entries: 200 (LRU eviction)
+- Cache hits return immediately without calling any provider
+
+### Observability Logging
+
+Each function emits structured `console.log` / `console.warn` entries containing:
+- `requestId` (from `generateRequestId()`)
+- Provider name and latency (`latency=Nms`)
+- Status (`success`, `rate-limited`, `fallback`, `error`)
+
+### Secrets Required
 
 ```bash
-supabase secrets set GEMINI_API_KEY=your-key
+supabase secrets set GEMINI_API_KEY=your_key_here
+supabase secrets set GROQ_API_KEY=your_key_here
+supabase secrets set OPENROUTER_API_KEY=your_key_here
 ```
 
 ## Development

@@ -26,6 +26,7 @@ import LogoMark from "./LogoMark";
 import MobileMenu from "./MobileMenu";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
 import ScrollToTopFab from "./ScrollToTopFab";
+import FloatingCTA from "./FloatingCTA";
 import type { BottomNavItem } from "./DockNav";
 
 // Desktop-only animated dock. Lazy so framer-motion (~130KB) is never
@@ -187,8 +188,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           {children}
         </Suspense>
       </main>
-      <footer className="bg-muted dark:bg-[#0B1220] border-t border-border dark:border-white/5 w-full pt-16 pb-24">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 px-6 sm:px-12 max-w-[1440px] mx-auto">
+      <footer className="bg-muted dark:bg-[#0B1220] border-t border-border dark:border-white/5 w-full pt-16 pb-20 sm:pb-24">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 md:gap-8 px-6 sm:px-12 max-w-[1440px] mx-auto">
           <div className="col-span-2 md:col-span-1 mb-4 md:mb-0">
             <div className="flex items-center gap-2 mb-4">
               <LogoMark size="h-10 w-10" />
@@ -204,6 +205,15 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 </Button>
               </Link>
             </div>
+            <a
+              href="https://play.google.com/store/apps/details?id=in.loadsaathi.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 010 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+              Get on Google Play
+            </a>
           </div>
           {Object.entries(footerLinks).map(([group, links]) => (
             <div key={group} className="flex flex-col gap-3">
@@ -305,6 +315,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         }
       />
       <ScrollToTopFab />
+      <FloatingCTA />
     </div>
   );
 }

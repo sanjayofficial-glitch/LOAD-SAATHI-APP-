@@ -59,15 +59,51 @@ export default function TruckLoadCalculator() {
         keywords="truck load calculator, which truck for cargo, truck capacity calculator, cargo weight to truck, truck size guide"
         canonical="/truck-load-calculator"
         breadcrumbs={[{ name: "Truck Load Calculator", url: "/truck-load-calculator" }]}
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          "name": "LoadSaathi Truck Load Calculator",
-          "url": "https://loadsaathi.in/truck-load-calculator",
-          "applicationCategory": "BusinessApplication",
-          "description": "Find the right truck for your cargo weight. From mini trucks to tractor-trailers."
-        }}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "LoadSaathi Truck Load Calculator",
+            "url": "https://loadsaathi.in/truck-load-calculator",
+            "applicationCategory": "BusinessApplication",
+            "description": "Find the right truck for your cargo weight. From mini trucks to tractor-trailers."
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "QAPage",
+            "mainEntity": {
+              "@type": "Question",
+              "name": "Which truck should I use for my cargo weight?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "For cargo under 1 tonne, use a mini truck like Tata Ace Gold (₹8–12/km). For 1–2.5 tonnes, a pickup like Tata Intra V10 works best. For 2.5–5 tonnes, use an LCV like Tata 407. For 5–10 tonnes, an MCV like Tata LPT 1613. For 10–25 tonnes, use an HCV or tractor-trailer. Enter your cargo weight above for a personalized recommendation."
+              }
+            }
+          }
+        ]}
       />
+      <noscript>
+        <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
+          <h1>Truck Load Calculator — Find the Right Truck for Your Cargo | LoadSaathi</h1>
+          <p>Find the right truck for your cargo weight. From Tata Ace (0.5T) to tractor-trailers (25T). Enter your cargo weight below and get an instant truck recommendation.</p>
+          <h2>Available Truck Types</h2>
+          <ul>
+            <li><strong>Tata Ace Gold / Mahindra Jeeto</strong> — 0.5–0.75T, Mini Truck. Best for local deliveries, small parcels, urban last-mile.</li>
+            <li><strong>Tata Intra V10 / V20</strong> — 1.0–1.5T, Pickup. Best for short-haul light cargo, intra-city deliveries.</li>
+            <li><strong>Tata 407 / Eicher 3011</strong> — 2.5–4T, LCV. Best for medium cargo, regional distribution.</li>
+            <li><strong>Ashok Leyland Dost</strong> — 1.5–2T, LCV. Best for inter-city small commercial loads.</li>
+            <li><strong>Tata 712 / Eicher 1718</strong> — 5–7T, ICV. Best for larger commercial shipments, inter-state freight.</li>
+            <li><strong>Tata 1212 / Ashok Leyland Commander</strong> — 9–12T, Multi-Axle. Best for heavy goods, bulk shipments.</li>
+            <li><strong>Tata 1618 / Volvo 16T</strong> — 16–25T, Trailer/Container. Best for industrial goods, containerised cargo.</li>
+          </ul>
+          <h2>Frequently Asked Questions</h2>
+          <h3>How do I choose the right truck for my shipment?</h3>
+          <p>Enter your cargo weight in tonnes. The calculator matches your cargo to the most suitable truck type — mini trucks for under 0.75T, pickups for 1–2T, LCVs for 2–5T, ICVs for 5–9T, MGVs for 9–16T, and HGVs for 16T+.</p>
+          <h3>What is the cheapest truck option in India?</h3>
+          <p>The cheapest option is the Tata Ace Gold mini truck at approximately ₹8–12 per km for loads under 0.75 tonnes. For larger loads, PTL (Partial Truck Load) sharing is the most cost-effective option.</p>
+          <p><strong>Need help?</strong> Call LoadSaathi freight support at <a href="tel:+918328998031">+91 83289 98031</a> or <a href="https://loadsaathi.in">visit loadsaathi.in</a> to book a truck.</p>
+        </div>
+      </noscript>
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased">
         <div className="max-w-3xl mx-auto px-6 py-24">
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">

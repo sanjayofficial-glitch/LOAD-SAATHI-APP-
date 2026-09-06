@@ -234,11 +234,11 @@ const ShipperHistory = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">History & Activity</h1>
+        <h1 id="shipper-history-header" className="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight">History & Activity</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-1">Review all your past loads and bookings in one place.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div id="shipper-history-stat-cards" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {[
           { label: 'Total', val: stats.total, icon: TrendingUp, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/50' },
           { label: 'Completed', val: stats.completed, icon: CheckCircle, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-950/50' },
@@ -257,7 +257,7 @@ const ShipperHistory = () => {
         ))}
       </div>
 
-      <Card className="mb-8 border-gray-100 dark:border-gray-800">
+      <Card id="shipper-history-filters" className="mb-8 border-gray-100 dark:border-gray-800">
         <CardContent className="p-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 space-y-2">
@@ -293,7 +293,7 @@ const ShipperHistory = () => {
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
+      <div id="shipper-history-list" className="space-y-4">
         {filteredActivities.length === 0 ? (
           activities.length === 0 ? (
             <EmptyState

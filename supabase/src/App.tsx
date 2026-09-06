@@ -1,6 +1,8 @@
 import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LocationProvider } from "@/contexts/LocationContext";
+import { ProductTourProvider } from "@/contexts/ProductTourContext";
 import { BrowserRouter, useNavigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -12,6 +14,7 @@ import { GoogleAnalyticsTracker } from "./components/GoogleAnalytics";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Suspense, useState, useEffect, type ReactNode } from "react";
 import { AppRoutes } from "./routes";
+import "@/styles/product-tour.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -103,14 +106,18 @@ function App() {
             <QueryClientProvider client={queryClient}>
               <TooltipProvider>
                 <ThemeProvider>
-                  <AuthProvider>
-                    <ScrollToTop />
-                    <GoogleAnalyticsTracker />
-                    <Suspense fallback={<Skeleton className="h-dvh w-full" />}>
-                      <AppRoutes />
-                    </Suspense>
-                    <ThemedToaster />
-                  </AuthProvider>
+                   <AuthProvider>
+                     <ProductTourProvider>
+                       <LocationProvider>
+                         <ScrollToTop />
+                         <GoogleAnalyticsTracker />
+                         <Suspense fallback={<Skeleton className="h-dvh w-full" />}>
+                           <AppRoutes />
+                         </Suspense>
+                         <ThemedToaster />
+                       </LocationProvider>
+                     </ProductTourProvider>
+                   </AuthProvider>
                 </ThemeProvider>
               </TooltipProvider>
             </QueryClientProvider>

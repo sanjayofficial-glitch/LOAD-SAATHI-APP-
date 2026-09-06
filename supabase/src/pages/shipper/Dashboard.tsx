@@ -156,6 +156,8 @@ const ShipperDashboard = () => {
 
   useEffect(() => { loadStats(); }, [loadStats]);
 
+
+
   const handleCancelShipment = async (shipmentId: string) => {
     if (!isOnline) {
       showError('You are offline. Cannot cancel shipment.');
@@ -244,7 +246,7 @@ const ShipperDashboard = () => {
           <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-1.5 rounded-lg shadow-sm">
             <Package className="h-4 w-4 text-white" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Shipper Dashboard</h1>
+          <h1 id="shipper-dashboard-header" className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Shipper Dashboard</h1>
         </div>
         <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
           Welcome back, {userProfile?.full_name || 'Shipper'}! {isOnline ? 'Manage your loads and find the best trucks.' : <span className="text-yellow-600">You are offline. Showing cached data.</span>}
@@ -258,8 +260,8 @@ const ShipperDashboard = () => {
         </div>
       )}
 
-      {/* Live Truck Map — hero for first-time & returning shippers */}
-      <div className="mb-8 sm:mb-10 animate-fade-in">
+{/* Live Truck Map — hero for first-time & returning shippers */}
+      <div id="live-truck-map" className="mb-8 sm:mb-10 animate-fade-in">
         <LiveTruckMap />
       </div>
 
@@ -278,8 +280,8 @@ const ShipperDashboard = () => {
         </div>
       )}
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+{/* Stats Grid */}
+      <div id="shipper-stat-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {loading ? (
           <>
             <StatCardSkeleton />
@@ -318,7 +320,7 @@ const ShipperDashboard = () => {
 
       {/* Action Cards */}
       <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 mb-10 sm:mb-12">
-        <Card className="border-blue-200 dark:border-blue-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+        <Card id="shipper-quick-actions" className="border-blue-200 dark:border-blue-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <div className="h-1 bg-gradient-to-r from-blue-500 to-blue-400" />
           <CardHeader className="bg-blue-50/50 dark:bg-blue-900/10 px-4 sm:px-6">
             <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</CardTitle>

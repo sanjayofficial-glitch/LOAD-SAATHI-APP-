@@ -6,19 +6,19 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './supabase/src'),
     },
   },
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
+      setupFiles: ['./supabase/src/test/setup.ts'],
     css: true,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/test/**', 'src/**/*.d.ts', 'src/main.tsx'],
+      include: ['supabase/src/**/*.{ts,tsx}'],
+      exclude: ['supabase/src/test/**', 'supabase/src/**/*.d.ts', 'supabase/src/main.tsx'],
     },
   },
 });

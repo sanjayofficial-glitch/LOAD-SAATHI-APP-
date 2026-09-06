@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocation } from '@/contexts/LocationContext';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { logger } from '@/lib/logger';
 import { showError } from '@/utils/toast';
@@ -18,6 +19,7 @@ const LOCATION_UPDATE_INTERVAL_MS = 30 * 1000;
 
 export default function AutoGpsTracker() {
   const { userProfile, getSupabaseToken } = useAuth();
+  const { locationPermission, setGpsTrackingState } = useLocation();
   const watchIdRef = useRef<number | null>(null);
   const lastUpdateRef = useRef<number>(0);
   const tripRefreshRef = useRef<number | null>(null);
@@ -38,6 +40,13 @@ export default function AutoGpsTracker() {
 
       const ut = userProfile.user_type;
       if (ut !== 'trucker' && ut !== 'shipper') return;
+
+      // Do not attempt GPS if permission has not been granted. The banner
+      // UI will prompt the user to grant permission.
+      if (locationPermission !== 'granted') {
+        setGpsTrackingState('no-location');
+        return;
+      }
 
       // Get Clerk JWT for authenticated Supabase client. MUST use the
       // 'supabase' template — the default session token fails Supabase JWT
@@ -86,6 +95,7 @@ export default function AutoGpsTracker() {
           if (!mounted) return;
 
           const now = Date.now();
+          setGpsTrackingState('active');
           // Throttle writes to every 30s so the live map stays fresh
           if (now - lastUpdateRef.current < LOCATION_UPDATE_INTERVAL_MS) return;
           lastUpdateRef.current = now;
@@ -130,8 +140,13 @@ export default function AutoGpsTracker() {
           }
         },
         (err) => {
-          // Silently ignore permission denied or timeout
-          logger.warn('AutoGpsTracker geolocation error', { error: err?.message ?? err }, 'AutoGpsTracker');
+          if (err?.code === err?.PERMISSION_DENIED) {
+            setGpsTrackingState('no-location');
+            logger.warn('AutoGpsTracker permission denied', { error: err?.message ?? err }, 'AutoGpsTracker');
+          } else {
+            setGpsTrackingState('error');
+            logger.warn('AutoGpsTracker geolocation error', { error: err?.message ?? err }, 'AutoGpsTracker');
+          }
         },
         {
           enableHighAccuracy: ut === 'trucker',
@@ -161,7 +176,7 @@ export default function AutoGpsTracker() {
         tripRefreshRef.current = null;
       }
     };
-  }, [userProfile, getSupabaseToken]);
+  }, [userProfile, getSupabaseToken, locationPermission, setGpsTrackingState]);
 
   // This component renders nothing
   return null;

@@ -87,7 +87,7 @@ const PlatformTabs = React.memo(() => {
             ))}
           </div>
         </div>
-        <div className="relative w-full max-h-[500px] sm:max-h-[600px] lg:aspect-[16/9] lg:max-h-[700px]">
+        <div className="relative w-full max-h-[70vh] sm:max-h-[600px] lg:aspect-[16/9] lg:max-h-[700px]">
           {/* Shipper OS */}
           <div role="tabpanel" className={`tab-content ${activeTab === 'shipper' ? 'active' : ''} absolute inset-0 glass-card rounded-xl border-blue-500/20 overflow-hidden shadow-2xl flex-col`}
             style={{ display: activeTab === 'shipper' ? 'flex' : 'none' }}

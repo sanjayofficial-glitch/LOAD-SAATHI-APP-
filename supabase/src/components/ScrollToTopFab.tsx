@@ -9,13 +9,21 @@ import { cn } from "@/lib/utils";
  */
 export default function ScrollToTopFab() {
   const [visible, setVisible] = useState(false);
+  const [fabOpen, setFabOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
       setVisible(window.scrollY > 400);
     };
+    const onFabOpen = (e: Event) => {
+      setFabOpen((e as CustomEvent).detail.open);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("lsaathi-fab-open", onFabOpen);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("lsaathi-fab-open", onFabOpen);
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -32,14 +40,15 @@ export default function ScrollToTopFab() {
       onClick={scrollToTop}
       aria-label="Scroll to top"
       className={cn(
-        "fixed bottom-28 right-4 z-[90] flex h-11 w-11 items-center justify-center rounded-full",
+        "fixed right-4 z-[90] flex h-11 w-11 items-center justify-center rounded-full",
         "bg-orange-600 text-white shadow-lg shadow-orange-600/25",
         "transition-all duration-200 ease-out",
         "hover:bg-orange-700 hover:shadow-xl hover:scale-105",
         "active:scale-95",
         "md:bottom-28",
         "backdrop-blur-sm",
-        visible
+        "bottom-[calc(8rem+env(safe-area-inset-bottom,0px))]",
+        visible && !fabOpen
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-4 pointer-events-none"
       )}

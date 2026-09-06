@@ -1,8 +1,9 @@
 {
-  "installCommand": "corepack enable && pnpm install",
+  "installCommand": "pnpm install",
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -22,6 +23,14 @@
     },
     {
       "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Vary", "value": "Accept, Accept-Encoding" }
+      ]
+    },
+    {
+      "source": "/llms-full.txt",
       "headers": [
         { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
         { "key": "Cache-Control", "value": "public, max-age=3600" },
@@ -51,7 +60,7 @@
     },
     {
       "src": "^/((?!assets/|.*\\..*).*)$",
-      "dest": "/index.html"
+      "dest": "/api/agent.js"
     }
   ]
 }

@@ -1,21 +1,15 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
+﻿import { useRef, useEffect, useState, useCallback } from 'react'
 import { useAuth as useClerkAuth } from '@clerk/clerk-react'
+import { useQuery } from '@tanstack/react-query'
+import type { AIMatchResult } from '@/types'
 
-export interface AIMatchResult {
-  aiScore: number
-  confidence: 'high' | 'medium' | 'low'
-  reasoning: string
-}
+const SCORE_CACHE_STALE_TIME = 5 * 60_000
+const DEBOUNCE_MS = 300
 
-/**
- * Fetches AI match scores for the top items in a list.
- * Only processes the first `maxItems` items, staggers calls to avoid throttling.
- * Resets fetched set when items change to handle filtering/reordering.
- */
 export function useSmartMatch<T extends { id: string }>(
   items: T[],
   getParams: (item: T) => Record<string, unknown> | null,
-  maxItems = 10,
+  maxItems = 5,
 ) {
   const [scores, setScores] = useState<Record<string, AIMatchResult>>({})
   const [loadingId, setLoadingId] = useState<string | null>(null)
@@ -23,63 +17,59 @@ export function useSmartMatch<T extends { id: string }>(
   const { getToken } = useClerkAuth()
   const fetchedRef = useRef<Set<string>>(new Set())
   const prevItemsRef = useRef<string>('')
+  const lastFetchRef = useRef<number>(0)
 
   const fetchScore = useCallback(async (item: T) => {
     const params = getParams(item)
     if (!params || !supabaseUrl || fetchedRef.current.has(item.id)) return null
+    const now = Date.now()
+    if (now - lastFetchRef.current < DEBOUNCE_MS) return null
+    lastFetchRef.current = now
 
-
-    setLoadingId(item.id)
     try {
-      const token = await getToken({ template: 'supabase' })
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-      if (token) headers['Authorization'] = `Bearer ${token}`
-
-      const response = await fetch(`${supabaseUrl}/functions/v1/match-ml`, {
+      const token = await getToken()
+      if (!token) return null
+      const res = await fetch(`${supabaseUrl}/functions/v1/match-ml`, {
         method: 'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(params),
-        signal: AbortSignal.timeout(6000),
       })
-      if (!response.ok) return null
-      const data: AIMatchResult = await response.json()
+      if (!res.ok) return null
+      const data = (await res.json()) as AIMatchResult & { provider?: string }
+      setScores(prev => ({ ...prev, [item.id]: data }))
       fetchedRef.current.add(item.id)
       return data
     } catch {
-      fetchedRef.current.add(item.id)
       return null
-    } finally {
-      setLoadingId(null)
     }
   }, [getParams, supabaseUrl, getToken])
 
   useEffect(() => {
-    const top = items.slice(0, maxItems)
-    if (top.length === 0 || !supabaseUrl) return
+    const key = JSON.stringify(items.map(i => i.id))
+    if (key === prevItemsRef.current) return
+    prevItemsRef.current = key
+    fetchedRef.current.clear()
+  }, [items])
 
-    // Reset fetched set when the item list changes (filter, reorder, etc.)
-    const itemsKey = top.map(i => i.id).join(',')
-    if (itemsKey !== prevItemsRef.current) {
-      fetchedRef.current.clear()
-      prevItemsRef.current = itemsKey
-    }
-
+  useEffect(() => {
+    const queue = items.slice(0, maxItems).filter(i => !fetchedRef.current.has(i.id))
+    if (queue.length === 0) return
     let cancelled = false
-
-    const run = async () => {
-      for (const item of top) {
-        if (cancelled || fetchedRef.current.has(item.id)) continue
-        const result = await fetchScore(item)
-        if (result && !cancelled) {
-          setScores(prev => ({ ...prev, [item.id]: result }))
-        }
-        await new Promise(r => setTimeout(r, 150))
+    ;(async () => {
+      for (let idx = 0; idx < queue.length; idx++) {
+        if (cancelled) break
+        const item = queue[idx]
+        setLoadingId(item.id)
+        await fetchScore(item)
+        if (idx < queue.length - 1) await new Promise(r => setTimeout(r, 150))
       }
-    }
-
-    run()
+      if (!cancelled) setLoadingId(null)
+    })()
     return () => { cancelled = true }
-  }, [items, maxItems, supabaseUrl, fetchScore])
+  }, [items, maxItems, fetchScore])
 
-  return { scores, loadingId }
+  return { scores, loadingId, refetch: () => fetchedRef.current.clear() }
 }

@@ -30,6 +30,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import EmptyState from '@/components/EmptyState';
 import ErrorState from '@/components/ErrorState';
+import RouteMap from '@/components/RouteMap';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -88,7 +89,7 @@ const TruckerHub = () => {
       // 1. My Posted Trips
       const { data: tripsData } = await supabase
         .from('trips')
-        .select('id, origin_city, destination_city, departure_date, available_capacity_tonnes, price_per_tonne, status, created_at, trucker_id, vehicle_type, vehicle_number')
+        .select('id, origin_city, destination_city, origin_lat, origin_lng, destination_lat, destination_lng, estimated_distance_km, estimated_duration_min, departure_date, available_capacity_tonnes, price_per_tonne, status, created_at, trucker_id, vehicle_type, vehicle_number')
         .eq('trucker_id', userProfile.id)
         .order('created_at', { ascending: false });
 
@@ -303,7 +304,7 @@ const TruckerHub = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Trucker Hub</h1>
+           <h1 id="trucker-hub-header" className="text-3xl font-bold text-gray-900 dark:text-gray-100">Trucker Hub</h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your trips, sent offers, and incoming bookings</p>
         </div>
         <Link to="/trucker/post-trip">
@@ -314,7 +315,7 @@ const TruckerHub = () => {
       </div>
 
       <Tabs defaultValue={defaultTab} className="space-y-6">
-        <TabsList className="flex w-full max-w-[600px] overflow-x-auto">
+        <TabsList id="trucker-hub-tabs" className="flex w-full max-w-[600px] overflow-x-auto">
           <TabsTrigger value="trips" className="flex flex-1 min-w-max items-center gap-2">
             <Truck className="h-4 w-4" />
             My Trips
@@ -345,7 +346,7 @@ const TruckerHub = () => {
               secondaryAction={{ label: 'Find Shipments', to: '/trucker/browse-shipments' }}
             />
           ) : (
-            <div className="grid gap-6">
+            <div id="trucker-hub-my-trips-grid" className="grid gap-6">
               {trips.map(trip => (
                 <Card key={trip.id} className="overflow-hidden border-orange-100 dark:border-orange-800 hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
@@ -357,6 +358,22 @@ const TruckerHub = () => {
                           </div>
                           <StatusBadge status={trip.status} />
                         </div>
+                        {(trip.origin_lat || trip.origin_lng || trip.destination_lat || trip.destination_lng) && (
+                          <div className="rounded-xl overflow-hidden border border-orange-100 dark:border-orange-800">
+                            <RouteMap
+                              originCity={trip.origin_city}
+                              destinationCity={trip.destination_city}
+                              originLat={trip.origin_lat}
+                              originLng={trip.origin_lng}
+                              destLat={trip.destination_lat}
+                              destLng={trip.destination_lng}
+                              distanceKm={trip.estimated_distance_km}
+                              durationMin={trip.estimated_duration_min}
+                              height="150px"
+                              interactive={false}
+                            />
+                          </div>
+                        )}
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-gray-500 dark:text-gray-400">
                           <div className="flex items-center"><Calendar className="h-4 w-4 mr-2 text-orange-600" />{new Date(trip.departure_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
                           <div className="flex items-center font-semibold text-gray-900 dark:text-gray-100"><IndianRupee className="h-4 w-4 mr-1 text-green-600" />{trip.price_per_tonne.toLocaleString()} /t</div>

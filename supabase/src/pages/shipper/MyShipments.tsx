@@ -240,7 +240,7 @@ const MyShipments = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Shipper Hub</h1>
+           <h1 id="shipper-hub-header" className="text-3xl font-bold text-gray-900 dark:text-white">Shipper Hub</h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your loads, sent requests, and incoming offers</p>
         </div>
         <Link to="/shipper/post-shipment">
@@ -251,7 +251,7 @@ const MyShipments = () => {
       </div>
 
       <Tabs defaultValue={defaultTab} className="space-y-6">
-        <TabsList className="flex w-full max-w-[600px] overflow-x-auto">
+        <TabsList id="shipper-hub-tabs" className="flex w-full max-w-[600px] overflow-x-auto">
           <TabsTrigger value="loads" className="flex flex-1 min-w-max items-center gap-2">
             <Package className="h-4 w-4" />
             My Loads
@@ -282,7 +282,7 @@ const MyShipments = () => {
               secondaryAction={{ label: 'Find Trucks', to: '/browse-trucks' }}
             />
           ) : (
-            <div className="grid gap-6">
+            <div id="shipper-hub-my-loads-grid" className="grid gap-6">
               {shipments.map(shipment => (
                 <Card key={shipment.id} className="overflow-hidden border-blue-100 hover:shadow-md transition-shadow">
                   <CardContent className="p-6">

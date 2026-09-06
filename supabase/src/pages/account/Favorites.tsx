@@ -126,7 +126,7 @@ const Favorites = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 animate-fade-in">
-      <div className="mb-6 sm:mb-8">
+       <div id="favorites-header" className="mb-6 sm:mb-8">
         <div className="flex items-center gap-2 mb-1">
           <div className="bg-gradient-to-br from-red-500 to-pink-500 p-1.5 rounded-lg shadow-sm">
             <Heart className="h-4 w-4 text-white" />
@@ -139,7 +139,7 @@ const Favorites = () => {
       </div>
 
       <Tabs defaultValue="trips">
-        <TabsList className="mb-6">
+        <TabsList id="favorites-tabs" className="mb-6">
           <TabsTrigger value="trips" className="flex items-center gap-1.5">
             <Truck className="h-3.5 w-3.5" /> Trips ({tripCount})
           </TabsTrigger>
@@ -160,7 +160,7 @@ const Favorites = () => {
           ) : trips.length === 0 ? (
             <EmptyState type="trips" />
           ) : (
-            <div className="space-y-3">
+            <div id="favorites-list" className="space-y-3">
               <div className="flex justify-end">
                 <AlertDialog open={removeAllTarget === "trip"} onOpenChange={(open) => !open && setRemoveAllTarget(null)}>
                   <AlertDialogTrigger asChild>

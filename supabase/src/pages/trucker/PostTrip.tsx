@@ -37,6 +37,8 @@ const PostTrip = () => {
     import('@/data/locations.json').then(mod => setLocationData(mod.default.data));
   }, []);
 
+
+
   const form = useForm<TripFormValues>({
     resolver: zodResolver(tripSchema),
     defaultValues: {
@@ -196,7 +198,7 @@ const PostTrip = () => {
       )}
 
       <Card className="border-orange-100 dark:border-orange-800 shadow-lg">
-        <CardHeader className="bg-orange-50/50 dark:bg-orange-950/30 border-b border-orange-100 dark:border-orange-800 px-4 sm:px-6">
+        <CardHeader id="post-trip-header" className="bg-orange-50/50 dark:bg-orange-950/30 border-b border-orange-100 dark:border-orange-800 px-4 sm:px-6">
           <CardTitle className="flex items-center text-orange-900 dark:text-orange-100 text-lg sm:text-xl">
             <Truck className="mr-2 text-orange-600 dark:text-orange-400 h-5 w-5 sm:h-6 sm:w-6" /> Post a New Trip
           </CardTitle>
@@ -220,7 +222,7 @@ const PostTrip = () => {
                 }}
               />
             )}
-            <div className="space-y-2">
+            <div id="post-trip-origin" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
                 <LocationSelector
                   label="Origin"
@@ -229,7 +231,7 @@ const PostTrip = () => {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div id="post-trip-destination" className="space-y-2">
                 <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
                 <LocationSelector
                   label="Destination"
@@ -361,6 +363,7 @@ const PostTrip = () => {
                 />
               )}
               <Button
+                id="post-trip-submit"
                 type="submit"
                 className="flex-1 bg-orange-600 hover:bg-orange-700 h-12 text-base sm:text-lg font-bold"
                 disabled={loading || !isOnline || form.formState.isSubmitting}
