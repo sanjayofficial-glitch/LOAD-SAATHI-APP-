@@ -84,11 +84,11 @@ const footerLinks = {
   ],
   Tools: [
     { label: "All Tools", path: "/tools" },
-    { label: "Fare Calculator", path: "/tools/fare-calculator" },
-    { label: "Freight Rate Calculator", path: "/tools/freight-rate-calculator" },
-    { label: "Return Load Calculator", path: "/tools/return-load-calculator" },
-    { label: "Truck Load Calculator", path: "/tools/truck-load-calculator" },
-    { label: "PTL vs FTL", path: "/tools/ptl-vs-ftl-calculator" },
+    { label: "Fare Calculator", path: "/fare-calculator" },
+    { label: "Freight Rate Calculator", path: "/freight-rate-calculator" },
+    { label: "Return Load Calculator", path: "/return-load-calculator" },
+    { label: "Truck Load Calculator", path: "/truck-load-calculator" },
+    { label: "PTL vs FTL", path: "/ptl-vs-ftl-calculator" },
   ],
   Freight: [
     { label: "All Routes", path: "/routes" },

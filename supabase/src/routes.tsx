@@ -163,6 +163,11 @@ export const AppRoutes = () => (
       <Route path="/ptl-vs-ftl-calculator" element={<PtlVsFtlCalculator />} />
       <Route path="/freight-rate-calculator" element={<FreightRateCalculator />} />
       <Route path="/return-load-calculator" element={<ReturnLoadCalculator />} />
+      <Route path="/tools/fare-calculator" element={<FareCalculator />} />
+      <Route path="/tools/freight-rate-calculator" element={<FreightRateCalculator />} />
+      <Route path="/tools/return-load-calculator" element={<ReturnLoadCalculator />} />
+      <Route path="/tools/truck-load-calculator" element={<TruckLoadCalculator />} />
+      <Route path="/tools/ptl-vs-ftl-calculator" element={<PtlVsFtlCalculator />} />
       <Route path="/tools/route-optimizer" element={<RouteOptimizer />} />
       <Route path="/tools/empty-km-savings" element={<EmptyKmSavings />} />
       <Route path="/tools/trip-profit" element={<TripProfitCalculator />} />
