@@ -81,7 +81,7 @@ export default function SeoMeta({
   image = DEFAULT_IMAGE,
   type = "website",
   publishedTime,
-  dateModified = "2026-08-08",
+  dateModified = "2026-09-18",
   author,
   jsonLd,
   breadcrumbs,
@@ -150,6 +150,7 @@ export default function SeoMeta({
     appendManaged("meta", { property: "og:image", content: image });
     if (isDefaultImage) appendManaged("meta", { property: "og:image:width", content: "1200" });
     if (isDefaultImage) appendManaged("meta", { property: "og:image:height", content: "630" });
+    appendManaged("meta", { property: "og:image:alt", content: `${title} — LoadSaathi` });
     appendManaged("meta", { property: "og:site_name", content: "LoadSaathi" });
     appendManaged("meta", { property: "og:locale", content: "en_IN" });
 
@@ -157,6 +158,7 @@ export default function SeoMeta({
     appendManaged("meta", { name: "twitter:title", content: fullTitle });
     appendManaged("meta", { name: "twitter:description", content: description });
     appendManaged("meta", { name: "twitter:image", content: image });
+    appendManaged("meta", { name: "twitter:image:alt", content: `${title} — LoadSaathi` });
 
     if (publishedTime) appendManaged("meta", { property: "article:published_time", content: publishedTime });
     if (type === "article") appendManaged("meta", { property: "article:modified_time", content: dateModified });

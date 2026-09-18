@@ -68,6 +68,13 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 - [Location: Cuttack](https://loadsaathi.in/location/cuttack)
 - [Location: Durgapur](https://loadsaathi.in/location/durgapur)
 - [Location: Asansol](https://loadsaathi.in/location/asansol)
+- [Location: Sambalpur](https://loadsaathi.in/location/sambalpur)
+- [Location: Angul](https://loadsaathi.in/location/angul)
+- [Location: Jharsuguda](https://loadsaathi.in/location/jharsuguda)
+- [Location: Dhanbad](https://loadsaathi.in/location/dhanbad)
+- [Location: Balasore](https://loadsaathi.in/location/balasore)
+- [Location: Berhampur](https://loadsaathi.in/location/berhampur)
+- [Location: Visakhapatnam](https://loadsaathi.in/location/visakhapatnam)
 - [Location: Burdwan](https://loadsaathi.in/location/burdwan)
 
 ## Guides
@@ -79,7 +86,7 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 ## Blog
 
 - [All Blog Posts](https://loadsaathi.in/blog)
-- [Truck Transport Cost Per Km India 2026](https://loadsaathi.in/blog/truck-transport-cost-per-km-india-2026)
+- [Truck Transport Charges Per Km India](https://loadsaathi.in/blog/truck-transport-charges-per-km-india)
 - [Return Loads from Rourkela](https://loadsaathi.in/blog/return-loads-rourkela)
 - [PTL Transport Odisha Jharkhand](https://loadsaathi.in/blog/ptl-transport-odisha-jharkhand-2026)
 - [Steel Transport Rourkela 2026](https://loadsaathi.in/blog/steel-transport-rourkela-2026)

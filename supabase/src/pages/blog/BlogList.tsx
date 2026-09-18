@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Calendar, Clock, ArrowRight, Tag } from "lucide-react";
+import { Calendar, Clock, ArrowRight, Tag, User } from "lucide-react";
 import SeoMeta from "@/components/SeoMeta";
 import { getBlogListItems } from "@/data/blog";
 
@@ -121,6 +121,9 @@ export default function BlogList() {
                   <div className="flex items-center gap-3">
                     <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {article.date}</span>
                     <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {article.readTime}</span>
+                    {article.author && (
+                      <span className="flex items-center gap-1"><User className="h-3 w-3" /> {article.author}</span>
+                    )}
                   </div>
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform text-orange-500" />
                 </div>

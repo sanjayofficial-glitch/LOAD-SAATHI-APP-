@@ -107,7 +107,7 @@ const Terms = () => {
     return () => observer.disconnect();
   }, []);
 
-  const lastUpdated = "January 1, 2026";
+  const lastUpdated = "September 18, 2026";
 
   return (
     <>
@@ -117,6 +117,44 @@ const Terms = () => {
       keywords="LoadSaathi terms of service, freight marketplace terms, logistics platform terms India"
       canonical="/terms"
       breadcrumbs={[{ name: "Terms of Service", url: "/terms" }]}
+      jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Terms of Service — LoadSaathi",
+        description: "LoadSaathi's terms of service — the rules and guidelines for using our freight marketplace platform.",
+        url: "https://loadsaathi.in/terms",
+        dateModified: "2026-09-18",
+        publisher: { "@type": "Organization", name: "LoadSaathi" },
+        mainEntity: {
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "What age do I need to be to use LoadSaathi?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "You must be at least 18 years old and legally capable of entering into binding contracts to use LoadSaathi."
+              }
+            },
+            {
+              "@type": "Question",
+              name: "How does LoadSaathi's payment escrow work?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Payments are processed through our secure escrow system. Funds are released to the transporter upon successful delivery confirmation by the shipper."
+              }
+            },
+            {
+              "@type": "Question",
+              name: "How are disputes resolved on LoadSaathi?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Users first attempt to resolve disputes informally through LoadSaathi's internal process. If unresolved, disputes are settled by binding arbitration in Bengaluru, Karnataka, in English."
+              }
+            }
+          ]
+        }
+      }}
     />
     <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       {/* HERO */}

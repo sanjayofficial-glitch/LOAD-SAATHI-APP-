@@ -112,6 +112,7 @@ const footerLinks = {
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { userProfile } = useAuth();
   // Whether we're on a desktop viewport. Initialized synchronously from the
   // media query so phones never render (and never download) the animated dock
@@ -126,6 +127,12 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     const onChange = (e: MediaQueryListEvent) => setIsDesktopView(e.matches);
     mql.addEventListener("change", onChange);
     return () => mql.removeEventListener("change", onChange);
+  }, []);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const dashboardPath = userProfile?.user_type === 'admin'
@@ -148,7 +155,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         Skip to content
       </a>
       <OfflineBanner />
-      <nav className="fixed top-0 w-full z-[100] bg-background/70 dark:bg-[#050816]/70 backdrop-blur-lg border-b border-border dark:border-white/10 pt-[env(safe-area-inset-top)]" style={{ contain: 'layout style' }}>
+      <nav className={`fixed top-0 w-full z-[100] backdrop-blur-lg border-b border-border dark:border-white/10 pt-[env(safe-area-inset-top)] transition-colors duration-300 ${scrolled ? 'bg-background/95 dark:bg-[#050816]/95 shadow-md' : 'bg-background/70 dark:bg-[#050816]/70'}`} style={{ contain: 'layout style' }}>
         <div className="flex justify-between items-center w-full px-6 sm:px-12 max-w-[1440px] mx-auto h-16">
           <Link to="/" className="flex items-center gap-2">
             <LogoMark size="h-11 w-11" />
@@ -206,15 +213,13 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 </Button>
               </Link>
             </div>
-            <a
-              href="https://play.google.com/store/apps/details?id=in.loadsaathi.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-lg bg-black dark:bg-white text-white dark:text-black text-xs font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+            <div
+              className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-lg bg-muted dark:bg-white/5 border border-border dark:border-white/10 text-xs font-bold text-muted-foreground cursor-not-allowed opacity-70"
+              aria-disabled="true"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 010 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
-              Get on Google Play
-            </a>
+              Coming Soon on Google Play
+            </div>
           </div>
           {Object.entries(footerLinks).map(([group, links]) => (
             <div key={group} className="flex flex-col gap-3">

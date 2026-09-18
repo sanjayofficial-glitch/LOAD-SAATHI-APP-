@@ -28,7 +28,7 @@ const HeroSection = React.memo(() => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           <div className="space-y-6 sm:space-y-8 lg:space-y-10">
             <div className="flex items-center gap-2 bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800/50 text-orange-700 dark:text-orange-300 px-4 py-2 rounded-full text-sm w-max">
-              <Star className="h-4 w-4 fill-orange-500 icon-hover" /> Early Access Program for East India
+              <Star className="h-4 w-4 fill-orange-500 icon-hover" /> Live in East India — Early Access
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-foreground dark:text-white tracking-tighter leading-none">
               The OS for<br />

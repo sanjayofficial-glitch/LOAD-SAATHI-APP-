@@ -130,7 +130,7 @@ const Privacy = () => {
     return () => observer.disconnect();
   }, []);
 
-  const lastUpdated = "January 1, 2026";
+  const lastUpdated = "September 18, 2026";
 
   return (
     <>
@@ -140,6 +140,44 @@ const Privacy = () => {
       keywords="LoadSaathi privacy, freight platform privacy policy, data protection India"
       canonical="/privacy"
       breadcrumbs={[{ name: "Privacy Policy", url: "/privacy" }]}
+      jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Privacy Policy — LoadSaathi",
+        description: "LoadSaathi's privacy policy — how we collect, use, and protect your personal data.",
+        url: "https://loadsaathi.in/privacy",
+        dateModified: "2026-09-18",
+        publisher: { "@type": "Organization", name: "LoadSaathi" },
+        mainEntity: {
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "What personal data does LoadSaathi collect?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "We collect your full name, email, phone, address, government IDs (Aadhaar/PAN/DL), business registration details, transaction history, GPS tracking data, and device/usage information."
+              }
+            },
+            {
+              "@type": "Question",
+              name: "Does LoadSaathi sell my personal data?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "No. We do not sell your personal information to third parties. Your data is used exclusively to provide and improve LoadSaathi services."
+              }
+            },
+            {
+              "@type": "Question",
+              name: "How can I delete my data from LoadSaathi?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "You can request deletion of your account and associated data by contacting our Data Protection Officer at privacy@loadsaathi.com. We will process legitimate requests within 30 days."
+              }
+            }
+          ]
+        }
+      }}
     />
     <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased overflow-x-hidden">
       {/* HERO */}

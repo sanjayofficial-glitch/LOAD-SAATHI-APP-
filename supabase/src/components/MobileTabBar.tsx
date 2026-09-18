@@ -73,7 +73,7 @@ const MobileTabBar = React.memo(
 
     const labelClass = (active: boolean) =>
       cn(
-        "max-w-full truncate text-[10px] font-semibold transition-colors duration-150",
+        "max-w-full truncate text-[11px] font-semibold transition-colors duration-150",
         active ? a.text : "text-gray-500 dark:text-gray-400"
       );
 
@@ -147,7 +147,10 @@ const MobileTabBar = React.memo(
             side="bottom"
             className="z-[110] max-h-[75dvh] overflow-y-auto rounded-t-3xl border-t border-gray-200/70 bg-white/95 p-0 pb-[max(env(safe-area-inset-bottom),1rem)] backdrop-blur-lg dark:border-white/10 dark:bg-gray-950/95"
           >
-            <SheetHeader className="px-5 pb-1 pt-5 text-left">
+            <div className="flex justify-center pt-3">
+              <div className="h-1 w-10 rounded-full bg-gray-300 dark:bg-gray-600" aria-hidden="true" />
+            </div>
+            <SheetHeader className="px-5 pb-1 pt-2 text-left">
               <SheetTitle className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                 Menu
               </SheetTitle>

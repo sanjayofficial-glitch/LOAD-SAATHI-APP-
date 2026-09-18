@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { ImageIcon, X } from 'lucide-react';
+import { ImageIcon, X, Camera, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import SeoMeta from '@/components/SeoMeta';
 
 const CATEGORIES = [
@@ -115,10 +117,17 @@ export default function Gallery() {
                 ))}
               </div>
             ) : images.length === 0 ? (
-              <div className="text-center py-24 text-muted-foreground">
-                <ImageIcon className="h-16 w-16 mx-auto mb-4 opacity-50 icon-hover" />
-                <p className="text-lg">No images in this category yet.</p>
-                <p className="text-sm mt-1">Check back soon — we&apos;re building our visual story.</p>
+              <div className="max-w-md mx-auto text-center py-24 glass-card p-8 rounded-xl border-border dark:border-white/[0.08]">
+                <Camera className="h-16 w-16 mx-auto mb-4 text-orange-500/60" />
+                <p className="text-lg font-semibold text-foreground dark:text-white mb-1">No images in this category yet.</p>
+                <p className="text-sm text-muted-foreground mb-6">Check back soon — we&apos;re building our visual story.</p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link to="/contact">
+                    <Button variant="outline" size="sm" className="text-xs font-bold tracking-wider uppercase border-border text-foreground hover:bg-accent">
+                      Contact Us
+                    </Button>
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
@@ -138,7 +147,7 @@ export default function Gallery() {
                     ) : (
                       <img
                         src={getPublicUrl(image.storage_path)}
-                        alt={image.title || 'Gallery image'}
+                        alt={`${image.title || image.category} — ${image.caption || 'gallery'} | LoadSaathi`}
                         className="w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
                         loading="lazy"
                         onError={() => handleImageError(image.id)}
@@ -169,13 +178,14 @@ export default function Gallery() {
                 <>
                   <button
                     onClick={() => setSelectedImage(null)}
-                    className="absolute top-4 right-4 z-50 text-white/80 hover:text-white bg-black/50 rounded-full p-2 transition-colors"
+                    className="absolute top-4 right-4 z-50 text-white/80 hover:text-white bg-black/50 rounded-full h-11 w-11 flex items-center justify-center transition-colors"
+                    aria-label="Close image"
                   >
-                    <X className="h-5 w-5 icon-hover" />
+                    <X className="h-5 w-5" />
                   </button>
                   <img
                     src={getPublicUrl(selectedImage.storage_path)}
-                    alt={selectedImage.title || 'Gallery image'}
+                    alt={`${selectedImage.title || selectedImage.category} — ${selectedImage.caption || 'gallery'} | LoadSaathi`}
                     className="w-full max-h-[80vh] object-contain"
                     onError={() => handleImageError(selectedImage.id)}
                   />
@@ -193,6 +203,32 @@ export default function Gallery() {
               )}
         </DialogContent>
       </Dialog>
+      <noscript>
+        <div style={{maxWidth:960, margin:'0 auto', padding:24}}>
+          <h1>LoadSaathi — Our Story in Pictures</h1>
+          <p>See LoadSaathi in action — our fleet, offices, corridors, and the team behind India's smart freight marketplace.</p>
+          <h2>Gallery Categories</h2>
+          <ul>
+            <li><strong>Fleet</strong> — Our trucks and vehicles in action across Indian highways.</li>
+            <li><strong>Office</strong> — The LoadSaathi workspace where technology meets logistics.</li>
+            <li><strong>Team</strong> — The people powering India's freight revolution.</li>
+            <li><strong>Corridors</strong> — Key freight routes connecting major economic hubs.</li>
+            <li><strong>Operations</strong> — Behind-the-scenes platform operations.</li>
+            <li><strong>Events</strong> — Conferences, launches, and community gatherings.</li>
+          </ul>
+          <h2>Visit LoadSaathi</h2>
+          <p>LoadSaathi is India's AI-powered freight matching platform connecting shippers with truckers for FTL, PTL, and part-load freight across 50,000+ pin codes. Explore our visual story at <a href="https://loadsaathi.in">loadsaathi.in</a>.</p>
+        </div>
+      </noscript>
     </>
   );
 }
+
+const ImageGallerySchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "LoadSaathi Gallery — Our Story in Pictures",
+  description: "See LoadSaathi in action — our fleet, offices, corridors, and the team behind India's smart freight marketplace.",
+  url: "https://loadsaathi.in/gallery",
+  isPartOf: { "@type": "WebSite", name: "LoadSaathi", url: "https://loadsaathi.in" },
+};
