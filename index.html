@@ -280,12 +280,19 @@
       </div>
     </noscript>
     <div id="root">
-      <!-- Minimal SSR fallback: H1 only for LCP + SEO. React replaces on hydration.
+      <!-- SSR fallback: serves as LCP content + AI crawler seed. React replaces on hydration.
            Full no-JS content is in the noscript block below (crawlers read that). -->
       <div id="ssr-fallback" style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif">
         <div style="text-align:center;padding:2rem">
-          <h1 style="font-size:2rem;font-weight:800;margin:0 0 0.5rem">LoadSaathi</h1>
-          <p style="color:#6b7280;margin:0">India's AI-Powered Freight Marketplace</p>
+          <h1 style="font-size:2.25rem;font-weight:800;margin:0 0 0.75rem;color:#1a1a2e">LoadSaathi</h1>
+          <p style="color:#6b7280;margin:0 0 1rem;font-size:1.125rem">India's AI-Powered Freight Marketplace</p>
+          <ul style="list-style:none;padding:0;margin:0 0 1.5rem;color:#374151;font-size:0.95rem">
+            <li>Freight route planner across 5000+ corridors</li>
+            <li>Live pricing: ₹/km by truck type</li>
+            <li>Smart matching for shippers and truckers</li>
+            <li>Fuel prices: ₹102.62 / Diesel (Delhi)</li>
+          </ul>
+          <a href="/register" style="display:inline-block;background:#2563eb;color:#fff;padding:0.75rem 1.75rem;border-radius:0.5rem;text-decoration:none;font-weight:600">Get Started Free</a>
         </div>
       </div>
       <!-- Inline boot loader: visible instantly, replaced by React on mount (hidden when SSR fallback present, shown via JS) -->

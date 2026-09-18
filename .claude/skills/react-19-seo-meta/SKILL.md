@@ -10,71 +10,46 @@ metadata:
   version: 1.0.0
 ---
 
-# React 19 SEO Meta
+# React 19-Safe SEO Meta Injection
 
-## What This Skill Captures
+Custom `<SeoMeta>` component that avoids `react-helmet-async` crashes on React 19 by writing `<head>` tags imperatively.
 
-This skill documents LoadSaathi's custom `SeoMeta` component, which replaces
-`react-helmet-async` with imperative `<head>` manipulation. It is safe for React 19,
-deterministic in cleanup, and supports JSON-LD, breadcrumbs, and static tag removal.
-It also enforces the SEO rules defined in `CONTEXT.md` for public pages.
+## Key Files
 
-## Key Files and Paths
+- `src/components/SeoMeta.tsx` — Main SEO component with imperative DOM manipulation
+- `index.html` — Static JSON-LD schemas (Organization, LocalBusiness, WebSite with SearchAction)
+- `src/components/PublicLayout.tsx` / `src/components/Layout.tsx` — Layout wrappers
 
-- `src/components/SeoMeta.tsx` — The SeoMeta component used on every public page.
-- `index.html` — SPA shell containing global static JSON-LD schemas.
-- `src/components/PublicLayout.tsx` — Layout wrapper that ensures `<HelmetProvider>`
-  is present (though SeoMeta itself does not depend on it).
-- `src/components/SeoMeta.tsx` — Component that handles all dynamic head injection.
+## Pattern
 
-## Core Patterns
+### Imperative DOM with Managed Tags
+```tsx
+const MANAGED_ATTR = "data-ls-seo";
+```
+All tags created by SeoMeta are marked with `data-ls-seo` so they can be removed deterministically on cleanup without conflicting with React-managed nodes.
 
-### Imperative Head Injection
+### Cleanup Strategy
+1. `clearManagedTags()` — removes only tags we created (`[data-ls-seo]`)
+2. `removeStaleStaticSeoTags()` — removes static tags from `index.html` SPA shell that weren't rendered by React
+3. Never touches nodes with `data-rh` (react-helmet-async managed)
 
-`SeoMeta` uses `useLayoutEffect` to write `<title>`, `<meta>`, `<link>`, and
-`<script type="application/ld+json">` tags directly into `document.head`. Each
-managed tag is marked with `data-ls-seo` for safe cleanup.
+### Supported Tags
+- `<title>` with site suffix (`| LoadSaathi`)
+- `<meta name="description">`, `<meta name="keywords">`
+- `<link rel="canonical">`, `<link rel="alternate" hreflang>`
+- Open Graph: `og:type`, `og:url`, `og:title`, `og:description`, `og:image`, `og:site_name`, `og:locale`
+- Twitter: `twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`
+- Article: `article:published_time`, `article:modified_time`
+- JSON-LD: any schema, plus automatic BreadcrumbList from breadcrumbs prop
+- Author meta tag
 
-### Deterministic Cleanup
-
-`clearManagedTags()` removes only tags created by `SeoMeta` during unmount or
-re-render. This prevents accidentally removing static tags from `index.html`.
-
-### Stale Static Tag Removal
-
-`removeStaleStaticSeoTags()` targets static SEO tags that may have been injected
-by older helmet-based code or server-rendered shells. It checks for `data-ls-seo`
-and known legacy markers.
-
-### Supported Features
-
-- Title and meta description / keywords / robots
-- Canonical URL (`<link rel="canonical">`)
-- Open Graph tags (`og:title`, `og:description`, `og:image`, `og:url`)
-- Twitter Card tags
-- Hreflang links
-- JSON-LD injection (objects serialized automatically)
-- BreadcrumbList generation from `breadcrumbs` prop
-
-### Static Global Schemas
-
-Global schemas (Organization, LocalBusiness, WebSite with SearchAction) live in
-`index.html`. `SeoMeta` adds page-specific JSON-LD without overwriting globals.
-
-### React 19 Compatibility
-
-`react-helmet-async` can crash under React 19 concurrent features. `SeoMeta` avoids
-this by using imperative DOM APIs inside `useLayoutEffect`, which is stable across
-React versions.
-
-## Usage
-
+### Usage
 ```tsx
 <SeoMeta
   title="Page Title"
   description="Page description for search engines"
   canonical="/page-slug"
-  jsonLd={{ "@type": "FAQPage", ... }}
+  jsonLd={schemaObject}
   breadcrumbs={[
     { name: 'Home', url: '/' },
     { name: 'Page Title', url: '/page-slug' },
@@ -82,23 +57,9 @@ React versions.
 />
 ```
 
-Every public page in LoadSaathi must use `<SeoMeta>` with `title`, `description`,
-and `canonical` props.
-
 ## Best Practices
 
-- Do not mix `react-helmet-async` and `SeoMeta` on the same page.
-- Keep JSON-LD objects small and self-contained; large nested schemas hurt parse time.
-- Use `breadcrumbs` for structured navigation paths; SeoMeta renders BreadcrumbList
-  JSON-LD automatically.
-- Test with View Source (not DevTools Elements) to confirm JSON-LD appears in raw HTML.
-- Ensure `noscript` blocks are present on public pages for AI crawlers that do not
-  execute JavaScript.
-
-## Trigger Phrases
-
-- "react 19 seo"
-- "helmet alternative"
-- "seo meta injection"
-- "json-ld react"
-- "imperative seo"
+- Required on every public page per LoadSaathi SEO rules
+- Static global schemas belong in `index.html`, not in SeoMeta
+- Dynamic schemas injected via `jsonLd` prop
+- Avoid flash of wrong title by using `useLayoutEffect` (synchronous DOM write)

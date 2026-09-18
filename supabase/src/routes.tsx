@@ -86,6 +86,7 @@ const CarbonSavingsCalculator = lazy(() => import("./pages/public/tools/CarbonSa
 const TollFuelCalculator = lazy(() => import("./pages/public/tools/TollFuelCalculator"));
 const GstCalculator = lazy(() => import("./pages/public/tools/GstCalculator"));
 const PayloadUtilization = lazy(() => import("./pages/public/tools/PayloadUtilization"));
+const ToolsIndex = lazy(() => import("./pages/public/Tools"));
 const ForMsmes = lazy(() => import("./pages/public/ForMsmes"));
 const AiLogistics = lazy(() => import("./pages/public/AiLogistics"));
 const Data = lazy(() => import("./pages/public/Data"));
@@ -152,6 +153,9 @@ export const AppRoutes = () => (
       <Route path="/ltl-transport" element={<LtlTransport />} />
       <Route path="/truck-load-booking" element={<TruckLoadBooking />} />
       <Route path="/freight-marketplace" element={<FreightMarketplace />} />
+
+      {/* Tools Index */}
+      <Route path="/tools" element={<ToolsIndex />} />
 
       {/* Tool Calculators */}
       <Route path="/transport-cost-calculator" element={<TransportCostCalculator />} />
