@@ -3,7 +3,7 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
   "framework": "vite",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -53,14 +53,14 @@
       ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "^/api/agent$",
-      "dest": "/api/agent.js"
+      "source": "/api/agent",
+      "destination": "/api/agent.js"
     },
     {
-      "src": "^/((?!assets/|.*\\..*).*)$",
-      "dest": "/api/agent.js"
+      "source": "/((?!assets/|.*\\..*).*)",
+      "destination": "/api/agent.js"
     }
   ]
 }

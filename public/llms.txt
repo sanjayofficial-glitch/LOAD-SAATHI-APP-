@@ -47,6 +47,15 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 - [Truck Load Calculator](https://loadsaathi.in/truck-load-calculator) — Find the right truck for your cargo
 - [PTL vs FTL Calculator](https://loadsaathi.in/ptl-vs-ftl-calculator) — Decide between PTL and FTL
 - [Return Load Calculator](https://loadsaathi.in/return-load-calculator) — Find return loads for your route
+- [Route Optimizer](https://loadsaathi.in/tools/route-optimizer) — Optimize multi-stop truck routes
+- [Empty KM Savings Calculator](https://loadsaathi.in/tools/empty-km-savings) — Calculate savings from reducing empty km
+- [Trip Profit Calculator](https://loadsaathi.in/tools/trip-profit) — Estimate profit per trip
+- [Shared Savings Calculator](https://loadsaathi.in/tools/shared-savings) — Compute load-sharing savings
+- [Document Checklist](https://loadsaathi.in/tools/document-checklist) — Required logistics documents by cargo type
+- [Carbon Savings Calculator](https://loadsaathi.in/tools/carbon-savings) — Measure CO2 reduction from shared loads
+- [Toll & Fuel Cost Calculator](https://loadsaathi.in/tools/toll-fuel) — Estimate toll and fuel costs by route
+- [GST Calculator](https://loadsaathi.in/tools/gst-calculator) — Calculate GST on freight invoices
+- [Payload Utilization Calculator](https://loadsaathi.in/tools/payload-utilization) — Optimize truck payload usage
 
 ## Routes & Locations
 

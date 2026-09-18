@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { ExpandableGallery } from '@/components/ui/gallery-animation';
 import { ImageIcon, X } from 'lucide-react';
 import SeoMeta from '@/components/SeoMeta';
 
@@ -30,6 +29,7 @@ export default function Gallery() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [brokenImages, setBrokenImages] = useState<Set<string>>(new Set());
 
   const fetchImages = useCallback(async () => {
     try {
@@ -59,11 +59,13 @@ export default function Gallery() {
 
   const getPublicUrl = (storagePath: string) => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+    // storage_path may or may not include a subfolder prefix — use it as-is
     return `${supabaseUrl}/storage/v1/object/public/gallery/${storagePath}`;
   };
 
-  const masonryImages = images;
-  const expandableImages = images.slice(0, 6);
+  const handleImageError = (imageId: string) => {
+    setBrokenImages(prev => new Set(prev).add(imageId));
+  };
 
   return (
     <>
@@ -103,20 +105,6 @@ export default function Gallery() {
           </div>
         </div>
 
-        {/* Expandable Gallery Row */}
-        {!loading && expandableImages.length > 0 && (
-          <section className="px-6 sm:px-12 mb-16">
-            <div className="max-w-[1440px] mx-auto">
-              <ExpandableGallery
-                images={expandableImages}
-                getImageUrl={getPublicUrl}
-                className="w-full"
-                maxVisible={6}
-              />
-            </div>
-          </section>
-        )}
-
         {/* Masonry Grid */}
         <section className="px-6 sm:px-12 pb-24">
           <div className="max-w-[1440px] mx-auto">
@@ -126,26 +114,36 @@ export default function Gallery() {
                   <div key={i} className="break-inside-avoid bg-muted rounded-xl animate-pulse aspect-[4/3]" />
                 ))}
               </div>
-            ) : masonryImages.length === 0 ? (
+            ) : images.length === 0 ? (
               <div className="text-center py-24 text-muted-foreground">
-                <ImageIcon className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                <ImageIcon className="h-16 w-16 mx-auto mb-4 opacity-50 icon-hover" />
                 <p className="text-lg">No images in this category yet.</p>
                 <p className="text-sm mt-1">Check back soon — we&apos;re building our visual story.</p>
               </div>
             ) : (
               <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-                {masonryImages.map((image) => (
+                {images.map((image) => (
                   <div
                     key={image.id}
                     className="break-inside-avoid rounded-xl overflow-hidden cursor-pointer group relative bg-muted border border-border/50 dark:border-white/5 hover:border-orange-500/30 transition-colors"
-                    onClick={() => setSelectedImage(image)}
+                    onClick={() => !brokenImages.has(image.id) && setSelectedImage(image)}
                   >
-                    <img
-                      src={getPublicUrl(image.storage_path)}
-                      alt={image.title || 'Gallery image'}
-                      className="w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                      loading="lazy"
-                    />
+                    {brokenImages.has(image.id) ? (
+                      <div className="w-full aspect-[4/3] flex items-center justify-center bg-muted text-muted-foreground">
+                        <div className="text-center p-4">
+                          <ImageIcon className="h-10 w-10 mx-auto mb-2 opacity-40" />
+                          <p className="text-sm">Image not available</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <img
+                        src={getPublicUrl(image.storage_path)}
+                        alt={image.title || 'Gallery image'}
+                        className="w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        loading="lazy"
+                        onError={() => handleImageError(image.id)}
+                      />
+                    )}
                     {(image.title || image.caption) && (
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         {image.title && (
@@ -167,31 +165,32 @@ export default function Gallery() {
       {/* Masonry Lightbox */}
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
         <DialogContent className="max-w-4xl p-0 bg-black border-0 overflow-hidden">
-          {selectedImage && (
-            <>
-              <button
-                onClick={() => setSelectedImage(null)}
-                className="absolute top-4 right-4 z-50 text-white/80 hover:text-white bg-black/50 rounded-full p-2 transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              <img
-                src={getPublicUrl(selectedImage.storage_path)}
-                alt={selectedImage.title || 'Gallery image'}
-                className="w-full max-h-[80vh] object-contain"
-              />
-              {(selectedImage.title || selectedImage.caption) && (
-                <div className="p-4 text-white">
-                  {selectedImage.title && (
-                    <p className="font-semibold">{selectedImage.title}</p>
+              {selectedImage && !brokenImages.has(selectedImage.id) && (
+                <>
+                  <button
+                    onClick={() => setSelectedImage(null)}
+                    className="absolute top-4 right-4 z-50 text-white/80 hover:text-white bg-black/50 rounded-full p-2 transition-colors"
+                  >
+                    <X className="h-5 w-5 icon-hover" />
+                  </button>
+                  <img
+                    src={getPublicUrl(selectedImage.storage_path)}
+                    alt={selectedImage.title || 'Gallery image'}
+                    className="w-full max-h-[80vh] object-contain"
+                    onError={() => handleImageError(selectedImage.id)}
+                  />
+                  {(selectedImage.title || selectedImage.caption) && (
+                    <div className="p-4 text-white">
+                      {selectedImage.title && (
+                        <p className="font-semibold">{selectedImage.title}</p>
+                      )}
+                      {selectedImage.caption && (
+                        <p className="text-white/60 text-sm mt-1">{selectedImage.caption}</p>
+                      )}
+                    </div>
                   )}
-                  {selectedImage.caption && (
-                    <p className="text-white/60 text-sm mt-1">{selectedImage.caption}</p>
-                  )}
-                </div>
+                </>
               )}
-            </>
-          )}
         </DialogContent>
       </Dialog>
     </>

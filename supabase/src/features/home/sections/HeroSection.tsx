@@ -28,7 +28,7 @@ const HeroSection = React.memo(() => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           <div className="space-y-6 sm:space-y-8 lg:space-y-10">
             <div className="flex items-center gap-2 bg-orange-100 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800/50 text-orange-700 dark:text-orange-300 px-4 py-2 rounded-full text-sm w-max">
-              <Star className="h-4 w-4 fill-orange-500" /> Early Access Program for East India
+              <Star className="h-4 w-4 fill-orange-500 icon-hover" /> Early Access Program for East India
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-foreground dark:text-white tracking-tighter leading-none">
               The OS for<br />
@@ -40,12 +40,12 @@ const HeroSection = React.memo(() => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/register?type=shipper">
                 <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg w-full sm:w-auto shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-transform duration-150 active:scale-[0.97]">
-                  I Want to Ship Goods <ArrowRight className="ml-2 h-5 w-5" />
+                  I Want to Ship Goods <ArrowRight className="ml-2 h-5 w-5 icon-hover" />
                 </Button>
               </Link>
               <Link to="/register?type=trucker">
                 <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg border-foreground/20 dark:border-white/20 text-foreground dark:text-white hover:bg-foreground/5 dark:hover:bg-white/5 w-full sm:w-auto transition-transform duration-150 active:scale-[0.97]">
-                  I Have Truck Space <ArrowRight className="ml-2 h-5 w-5" />
+                   I Have Truck Space <ArrowRight className="ml-2 h-5 w-5 icon-hover" />
                 </Button>
               </Link>
             </div>

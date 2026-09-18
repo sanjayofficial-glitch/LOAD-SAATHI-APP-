@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
@@ -26,6 +26,7 @@ import {
   Map as MapIcon,
   List as ListIcon,
   MapPin,
+  ChevronLeft,
 } from 'lucide-react';
 import {
   Select,
@@ -47,14 +48,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import LoadCardStack from '@/components/LoadCardStack';
+import FloatingWhatsAppButton from '@/components/FloatingWhatsAppButton';
 import type { Shipment } from '@/types';
 
 const BrowseShipments = () => {
   const { userProfile, getSupabaseToken } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const viewModeParam = searchParams.get('view') as 'list' | 'map' | 'card' | null;
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [viewMode, setViewMode] = useState<'list' | 'map' | 'card'>(viewModeParam === 'card' ? 'card' : viewModeParam === 'map' ? 'map' : 'list');
   const [filters, setFilters] = useState({
     origin: '',
     destination: '',
@@ -211,6 +216,10 @@ const BrowseShipments = () => {
 
   const { loads: liveLoads } = useLiveLoadLocations();
 
+  const handleAcceptLoad = async (shipment: Shipment) => {
+    navigate(`/trucker/shipments/${shipment.id}`);
+  };
+
   if (!userProfile) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
@@ -253,6 +262,39 @@ const BrowseShipments = () => {
   }
 
   const hasActiveFilters = filters.origin || filters.destination || filters.minWeight || filters.maxBudget;
+
+  if (viewMode === 'card') {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" onClick={() => navigate('/trucker/my-trips')} className="shrink-0">
+            <ChevronLeft className="h-4 w-4 mr-2" /> Back
+          </Button>
+          <div>
+            <h2 className="text-2xl font-black text-gray-900 dark:text-gray-100">Find Loads</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Swipe through available loads — one tap to accept.</p>
+          </div>
+        </div>
+        <LoadCardStack
+          shipments={filteredShipments}
+          onAccept={handleAcceptLoad}
+          onViewDetails={(s) => navigate(`/trucker/shipments/${s.id}`)}
+        />
+        {filteredShipments.length > 0 && (() => {
+          const first = filteredShipments[0]!;
+          return (
+            <FloatingWhatsAppButton
+              type="shipment"
+              id={first.id}
+              originCity={first.origin_city}
+              destinationCity={first.destination_city}
+              weight={first.weight_tonnes}
+            />
+          );
+        })()}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -546,6 +588,18 @@ const BrowseShipments = () => {
           </div>
         )}
       </div>
+      {filteredShipments.length > 0 && (() => {
+        const first = filteredShipments[0]!;
+        return (
+          <FloatingWhatsAppButton
+            type="shipment"
+            id={first.id}
+            originCity={first.origin_city}
+            destinationCity={first.destination_city}
+            weight={first.weight_tonnes}
+          />
+        );
+      })()}
     </div>
   );
 };

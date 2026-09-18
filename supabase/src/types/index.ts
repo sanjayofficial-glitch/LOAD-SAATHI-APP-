@@ -12,6 +12,11 @@
   suspended_at?: string;
   created_at: string;
   city?: string;
+  rc_document_url?: string;
+  insurance_document_url?: string;
+  mentor_requested?: boolean;
+  mentor_id?: string;
+  sms_opt_in?: boolean;
 }
 
 export interface Trip {

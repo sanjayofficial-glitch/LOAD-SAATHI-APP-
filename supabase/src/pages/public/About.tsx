@@ -166,7 +166,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="glass-card p-10 rounded-xl border border-orange-500/10 hover:border-orange-500/30 transition-all duration-300">
               <div className="w-14 h-14 rounded-xl bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center mb-6">
-                <Target className="h-7 w-7 text-orange-600 dark:text-orange-400" />
+                <Target className="h-7 w-7 text-orange-600 dark:text-orange-400 icon-hover" />
               </div>
               <h2 className="text-2xl font-black text-foreground mb-4">Our Mission</h2>
               <p className="text-muted-foreground leading-relaxed">
@@ -175,7 +175,7 @@ const About = () => {
             </div>
             <div className="glass-card p-10 rounded-xl border border-blue-500/10 hover:border-blue-500/30 transition-all duration-300">
               <div className="w-14 h-14 rounded-xl bg-blue-600/10 dark:bg-blue-500/10 flex items-center justify-center mb-6">
-                <Eye className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                <Eye className="h-7 w-7 text-blue-600 dark:text-blue-400 icon-hover" />
               </div>
               <h2 className="text-2xl font-black text-foreground mb-4">Our Vision</h2>
               <p className="text-muted-foreground leading-relaxed">
@@ -251,7 +251,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {values.map((value, i) => (
               <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 transition-all duration-300 group border-border dark:border-white/[0.08]">
-                <value.icon className="h-8 w-8 text-orange-600 dark:text-orange-400 mb-5 group-hover:scale-110 transition-transform duration-300" />
+                <value.icon className="h-8 w-8 text-orange-600 dark:text-orange-400 mb-5 group-hover:scale-110 transition-transform duration-300 active:scale-95" />
                 <h3 className="text-lg font-bold text-foreground mb-3">{value.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{value.desc}</p>
               </div>
@@ -263,7 +263,7 @@ const About = () => {
       {/* STORY */}
       <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10 text-center">
-          <Globe className="h-12 w-12 text-orange-500 mx-auto mb-6" />
+          <Globe className="h-12 w-12 text-orange-500 mx-auto mb-6 icon-hover" />
           <h2 className="text-3xl sm:text-4xl font-black mb-6 text-foreground dark:text-white">The LoadSaathi Story</h2>
           <div className="text-muted-foreground leading-relaxed space-y-4 text-left max-w-3xl mx-auto">
             <p>
@@ -308,20 +308,20 @@ const About = () => {
             ].map((route, i) => (
               <Link key={i} to={`/routes/${route.from.toLowerCase()}-to-${route.to.toLowerCase()}`} className="glass-card p-5 rounded-xl border border-border hover:border-orange-500/30 transition-all duration-300 group flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <MapPin className="h-4 w-4 text-orange-500 shrink-0" />
+                   <MapPin className="h-4 w-4 text-orange-500 shrink-0 icon-hover" />
                   <div>
                     <span className="text-sm font-bold text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{route.from} → {route.to}</span>
                     <div className="text-xs text-muted-foreground">{route.distance} · {route.time}</div>
                   </div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-orange-500 transition-colors" />
+                 <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-orange-500 icon-hover transition-colors" />
               </Link>
             ))}
           </div>
           <div className="text-center mt-8">
             <Link to="/routes">
               <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-6 py-3 h-auto rounded-lg border-border hover:border-orange-400 text-foreground">
-                View All Routes <ArrowRight className="ml-2 h-4 w-4" />
+                View All Routes <ArrowRight className="ml-2 h-4 w-4 icon-hover" />
               </Button>
             </Link>
           </div>

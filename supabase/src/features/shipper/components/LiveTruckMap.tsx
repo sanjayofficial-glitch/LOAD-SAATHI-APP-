@@ -44,7 +44,7 @@ export default function LiveTruckMap({ className }: LiveTruckMapProps) {
           id, origin_city, destination_city, origin_state, destination_state, origin_lat, origin_lng, destination_lat, destination_lng, available_capacity_tonnes, price_per_tonne, departure_date, created_at, trucker_id, status, vehicle_type,
           trucker:users!trips_trucker_id_fkey(full_name, rating, is_verified)
         `)
-        .eq('status', 'active')
+        .in('status', ['active', 'in_transit'])
         .order('departure_date', { ascending: true })
         .limit(50);
       const mapped = (data || []).map((t: Record<string, unknown>) => ({

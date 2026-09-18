@@ -8,6 +8,7 @@ import { routes } from "@/data/routes";
 import { articles } from "@/data/blog";
 import QuoteLeadCard from "@/components/QuoteLeadCard";
 import { trackRouteView } from "@/utils/analytics";
+import PriceTrendChart from "@/components/PriceTrendChart";
 
 const benefits = [
   {
@@ -423,6 +424,13 @@ export default function RouteDetail() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Price Trend */}
+        <section className="py-20">
+          <div className="max-w-[1440px] mx-auto px-6 sm:px-12">
+            <PriceTrendChart origin={route.from} destination={route.to} />
           </div>
         </section>
 

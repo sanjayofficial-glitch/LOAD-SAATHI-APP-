@@ -95,7 +95,7 @@ export function useTripMapMarkers(
         destination_city: trip.destination_city,
         vehicle_type: trip.vehicle_type,
         available_capacity_tonnes: trip.available_capacity_tonnes,
-        trip_status: 'active',
+        trip_status: trip.status || 'active',
         last_seen_at: trip.created_at,
         is_live: false,
       });

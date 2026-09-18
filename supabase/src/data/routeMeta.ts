@@ -1,5 +1,5 @@
 export interface RouteMeta {
-  slug: string;
+  slug?: string;
   title: string;
   titleHi: string;
   description: string;

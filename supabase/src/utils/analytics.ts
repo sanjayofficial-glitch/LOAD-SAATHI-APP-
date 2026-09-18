@@ -63,7 +63,7 @@ export function trackEstimateGenerated(props: {
   avg_price: number;
   min_price: number;
   max_price: number;
-  source: "market_data" | "fallback";
+  source: "market_data" | "fallback" | string;
 }) {
   trackEvent(EVENTS.ESTIMATE_GENERATED, props);
 }

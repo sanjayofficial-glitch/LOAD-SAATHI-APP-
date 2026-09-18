@@ -23,22 +23,22 @@ const RoleProtectedRoute = ({ children, allowedRole }: RoleProtectedRouteProps) 
     );
   }
 
-  // No user – redirect to home
+  // No user – redirect to login
   if (!userProfile) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   // Whitelist check: reject unknown/malformed user_type (RBAC bypass guard)
   if (userProfile.user_type && !(VALID_USER_TYPES as readonly string[]).includes(userProfile.user_type)) {
     console.warn(`[Security] Invalid user_type "${userProfile.user_type}" for user ${userProfile.id} — access denied`);
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   // Admin check: user must have admin type in the database
   if (allowedRole === 'admin') {
     if (userProfile.user_type !== 'admin') {
       console.warn(`[Security] Unauthorized admin access attempt by user: ${userProfile.id}`);
-      return <Navigate to="/" replace />;
+      return <Navigate to="/login" replace />;
     }
   }
 

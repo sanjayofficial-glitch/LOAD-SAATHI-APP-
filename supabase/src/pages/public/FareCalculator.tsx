@@ -12,6 +12,7 @@ import { posthog } from "@/utils/posthog";
 import QuoteLeadCard from "@/components/QuoteLeadCard";
 import VehicleRateCard, { VEHICLE_RATES } from "@/components/VehicleRateCard";
 import { trackCalculatorStarted, trackEstimateGenerated } from "@/utils/analytics";
+import PriceTrendChart from "@/components/PriceTrendChart";
 
 interface BreakdownItem {
   label: string;
@@ -500,6 +501,8 @@ export default function FareCalculator() {
                 avgPrice={result.avgPrice}
                 route={`${origin.trim()} → ${destination.trim()}`}
               />
+
+              <PriceTrendChart origin={origin.trim()} destination={destination.trim()} />
 
               <div className="mt-12">
                 <VehicleRateCard />

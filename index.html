@@ -34,8 +34,6 @@
     <meta name="apple-mobile-web-app-title" content="LoadSaathi" />
 
     <!-- Preconnect / DNS prefetch -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://router.project-osrm.org" crossorigin />
     <link rel="dns-prefetch" href="https://cdn.cookiehub.eu" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -282,42 +280,13 @@
       </div>
     </noscript>
     <div id="root">
-      <!-- SSR fallback for AI crawlers and no-JS: H1 + 500+ chars visible without JavaScript.
-           React replaces this entire block on hydration. Kept in sync with noscript below. -->
-      <div id="ssr-fallback" style="max-width:800px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif;line-height:1.6;color:#1a1a1a">
-        <h1>LoadSaathi - India's AI-Powered Freight Marketplace</h1>
-        <p>LoadSaathi connects shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%. Shippers in Odisha, Jharkhand, and West Bengal post loads on the Rourkela-Ranchi-Burdwan corridor and beyond; truckers and fleet owners find return loads, fill empty capacity, and build a digital reputation with a 300-900 credit score.</p>
-        <h2>Who It's For</h2>
-        <ul>
-          <li><strong>Shippers:</strong> SMEs and enterprises in Odisha, Jharkhand, and West Bengal who need to move goods on the Rourkela-Ranchi-Burdwan corridor and beyond.</li>
-          <li><strong>Truckers &amp; Fleet Owners:</strong> Independent truckers and fleet operators looking to fill empty capacity, find return loads, and build a digital reputation.</li>
-        </ul>
-        <h2>Key Features</h2>
-        <ul>
-          <li>AI-Powered Matching: Multi-factor scoring engine that matches shippers with truckers in seconds.</li>
-          <li>Real-Time GPS Tracking: Live location sharing with ETAs, route visualization, and geofence alerts.</li>
-          <li>Digital Freight Credit Score: 300-900 score for every participant based on completion rates and reviews.</li>
-          <li>AI Price Prediction: Market-aligned pricing suggestions based on route, demand, and historical data.</li>
-          <li>Escrow Payments: Secure milestone-based payment releases with dispute resolution.</li>
-          <li>Bidirectional Reviews: Both shippers and truckers rate each other after every completed trip.</li>
-        </ul>
-        <h2>Pricing</h2>
-        <p>Free to join. Transaction fee: 2-5% per completed shipment. No subscriptions, no hidden fees, no minimum commitments. Enterprise pricing for 50+ loads per month.</p>
-        <h2>Cities Served</h2>
-        <p>Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal. 25+ active freight corridors including Rourkela-Ranchi-Burdwan, Rourkela-Kolkata, and Bhubaneswar-Kolkata. Indian logistics market: $350B+ (IBEF 2026).</p>
-        <h2>Key Pages</h2>
-        <ul>
-          <li><a href="/about">About LoadSaathi</a></li>
-          <li><a href="/contact">Contact Us</a></li>
-          <li><a href="/features">Features</a></li>
-          <li><a href="/how-it-works">How It Works</a></li>
-          <li><a href="/pricing">Pricing</a></li>
-          <li><a href="/faq">FAQ</a></li>
-          <li><a href="/blog">Blog</a></li>
-          <li><a href="/routes">All Freight Routes</a></li>
-          <li><a href="/privacy">Privacy Policy</a></li>
-          <li><a href="/terms">Terms of Service</a></li>
-        </ul>
+      <!-- Minimal SSR fallback: H1 only for LCP + SEO. React replaces on hydration.
+           Full no-JS content is in the noscript block below (crawlers read that). -->
+      <div id="ssr-fallback" style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif">
+        <div style="text-align:center;padding:2rem">
+          <h1 style="font-size:2rem;font-weight:800;margin:0 0 0.5rem">LoadSaathi</h1>
+          <p style="color:#6b7280;margin:0">India's AI-Powered Freight Marketplace</p>
+        </div>
       </div>
       <!-- Inline boot loader: visible instantly, replaced by React on mount (hidden when SSR fallback present, shown via JS) -->
       <div id="boot-loader" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:#fafafa;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;">

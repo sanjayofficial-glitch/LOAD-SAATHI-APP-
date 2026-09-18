@@ -1,6 +1,6 @@
 ﻿import { useRef, useEffect, useState, useCallback } from 'react'
 import { useAuth as useClerkAuth } from '@clerk/clerk-react'
-import { useQuery } from '@tanstack/react-query'
+
 import type { AIMatchResult } from '@/types'
 
 const SCORE_CACHE_STALE_TIME = 5 * 60_000

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupabase } from "@/hooks/useSupabase";
@@ -14,9 +14,11 @@ import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import { showSuccess, showError } from "@/utils/toast";
 import { Package, Calendar, IndianRupee, Loader2, ArrowLeft, WifiOff } from "lucide-react";
 import LocationSelector from "@/components/LocationSelector";
+import VoiceLocationInput from "@/components/VoiceLocationInput";
 import { geocodeCity } from "@/utils/geocode";
 import { safeJsonParse } from "@/lib/utils";
 import { getRoute } from "@/utils/osrm";
+import ReturnLoadProbability from "@/components/ReturnLoadProbability";
 import { PricePredictor } from "@/components/PricePredictor";
 import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
@@ -54,6 +56,12 @@ const PostShipments = () => {
     form.setValue(`${field}_city`, value.city);
     form.setValue(`${field}_state`, value.state);
   };
+
+  const destInputRef = useRef<HTMLInputElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  const advanceToDest = () => destInputRef.current?.focus();
+  const advanceToDate = () => dateInputRef.current?.focus();
 
   const handleSubmit = form.handleSubmit(async () => {
     if (!userProfile?.id) {
@@ -216,25 +224,49 @@ posthog.capture('shipment_posted', {
                 }}
               />
             )}
-<div id="post-shipment-origin" className="space-y-2">
+  <div id="post-shipment-origin" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
+              {mode === 'quick' && locationData ? (
+                <VoiceLocationInput
+                  label="From"
+                  data={locationData}
+                  value={{ state: formData.origin_state || '', district: '', city: formData.origin_city }}
+                  onChange={(value) => handleLocationChange('origin', value)}
+                  onSelect={advanceToDest}
+                />
+              ) : (
                 <LocationSelector
                   label="Origin"
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('origin', value)}
                 />
-                {form.formState.errors.origin_city?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.origin_city.message}</p>}
-              </div>
+              )}
+              {form.formState.errors.origin_city?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.origin_city.message}</p>}
+            </div>
 
-              <div id="post-shipment-destination" className="space-y-2">
-                <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
+            <div id="post-shipment-destination" className="space-y-2">
+              <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
+              {mode === 'quick' && locationData ? (
+                <VoiceLocationInput
+                  label="To"
+                  data={locationData}
+                  value={{ state: formData.destination_state || '', district: '', city: formData.destination_city }}
+                  onChange={(value) => handleLocationChange('destination', value)}
+                  onSelect={advanceToDate}
+                />
+              ) : (
                 <LocationSelector
                   label="Destination"
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('destination', value)}
                 />
-                {form.formState.errors.destination_city?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.destination_city.message}</p>}
+              )}
+              {form.formState.errors.destination_city?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.destination_city.message}</p>}
             </div>
+
+              {(formData.origin_city || formData.destination_city) && (
+                <ReturnLoadProbability origin={formData.origin_city} destination={formData.destination_city} />
+              )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
@@ -243,6 +275,7 @@ posthog.capture('shipment_posted', {
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     id="date"
+                    ref={dateInputRef}
                     type="date"
                     className="pl-10"
                     min={new Date().toISOString().split('T')[0]}

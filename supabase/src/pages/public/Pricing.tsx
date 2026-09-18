@@ -1,5 +1,4 @@
 
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle, X, HelpCircle, Truck, Package, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -134,21 +133,6 @@ const pricingFaqSchema = {
 };
 
 const Pricing = () => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll(".fade-section").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <>
       <noscript>
@@ -217,7 +201,7 @@ const Pricing = () => {
       </section>
 
       {/* PLANS */}
-      <section className="fade-section py-24 relative">
+      <section className=" py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {plans.map((plan) => {
@@ -283,7 +267,7 @@ const Pricing = () => {
       </section>
 
       {/* TRANSACTION FEE BREAKDOWN */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <section className=" py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Transaction Fee Breakdown</h2>
@@ -310,7 +294,7 @@ const Pricing = () => {
       </section>
 
       {/* COMPARISON TABLE */}
-      <section className="fade-section py-24 relative">
+      <section className=" py-24 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">LoadSaathi vs Traditional Brokers</h2>
@@ -360,7 +344,7 @@ const Pricing = () => {
       </section>
 
       {/* FAQ */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <section className=" py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-3xl mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Pricing FAQ</h2>
@@ -383,7 +367,7 @@ const Pricing = () => {
       </section>
 
       {/* CTA */}
-      <section className="fade-section py-24 relative overflow-hidden">
+      <section className=" py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
           <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">

@@ -15,14 +15,14 @@ import { cn } from '@/lib/utils';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCreditScore } from '@/hooks/useCreditScore';
 import CreditScoreBadge from '@/components/CreditScoreBadge';
-import { 
-  User, 
-  Phone, 
-  Building, 
-  Star as StarIcon, 
-  Shield, 
-  Truck, 
-  Package, 
+import {
+  User,
+  Phone,
+  Building,
+  Star as StarIcon,
+  Shield,
+  Truck,
+  Package,
   Calendar,
   Mail,
   Lock,
@@ -30,7 +30,9 @@ import {
   CheckCircle2,
   MessageSquare,
   ShieldCheck,
-  RefreshCw
+  RefreshCw,
+  Camera,
+  FileText,
 } from 'lucide-react';
 import Star from '@/components/Star';
 import type { Review } from '@/types';
@@ -52,6 +54,7 @@ const Profile = () => {
   const [statsLoading, setStatsLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [uploadingDoc, setUploadingDoc] = useState<string | null>(null);
   const { data: creditData } = useCreditScore();
 
   const fetchStats = useCallback(async () => {
@@ -220,6 +223,48 @@ const Profile = () => {
     }
   };
 
+  const handleDocumentUpload = async (file: File, docType: 'rc' | 'insurance') => {
+    if (!userProfile?.id) return;
+    setUploadingDoc(docType);
+    try {
+      const supabaseToken = await getToken({ template: 'supabase' });
+      if (!supabaseToken) throw new Error('Authentication error');
+      
+      const supabase = createClerkSupabaseClient(supabaseToken);
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userProfile.id}/${docType}_${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(fileName);
+
+      const field = docType === 'rc' ? 'rc_document_url' : 'insurance_document_url';
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ [field]: urlData.publicUrl })
+        .eq('id', userProfile.id);
+
+      if (updateError) throw updateError;
+
+      showSuccess(`${docType === 'rc' ? 'RC' : 'Insurance'} document uploaded successfully!`);
+      await refreshProfile();
+    } catch (err: unknown) {
+      showError(err instanceof Error ? err.message : 'Failed to upload document');
+    } finally {
+      setUploadingDoc(null);
+    }
+  };
+
   if (authLoading) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -302,6 +347,7 @@ const Profile = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="personal">Personal Info</TabsTrigger>
+          {userProfile?.user_type === 'trucker' && (<TabsTrigger value="documents">Documents</TabsTrigger>)}
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
@@ -537,6 +583,30 @@ const Profile = () => {
                       />
                     </div>
                   </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <div className="flex items-center gap-2">
+                      <input
+                        id="smsOptIn"
+                        type="checkbox"
+                        checked={!!(userProfile as unknown as Record<string, unknown>)?.sms_opt_in}
+                        onChange={async (e) => {
+                          const checked = e.target.checked;
+                          const supabaseToken = await getToken({ template: 'supabase' });
+                          if (!supabaseToken) return;
+                          const supabase = createClerkSupabaseClient(supabaseToken);
+                          await supabase.from('users').update({ sms_opt_in: checked }).eq('id', userProfile?.id);
+                          refreshProfile();
+                        }}
+                        className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                      />
+                      <Label htmlFor="smsOptIn" className="text-sm text-gray-700 dark:text-gray-300">
+                        Receive SMS updates about your trips and bookings
+                      </Label>
+                    </div>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
+                      Get notified via SMS when a shipment is booked or a trip is completed.
+                    </p>
+                  </div>
                 </div>
                 <Button
                   type="submit"
@@ -550,6 +620,95 @@ const Profile = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {userProfile?.user_type === 'trucker' && (
+          <TabsContent value="documents">
+            <Card className="border-orange-100 dark:border-orange-800 shadow-sm overflow-hidden">
+              <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
+              <CardHeader>
+                <CardTitle className="text-gray-900 dark:text-white">Documents</CardTitle>
+                <CardDescription className="dark:text-gray-400">Upload your vehicle RC and insurance documents</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label className="dark:text-gray-300">RC Document</Label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Take a clear photo of your vehicle RC</p>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          const input = document.createElement('input');
+                          input.type = 'file';
+                          input.accept = 'image/*';
+                          input.capture = 'environment';
+                          input.onchange = (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0];
+                            if (file) handleDocumentUpload(file, 'rc');
+                          };
+                          input.click();
+                        }}
+                        disabled={!!uploadingDoc}
+                        className="border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950"
+                      >
+                        {uploadingDoc === 'rc' ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                          <Camera className="h-4 w-4 mr-2" />
+                        )}
+                        {userProfile?.rc_document_url ? 'Update RC Photo' : 'Take RC Photo'}
+                      </Button>
+                      {userProfile?.rc_document_url && (
+                        <a href={userProfile.rc_document_url} target="_blank" rel="noopener noreferrer">
+                          <Button variant="ghost" size="sm">
+                            <FileText className="h-4 w-4 mr-2" /> View
+                          </Button>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="dark:text-gray-300">Insurance Document</Label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Take a clear photo of your insurance paper</p>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          const input = document.createElement('input');
+                          input.type = 'file';
+                          input.accept = 'image/*';
+                          input.capture = 'environment';
+                          input.onchange = (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0];
+                            if (file) handleDocumentUpload(file, 'insurance');
+                          };
+                          input.click();
+                        }}
+                        disabled={!!uploadingDoc}
+                        className="border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950"
+                      >
+                        {uploadingDoc === 'insurance' ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : (
+                          <Camera className="h-4 w-4 mr-2" />
+                        )}
+                        {userProfile?.insurance_document_url ? 'Update Insurance Photo' : 'Take Insurance Photo'}
+                      </Button>
+                      {userProfile?.insurance_document_url && (
+                        <a href={userProfile.insurance_document_url} target="_blank" rel="noopener noreferrer">
+                          <Button variant="ghost" size="sm">
+                            <FileText className="h-4 w-4 mr-2" /> View
+                          </Button>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         <TabsContent value="security">
           <div className="space-y-6">

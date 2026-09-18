@@ -185,6 +185,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     import('@/utils/posthog')
       .then(({ posthog }) => posthog.reset())
       .catch(() => {});
+    supabaseTokenRef.current = null;
+    supabaseTokenExpiryRef.current = 0;
     setUserProfile(null);
   }, [clerk]);
 

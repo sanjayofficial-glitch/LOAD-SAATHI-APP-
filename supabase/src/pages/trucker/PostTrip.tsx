@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupabase } from "@/hooks/useSupabase";
@@ -11,9 +11,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, ArrowLeft, Truck, Calendar, IndianRupee, WifiOff } from "lucide-react";
 import LocationSelector from "@/components/LocationSelector";
+import VoiceLocationInput from "@/components/VoiceLocationInput";
 import { geocodeCity } from "@/utils/geocode";
 import { safeJsonParse } from "@/lib/utils";
 import { getRoute } from "@/utils/osrm";
+import ReturnLoadProbability from "@/components/ReturnLoadProbability";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import { showSuccess, showError } from "@/utils/toast";
 import { PricePredictor } from "@/components/PricePredictor";
@@ -60,6 +62,12 @@ const PostTrip = () => {
     form.setValue(`${field}_city`, value.city);
     form.setValue(`${field}_state`, value.state);
   };
+
+  const destInputRef = useRef<HTMLInputElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  const advanceToDest = () => destInputRef.current?.focus();
+  const advanceToDate = () => dateInputRef.current?.focus();
 
   const handleSubmit = form.handleSubmit(async () => {
     if (!userProfile?.id) {
@@ -224,21 +232,45 @@ const PostTrip = () => {
             )}
             <div id="post-trip-origin" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
+              {mode === 'quick' && locationData ? (
+                <VoiceLocationInput
+                  label="From"
+                  data={locationData}
+                   value={{ state: formData.origin_state || '', district: '', city: formData.origin_city }}
+                  onChange={(value) => handleLocationChange('origin', value)}
+                  onSelect={advanceToDest}
+                />
+              ) : (
                 <LocationSelector
                   label="Origin"
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('origin', value)}
                 />
-              </div>
+              )}
+            </div>
 
-              <div id="post-trip-destination" className="space-y-2">
-                <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
+            <div id="post-trip-destination" className="space-y-2">
+              <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
+              {mode === 'quick' && locationData ? (
+                <VoiceLocationInput
+                  label="To"
+                  data={locationData}
+                   value={{ state: formData.destination_state || '', district: '', city: formData.destination_city }}
+                  onChange={(value) => handleLocationChange('destination', value)}
+                  onSelect={advanceToDate}
+                />
+              ) : (
                 <LocationSelector
                   label="Destination"
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('destination', value)}
                 />
+              )}
             </div>
+
+              {(formData.origin_city || formData.destination_city) && (
+                <ReturnLoadProbability origin={formData.origin_city} destination={formData.destination_city} />
+              )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
@@ -247,6 +279,7 @@ const PostTrip = () => {
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     id="date"
+                    ref={dateInputRef}
                     type="date"
                     className="pl-10"
                     min={new Date().toISOString().split('T')[0]}

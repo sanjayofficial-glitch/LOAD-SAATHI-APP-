@@ -46,6 +46,8 @@ const ChooseRole = () => {
     setLoading(true);
     setError(null);
 
+    const mentorRequested = role === 'trucker' && (document.getElementById('mentor-opt-in') as HTMLInputElement | null)?.checked || false;
+
     try {
       const supabaseToken = await session.getToken({ template: 'supabase' });
       if (!supabaseToken) {
@@ -67,13 +69,17 @@ const ChooseRole = () => {
       if (lookupErr) throw lookupErr;
 
       let writeErr = null;
+      const userPayload: Record<string, unknown> = {
+        user_type: role,
+        full_name: user.fullName || '',
+      };
+      if (role === 'trucker') {
+        userPayload.mentor_requested = mentorRequested;
+      }
       if (existing) {
         const { error } = await supabase
           .from('users')
-          .update({
-            user_type: role,
-            full_name: user.fullName || '',
-          })
+          .update(userPayload)
           .eq('id', user.id);
         writeErr = error;
       } else {
@@ -82,8 +88,7 @@ const ChooseRole = () => {
           .insert({
             id: user.id,
             email: user.primaryEmailAddress?.emailAddress || '',
-            user_type: role,
-            full_name: user.fullName || '',
+            ...userPayload,
             phone: user.primaryPhoneNumber?.phoneNumber || '',
             rating: 0,
             total_trips: 0,
@@ -92,6 +97,9 @@ const ChooseRole = () => {
       }
 
       if (writeErr) throw writeErr;
+
+      // Mark selection BEFORE setProfile so the redirect guard skips stale profile
+      justSelectedRef.current = true;
 
       // Set profile in context BEFORE navigating so OnboardingFlow sees the role
       const profileData: UserType = {
@@ -115,7 +123,6 @@ const ChooseRole = () => {
       // Small delay to let React state settle before navigating
       await new Promise((r) => setTimeout(r, 100));
 
-      justSelectedRef.current = true;
       navigate('/onboarding', { replace: true });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to set role';
@@ -190,6 +197,16 @@ const ChooseRole = () => {
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
               I have a truck and want to find loads to fill my empty space and earn more.
             </p>
+            <div className="mt-4 flex items-center gap-2">
+              <input
+                id="mentor-opt-in"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+              />
+              <label htmlFor="mentor-opt-in" className="text-xs text-left text-gray-600 dark:text-gray-400">
+                Get help from an experienced trucker on my route
+              </label>
+            </div>
             <div className="mt-6 flex items-center text-orange-600 dark:text-orange-400 font-bold opacity-0 group-hover:opacity-100 transition-all">
               Select Trucker <CheckCircle2 className="ml-2 h-4 w-4" />
             </div>

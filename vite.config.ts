@@ -9,9 +9,9 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    dyadComponentTagger(),
+    mode === "development" && dyadComponentTagger(),
     react(),
-  ],
+  ].filter(Boolean),
   optimizeDeps: {
     exclude: ["posthog-js"],
   },

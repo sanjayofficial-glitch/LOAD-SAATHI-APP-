@@ -12,6 +12,7 @@ import { ThemeProvider, useTheme } from "@/theme/theme";
 import { PostHogProvider } from "./components/PostHogProvider";
 import { GoogleAnalyticsTracker } from "./components/GoogleAnalytics";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SimpleLabelsProvider } from "@/contexts/SimpleLabelsContext";
 import { Suspense, useState, useEffect, type ReactNode } from "react";
 import { AppRoutes } from "./routes";
 import "@/styles/product-tour.css";
@@ -38,6 +39,8 @@ function ClerkProviderWithRouter({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider
       publishableKey={CLERK_PUBLISHABLE_KEY}
+      signInUrl="/login"
+      signUpUrl="/register"
       allowedRedirectOrigins={['http://localhost', 'https://localhost', 'http://localhost:5173', 'https://localhost:5173', 'https://loadsaathi.in', 'https://www.loadsaathi.in', 'https://in.loadsaathi.app', 'capacitor://localhost', 'http://localhost:32126', 'http://localhost:42126']}
       signUpFallbackRedirectUrl="/choose-role"
       signInFallbackRedirectUrl="/choose-role"
@@ -106,18 +109,20 @@ function App() {
             <QueryClientProvider client={queryClient}>
               <TooltipProvider>
                 <ThemeProvider>
-                   <AuthProvider>
-                     <ProductTourProvider>
-                       <LocationProvider>
+                    <AuthProvider>
+                      <SimpleLabelsProvider value={{}}>
+                        <ProductTourProvider>
+                          <LocationProvider>
                          <ScrollToTop />
                          <GoogleAnalyticsTracker />
                          <Suspense fallback={<Skeleton className="h-dvh w-full" />}>
                            <AppRoutes />
                          </Suspense>
                          <ThemedToaster />
-                       </LocationProvider>
-                     </ProductTourProvider>
-                   </AuthProvider>
+                        </LocationProvider>
+                      </ProductTourProvider>
+                    </SimpleLabelsProvider>
+                  </AuthProvider>
                 </ThemeProvider>
               </TooltipProvider>
             </QueryClientProvider>

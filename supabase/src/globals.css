@@ -169,6 +169,28 @@
     transform: translateY(-2px);
   }
 
+  /* Icon micro-interactions — applies to lucide-react <svg> elements.
+     Smooth scale on hover, subtle spring on tap, GPU-promoted. */
+  .icon-hover {
+    transition: transform 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.15s ease;
+    will-change: transform;
+  }
+  .icon-hover:hover {
+    transform: scale(1.12);
+  }
+  .icon-hover:active {
+    transform: scale(0.95);
+  }
+
+  /* Gentle floating animation — use with animate-icon-float or as a group hover effect */
+  .icon-float {
+    transition: transform 0.2s ease;
+    will-change: transform;
+  }
+  .icon-float:hover {
+    transform: translateY(-2px);
+  }
+
   /* Glass morphism panels — use lighter blur on mobile */
   .glass-panel {
     background: hsl(var(--card) / 0.6);
@@ -311,6 +333,14 @@
 @keyframes floatAnim {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-8px); }
+}
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 @keyframes dashAnim {
   to { stroke-dashoffset: -1000; }

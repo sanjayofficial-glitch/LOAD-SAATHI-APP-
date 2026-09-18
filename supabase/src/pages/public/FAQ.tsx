@@ -264,7 +264,7 @@ const FAQ = () => {
               <div key={idx}>
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-10 h-10 rounded-lg bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                    <Icon className="h-5 w-5 text-orange-600 dark:text-orange-400 icon-hover" />
                   </div>
                   <h2 className="text-2xl font-black text-foreground dark:text-white">{category.category}</h2>
                 </div>

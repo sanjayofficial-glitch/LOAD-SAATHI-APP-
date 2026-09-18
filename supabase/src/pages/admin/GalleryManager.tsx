@@ -4,7 +4,7 @@ import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { Trash2, Upload, ArrowUp, ArrowDown, ImageIcon } from 'lucide-react';
+import { Trash2, Upload, ArrowUp, ArrowDown, ImageIcon, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CATEGORIES = [
@@ -29,6 +29,11 @@ interface GalleryImage {
   created_at: string;
 }
 
+interface StatusMessage {
+  type: 'success' | 'error';
+  text: string;
+}
+
 export default function GalleryManager() {
   const { getToken } = useClerkAuth();
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -38,7 +43,14 @@ export default function GalleryManager() {
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<StatusMessage | null>(null);
+  const [brokenImages, setBrokenImages] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const showStatus = useCallback((type: 'success' | 'error', text: string) => {
+    setStatus({ type, text });
+    setTimeout(() => setStatus(null), 5000);
+  }, []);
 
   const getClient = useCallback(async () => {
     const token = await getToken();
@@ -57,10 +69,11 @@ export default function GalleryManager() {
       setImages(data || []);
     } catch (err) {
       console.error('Failed to fetch images:', err);
+      showStatus('error', 'Failed to load gallery images.');
     } finally {
       setLoading(false);
     }
-  }, [getClient]);
+  }, [getClient, showStatus]);
 
   useEffect(() => {
     fetchImages();
@@ -68,6 +81,7 @@ export default function GalleryManager() {
 
   const getPublicUrl = (storagePath: string) => {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+    // storage_path may or may not include a subfolder prefix — use it as-is
     return `${supabaseUrl}/storage/v1/object/public/gallery/${storagePath}`;
   };
 
@@ -111,35 +125,75 @@ export default function GalleryManager() {
   const handleUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setUploading(true);
+    setStatus(null);
 
     try {
       const client = await getClient();
+      let uploadedCount = 0;
+      let updatedCount = 0;
+
       for (const rawFile of Array.from(files)) {
         const file = await resizeImage(rawFile);
         const ext = file.name.split('.').pop() || 'jpg';
-        const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const fileName = file.name.replace(/\.[^.]+$/, '');
+        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
         const { error: uploadError } = await client.storage
           .from('gallery')
           .upload(path, file, { contentType: file.type, upsert: false });
+        // Note: path is relative to the bucket root (no "gallery/" prefix)
         if (uploadError) throw uploadError;
 
-        const maxOrder = Math.max(0, ...images.map(i => i.sort_order));
-        const { error: insertError } = await client.rpc('upsert_gallery_image', {
-          p_storage_path: path,
-          p_title: title || file.name.replace(/\.[^.]+$/, ''),
-          p_caption: caption || null,
-          p_category: category,
-          p_sort_order: maxOrder + 1,
-          p_file_size: file.size,
-        });
-        if (insertError) throw insertError;
+        // Check for duplicate by title
+        const { data: existing } = await client
+          .from('gallery_images')
+          .select('id, storage_path')
+          .eq('title', title || fileName)
+          .limit(1);
+
+        if (existing && existing.length > 0) {
+          // Update existing entry instead of creating duplicate
+          const oldPath = existing[0]?.storage_path;
+          await client.rpc('upsert_gallery_image', {
+            p_id: existing[0]?.id,
+            p_storage_path: path,
+            p_title: title || fileName,
+            p_caption: caption || null,
+            p_category: category,
+            p_file_size: file.size,
+          });
+          // Remove old file from storage
+          try {
+            await client.storage.from('gallery').remove([oldPath]);
+          } catch { /* old file may not exist */ }
+          updatedCount++;
+        } else {
+          // Insert new entry
+          const maxOrder = Math.max(0, ...images.map(i => i.sort_order));
+          const { error: insertError } = await client.rpc('upsert_gallery_image', {
+            p_storage_path: path,
+            p_title: title || fileName,
+            p_caption: caption || null,
+            p_category: category,
+            p_sort_order: maxOrder + 1 + uploadedCount,
+            p_file_size: file.size,
+          });
+          if (insertError) throw insertError;
+          uploadedCount++;
+        }
       }
+
       setTitle('');
       setCaption('');
       await fetchImages();
+
+      const parts: string[] = [];
+      if (uploadedCount > 0) parts.push(`${uploadedCount} uploaded`);
+      if (updatedCount > 0) parts.push(`${updatedCount} updated`);
+      showStatus('success', parts.join(', ') || 'Done');
     } catch (err) {
       console.error('Upload failed:', err);
+      showStatus('error', `Upload failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setUploading(false);
     }
@@ -155,11 +209,18 @@ export default function GalleryManager() {
     if (!confirm(`Delete "${image.title || 'untitled'}"? This cannot be undone.`)) return;
     try {
       const client = await getClient();
-      await client.storage.from('gallery').remove([image.storage_path]);
-      await client.rpc('delete_gallery_image', { p_image_id: image.id });
+      // Remove from storage (ignore errors if file doesn't exist)
+      try {
+        await client.storage.from('gallery').remove([image.storage_path]);
+      } catch { /* file may not exist */ }
+      // Remove from database
+      const { error } = await client.rpc('delete_gallery_image', { p_id: image.id });
+      if (error) throw error;
       setImages(prev => prev.filter(i => i.id !== image.id));
+      showStatus('success', 'Image deleted');
     } catch (err) {
       console.error('Delete failed:', err);
+      showStatus('error', `Delete failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
@@ -174,11 +235,20 @@ export default function GalleryManager() {
     const b = sorted[swapIdx];
     if (!a || !b) return;
     const client = await getClient();
-    await client.rpc('reorder_gallery_images', {
+    const { error } = await client.rpc('reorder_gallery_images', {
       p_ids: [a.id, b.id],
-      p_sort_orders: [b.sort_order, a.sort_order],
+      p_orders: [b.sort_order, a.sort_order],
     });
+    if (error) {
+      console.error('Reorder failed:', error);
+      showStatus('error', 'Reorder failed');
+      return;
+    }
     await fetchImages();
+  };
+
+  const handleImageError = (imageId: string) => {
+    setBrokenImages(prev => new Set(prev).add(imageId));
   };
 
   return (
@@ -187,6 +257,22 @@ export default function GalleryManager() {
         <h1 className="text-2xl font-bold">Gallery Manager</h1>
         <p className="text-muted-foreground mt-1">Upload, organize, and manage your photo gallery.</p>
       </div>
+
+      {/* Status message */}
+      {status && (
+        <div className={cn(
+          'flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium',
+          status.type === 'success'
+            ? 'bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20'
+            : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20'
+        )}>
+          {status.type === 'success'
+            ? <CheckCircle2 className="h-4 w-4 shrink-0" />
+            : <AlertCircle className="h-4 w-4 shrink-0" />
+          }
+          {status.text}
+        </div>
+      )}
 
       {/* Upload zone */}
       <div
@@ -253,12 +339,22 @@ export default function GalleryManager() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.sort((a, b) => a.sort_order - b.sort_order).map((image) => (
             <div key={image.id} className="group relative rounded-lg overflow-hidden bg-muted">
-              <img
-                src={getPublicUrl(image.storage_path)}
-                alt={image.title || 'Gallery image'}
-                className="w-full aspect-square object-cover"
-                loading="lazy"
-              />
+              {brokenImages.has(image.id) ? (
+                <div className="w-full aspect-square flex items-center justify-center bg-muted text-muted-foreground">
+                  <div className="text-center p-4">
+                    <ImageIcon className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p className="text-xs">Image not found</p>
+                  </div>
+                </div>
+              ) : (
+                <img
+                  src={getPublicUrl(image.storage_path)}
+                  alt={image.title || 'Gallery image'}
+                  className="w-full aspect-square object-cover"
+                  loading="lazy"
+                  onError={() => handleImageError(image.id)}
+                />
+              )}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
                 <div className="flex justify-between items-start">
                   <span className="text-xs bg-orange-500/80 text-white px-2 py-0.5 rounded-full">

@@ -112,7 +112,7 @@ const TripList = () => {
             is_verified
           )
         `)
-        .eq('status', 'active')
+        .in('status', ['active', 'in_transit'])
         .order('departure_date', { ascending: true })
         .limit(50);
 

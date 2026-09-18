@@ -19,13 +19,12 @@ const Login = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (isSignedIn) {
-      if (userProfile?.user_type === "shipper") navigate("/shipper/dashboard", { replace: true });
-      else if (userProfile?.user_type === "trucker") navigate("/trucker/dashboard", { replace: true });
-      else if (userProfile?.user_type === "admin") navigate("/admin/monitoring", { replace: true });
-      else navigate("/choose-role", { replace: true });
-    }
-  }, [isSignedIn, userProfile, navigate]);
+    if (!isLoaded || !isSignedIn) return;
+    if (userProfile?.user_type === "shipper") navigate("/shipper/dashboard", { replace: true });
+    else if (userProfile?.user_type === "trucker") navigate("/trucker/dashboard", { replace: true });
+    else if (userProfile?.user_type === "admin") navigate("/admin/monitoring", { replace: true });
+    else navigate("/choose-role", { replace: true });
+  }, [isLoaded, isSignedIn, userProfile, navigate]);
 
   const handleGoogleSignIn = async () => {
     if (!isLoaded) return;

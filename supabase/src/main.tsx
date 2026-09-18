@@ -53,19 +53,16 @@ afterPaint(() => {
   });
   import("./utils/capacitorOAuth").then(({ initCapacitorOAuth }) => initCapacitorOAuth());
 
-  // Preload the route chunks most-likely to be navigated to from the landing
-  // page so their React.lazy() Promises resolve before the user taps.  This
-  // eliminates the flash-to-skeleton caused by the top-level <Suspense>
+  // Preload only the route chunks most-likely to be navigated to from the
+  // landing page so their React.lazy() Promises resolve before the user taps.
+  // Eliminates the flash-to-skeleton caused by the top-level <Suspense>
   // boundary catching a still-pending lazy import on first navigation.
+  // Deferred: Pricing, FAQ, Contact, ChooseRole (loaded on demand instead).
   import("./components/PublicLayout");
   import("./pages/auth/Register");
   import("./pages/auth/Login");
-  import("./pages/auth/ChooseRole");
   import("./pages/public/Features");
   import("./pages/public/HowItWorks");
-  import("./pages/public/Pricing");
-  import("./pages/public/Contact");
-  import("./pages/public/FAQ");
 });
 
 async function mountApp() {

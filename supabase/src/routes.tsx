@@ -77,6 +77,15 @@ const TruckLoadCalculator = lazy(() => import("./pages/public/tools/TruckLoadCal
 const PtlVsFtlCalculator = lazy(() => import("./pages/public/tools/PtlVsFtlCalculator"));
 const FreightRateCalculator = lazy(() => import("./pages/public/tools/FreightRateCalculator"));
 const ReturnLoadCalculator = lazy(() => import("./pages/public/tools/ReturnLoadCalculator"));
+const RouteOptimizer = lazy(() => import("./pages/public/tools/RouteOptimizer"));
+const EmptyKmSavings = lazy(() => import("./pages/public/tools/EmptyKmSavings"));
+const TripProfitCalculator = lazy(() => import("./pages/public/tools/TripProfitCalculator"));
+const SharedSavingsCalculator = lazy(() => import("./pages/public/tools/SharedSavingsCalculator"));
+const DocumentChecklist = lazy(() => import("./pages/public/tools/DocumentChecklist"));
+const CarbonSavingsCalculator = lazy(() => import("./pages/public/tools/CarbonSavingsCalculator"));
+const TollFuelCalculator = lazy(() => import("./pages/public/tools/TollFuelCalculator"));
+const GstCalculator = lazy(() => import("./pages/public/tools/GstCalculator"));
+const PayloadUtilization = lazy(() => import("./pages/public/tools/PayloadUtilization"));
 const ForMsmes = lazy(() => import("./pages/public/ForMsmes"));
 const AiLogistics = lazy(() => import("./pages/public/AiLogistics"));
 const Data = lazy(() => import("./pages/public/Data"));
@@ -150,6 +159,15 @@ export const AppRoutes = () => (
       <Route path="/ptl-vs-ftl-calculator" element={<PtlVsFtlCalculator />} />
       <Route path="/freight-rate-calculator" element={<FreightRateCalculator />} />
       <Route path="/return-load-calculator" element={<ReturnLoadCalculator />} />
+      <Route path="/tools/route-optimizer" element={<RouteOptimizer />} />
+      <Route path="/tools/empty-km-savings" element={<EmptyKmSavings />} />
+      <Route path="/tools/trip-profit" element={<TripProfitCalculator />} />
+      <Route path="/tools/shared-savings" element={<SharedSavingsCalculator />} />
+      <Route path="/tools/document-checklist" element={<DocumentChecklist />} />
+      <Route path="/tools/carbon-savings" element={<CarbonSavingsCalculator />} />
+      <Route path="/tools/toll-fuel" element={<TollFuelCalculator />} />
+      <Route path="/tools/gst-calculator" element={<GstCalculator />} />
+      <Route path="/tools/payload-utilization" element={<PayloadUtilization />} />
 
       {/* Cluster Pages */}
       <Route path="/for-msmes" element={<ForMsmes />} />

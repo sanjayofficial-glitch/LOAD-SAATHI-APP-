@@ -25,7 +25,8 @@ import {
   MessageSquare,
   Phone,
   Check,
-  X
+  X,
+  Flag
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import EmptyState from '@/components/EmptyState';
@@ -47,6 +48,7 @@ import {
   notifyShipperOfRequestAccepted,
   notifyShipperOfRequestDeclined,
   notifyShipperOfTripCompletion,
+  notifyShipperOfTripDelivered,
 } from '@/utils/notifications';
 import type { Trip, ShipmentRequest, Request } from '@/types';
 
@@ -212,6 +214,51 @@ const TruckerHub = () => {
     }
   };
 
+  const handleMarkDelivered = async (tripId: string) => {
+    setActionLoading(tripId);
+    try {
+      const supabase = await getAuthenticatedClient();
+      const { data, error } = await supabase.rpc('mark_trip_delivered', { p_trip_id: tripId });
+
+      if (error) throw error;
+      const result = typeof data === 'string' ? JSON.parse(data) : data;
+      if (result?.error) throw new Error(result.error);
+
+      // Fire-and-forget: update linked shipments and notify shippers.
+      void (async () => {
+        try {
+          const supabase = await getAuthenticatedClient();
+          updateLinkedShipmentStatuses(supabase, tripId, 'delivered').catch(() =>
+            console.warn('[handleMarkDelivered] Failed to update linked shipment statuses')
+          );
+        } catch (_e) {
+          console.warn('[handleMarkDelivered] Failed to get client for side effects');
+        }
+      })();
+
+      const tripRequests = incomingRequests.filter(r => r.trip_id === tripId && r.status === 'accepted');
+      Promise.all(tripRequests.map(request =>
+        notifyShipperOfTripDelivered({
+          shipperId: request.shipper_id,
+          truckerName: userProfile?.full_name || 'The trucker',
+          originCity: request.trip?.origin_city || '',
+          destinationCity: request.trip?.destination_city || '',
+          tripId,
+          getToken: () => getToken({ template: 'supabase' }),
+        })
+      )).catch(() =>
+        console.warn('[handleMarkDelivered] Failed to notify some shippers')
+      );
+
+      showSuccess('Trip marked as delivered!');
+      fetchData();
+    } catch (_err) {
+      showError('Failed to mark trip as delivered');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const handleBookingAction = async (request: Request, status: 'accepted' | 'declined') => {
     setActionLoading(request.id);
     try {
@@ -307,11 +354,19 @@ const TruckerHub = () => {
            <h1 id="trucker-hub-header" className="text-3xl font-bold text-gray-900 dark:text-gray-100">Trucker Hub</h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your trips, sent offers, and incoming bookings</p>
         </div>
-        <Link to="/trucker/post-trip">
-          <Button className="bg-orange-600 hover:bg-orange-700 shadow-md">
-            <Plus className="mr-2 h-4 w-4" /> Post New Trip
+        <div className="flex gap-2">
+          <Button
+            className="bg-green-600 hover:bg-green-700 shadow-md"
+            onClick={() => navigate('/trucker/browse-shipments?view=card')}
+          >
+            <Package className="mr-2 h-4 w-4" /> Show me loads
           </Button>
-        </Link>
+          <Link to="/trucker/post-trip">
+            <Button className="bg-orange-600 hover:bg-orange-700 shadow-md">
+              <Plus className="mr-2 h-4 w-4" /> Post New Trip
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <Tabs defaultValue={defaultTab} className="space-y-6">
@@ -383,7 +438,40 @@ const TruckerHub = () => {
                       <div className="flex flex-wrap items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0 dark:border-gray-700">
                         <Link to={`/trucker/trips/${trip.id}`}><Button variant="outline" size="sm" className="border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950"><Eye className="h-4 w-4 mr-2" />View</Button></Link>
                         
-                        {trip.status !== 'completed' && trip.status !== 'cancelled' && incomingRequests.some(r => r.trip_id === trip.id && r.status === 'accepted') && (
+                        {trip.status === 'in_transit' && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="outline" size="sm" className="border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-950">
+                                <Flag className="h-4 w-4 mr-2" />
+                                Mark Delivered
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Mark as delivered?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Confirm that goods have been delivered. Shippers will be notified to confirm and leave a review.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => { if (!actionLoading) handleMarkDelivered(trip.id); }}
+                                  disabled={!!actionLoading}
+                                  className="bg-purple-600 hover:bg-purple-700"
+                                >
+                                  {actionLoading === trip.id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                  ) : (
+                                    'Mark Delivered'
+                                  )}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
+
+                        {trip.status === 'delivered' && (
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button variant="outline" size="sm" className="border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950">

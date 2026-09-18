@@ -155,7 +155,7 @@ const HowItWorks = () => {
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-4">
-              <Package className="h-8 w-8 text-orange-500" />
+              <Package className="h-8 w-8 text-orange-500 icon-hover" />
               <h2 className="text-3xl sm:text-4xl font-black text-foreground dark:text-white">For Shippers</h2>
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl">From posting a shipment to delivery confirmation — a seamless journey powered by intelligent matching.</p>
@@ -165,7 +165,7 @@ const HowItWorks = () => {
               <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-orange-500/30 transition-all duration-300 group relative">
                 <div className="text-5xl font-black text-orange-600/10 dark:text-orange-500/10 absolute top-3 right-4 select-none">{step.step}</div>
                 <div className="w-12 h-12 rounded-full bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <step.icon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                   <step.icon className="h-6 w-6 text-orange-600 dark:text-orange-400 icon-hover" />
                 </div>
                 <div className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-2">{step.step}</div>
                 <h3 className="text-base font-bold text-foreground mb-2">{step.title}</h3>
@@ -189,7 +189,7 @@ const HowItWorks = () => {
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-4">
-              <Truck className="h-8 w-8 text-blue-500" />
+              <Truck className="h-8 w-8 text-blue-500 icon-hover" />
               <h2 className="text-3xl sm:text-4xl font-black text-foreground dark:text-white">For Truckers &amp; Fleet Owners</h2>
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl">Turn empty kilometers into profit. From declaring availability to getting paid — we handle the logistics so you can focus on the road.</p>
@@ -199,7 +199,7 @@ const HowItWorks = () => {
               <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-blue-500/30 transition-all duration-300 group relative">
                 <div className="text-5xl font-black text-blue-600/10 dark:text-blue-500/10 absolute top-3 right-4 select-none">{step.step}</div>
                 <div className="w-12 h-12 rounded-full bg-blue-600/10 dark:bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <step.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                   <step.icon className="h-6 w-6 text-blue-600 dark:text-blue-400 icon-hover" />
                 </div>
                 <div className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-2">{step.step}</div>
                 <h3 className="text-base font-bold text-foreground mb-2">{step.title}</h3>
@@ -226,12 +226,12 @@ const HowItWorks = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register?type=shipper">
                 <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                  <Package className="mr-2 h-5 w-5" /> Sign Up as Shipper
+                  <Package className="mr-2 h-5 w-5 icon-hover" /> Sign Up as Shipper
                 </Button>
               </Link>
               <Link to="/register?type=trucker">
                 <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg border-border text-foreground hover:bg-accent">
-                  <Truck className="mr-2 h-5 w-5" /> Sign Up as Trucker
+                  <Truck className="mr-2 h-5 w-5 icon-hover" /> Sign Up as Trucker
                 </Button>
               </Link>
             </div>
