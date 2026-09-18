@@ -52,6 +52,7 @@ const EXACT_ROUTES = new Set([
   '/sso-callback',
   '/sign-in',
   '/sign-up',
+  '/tools',
 ]);
 
 // Prefixes for dynamic routes — any sub-path under these is considered a valid SPA route
