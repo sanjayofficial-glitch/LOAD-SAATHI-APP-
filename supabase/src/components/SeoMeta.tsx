@@ -23,6 +23,11 @@ interface SeoMetaProps {
    * is the default and must not be rendered explicitly per-page).
    */
   robots?: string;
+  /**
+   * Content language for hreflang + og:locale. Defaults to "en-in"/"en_IN".
+   * Hindi pages pass hreflang="hi".
+   */
+  hreflang?: string;
 }
 
 const BASE_URL = "https://loadsaathi.in";
@@ -93,6 +98,7 @@ export default function SeoMeta({
   jsonLd,
   breadcrumbs,
   robots,
+  hreflang = "en-in",
 }: SeoMetaProps) {
   // Avoid "X — LoadSaathi | LoadSaathi" double branding: some pages already
   // include the brand in their title. Only append when it isn't there.
@@ -153,7 +159,7 @@ export default function SeoMeta({
     if (keywords) appendManaged("meta", { name: "keywords", content: keywords });
     if (robots) appendManaged("meta", { name: "robots", content: robots });
     appendManaged("link", { rel: "canonical", href: url });
-    appendManaged("link", { rel: "alternate", hreflang: "en-in", href: url });
+    appendManaged("link", { rel: "alternate", hreflang, href: url });
     appendManaged("link", { rel: "alternate", hreflang: "x-default", href: url });
 
     appendManaged("meta", { property: "og:type", content: type });
@@ -165,7 +171,7 @@ export default function SeoMeta({
     if (isDefaultImage) appendManaged("meta", { property: "og:image:height", content: "630" });
     appendManaged("meta", { property: "og:image:alt", content: `${title} — LoadSaathi` });
     appendManaged("meta", { property: "og:site_name", content: "LoadSaathi" });
-    appendManaged("meta", { property: "og:locale", content: "en_IN" });
+    appendManaged("meta", { property: "og:locale", content: hreflang === "hi" ? "hi_IN" : "en_IN" });
 
     appendManaged("meta", { name: "twitter:card", content: "summary_large_image" });
     appendManaged("meta", { name: "twitter:title", content: fullTitle });
@@ -181,7 +187,7 @@ export default function SeoMeta({
     if (breadcrumbSchema) appendManaged("script", { type: "application/ld+json" }, JSON.stringify(breadcrumbSchema));
 
     return () => clearManagedTags();
-  }, [fullTitle, url, description, keywords, robots, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage]);
+  }, [fullTitle, url, description, keywords, robots, hreflang, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage]);
 
   return null;
 }
