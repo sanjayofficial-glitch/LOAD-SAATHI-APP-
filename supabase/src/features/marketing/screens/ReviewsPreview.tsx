@@ -66,7 +66,7 @@ export default function ReviewsPreview() {
 
   return (
     <>
-      <SeoMeta title="Reviews Preview — LoadSaathi App Screens" description="Preview LoadSaathi's bidirectional review system: shippers rate truckers and truckers rate shippers for complete transparency." canonical="/screens/reviews" />
+      <SeoMeta title="Reviews Preview — LoadSaathi App Screens" description="Preview LoadSaathi's bidirectional review system: shippers rate truckers and truckers rate shippers for complete transparency." canonical="/screens/reviews" breadcrumbs={[{ name: "App Screens", url: "/gallery" }, { name: "Reviews Preview", url: "/screens/reviews" }]} />
       <div className="min-h-screen bg-background">
         <div className="relative overflow-hidden border-b border-border bg-gradient-to-b from-yellow-500/5 via-transparent to-transparent">
           <div className="absolute top-0 left-1/2 w-[600px] h-[600px] rounded-full opacity-[0.06] pointer-events-none"

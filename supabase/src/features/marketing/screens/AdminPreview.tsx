@@ -81,7 +81,7 @@ export default function AdminPreview() {
 
   return (
     <>
-      <SeoMeta title="Admin Center Preview — LoadSaathi App Screens" description="Preview LoadSaathi's admin command center with system health monitoring, business intelligence, and live event tracking." canonical="/screens/admin" />
+      <SeoMeta title="Admin Center Preview — LoadSaathi App Screens" description="Preview LoadSaathi's admin command center with system health monitoring, business intelligence, and live event tracking." canonical="/screens/admin" breadcrumbs={[{ name: "App Screens", url: "/gallery" }, { name: "Admin Preview", url: "/screens/admin" }]} />
       <div className="min-h-screen bg-background">
         <div className="relative overflow-hidden border-b border-border bg-gradient-to-b from-red-500/5 via-transparent to-transparent">
           <div className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full opacity-[0.05] pointer-events-none"

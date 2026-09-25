@@ -28,6 +28,7 @@ export default function Tools() {
         title="Logistics Tools & Calculators for Indian Truckers & Shippers"
         description="14 free freight calculators and logistics tools for Indian truckers and shippers — fare estimates, route optimisation, GST, carbon savings, and more."
         canonical="/tools"
+        breadcrumbs={[{ name: "Tools", url: "/tools" }]}
       />
       <div className="max-w-[1200px] mx-auto px-6 py-12">
         <Link to="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground mb-8 transition-colors">

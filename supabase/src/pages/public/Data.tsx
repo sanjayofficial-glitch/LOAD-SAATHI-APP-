@@ -85,7 +85,7 @@ export default function Data() {
             "name": "LoadSaathi",
             "url": "https://loadsaathi.in"
           },
-          "dateModified": "2026-08-08"
+          "dateModified": "2026-09-25"
         }}
       />
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased">
@@ -106,7 +106,7 @@ export default function Data() {
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl leading-relaxed">
               Key insights from LoadSaathi's marketplace: PTL rates, empty kilometre trends, truck utilization, and corridor-specific data across East India.
             </p>
-            <p className="text-xs text-muted-foreground mt-4">Last updated: August 2026 · Sources: LoadSaathi marketplace data, MarkNtel, Mordor Intelligence</p>
+            <p className="text-xs text-muted-foreground mt-4">Last updated: September 2026 · Sources: LoadSaathi marketplace data, MarkNtel, Mordor Intelligence</p>
           </div>
         </div>
       </section>

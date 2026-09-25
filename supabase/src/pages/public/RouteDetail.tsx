@@ -182,6 +182,10 @@ export default function RouteDetail() {
       {
         "@type": "QAPage",
         "name": `Frequently Asked Questions — ${route.from} to ${route.to} Freight`,
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": ["h1", ".route-snippet-answer"]
+        },
         "mainEntity": [
           {
             "@type": "Question",
@@ -214,8 +218,43 @@ export default function RouteDetail() {
               "@type": "Answer",
               "text": `Yes. LoadSaathi specializes in PTL (Part Truck Load) and LTL (Less Than Truck Load) freight on the ${route.from}–${route.to} corridor. PTL lets you share truck space with other shippers, saving up to 40% compared to hiring a full truck. Ideal for shipments under 3 tonnes.`
             }
+          },
+          {
+            "@type": "Question",
+            "name": `Can I track my ${route.from} to ${route.to} shipment in real time?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Yes. Every LoadSaathi shipment comes with live GPS tracking. You can see your truck's location on a map, receive estimated time of arrival updates, and get notified at pickup confirmation, in-transit milestones, and delivery completion. Share the tracking link with your supply chain partners automatically.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": `Is there a minimum weight for PTL shipping from ${route.from} to ${route.to}?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `No fixed minimum. PTL freight from ${route.from} to ${route.to} is priced per kg (approximately ₹${Math.round(route.distanceKm * 0.08)}–₹${Math.round(route.distanceKm * 0.12)} per kg), so even a few hundred kilos can ship cost-effectively by sharing truck space. Enter your exact weight in LoadSaathi's freight rate calculator for a precise quote.`
+            }
           }
         ]
+      },
+      {
+        "@type": "Table",
+        "about": `PTL vs FTL freight comparison for ${route.from} to ${route.to} (${route.distanceKm} km)`,
+        "mainEntity": {
+          "@type": "ItemList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": `PTL shared freight ${route.from} to ${route.to}: ₹${Math.round(route.distanceKm * 0.08)}–₹${Math.round(route.distanceKm * 0.12)} per kg, transit ~${Math.round(Number(route.transitTime) * 1.4)} hours, best for loads under 3 tonnes`
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": `FTL full truck ${route.from} to ${route.to}: ₹${Math.round(route.distanceKm * 85).toLocaleString("en-IN")}–₹${Math.round(route.distanceKm * 120).toLocaleString("en-IN")} per trip, transit ~${route.transitTime} hours, best for loads over 10 tonnes`
+            }
+          ]
+        }
       }
     ]
   };
@@ -275,6 +314,11 @@ export default function RouteDetail() {
                 {route.description}
               </p>
 
+              {/* Snippet bait: 40–60-word self-contained cost answer for featured snippets / AI answers */}
+              <p className="route-snippet-answer text-base sm:text-lg text-foreground max-w-2xl leading-relaxed mb-8">
+                PTL freight from {route.from} to {route.to} ({route.distanceKm} km) costs approximately ₹{Math.round(route.distanceKm * 0.08)}–₹{Math.round(route.distanceKm * 0.12)} per kg for shared loads, while a full truck costs ₹{Math.round(route.distanceKm * 85).toLocaleString("en-IN")}–₹{Math.round(route.distanceKm * 120).toLocaleString("en-IN")}. Transit takes about {route.transitTime} hours with live GPS tracking on LoadSaathi.
+              </p>
+
               {/* Route stats */}
               <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-6 mb-10">
                 <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-card/50 border border-border">
@@ -306,7 +350,7 @@ export default function RouteDetail() {
                     Ship from {route.from} <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link to={`/fare-calculator?from=${encodeURIComponent(route.from)}&to=${encodeURIComponent(route.to)}`}>
+                <Link to={`/tools/fare-calculator?from=${encodeURIComponent(route.from)}&to=${encodeURIComponent(route.to)}`}>
                   <Button variant="outline" className="w-full sm:w-auto border-orange-500/30 text-foreground hover:bg-orange-500/5 text-sm font-bold px-8 py-4 h-auto rounded-lg">
                     Check Estimated Fare
                   </Button>
@@ -435,6 +479,44 @@ export default function RouteDetail() {
           </div>
         </section>
 
+        {/* PTL vs FTL comparison */}
+        <section className="py-20 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
+          <div className="max-w-3xl mx-auto px-6 sm:px-12">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl sm:text-4xl font-black text-foreground dark:text-white mb-4">
+                PTL vs FTL: {route.from} to {route.to}
+              </h2>
+              <p className="text-lg text-muted-foreground">Which option fits your shipment?</p>
+            </div>
+            <div className="overflow-x-auto rounded-xl border border-border">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-muted/60 dark:bg-white/5 text-left">
+                    <th className="px-4 py-3 font-bold text-foreground">Option</th>
+                    <th className="px-4 py-3 font-bold text-foreground">Cost</th>
+                    <th className="px-4 py-3 font-bold text-foreground">Transit</th>
+                    <th className="px-4 py-3 font-bold text-foreground">Best for</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-t border-border">
+                    <td className="px-4 py-3 font-semibold text-foreground">PTL (shared)</td>
+                    <td className="px-4 py-3 text-muted-foreground">₹{Math.round(route.distanceKm * 0.08)}–₹{Math.round(route.distanceKm * 0.12)}/kg</td>
+                    <td className="px-4 py-3 text-muted-foreground">~{Math.round(Number(route.transitTime) * 1.4)} hrs</td>
+                    <td className="px-4 py-3 text-muted-foreground">Loads under 3 tonnes</td>
+                  </tr>
+                  <tr className="border-t border-border">
+                    <td className="px-4 py-3 font-semibold text-foreground">FTL (full truck)</td>
+                    <td className="px-4 py-3 text-muted-foreground">₹{Math.round(route.distanceKm * 85).toLocaleString("en-IN")}–₹{Math.round(route.distanceKm * 120).toLocaleString("en-IN")}/trip</td>
+                    <td className="px-4 py-3 text-muted-foreground">~{route.transitTime} hrs</td>
+                    <td className="px-4 py-3 text-muted-foreground">Loads over 10 tonnes</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
         {/* FAQ */}
         <section className="py-20">
           <div className="max-w-3xl mx-auto px-6 sm:px-12">
@@ -465,6 +547,10 @@ export default function RouteDetail() {
                 {
                   q: `Can I track my ${route.from} to ${route.to} shipment in real time?`,
                   a: `Yes. Every LoadSaathi shipment comes with live GPS tracking. You can see your truck's location on a map, receive estimated time of arrival updates, and get notified at pickup confirmation, in-transit milestones, and delivery completion. Share the tracking link with your supply chain partners automatically.`,
+                },
+                {
+                  q: `Is there a minimum weight for PTL shipping from ${route.from} to ${route.to}?`,
+                  a: `No fixed minimum. PTL freight on this corridor is priced per kg (approximately ₹${Math.round(route.distanceKm * 0.08)}–₹${Math.round(route.distanceKm * 0.12)} per kg), so even a few hundred kilos can ship cost-effectively by sharing truck space. Enter your exact weight in LoadSaathi's freight rate calculator for a precise quote.`,
                 },
               ].map((item, i) => (
                 <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08]">

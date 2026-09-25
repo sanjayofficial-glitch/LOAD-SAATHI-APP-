@@ -73,7 +73,7 @@ export default function MatchingPreview() {
 
   return (
     <>
-      <SeoMeta title="AI Matching Preview — LoadSaathi App Screens" description="Preview LoadSaathi's AI-powered load matching: intelligent shipment-to-truck matching with confidence scores, filters, and driver profiles." canonical="/screens/matching" />
+      <SeoMeta title="AI Matching Preview — LoadSaathi App Screens" description="Preview LoadSaathi's AI-powered load matching: intelligent shipment-to-truck matching with confidence scores, filters, and driver profiles." canonical="/screens/matching" breadcrumbs={[{ name: "App Screens", url: "/gallery" }, { name: "Matching Preview", url: "/screens/matching" }]} />
       <div className="min-h-screen bg-background">
         <div className="relative overflow-hidden border-b border-border bg-gradient-to-b from-blue-500/5 via-transparent to-transparent">
           <div className="absolute top-0 right-1/4 w-[600px] h-[600px] rounded-full opacity-[0.06] pointer-events-none"

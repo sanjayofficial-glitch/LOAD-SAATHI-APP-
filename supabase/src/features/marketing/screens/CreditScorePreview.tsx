@@ -38,7 +38,7 @@ export default function CreditScorePreview() {
 
   return (
     <>
-      <SeoMeta title="Credit Score Preview — LoadSaathi App Screens" description="Preview LoadSaathi's digital freight credit score: a trust and reputation system that quantifies reliability across every interaction." canonical="/screens/credit-score" />
+      <SeoMeta title="Credit Score Preview — LoadSaathi App Screens" description="Preview LoadSaathi's digital freight credit score: a trust and reputation system that quantifies reliability across every interaction." canonical="/screens/credit-score" breadcrumbs={[{ name: "App Screens", url: "/gallery" }, { name: "Credit Score Preview", url: "/screens/credit-score" }]} />
       <div className="min-h-screen bg-background">
         <div className="relative overflow-hidden border-b border-border bg-gradient-to-b from-purple-500/5 via-transparent to-transparent">
           <div className="absolute top-0 right-1/3 w-[600px] h-[600px] rounded-full opacity-[0.06] pointer-events-none"

@@ -394,6 +394,10 @@ export default function LocationPage() {
     name: `Freight Transport in ${data.name}, ${data.state} — LoadSaathi`,
     description: data.description,
     url: `https://loadsaathi.in/location/${canonicalSlug}`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", ".city-snippet-answer"],
+    },
     isPartOf: { "@type": "WebSite", name: "LoadSaathi", url: "https://loadsaathi.in" },
     about: {
       "@type": "Place",
@@ -449,6 +453,10 @@ export default function LocationPage() {
             </h1>
             <p className="text-lg sm:text-xl text-white/90 max-w-[700px] mb-8">
               {data.description}
+            </p>
+            {/* Snippet bait: self-contained answer for featured snippets / AI answers */}
+            <p className="city-snippet-answer text-base sm:text-lg text-white max-w-[700px] mb-8 font-medium">
+              Need a truck in {data.name}, {data.state}? LoadSaathi connects shippers with verified local truckers for PTL and full-load freight across {data.hubDistances.map((h) => h.city).join(", ")} corridors, with live GPS tracking and transparent per-kg pricing. Post your load free and get matched in minutes.
             </p>
             <Link
               to="/register"

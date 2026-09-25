@@ -41,12 +41,12 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 
 ## Tools & Calculators
 
-- [Fare Calculator](https://loadsaathi.in/fare-calculator) — AI-powered PTL/LTL rate estimates
+- [Fare Calculator](https://loadsaathi.in/tools/fare-calculator) — AI-powered PTL/LTL rate estimates
 - [Transport Cost Calculator](https://loadsaathi.in/transport-cost-calculator) — Estimate freight costs by route
-- [Freight Rate Calculator](https://loadsaathi.in/freight-rate-calculator) — Calculate freight rates with cost per km
-- [Truck Load Calculator](https://loadsaathi.in/truck-load-calculator) — Find the right truck for your cargo
-- [PTL vs FTL Calculator](https://loadsaathi.in/ptl-vs-ftl-calculator) — Decide between PTL and FTL
-- [Return Load Calculator](https://loadsaathi.in/return-load-calculator) — Find return loads for your route
+- [Freight Rate Calculator](https://loadsaathi.in/tools/freight-rate-calculator) — Calculate freight rates with cost per km
+- [Truck Load Calculator](https://loadsaathi.in/tools/truck-load-calculator) — Find the right truck for your cargo
+- [PTL vs FTL Calculator](https://loadsaathi.in/tools/ptl-vs-ftl-calculator) — Decide between PTL and FTL
+- [Return Load Calculator](https://loadsaathi.in/tools/return-load-calculator) — Find return loads for your route
 - [Route Optimizer](https://loadsaathi.in/tools/route-optimizer) — Optimize multi-stop truck routes
 - [Empty KM Savings Calculator](https://loadsaathi.in/tools/empty-km-savings) — Calculate savings from reducing empty km
 - [Trip Profit Calculator](https://loadsaathi.in/tools/trip-profit) — Estimate profit per trip
@@ -128,6 +128,47 @@ A: LoadSaathi is free to join for both shippers and truckers. A transaction fee 
 
 Q: How does LoadSaathi's AI matching work?
 A: LoadSaathi's AI scoring engine analyzes route alignment, capacity fit, price compatibility, timeliness, historical performance, communication responsiveness, and tenure to match shippers with the best-suited truckers in seconds.
+
+## Corridor Rate Guide (indicative, September 2026)
+
+Indicative East-India freight bands computed from LoadSaathi's per-km rate model (FTL ₹85–120/km trip rate; PTL ₹0.08–0.12/kg-km). Live quotes vary by truck type, season, and load — verify with the fare calculator.
+
+| Corridor | Distance | Full truck (FTL) | Shared (PTL) |
+|---|---|---|---|
+| Rourkela → Ranchi | 180 km | ₹15,300–₹21,600 | ₹14–₹22/kg |
+| Ranchi → Rourkela | 180 km | ₹15,300–₹21,600 | ₹14–₹22/kg |
+| Rourkela → Jamshedpur | 220 km | ₹18,700–₹26,400 | ₹18–₹26/kg |
+| Jamshedpur → Rourkela | 220 km | ₹18,700–₹26,400 | ₹18–₹26/kg |
+| Rourkela → Bhubaneswar | 340 km | ₹28,900–₹40,800 | ₹27–₹41/kg |
+| Rourkela → Burdwan | 320 km | ₹27,200–₹38,400 | ₹26–₹38/kg |
+| Rourkela → Kolkata | 440 km | ₹37,400–₹52,800 | ₹35–₹53/kg |
+| Ranchi → Jamshedpur | 130 km | ₹11,050–₹15,600 | ₹10–₹16/kg |
+| Jamshedpur → Ranchi | 130 km | ₹11,050–₹15,600 | ₹10–₹16/kg |
+| Ranchi → Bhubaneswar | 450 km | ₹38,250–₹54,000 | ₹36–₹54/kg |
+| Ranchi → Kolkata | 420 km | ₹35,700–₹50,400 | ₹34–₹50/kg |
+| Jamshedpur → Bhubaneswar | 340 km | ₹28,900–₹40,800 | ₹27–₹41/kg |
+| Jamshedpur → Burdwan | 200 km | ₹17,000–₹24,000 | ₹16–₹24/kg |
+| Jamshedpur → Kolkata | 280 km | ₹23,800–₹33,600 | ₹22–₹34/kg |
+| Bhubaneswar → Kolkata | 440 km | ₹37,400–₹52,800 | ₹35–₹53/kg |
+| Bhubaneswar → Burdwan | 420 km | ₹35,700–₹50,400 | ₹34–₹50/kg |
+| Rourkela → Sambalpur | 120 km | ₹10,200–₹14,400 | ₹10–₹14/kg |
+| Ranchi → Dhanbad | 280 km | ₹23,800–₹33,600 | ₹22–₹34/kg |
+| Bhubaneswar → Visakhapatnam | 450 km | ₹38,250–₹54,000 | ₹36–₹54/kg |
+| Balasore → Bhubaneswar | 210 km | ₹17,850–₹25,200 | ₹17–₹25/kg |
+| Berhampur → Bhubaneswar | 180 km | ₹15,300–₹21,600 | ₹14–₹22/kg |
+| Dhanbad → Jamshedpur | 170 km | ₹14,450–₹20,400 | ₹14–₹20/kg |
+| Kolkata → Burdwan | 110 km | ₹9,350–₹13,200 | ₹9–₹13/kg |
+| Sambalpur → Jharsuguda | 100 km | ₹8,500–₹12,000 | ₹8–₹12/kg |
+| Cuttack → Bhubaneswar | 30 km | ₹2,550–₹3,600 | ₹2–₹4/kg |
+| Cuttack → Rourkela | 320 km | ₹27,200–₹38,400 | ₹26–₹38/kg |
+| Sambalpur → Bhubaneswar | 350 km | ₹29,750–₹42,000 | ₹28–₹42/kg |
+| Rourkela → Cuttack | 320 km | ₹27,200–₹38,400 | ₹26–₹38/kg |
+
+Q: How much does PTL freight cost per kg in East India?
+A: Indicative shared-load (PTL) rates on LoadSaathi corridors range from about ₹2/kg on short hops (Cuttack–Bhubaneswar, 30 km) to about ₹54/kg on long hauls (Ranchi–Bhubaneswar, 450 km). Full-truck (FTL) trip rates range from roughly ₹2,550 to ₹54,000 by the same model. See the corridor table above; live quotes depend on truck type and season.
+
+Q: What is the cheapest way to ship a small load between Odisha cities?
+A: Sharing truck space (PTL) via LoadSaathi: you pay only for the weight you ship instead of hiring a full truck, typically saving up to 40%. Enter origin, destination, and weight in the fare calculator for an exact quote.
 
 ## Contact
 

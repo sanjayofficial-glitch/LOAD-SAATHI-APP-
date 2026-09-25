@@ -142,6 +142,10 @@ export default function GuidePage() {
         datePublished: "2026-06-01",
         dateModified: "2026-08-08",
         image: "https://loadsaathi.in/og-image.png",
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: ["h1", ".guide-summary"],
+        },
         author: {
           "@type": "Person",
           name: guide.author,
@@ -254,7 +258,7 @@ export default function GuidePage() {
 
         <div className="max-w-[800px] mx-auto px-6 sm:px-12 pb-24">
           <div className="glass-card p-6 rounded-xl border border-orange-500/20 dark:border-orange-500/10 mb-10">
-            <p className="text-sm sm:text-base text-foreground leading-relaxed font-medium">
+            <p className="guide-summary text-sm sm:text-base text-foreground leading-relaxed font-medium">
               {guide.summary}
             </p>
           </div>
