@@ -43,19 +43,21 @@
     <link rel="preload" as="image" href="/logo-64.webp" imagesrcset="/logo-32.webp 32w, /logo-64.webp 64w, /logo-128.webp 128w" imagesizes="(min-width: 768px) 44px, 32px" />
     <link rel="preload" as="image" href="/hero-bg.webp" fetchpriority="high" />
 
-    <!-- Primary SEO (fallback for no-JS; SeoMeta replaces after hydration) -->
+    <!-- Primary SEO (fallback for no-JS; per-route tags are injected
+         server-side by api/agent.js and client-side by SeoMeta after hydration.
+         NOTE: no site-wide canonical or og:url here on purpose — a hardcoded
+         canonical would tell Google every URL is the homepage. -->
     <title>Shared Freight Marketplace | PTL/LTL East India | LoadSaathi</title>
     <meta name="description" content="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs on the Rourkela–Ranchi–Burdwan corridor. Book part loads online." />
     <meta name="keywords" content="PTL freight Rourkela, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://loadsaathi.in/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Shared Freight Marketplace | PTL/LTL East India | LoadSaathi" />
     <meta property="og:description" content="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs on the Rourkela–Ranchi–Burdwan corridor." />
     <meta property="og:image" content="https://loadsaathi.in/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:url" content="https://loadsaathi.in/" />
+    <!-- NOTE: no og:url here on purpose (see canonical note above) -->
     <meta property="og:site_name" content="LoadSaathi" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -118,7 +120,8 @@
             "https://www.facebook.com/people/Load-Saathi/61590859902405/",
             "https://www.instagram.com/loadsaathi/",
             "https://www.linkedin.com/in/load-saathi-119867422/",
-            "https://www.reddit.com/user/Loadsaathi/"
+            "https://www.reddit.com/user/Loadsaathi/",
+            "https://www.threads.com/@loadsaathi"
           ],
           "contactPoint": {
             "@type": "ContactPoint",
@@ -173,7 +176,8 @@
             "https://www.facebook.com/people/Load-Saathi/61590859902405/",
             "https://www.instagram.com/loadsaathi/",
             "https://www.linkedin.com/in/load-saathi-119867422/",
-            "https://www.reddit.com/user/Loadsaathi/"
+            "https://www.reddit.com/user/Loadsaathi/",
+            "https://www.threads.com/@loadsaathi"
           ]
         },
         {

@@ -236,7 +236,7 @@ export default function RouteDetail() {
         </div>
       </noscript>
       <SeoMeta
-        title={`PTL Freight ${route.from} to ${route.to} | Book Trucks Online`}
+        title={`PTL Freight ${route.from} to ${route.to}`}
         description={route.metaDescription}
         canonical={`/routes/${route.slug}`}
         keywords={route.keywords}

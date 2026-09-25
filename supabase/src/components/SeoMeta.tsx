@@ -17,6 +17,12 @@ interface SeoMetaProps {
   author?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   breadcrumbs?: BreadcrumbItem[];
+  /**
+   * Robots directive, e.g. "noindex, nofollow" for private pages, auth pages,
+   * 404 states and share links. Omit on public indexable pages (index, follow
+   * is the default and must not be rendered explicitly per-page).
+   */
+  robots?: string;
 }
 
 const BASE_URL = "https://loadsaathi.in";
@@ -41,6 +47,7 @@ function removeStaleStaticSeoTags() {
     'title:not([data-rh]):not([data-ls-seo]),' +
     'link[rel="canonical"]:not([data-rh]):not([data-ls-seo]),' +
     'meta[name="description"]:not([data-rh]):not([data-ls-seo]),' +
+    'meta[name="robots"]:not([data-rh]):not([data-ls-seo]),' +
     'meta[name="keywords"]:not([data-rh]):not([data-ls-seo]),' +
     'meta[property^="og:"]:not([data-rh]):not([data-ls-seo]),' +
     'meta[name^="twitter:"]:not([data-rh]):not([data-ls-seo]),' +
@@ -85,8 +92,13 @@ export default function SeoMeta({
   author,
   jsonLd,
   breadcrumbs,
+  robots,
 }: SeoMetaProps) {
-  const fullTitle = `${title} | LoadSaathi`;
+  // Avoid "X — LoadSaathi | LoadSaathi" double branding: some pages already
+  // include the brand in their title. Only append when it isn't there.
+  const fullTitle = /loadsaathi\s*$/i.test(title.trim())
+    ? title.trim()
+    : `${title} | LoadSaathi`;
   const url = canonical
     ? `${BASE_URL}${canonical}`
     : typeof window !== "undefined"
@@ -139,6 +151,7 @@ export default function SeoMeta({
 
     appendManaged("meta", { name: "description", content: description });
     if (keywords) appendManaged("meta", { name: "keywords", content: keywords });
+    if (robots) appendManaged("meta", { name: "robots", content: robots });
     appendManaged("link", { rel: "canonical", href: url });
     appendManaged("link", { rel: "alternate", hreflang: "en-in", href: url });
     appendManaged("link", { rel: "alternate", hreflang: "x-default", href: url });
@@ -168,7 +181,7 @@ export default function SeoMeta({
     if (breadcrumbSchema) appendManaged("script", { type: "application/ld+json" }, JSON.stringify(breadcrumbSchema));
 
     return () => clearManagedTags();
-  }, [fullTitle, url, description, keywords, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage]);
+  }, [fullTitle, url, description, keywords, robots, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage]);
 
   return null;
 }
