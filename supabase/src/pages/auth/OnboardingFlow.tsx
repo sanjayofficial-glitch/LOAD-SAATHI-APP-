@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import LogoMark from '@/components/LogoMark';
+import SeoMeta from '@/components/SeoMeta';
 import { showSuccess, showError } from '@/utils/toast';
 
 type Step = 'welcome' | 'profile' | 'done';
@@ -158,6 +159,7 @@ const OnboardingFlow = () => {
   if (!isLoaded || !isSignedIn || !user) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
+        <SeoMeta title="Getting Started" description="Set up your LoadSaathi account." canonical="/onboarding" robots="noindex, nofollow" />
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-orange-600 dark:text-orange-400 mx-auto mb-2" />
           <p className="text-sm text-gray-500 dark:text-gray-400">Loading...</p>
@@ -170,6 +172,7 @@ const OnboardingFlow = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 items-center justify-center px-4 py-10">
+      <SeoMeta title="Getting Started" description="Complete your LoadSaathi account setup." canonical="/onboarding" robots="noindex, nofollow" />
       <div className="w-full max-w-lg mx-auto animate-scale-in">
         <div className="text-center mb-8">
           <LogoMark size="h-14 w-14" className="mx-auto mb-4" />

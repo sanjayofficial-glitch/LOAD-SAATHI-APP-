@@ -2,11 +2,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Truck, ArrowLeft, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SeoMeta from '@/components/SeoMeta';
 
 const NotFound = () => {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
+      <SeoMeta title="Page Not Found" description="The page you are looking for does not exist." robots="noindex, nofollow" />
       <div className="text-center max-w-md animate-scale-in">
         <div className="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
           <Truck className="h-10 w-10 text-orange-600 dark:text-orange-400" />

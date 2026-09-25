@@ -11,6 +11,7 @@ const guideData: Record<string, {
   content: string[];
   internalLinks: { label: string; path: string }[];
   steps: { name: string; text: string }[];
+  rateTable?: { caption: string; headers: string[]; rows: string[][]; footnote?: string };
 }> = {
   "ptl-vs-ftl": {
     title: "PTL vs FTL: Which Freight Option Is Right for Your Business?",
@@ -24,6 +25,18 @@ const guideData: Record<string, {
       { name: "Compare costs for your route", text: "Use the LoadSaathi Fare Calculator to compare PTL and FTL pricing on your specific corridor before committing." },
       { name: "Book through LoadSaathi", text: "Post your shipment and the platform's AI automatically recommends the most cost-effective option based on weight, volume, and delivery requirements." },
     ],
+    rateTable: {
+      caption: "PTL vs FTL at a glance",
+      headers: ["Factor", "PTL (Part Truck Load)", "FTL (Full Truck Load)"],
+      rows: [
+        ["Best for", "Shipments under 3 tonnes", "Shipments over 7 tonnes"],
+        ["Cost", "30-40% less than booking a full truck", "Full vehicle rate"],
+        ["Transit time", "Slightly longer, multiple pickups and deliveries", "Fastest, direct with no intermediate stops"],
+        ["Vehicle use", "Shared truck space", "Exclusive use of the entire vehicle"],
+        ["Ideal when", "Regular MSME shipments with flexible timelines", "Urgent or high-value cargo"],
+      ],
+      footnote: "Indicative guidance for East India corridors. Compare live prices with the LoadSaathi Fare Calculator.",
+    },
     content: [
       "One of the most common questions from new shippers is whether to book PTL or FTL for their freight. The answer depends on your shipment size, budget, timeline, and the specific route you're shipping on.",
       "PTL (Part Truck Load) is a shared freight model where your goods share truck space with other shipments heading in the same direction. It's ideal for shipments under 3 tonnes and typically costs 30-40% less than booking an entire truck. The tradeoff is slightly longer transit times due to multiple pickups and deliveries.",
@@ -49,6 +62,16 @@ const guideData: Record<string, {
       { name: "Check current market rates", text: "Reference corridor averages such as ₹1,800-2,500/tonne for Rourkela–Ranchi PTL and ₹9,000-12,000 for a 7-ton FTL on the same route." },
       { name: "Use LoadSaathi's AI Price Predictor", text: "Post your shipment and the AI analyzes live market conditions, fuel, and truck availability to recommend fair pricing." },
     ],
+    rateTable: {
+      caption: "East India corridor freight rate snapshot",
+      headers: ["Corridor", "Distance", "PTL rate (per tonne)", "FTL rate (per vehicle)"],
+      rows: [
+        ["Rourkela–Ranchi", "180 km", "₹1,800–2,500", "₹9,000–12,000 (7-ton) / ₹22,000–28,000 (25-ton)"],
+        ["Rourkela–Bhubaneswar", "340 km", "₹2,200–3,000", "—"],
+        ["Rourkela–Kolkata", "430 km", "₹2,500–3,500", "—"],
+      ],
+      footnote: "Indicative 2026 corridor averages from this guide. FTL is quoted per vehicle — check the Fare Calculator for current pricing.",
+    },
     content: [
       "Understanding freight rates across East India's industrial corridors is essential for MSMEs looking to optimize their logistics budgets. Rates vary significantly based on distance, cargo type, vehicle availability, and seasonal demand.",
       "The Rourkela–Ranchi corridor (180 km) is one of the busiest, with PTL rates averaging ₹1,800-2,500 per tonne. Full truckload rates range from ₹9,000-12,000 for a 7-ton truck to ₹22,000-28,000 for a 25-ton trailer.",
@@ -95,6 +118,7 @@ export default function GuidePage() {
   if (!guide) {
     return (
       <div className="min-h-screen bg-background dark:bg-[#050816] flex items-center justify-center">
+        <SeoMeta title="Guide Not Found" description="The guide you are looking for does not exist." robots="noindex, nofollow" />
         <div className="text-center max-w-md mx-auto px-6">
           <h1 className="text-4xl font-black text-foreground mb-4">Guide Not Found</h1>
           <p className="text-muted-foreground mb-8">The guide you're looking for doesn't exist yet.</p>
@@ -171,6 +195,28 @@ export default function GuidePage() {
           {guide.content.map((para, i) => (
             <p key={i}>{para}</p>
           ))}
+          {guide.rateTable && (
+            <table border={1} style={{borderCollapse:'collapse',width:'100%',margin:'16px 0'}}>
+              <caption style={{textAlign:'left',fontWeight:700,padding:'8px 0'}}>{guide.rateTable.caption}</caption>
+              <thead>
+                <tr>
+                  {guide.rateTable.headers.map((h, i) => (
+                    <th key={i} style={{padding:'6px 8px',textAlign:'left',background:'#f4f4f5'}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {guide.rateTable.rows.map((row, ri) => (
+                  <tr key={ri}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} style={{padding:'6px 8px'}}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {guide.rateTable?.footnote && <p style={{fontSize:'12px'}}>{guide.rateTable.footnote}</p>}
         </div>
       </noscript>
       <SeoMeta
@@ -220,6 +266,46 @@ export default function GuidePage() {
               </p>
             ))}
           </div>
+
+          {guide.rateTable && (
+            <div className="mt-10 overflow-x-auto">
+              <table className="w-full text-left text-sm border border-border rounded-xl overflow-hidden">
+                <caption className="text-left font-bold text-foreground mb-3 caption-top">
+                  {guide.rateTable.caption}
+                </caption>
+                <thead>
+                  <tr className="bg-orange-100 dark:bg-orange-900/20">
+                    {guide.rateTable.headers.map((h) => (
+                      <th key={h} className="px-4 py-3 font-bold whitespace-nowrap text-foreground">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {guide.rateTable.rows.map((row) => (
+                    <tr key={row[0]} className="border-t border-border">
+                      {row.map((cell, ci) => (
+                        <td
+                          key={ci}
+                          className={
+                            ci === 0
+                              ? "px-4 py-3 font-semibold text-foreground"
+                              : "px-4 py-3 text-muted-foreground"
+                          }
+                        >
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {guide.rateTable.footnote && (
+                <p className="text-xs text-muted-foreground mt-3">{guide.rateTable.footnote}</p>
+              )}
+            </div>
+          )}
 
           {/* Internal Links */}
           <div className="mt-12 pt-8 border-t border-border">

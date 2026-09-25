@@ -119,6 +119,7 @@ export default function RouteDetail() {
   if (!route) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background dark:bg-[#050816]">
+        <SeoMeta title="Route Not Found" description="The freight route you are looking for does not exist." robots="noindex, nofollow" />
         <div className="text-center max-w-md mx-auto px-6">
           <Truck className="h-16 w-16 text-orange-400/50 mx-auto mb-6" />
           <h1 className="text-3xl font-black text-foreground mb-3">Route Not Found</h1>

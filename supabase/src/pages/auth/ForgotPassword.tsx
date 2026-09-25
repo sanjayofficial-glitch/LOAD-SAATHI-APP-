@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { showSuccess, showError } from '@/utils/toast';
+import SeoMeta from '@/components/SeoMeta';
 import { Mail, ArrowLeft, Loader2, CheckCircle, Lock } from 'lucide-react';
 
 const ForgotPassword = () => {
@@ -79,6 +80,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
+      <SeoMeta title="Reset Password" description="Reset your LoadSaathi account password." canonical="/forgot-password" robots="noindex, nofollow" />
       <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 animate-scale-in">
         <div className="text-center">
           <div className="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">

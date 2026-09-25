@@ -352,13 +352,23 @@ const cityData: Record<string, {
   },
 };
 
+// URL-slug aliases → cityData key. Canonical slug is what the sitemap lists.
+const CITY_ALIASES: Record<string, { key: string; canonicalSlug: string }> = {
+  visakhapatnam: { key: "vizag", canonicalSlug: "visakhapatnam" },
+  vizag: { key: "vizag", canonicalSlug: "visakhapatnam" },
+};
+
 export default function LocationPage() {
   const { city } = useParams<{ city: string }>();
-  const data = city ? cityData[city.toLowerCase()] : null;
+  const slug = city ? city.toLowerCase() : "";
+  const alias = CITY_ALIASES[slug];
+  const data = city ? (alias ? cityData[alias.key] : cityData[slug]) : null;
+  const canonicalSlug = (alias?.canonicalSlug ?? slug) || "";
 
   if (!data) {
     return (
       <div className="min-h-screen bg-background dark:bg-[#050816] flex items-center justify-center">
+        <SeoMeta title="City Not Found" description="We do not have a page for this city yet." robots="noindex, nofollow" />
         <div className="text-center max-w-md mx-auto px-6">
           <h1 className="text-4xl font-black text-foreground mb-4">City Not Found</h1>
           <p className="text-muted-foreground mb-8">We don't have a page for this city yet. Check back soon!</p>
@@ -383,7 +393,7 @@ export default function LocationPage() {
     "@type": "WebPage",
     name: `Freight Transport in ${data.name}, ${data.state} — LoadSaathi`,
     description: data.description,
-    url: `https://loadsaathi.in/location/${city}`,
+    url: `https://loadsaathi.in/location/${canonicalSlug}`,
     isPartOf: { "@type": "WebSite", name: "LoadSaathi", url: "https://loadsaathi.in" },
     about: {
       "@type": "Place",
@@ -419,11 +429,11 @@ export default function LocationPage() {
         title={`Freight Transport in ${data.name}, ${data.state} — LoadSaathi`}
         description={data.description.substring(0, 160)}
         keywords={`freight ${data.name.toLowerCase()}, truck booking ${data.name.toLowerCase()}, PTL ${data.name.toLowerCase()}, logistics ${data.name.toLowerCase()} ${data.state.toLowerCase()}`}
-        canonical={`/location/${city}`}
+        canonical={`/location/${canonicalSlug}`}
         jsonLd={faqSchema ? [schema, faqSchema] : schema}
         breadcrumbs={[
           { name: "Routes", url: "/routes" },
-          { name: data.name, url: `/location/${city}` },
+          { name: data.name, url: `/location/${canonicalSlug}` },
         ]}
       />
       <div className="min-h-screen bg-background dark:bg-[#050816]">

@@ -155,6 +155,7 @@ export default function BlogArticle() {
   if (!article) {
     return (
       <div className="min-h-screen bg-background dark:bg-[#050816] flex items-center justify-center">
+        <SeoMeta title="Article Not Found" description="The article you are looking for does not exist." robots="noindex, nofollow" />
         <div className="text-center max-w-md mx-auto px-6">
           <h1 className="text-4xl font-black text-foreground mb-4">Article Not Found</h1>
           <p className="text-muted-foreground mb-8">The article you're looking for doesn't exist or may have been removed.</p>

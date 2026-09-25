@@ -7,6 +7,7 @@ import { showSuccess, showError } from '@/utils/toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { User as UserType } from '@/types';
 import LogoMark from '@/components/LogoMark';
+import SeoMeta from '@/components/SeoMeta';
 
 const ChooseRole = () => {
   const { user, isLoaded } = useUser();
@@ -140,6 +141,7 @@ const ChooseRole = () => {
   if (!isLoaded || !user || profileLoading || userProfile?.user_type) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
+        <SeoMeta title="Choose Your Role" description="Choose your LoadSaathi account type." canonical="/choose-role" robots="noindex, nofollow" />
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-orange-600 dark:text-orange-400 mx-auto mb-2" />
           <p className="text-sm text-gray-500 dark:text-gray-400">Loading...</p>
@@ -150,6 +152,7 @@ const ChooseRole = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
+      <SeoMeta title="Choose Your Role" description="Choose whether to join LoadSaathi as a shipper or trucker." canonical="/choose-role" robots="noindex, nofollow" />
       <div className="max-w-2xl w-full mx-auto animate-scale-in">
         <div className="text-center mb-12">
           <LogoMark size="h-16 w-16" className="mx-auto mb-6" />

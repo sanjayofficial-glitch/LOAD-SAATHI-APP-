@@ -42,6 +42,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import LogoMark from "./LogoMark";
+import SeoMeta from "./SeoMeta";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import NotificationBell from "./NotificationBell";
@@ -381,6 +382,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col transition-colors duration-300">
+      {/* All routes behind this layout require auth — keep them out of the index */}
+      <SeoMeta title="LoadSaathi App" description="Your LoadSaathi dashboard." robots="noindex, nofollow" />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"

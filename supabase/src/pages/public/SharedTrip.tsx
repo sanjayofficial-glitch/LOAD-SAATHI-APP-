@@ -69,7 +69,7 @@ export default function SharedTrip() {
   if (loading) {
     return (
       <>
-        <SeoMeta title="Loading Trip Details" description="Loading shared trip information from LoadSaathi." canonical={`/share/trip/${id}`} />
+        <SeoMeta title="Loading Trip Details" description="Loading shared trip information from LoadSaathi." canonical={`/share/trip/${id}`} robots="noindex, nofollow" />
         <div className="min-h-screen bg-gradient-to-b from-orange-50/50 to-background dark:from-orange-950/10 dark:to-background flex items-center justify-center px-6">
           <Card className="w-full max-w-lg">
             <CardContent className="p-8 space-y-4">
@@ -87,7 +87,7 @@ export default function SharedTrip() {
   if (error || !trip) {
     return (
       <>
-        <SeoMeta title="Trip Not Found" description="This shared trip link is invalid or no longer available on LoadSaathi." canonical={`/share/trip/${id}`} />
+        <SeoMeta title="Trip Not Found" description="This shared trip link is invalid or no longer available on LoadSaathi." canonical={`/share/trip/${id}`} robots="noindex, nofollow" />
         <div className="min-h-screen bg-gradient-to-b from-orange-50/50 to-background dark:from-orange-950/10 dark:to-background flex items-center justify-center px-6">
           <Card className="w-full max-w-lg text-center">
             <CardContent className="p-8">
@@ -121,6 +121,7 @@ export default function SharedTrip() {
         title={`${trip.origin_city} to ${trip.destination_city} — Shared Truck Space`}
         description={`Available truck space from ${trip.origin_city} to ${trip.destination_city}. ${trip.available_capacity_tonnes}T capacity at ₹${trip.price_per_tonne}/T. ${trip.vehicle_type || 'Truck'} via LoadSaathi.`}
         canonical={`/share/trip/${id}`}
+        robots="noindex, nofollow"
       />
       <div className="min-h-screen bg-gradient-to-b from-orange-50/50 to-background dark:from-orange-950/10 dark:to-background">
       {/* Header */}

@@ -4,6 +4,7 @@ import { useSignIn, useUser } from "@clerk/clerk-react";
 import { Capacitor } from "@capacitor/core";
 import ThemeToggle from "@/components/ThemeToggle";
 import LogoMark from "@/components/LogoMark";
+import SeoMeta from "@/components/SeoMeta";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -72,6 +73,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4 py-4">
+      <SeoMeta title="Sign In" description="Sign in to your LoadSaathi account." canonical="/login" robots="noindex, nofollow" />
       <div className="flex justify-between items-center max-w-6xl mx-auto w-full mb-8">
         <Link to="/" className="flex items-center gap-2">
           <LogoMark size="h-9 w-9" />
