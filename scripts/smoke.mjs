@@ -49,10 +49,14 @@ function main() {
   const html = fs.readFileSync(indexHtml, "utf-8");
   check("dist/index.html is non-empty", html.length > 100);
 
-  // 2. Check that JS/CSS bundles exist
+  // 2. Check that JS/CSS bundles exist (local only — prerendered HTML also
+  // contains third-party CDN scripts like cookiehub and platform-injected
+  // Vercel insights scripts, none of which live in dist/)
+  const isExternal = (u) => /^(https?:)?\/\//.test(u) || u.startsWith("/_vercel/");
   const scriptMatches = html.matchAll(/src="([^"]*\.js)"/g);
   let scriptCount = 0;
   for (const [, src] of scriptMatches) {
+    if (isExternal(src)) continue;
     const scriptPath = path.join(DIST, src);
     check(`Script bundle ${src} exists`, fs.existsSync(scriptPath));
     scriptCount++;
@@ -62,6 +66,7 @@ function main() {
   const cssMatches = html.matchAll(/href="([^"]*\.css)"/g);
   let cssCount = 0;
   for (const [, href] of cssMatches) {
+    if (isExternal(href)) continue;
     const cssPath = path.join(DIST, href);
     check(`CSS bundle ${href} exists`, fs.existsSync(cssPath));
     cssCount++;
@@ -92,10 +97,10 @@ function main() {
     "/truck-load-booking",
     "/freight-marketplace",
     "/transport-cost-calculator",
-    "/truck-load-calculator",
-    "/ptl-vs-ftl-calculator",
-    "/freight-rate-calculator",
-    "/return-load-calculator",
+    "/tools/truck-load-calculator",
+    "/tools/ptl-vs-ftl-calculator",
+    "/tools/freight-rate-calculator",
+    "/tools/return-load-calculator",
     "/for-msmes",
     "/ai-logistics",
     "/data",
@@ -121,7 +126,7 @@ function main() {
     "/return-load",
     "/ptl-transport",
     "/freight-marketplace",
-    "/freight-rate-calculator",
+    "/tools/freight-rate-calculator",
     "/data",
   ];
   let canonicalOk = 0;
