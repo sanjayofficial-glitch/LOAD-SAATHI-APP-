@@ -164,7 +164,7 @@ export default function TruckLoadBooking() {
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link to="/fare-calculator">
+                <Link to="/tools/fare-calculator">
                   <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg border-border hover:border-orange-400 hover:text-orange-500 dark:hover:text-orange-400 transition-all text-foreground">
                     Get a Price Estimate
                   </Button>

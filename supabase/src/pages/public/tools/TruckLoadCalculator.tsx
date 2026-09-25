@@ -57,14 +57,14 @@ export default function TruckLoadCalculator() {
         title="Truck Load Calculator | Find the Right Truck for Your Cargo"
         description="Calculate which truck type fits your cargo weight. From Tata Ace (0.5T) to tractor-trailers (25T). AI recommends the best truck for your shipment."
         keywords="truck load calculator, which truck for cargo, truck capacity calculator, cargo weight to truck, truck size guide"
-        canonical="/truck-load-calculator"
-        breadcrumbs={[{ name: "Truck Load Calculator", url: "/truck-load-calculator" }]}
+        canonical="/tools/truck-load-calculator"
+        breadcrumbs={[{ name: "Truck Load Calculator", url: "/tools/truck-load-calculator" }]}
         jsonLd={[
           {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "LoadSaathi Truck Load Calculator",
-            "url": "https://loadsaathi.in/truck-load-calculator",
+            "url": "https://loadsaathi.in/tools/truck-load-calculator",
             "applicationCategory": "BusinessApplication",
             "description": "Find the right truck for your cargo weight. From mini trucks to tractor-trailers."
           },
@@ -154,7 +154,7 @@ export default function TruckLoadCalculator() {
           <div className="mt-8 text-center space-y-3">
             <p className="text-sm text-muted-foreground">Ready to book?</p>
             <div className="flex justify-center gap-3">
-              <Link to="/fare-calculator">
+              <Link to="/tools/fare-calculator">
                 <Button variant="outline" className="text-xs font-bold">Get a Price Estimate</Button>
               </Link>
               <Link to="/register?type=shipper">

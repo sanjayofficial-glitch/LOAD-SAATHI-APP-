@@ -29,14 +29,14 @@ export default function PtlVsFtlCalculator() {
         title="PTL vs FTL Calculator | Which Freight Option is Right for You?"
         description="Calculate whether PTL (Partial Truckload) or FTL (Full Truckload) is the right freight option for your shipment. Enter weight and urgency to get a recommendation."
         keywords="PTL vs FTL calculator, partial truckload vs full truckload, which freight option, PTL or FTL, freight decision tool"
-        canonical="/ptl-vs-ftl-calculator"
-        breadcrumbs={[{ name: "PTL vs FTL Calculator", url: "/ptl-vs-ftl-calculator" }]}
+        canonical="/tools/ptl-vs-ftl-calculator"
+        breadcrumbs={[{ name: "PTL vs FTL Calculator", url: "/tools/ptl-vs-ftl-calculator" }]}
         jsonLd={[
           {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "LoadSaathi PTL vs FTL Calculator",
-            "url": "https://loadsaathi.in/ptl-vs-ftl-calculator",
+            "url": "https://loadsaathi.in/tools/ptl-vs-ftl-calculator",
             "applicationCategory": "BusinessApplication",
             "description": "Decide between PTL (Partial Truckload) and FTL (Full Truckload) based on shipment weight and urgency."
           },

@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SeoMeta from "@/components/SeoMeta";
 
 const tools = [
-  { title: "Fare Calculator", desc: "Estimate end-to-end truck fares for any Indian city pair.", path: "/fare-calculator", icon: IndianRupee },
-  { title: "Freight Rate Calculator", desc: "Compare per-kg rates across PTL, FTL, and LTL modes.", path: "/freight-rate-calculator", icon: Calculator },
+  { title: "Fare Calculator", desc: "Estimate end-to-end truck fares for any Indian city pair.", path: "/tools/fare-calculator", icon: IndianRupee },
+  { title: "Freight Rate Calculator", desc: "Compare per-kg rates across PTL, FTL, and LTL modes.", path: "/tools/freight-rate-calculator", icon: Calculator },
   { title: "Transport Cost Calculator", desc: "Calculate total transport cost including fuel, tolls, and driver wages.", path: "/transport-cost-calculator", icon: BarChart3 },
-  { title: "Truck Load Calculator", desc: "Determine optimal load weight and payload distribution.", path: "/truck-load-calculator", icon: Truck },
-  { title: "PTL vs FTL Calculator", desc: "Decide whether Part Truck Load or Full Truck Load saves more.", path: "/ptl-vs-ftl-calculator", icon: Scale },
-  { title: "Return Load Calculator", desc: "Find savings by booking return loads on empty backhaul legs.", path: "/return-load-calculator", icon: ArrowLeft },
+  { title: "Truck Load Calculator", desc: "Determine optimal load weight and payload distribution.", path: "/tools/truck-load-calculator", icon: Truck },
+  { title: "PTL vs FTL Calculator", desc: "Decide whether Part Truck Load or Full Truck Load saves more.", path: "/tools/ptl-vs-ftl-calculator", icon: Scale },
+  { title: "Return Load Calculator", desc: "Find savings by booking return loads on empty backhaul legs.", path: "/tools/return-load-calculator", icon: ArrowLeft },
   { title: "Route Optimizer", desc: "Plan the fastest or cheapest multi-stop truck route.", path: "/tools/route-optimizer", icon: Route },
   { title: "Empty Km Savings", desc: "Quantify revenue lost to empty running and how to recover it.", path: "/tools/empty-km-savings", icon: MapPin },
   { title: "Trip Profit Calculator", desc: "See net profit after fuel, tolls, maintenance, and driver costs.", path: "/tools/trip-profit", icon: TrendingUp },

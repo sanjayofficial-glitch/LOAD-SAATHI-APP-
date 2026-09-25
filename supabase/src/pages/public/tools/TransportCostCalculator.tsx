@@ -194,7 +194,7 @@ export default function TransportCostCalculator() {
           <div className="mt-8 text-center space-y-3">
             <p className="text-sm text-muted-foreground">Need a full freight booking?</p>
             <div className="flex justify-center gap-3">
-              <Link to="/fare-calculator">
+              <Link to="/tools/fare-calculator">
                 <Button variant="outline" className="text-xs font-bold">AI Price Predictor</Button>
               </Link>
               <Link to="/register?type=shipper">

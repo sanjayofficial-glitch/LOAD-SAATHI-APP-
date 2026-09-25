@@ -83,7 +83,7 @@ export default function ForMsmes() {
               LoadSaathi connects MSMEs directly with verified truckers. Transparent pricing, AI rate predictions, and no brokers — helping you save 20–40% on every shipment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/freight-rate-calculator" className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors">
+              <Link to="/tools/freight-rate-calculator" className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors">
                 Calculate Your Rate <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/register" className="inline-flex items-center gap-2 border border-white/40 text-white px-6 py-3 rounded-lg font-bold hover:bg-white/10 transition-colors">
@@ -177,7 +177,7 @@ export default function ForMsmes() {
               <Link to="/register" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-bold transition-colors">
                 Get Started Free
               </Link>
-              <Link to="/freight-rate-calculator" className="border border-border hover:border-orange-500/30 text-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
+              <Link to="/tools/freight-rate-calculator" className="border border-border hover:border-orange-500/30 text-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
                 Calculate Freight Rate
               </Link>
             </div>

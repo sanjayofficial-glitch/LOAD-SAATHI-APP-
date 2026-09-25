@@ -200,14 +200,14 @@ export default function FareCalculator() {
         title="Freight Fare Calculator — Estimate PTL/LTL Rates"
         description="Calculate estimated freight rates for PTL and LTL shipments across India. AI-powered fare estimates with vehicle-specific per-km rates, fuel surcharge, and live diesel prices."
         keywords="freight fare calculator India, PTL LTL rate calculator, truck freight cost estimation, vehicle rate card"
-        canonical="/fare-calculator"
-        breadcrumbs={[{ name: "Fare Calculator", url: "/fare-calculator" }]}
+        canonical="/tools/fare-calculator"
+        breadcrumbs={[{ name: "Fare Calculator", url: "/tools/fare-calculator" }]}
         jsonLd={[
           {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "LoadSaathi Freight Fare Calculator",
-            "url": "https://loadsaathi.in/fare-calculator",
+            "url": "https://loadsaathi.in/tools/fare-calculator",
             "description": "AI-powered freight fare calculator for PTL and LTL shipments across India. Get instant estimates with vehicle-specific rates, fuel surcharge, and live diesel prices.",
             "applicationCategory": "BusinessApplication",
             "operatingSystem": "Web",

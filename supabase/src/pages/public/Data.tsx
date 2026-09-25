@@ -181,7 +181,7 @@ export default function Data() {
           <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Need a Quote for Your Route?</h2>
           <p className="text-lg text-muted-foreground mb-8">Get AI-powered pricing based on real-time market data.</p>
           <div className="flex justify-center gap-4">
-            <Link to="/fare-calculator">
+            <Link to="/tools/fare-calculator">
               <Button className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-8 py-4 h-auto rounded-lg">
                 Get a Rate Estimate
               </Button>

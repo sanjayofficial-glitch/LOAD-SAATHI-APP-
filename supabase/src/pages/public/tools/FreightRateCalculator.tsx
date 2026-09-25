@@ -166,14 +166,14 @@ export default function FreightRateCalculator() {
         title="Freight Rate Calculator India | Estimate Truck Rates & Cost per KM"
         description="Calculate estimated freight rates for PTL, LTL, and FTL shipments across India. Get distance, cost/km, truck recommendation, and freight range."
         keywords="freight rate calculator India, truck rate per km, transport cost calculator, freight charges India, PTL LTL rate estimate"
-        canonical="/freight-rate-calculator"
-        breadcrumbs={[{ name: "Freight Rate Calculator", url: "/freight-rate-calculator" }]}
+        canonical="/tools/freight-rate-calculator"
+        breadcrumbs={[{ name: "Freight Rate Calculator", url: "/tools/freight-rate-calculator" }]}
         jsonLd={[
           {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "LoadSaathi Freight Rate Calculator",
-            "url": "https://loadsaathi.in/freight-rate-calculator",
+            "url": "https://loadsaathi.in/tools/freight-rate-calculator",
             "applicationCategory": "BusinessApplication",
             "description": "Estimate freight rates for PTL, LTL, and FTL shipments across India. Calculate cost per km, truck recommendation, and freight range.",
           },
@@ -356,13 +356,13 @@ export default function FreightRateCalculator() {
               <Link to="/transport-cost-calculator">
                 <Button variant="outline" className="text-xs font-bold">Transport Cost Calculator</Button>
               </Link>
-              <Link to="/truck-load-calculator">
+              <Link to="/tools/truck-load-calculator">
                 <Button variant="outline" className="text-xs font-bold">Truck Load Calculator</Button>
               </Link>
-              <Link to="/ptl-vs-ftl-calculator">
+              <Link to="/tools/ptl-vs-ftl-calculator">
                 <Button variant="outline" className="text-xs font-bold">PTL vs FTL Calculator</Button>
               </Link>
-              <Link to="/return-load-calculator">
+              <Link to="/tools/return-load-calculator">
                 <Button variant="outline" className="text-xs font-bold">Return Load Calculator</Button>
               </Link>
             </div>

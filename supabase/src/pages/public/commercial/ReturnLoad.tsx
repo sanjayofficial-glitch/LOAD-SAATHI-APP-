@@ -213,7 +213,7 @@ export default function ReturnLoad() {
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Link to="/fare-calculator">
+                <Link to="/tools/fare-calculator">
                   <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg border-border hover:border-green-400 hover:text-green-500 dark:hover:text-green-400 transition-all text-foreground">
                     Check Rates
                   </Button>

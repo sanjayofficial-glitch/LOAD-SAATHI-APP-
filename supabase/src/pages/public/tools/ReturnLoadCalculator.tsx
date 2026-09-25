@@ -112,14 +112,14 @@ export default function ReturnLoadCalculator() {
         title="Return Load Calculator India | Estimate Empty Miles & Revenue"
         description="Calculate empty kilometres, fuel cost, and potential return-load revenue for your truck route. Reduce empty miles and increase truck utilisation with LoadSaathi."
         keywords="return load calculator, empty miles calculator, backhaul calculator India, truck empty return trip, find return load revenue"
-        canonical="/return-load-calculator"
-        breadcrumbs={[{ name: "Return Load Calculator", url: "/return-load-calculator" }]}
+        canonical="/tools/return-load-calculator"
+        breadcrumbs={[{ name: "Return Load Calculator", url: "/tools/return-load-calculator" }]}
         jsonLd={[
           {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "LoadSaathi Return Load Calculator",
-            "url": "https://loadsaathi.in/return-load-calculator",
+            "url": "https://loadsaathi.in/tools/return-load-calculator",
             "applicationCategory": "BusinessApplication",
             "description": "Calculate empty kilometres, fuel cost, and potential return-load revenue for your truck routes in India.",
           },
@@ -306,7 +306,7 @@ export default function ReturnLoadCalculator() {
               <Link to="/return-load">
                 <Button variant="outline" className="text-xs font-bold">What Are Return Loads?</Button>
               </Link>
-              <Link to="/freight-rate-calculator">
+              <Link to="/tools/freight-rate-calculator">
                 <Button variant="outline" className="text-xs font-bold">Freight Rate Calculator</Button>
               </Link>
               <Link to="/register">

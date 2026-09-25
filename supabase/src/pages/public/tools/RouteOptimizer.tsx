@@ -276,7 +276,7 @@ export default function RouteOptimizer() {
                   <Link to="/register" className="flex-1">
                     <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold">Book This Route</Button>
                   </Link>
-                  <Link to="/freight-rate-calculator" className="flex-1">
+                  <Link to="/tools/freight-rate-calculator" className="flex-1">
                     <Button variant="outline" className="w-full font-bold">Estimate Freight Cost</Button>
                   </Link>
                 </div>
@@ -287,13 +287,13 @@ export default function RouteOptimizer() {
           <div className="mt-10 text-center space-y-3">
             <p className="text-sm text-muted-foreground">Related tools</p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Link to="/return-load-calculator">
+              <Link to="/tools/return-load-calculator">
                 <Button variant="outline" className="text-xs font-bold">Return Load Calculator</Button>
               </Link>
-              <Link to="/freight-rate-calculator">
+              <Link to="/tools/freight-rate-calculator">
                 <Button variant="outline" className="text-xs font-bold">Freight Rate Calculator</Button>
               </Link>
-              <Link to="/fare-calculator">
+              <Link to="/tools/fare-calculator">
                 <Button variant="outline" className="text-xs font-bold">Fare Calculator</Button>
               </Link>
             </div>

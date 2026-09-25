@@ -218,7 +218,7 @@ export default function SharedSavingsCalculator() {
                   <Link to="/register" className="flex-1">
                     <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold">Ship Shared Freight</Button>
                   </Link>
-                  <Link to="/ptl-vs-ftl-calculator" className="flex-1">
+                  <Link to="/tools/ptl-vs-ftl-calculator" className="flex-1">
                     <Button variant="outline" className="w-full font-bold">PTL vs FTL Guide</Button>
                   </Link>
                 </div>

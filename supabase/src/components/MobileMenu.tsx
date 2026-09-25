@@ -20,9 +20,9 @@ interface MobileMenuProps {
 
 const menuItems: { label: string; path: string; icon: React.ReactNode }[] = [
   { label: "How It Works", path: "/how-it-works", icon: <BookOpen className="h-5 w-5" /> },
-  { label: "Fare Calculator", path: "/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
-  { label: "Freight Rate Calculator", path: "/freight-rate-calculator", icon: <Calculator className="h-5 w-5" /> },
-  { label: "Return Load Calculator", path: "/return-load-calculator", icon: <Calculator className="h-5 w-5" /> },
+  { label: "Fare Calculator", path: "/tools/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
+  { label: "Freight Rate Calculator", path: "/tools/freight-rate-calculator", icon: <Calculator className="h-5 w-5" /> },
+  { label: "Return Load Calculator", path: "/tools/return-load-calculator", icon: <Calculator className="h-5 w-5" /> },
   { label: "About", path: "/about", icon: <Info className="h-5 w-5" /> },
   { label: "FAQ", path: "/faq", icon: <HelpCircle className="h-5 w-5" /> },
   { label: "Blog", path: "/blog", icon: <Newspaper className="h-5 w-5" /> },

@@ -47,7 +47,7 @@ const guideData: Record<string, {
     internalLinks: [
       { label: "Browse Freight Routes", path: "/routes" },
       { label: "Post a Shipment", path: "/register" },
-      { label: "Fare Calculator", path: "/fare-calculator" },
+      { label: "Fare Calculator", path: "/tools/fare-calculator" },
     ],
   },
   "freight-rates-east-india": {

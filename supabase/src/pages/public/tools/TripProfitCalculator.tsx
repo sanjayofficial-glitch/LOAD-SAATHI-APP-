@@ -249,7 +249,7 @@ export default function TripProfitCalculator() {
                   <Link to="/register?type=trucker" className="flex-1">
                     <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold">Start Earning</Button>
                   </Link>
-                  <Link to="/fare-calculator" className="flex-1">
+                  <Link to="/tools/fare-calculator" className="flex-1">
                     <Button variant="outline" className="w-full font-bold">Estimate Freight Rates</Button>
                   </Link>
                 </div>

@@ -364,7 +364,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const toolsItems: MobileTabItem[] = [
       { label: "Contact", path: "/contact", icon: <Phone className="h-5 w-5" /> },
       { label: "About", path: "/about", icon: <Info className="h-5 w-5" /> },
-      { label: "Fare Calculator", path: "/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
+      { label: "Fare Calculator", path: "/tools/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
       { label: "Cricket Score", path: "/cricket-score", icon: <Trophy className="h-5 w-5" /> },
     ];
     const footerItems: MobileTabItem[] = [

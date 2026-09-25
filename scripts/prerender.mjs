@@ -16,7 +16,7 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
-import { execFileSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -83,7 +83,10 @@ const STATIC_ROUTES = [
 function extractSlugs(filePath, pattern) {
   if (!fs.existsSync(filePath)) return [];
   const content = fs.readFileSync(filePath, "utf-8");
-  const regex = new RegExp(pattern, "g");
+  // Preserve the caller's flags (notably `m` for ^-anchored patterns) —
+  // new RegExp(regexp, "g") would silently drop them and match nothing.
+  const flags = pattern.flags.includes("g") ? pattern.flags : pattern.flags + "g";
+  const regex = new RegExp(pattern.source, flags);
   const slugs = [];
   let match;
   while ((match = regex.exec(content)) !== null) {
@@ -132,8 +135,16 @@ const PUBLIC_ROUTES = [
   ...TRANSPORT_SERVICE_SLUGS.map((s) => `/transport-service/${s}`),
 ];
 
-const TIMEOUT_MS = 20_000;
+const TIMEOUT_MS = 90_000;
+const READY_TIMEOUT_MS = 40_000; // per-page wall-clock budget waiting for React
+const READY_POLL_MS = 500;
 const PORT = 0; // random available port
+
+// Optional: PRERENDER_ONLY="/about,/blog/x" to render a subset (debugging).
+const ONLY = (process.env.PRERENDER_ONLY || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 const CHROME_PATH =
   process.env.CHROME_PATH ||
@@ -199,7 +210,7 @@ function routeToFile(route) {
   return path.join(DIST, route, "index.html");
 }
 
-function chromeDumpDom(chromePath, url, timeoutMs) {
+function chromeDumpDom(chromePath, url, timeoutMs, profileDir) {
   return execFileSync(
     chromePath,
     [
@@ -207,6 +218,14 @@ function chromeDumpDom(chromePath, url, timeoutMs) {
       "--disable-gpu",
       "--no-sandbox",
       "--disable-setuid-sandbox",
+      // Isolated throwaway profile: never touches (or blocks on) the user's
+      // real Chrome profile, and skips extensions / first-run / sync noise.
+      `--user-data-dir=${profileDir}`,
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--disable-extensions",
+      "--disable-background-networking",
+      "--disable-sync",
       "--dump-dom",
       url,
     ],
@@ -219,7 +238,120 @@ function chromeDumpDom(chromePath, url, timeoutMs) {
   );
 }
 
-function main() {
+// ── CDP renderer ─────────────────────────────────────────────────────────────
+// --dump-dom snapshots at the load event (boot-loader shell). Instead we drive
+// one persistent headless Chrome over CDP, navigate per route, and wait for
+// React to actually render (SeoMeta marker + h1) before grabbing the HTML.
+
+function launchChrome(chromePath, profileDir, debugPort) {
+  const child = spawn(
+    chromePath,
+    [
+      "--headless",
+      "--disable-gpu",
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      `--user-data-dir=${profileDir}`,
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--disable-extensions",
+      "--disable-background-networking",
+      "--disable-sync",
+      `--remote-debugging-port=${debugPort}`,
+      "about:blank",
+    ],
+    { stdio: ["ignore", "ignore", "ignore"], windowsHide: true }
+  );
+  return child;
+}
+
+async function waitForDebugger(port, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(`http://127.0.0.1:${port}/json/version`);
+      if (res.ok) return true;
+    } catch {
+      // not up yet
+    }
+    await new Promise((r) => setTimeout(r, 300));
+  }
+  return false;
+}
+
+function connectPage(wsUrl) {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(wsUrl, { maxPayload: 50 * 1024 * 1024 });
+    let nextId = 0;
+    const pending = new Map();
+    ws.onopen = () => {
+      resolve({
+        send: (method, params = {}) =>
+          new Promise((res, rej) => {
+            const myId = ++nextId;
+            pending.set(myId, { res, rej });
+            ws.send(JSON.stringify({ id: myId, method, params }));
+          }),
+        close: () => {
+          try { ws.close(); } catch { /* ignore */ }
+        },
+      });
+    };
+    ws.onerror = (e) => reject(e);
+    ws.onmessage = (ev) => {
+      let msg;
+      try {
+        msg = JSON.parse(ev.data.toString());
+      } catch {
+        return;
+      }
+      if (msg.id && pending.has(msg.id)) {
+        pending.get(msg.id).res(msg);
+        pending.delete(msg.id);
+      }
+    };
+  });
+}
+
+async function renderRoute(debugPort, url) {
+  // Fresh tab per route so one bad page can't poison the next.
+  const created = await (
+    await fetch(`http://127.0.0.1:${debugPort}/json/new?about:blank`, { method: "PUT" })
+  ).json();
+  const { send, close } = await connectPage(created.webSocketDebuggerUrl);
+  try {
+    await send("Page.enable");
+    await send("Runtime.enable");
+    await send("Page.navigate", { url });
+    const deadline = Date.now() + READY_TIMEOUT_MS;
+    for (;;) {
+      await new Promise((r) => setTimeout(r, READY_POLL_MS));
+      const m = await send("Runtime.evaluate", {
+        expression:
+          "({seo: !!document.querySelector('[data-ls-seo]'), h1: !!document.querySelector('h1'), done: document.readyState === 'complete'})",
+        returnByValue: true,
+      });
+      const v = m.result?.result?.value;
+      if (v && v.seo && v.h1 && v.done) break;
+      if (Date.now() > deadline) return null; // fail-soft: skip this route
+    }
+    const m = await send("Runtime.evaluate", {
+      expression: "document.documentElement.outerHTML",
+      returnByValue: true,
+    });
+    const html = m.result?.result?.value;
+    return typeof html === "string" && html.length > 0 ? `<!DOCTYPE html>\n${html}` : null;
+  } finally {
+    close();
+    try {
+      await fetch(`http://127.0.0.1:${debugPort}/json/close/${created.id}`, { method: "PUT" });
+    } catch {
+      // best effort
+    }
+  }
+}
+
+async function main() {
   console.log("[prerender] Starting build-time prerender...");
 
   if (!fs.existsSync(DIST)) {
@@ -241,35 +373,67 @@ function main() {
     return;
   }
 
+  const routes = ONLY.length
+    ? PUBLIC_ROUTES.filter((r) => ONLY.includes(r))
+    : PUBLIC_ROUTES;
+  if (ONLY.length) console.log(`[prerender] PRERENDER_ONLY filter: ${routes.length} route(s)`);
+
+  // Fresh throwaway Chrome profile per run (under the OS temp dir).
+  const profileDir = fs.mkdtempSync(
+    path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "ls-prerender-")
+  );
+
   // Start SPA server
   const server = createSpaServer(DIST);
-  server.listen(PORT, "127.0.0.1", () => {
-    const port = server.address().port;
-    console.log(`[prerender] SPA server on http://127.0.0.1:${port}`);
+  await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+  const port = server.address().port;
+  console.log(`[prerender] SPA server on http://127.0.0.1:${port}`);
 
-    const results = { success: 0, failed: 0 };
-
-    for (const route of PUBLIC_ROUTES) {
-      const url = `http://127.0.0.1:${port}${route}`;
-      const outFile = routeToFile(route);
-
-      try {
-        const rendered = chromeDumpDom(chromePath, url, TIMEOUT_MS);
-        fs.mkdirSync(path.dirname(outFile), { recursive: true });
-        fs.writeFileSync(outFile, rendered, "utf-8");
-        results.success++;
-        console.log(`  ✓ ${route} (${rendered.length} bytes)`);
-      } catch (err) {
-        results.failed++;
-        console.warn(`  ✗ ${route}: ${err.message?.slice(0, 120)}`);
-      }
-    }
-
+  // One persistent headless Chrome driven over CDP.
+  const debugPort = 18711;
+  const chrome = launchChrome(chromePath, profileDir, debugPort);
+  const ready = await waitForDebugger(debugPort, TIMEOUT_MS);
+  if (!ready) {
+    console.warn("[prerender] Chrome debugger never came up. Skipping.");
+    try { chrome.kill(); } catch { /* ignore */ }
     server.close();
-    console.log(
-      `[prerender] Done. ${results.success} succeeded, ${results.failed} failed.`
-    );
-  });
+    return;
+  }
+
+  const results = { success: 0, failed: 0, skipped: 0 };
+
+  for (const route of routes) {
+    const url = `http://127.0.0.1:${port}${route}`;
+    const outFile = routeToFile(route);
+
+    try {
+      const rendered = await renderRoute(debugPort, url);
+      // Corruption guard: never write suspicious output over a good file.
+      if (!rendered || rendered.length < 5000 || !rendered.includes("<h1")) {
+        results.skipped++;
+        console.warn(`  ! ${route}: not ready (${rendered ? `${rendered.length} bytes` : "timeout"}) — kept previous file`);
+        continue;
+      }
+      fs.mkdirSync(path.dirname(outFile), { recursive: true });
+      fs.writeFileSync(outFile, rendered, "utf-8");
+      results.success++;
+      console.log(`  ✓ ${route} (${rendered.length} bytes)`);
+    } catch (err) {
+      results.failed++;
+      console.warn(`  ✗ ${route}: ${err.message?.slice(0, 120)}`);
+    }
+  }
+
+  try { chrome.kill(); } catch { /* ignore */ }
+  server.close();
+  try {
+    fs.rmSync(profileDir, { recursive: true, force: true });
+  } catch {
+    // best effort
+  }
+  console.log(
+    `[prerender] Done. ${results.success} succeeded, ${results.failed} failed, ${results.skipped} skipped.`
+  );
 }
 
 main();

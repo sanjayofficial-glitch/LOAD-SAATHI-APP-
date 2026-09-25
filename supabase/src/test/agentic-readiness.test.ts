@@ -174,8 +174,8 @@ describe('Agentic Readiness: index.html metadata', () => {
     content = readFile('index.html');
   });
 
-  it('has canonical URL', () => {
-    expect(content).toContain('<link rel="canonical" href="https://loadsaathi.in/" />');
+  it('has NO site-wide canonical (per-route canonicals are injected by api/agent.js and prerender; a hardcoded apex canonical would tell Google every URL is the homepage)', () => {
+    expect(content).not.toContain('<link rel="canonical"');
   });
 
   it('has og:type', () => {
@@ -186,8 +186,8 @@ describe('Agentic Readiness: index.html metadata', () => {
     expect(content).toContain('<meta property="og:image" content="https://loadsaathi.in/og-image.png" />');
   });
 
-  it('has og:url', () => {
-    expect(content).toContain('<meta property="og:url" content="https://loadsaathi.in/" />');
+  it('has NO site-wide og:url (same reason as canonical above)', () => {
+    expect(content).not.toContain('property="og:url"');
   });
 
   it('has lang attribute on html tag', () => {
