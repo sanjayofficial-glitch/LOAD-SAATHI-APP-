@@ -80,6 +80,11 @@ const STATIC = [
   ["/data", "monthly", "0.8"],
   ["/blog", "weekly", "0.9"],
   ["/routes", "weekly", "0.9"],
+  ["/hi", "monthly", "0.8"],
+  ["/hi/ptl-transport", "monthly", "0.8"],
+  ["/hi/return-load", "monthly", "0.8"],
+  ["/hi/bhada-kaise-book-kare", "monthly", "0.7"],
+  ["/hi/route/rourkela-to-ranchi", "monthly", "0.7"],
 ];
 
 // ── Dynamic slugs (same sources as scripts/prerender.mjs) ────────────────────
@@ -98,7 +103,7 @@ const GUIDE_SLUGS = extractSlugs(
 const LOCATION_SLUGS = extractSlugs(
   path.join(ROOT, "supabase/src/pages/public/locations/LocationPage.tsx"),
   /^\s+([a-z]+):\s*\{$/gm
-).filter((s) => s !== "vizag" && s !== "serviceBlurbs" && s !== "about" && s !== "contactPoint");
+).filter((s) => s !== "vizag" && s !== "serviceBlurbs" && s !== "about" && s !== "contactPoint" && s !== "speakable");
 if (!LOCATION_SLUGS.includes("visakhapatnam")) LOCATION_SLUGS.push("visakhapatnam");
 const TRANSPORT_SERVICE_SLUGS = extractSlugs(
   path.join(ROOT, "supabase/src/pages/public/transport/TransportServicePage.tsx"),

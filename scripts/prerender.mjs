@@ -71,6 +71,11 @@ const STATIC_ROUTES = [
   "/for-msmes",
   "/ai-logistics",
   "/data",
+  "/hi",
+  "/hi/ptl-transport",
+  "/hi/return-load",
+  "/hi/bhada-kaise-book-kare",
+  "/hi/route/rourkela-to-ranchi",
 ];
 // NOTE: redirect sources (/freight-intelligence, legacy calculator URLs,
 // /transport/*, /location/vizag) are deliberately NOT prerendered — baking a
@@ -117,7 +122,7 @@ const GUIDE_SLUGS = extractSlugs(
 const LOCATION_SLUGS = extractSlugs(
   path.join(ROOT, "supabase/src/pages/public/locations/LocationPage.tsx"),
   /^\s+([a-z]+):\s*\{$/gm
-).filter((s) => s !== "vizag" && s !== "serviceBlurbs" && s !== "about" && s !== "contactPoint");
+).filter((s) => s !== "vizag" && s !== "serviceBlurbs" && s !== "about" && s !== "contactPoint" && s !== "speakable");
 if (!LOCATION_SLUGS.includes("visakhapatnam")) LOCATION_SLUGS.push("visakhapatnam");
 
 // Dynamic routes: transport-service pages
