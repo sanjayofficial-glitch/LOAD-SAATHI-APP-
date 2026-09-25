@@ -4,6 +4,14 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.loadsaathi.in" }],
+      "destination": "https://loadsaathi.in/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

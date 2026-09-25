@@ -30,7 +30,6 @@ const STATIC_ROUTES = [
   "/about",
   "/pricing",
   "/faq",
-  "/fare-calculator",
   "/contact",
   "/safety-trust",
   "/compare",
@@ -38,6 +37,12 @@ const STATIC_ROUTES = [
   "/terms",
   "/solutions/shippers",
   "/solutions/truckers",
+  "/screens/dashboard",
+  "/screens/matching",
+  "/screens/chat",
+  "/screens/credit-score",
+  "/screens/reviews",
+  "/screens/admin",
   "/routes",
   "/blog",
   "/gallery",
@@ -46,15 +51,30 @@ const STATIC_ROUTES = [
   "/ltl-transport",
   "/truck-load-booking",
   "/freight-marketplace",
+  "/truck-near-me",
+  "/tools",
   "/transport-cost-calculator",
-  "/truck-load-calculator",
-  "/ptl-vs-ftl-calculator",
-  "/freight-rate-calculator",
-  "/return-load-calculator",
+  "/tools/fare-calculator",
+  "/tools/freight-rate-calculator",
+  "/tools/return-load-calculator",
+  "/tools/truck-load-calculator",
+  "/tools/ptl-vs-ftl-calculator",
+  "/tools/route-optimizer",
+  "/tools/empty-km-savings",
+  "/tools/trip-profit",
+  "/tools/shared-savings",
+  "/tools/document-checklist",
+  "/tools/carbon-savings",
+  "/tools/toll-fuel",
+  "/tools/gst-calculator",
+  "/tools/payload-utilization",
   "/for-msmes",
   "/ai-logistics",
   "/data",
 ];
+// NOTE: redirect sources (/freight-intelligence, legacy calculator URLs,
+// /transport/*, /location/vizag) are deliberately NOT prerendered — baking a
+// static file would shadow the edge 301 with a 200 on Vercel.
 
 /**
  * Extract slugs from a TypeScript/JavaScript source file by matching
@@ -90,11 +110,18 @@ const GUIDE_SLUGS = extractSlugs(
   /^\s+"([a-z0-9-]+)":\s*\{/gm
 );
 
-// Dynamic routes: location pages
+// Dynamic routes: location pages (vizag 301s to visakhapatnam — prerender the target only)
 const LOCATION_SLUGS = extractSlugs(
   path.join(ROOT, "supabase/src/pages/public/locations/LocationPage.tsx"),
   /^\s+([a-z]+):\s*\{$/gm
-);
+).filter((s) => s !== "vizag" && s !== "serviceBlurbs" && s !== "about" && s !== "contactPoint");
+if (!LOCATION_SLUGS.includes("visakhapatnam")) LOCATION_SLUGS.push("visakhapatnam");
+
+// Dynamic routes: transport-service pages
+const TRANSPORT_SERVICE_SLUGS = extractSlugs(
+  path.join(ROOT, "supabase/src/pages/public/transport/TransportServicePage.tsx"),
+  /^  ([a-z-]+): \{$/gm
+).filter((s) => !["serviceBlurbs", "about", "contactPoint"].includes(s));
 
 const PUBLIC_ROUTES = [
   ...STATIC_ROUTES,
@@ -102,6 +129,7 @@ const PUBLIC_ROUTES = [
   ...BLOG_SLUGS.map((s) => `/blog/${s}`),
   ...GUIDE_SLUGS.map((s) => `/guide/${s}`),
   ...LOCATION_SLUGS.map((s) => `/location/${s}`),
+  ...TRANSPORT_SERVICE_SLUGS.map((s) => `/transport-service/${s}`),
 ];
 
 const TIMEOUT_MS = 20_000;
@@ -205,7 +233,7 @@ function main() {
     return;
   }
   console.log(`[prerender] Using Chrome: ${chromePath}`);
-  console.log(`[prerender] Discovered ${PUBLIC_ROUTES.length} routes to pre-render (${ROUTE_SLUGS.length} routes, ${BLOG_SLUGS.length} blog, ${GUIDE_SLUGS.length} guides, ${LOCATION_SLUGS.length} locations)`);
+  console.log(`[prerender] Discovered ${PUBLIC_ROUTES.length} routes to pre-render (${ROUTE_SLUGS.length} routes, ${BLOG_SLUGS.length} blog, ${GUIDE_SLUGS.length} guides, ${LOCATION_SLUGS.length} locations, ${TRANSPORT_SERVICE_SLUGS.length} transport-service)`);
 
   const spaIndex = path.join(DIST, "index.html");
   if (!fs.existsSync(spaIndex)) {
