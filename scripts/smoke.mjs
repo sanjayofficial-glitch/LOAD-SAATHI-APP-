@@ -118,40 +118,60 @@ function main() {
   );
 
   // 6. Canonical tag verification in prerendered pages
-  const canonicalPages = [
-    "/",
-    "/features",
-    "/about",
-    "/pricing",
-    "/return-load",
-    "/ptl-transport",
-    "/freight-marketplace",
-    "/tools/freight-rate-calculator",
-    "/data",
-  ];
-  let canonicalOk = 0;
-  for (const route of canonicalPages) {
-    const pagePath = route === "/"
-      ? path.join(DIST, "index.html")
-      : path.join(DIST, route, "index.html");
-    if (!fs.existsSync(pagePath)) continue;
-    const content = fs.readFileSync(pagePath, "utf-8");
-    const canonicalMatch = content.match(/<link\s+rel="canonical"\s+href="([^"]+)"/);
-    if (canonicalMatch) {
-      const href = canonicalMatch[1];
-      const expected = `https://loadsaathi.in${route}`;
-      if (href === expected) {
-        canonicalOk++;
-      } else {
-        console.error(`  ✗ Canonical mismatch for ${route}: got ${href}, expected ${expected}`);
-        failures++;
-      }
-    } else {
-      console.error(`  ✗ Missing canonical tag in ${route}`);
-      failures++;
+  // Canonicals only exist in HTML after prerender executes the React app.
+  // When prerender was skipped (e.g. Vercel build image has no Chrome), the
+  // SPA shell legitimately has no canonical tag — canonical is injected at
+  // runtime by SeoMeta, so downgrade these checks to informational.
+  const prerenderStatusPath = path.join(DIST, ".prerender-status.json");
+  let prerendered = null;
+  if (fs.existsSync(prerenderStatusPath)) {
+    try {
+      prerendered = JSON.parse(fs.readFileSync(prerenderStatusPath, "utf-8")).prerendered === true;
+    } catch {
+      prerendered = null;
     }
   }
-  console.log(`  ℹ ${canonicalOk}/${canonicalPages.length} prerendered pages have correct canonical tags`);
+  if (prerendered === false) {
+    console.log(
+      "\n  ℹ prerender was skipped (see .prerender-status.json) — " +
+        "skipping canonical HTML checks (canonicals are injected at runtime)"
+    );
+  } else {
+    const canonicalPages = [
+      "/",
+      "/features",
+      "/about",
+      "/pricing",
+      "/return-load",
+      "/ptl-transport",
+      "/freight-marketplace",
+      "/tools/freight-rate-calculator",
+      "/data",
+    ];
+    let canonicalOk = 0;
+    for (const route of canonicalPages) {
+      const pagePath = route === "/"
+        ? path.join(DIST, "index.html")
+        : path.join(DIST, route, "index.html");
+      if (!fs.existsSync(pagePath)) continue;
+      const content = fs.readFileSync(pagePath, "utf-8");
+      const canonicalMatch = content.match(/<link\s+rel="canonical"\s+href="([^"]+)"/);
+      if (canonicalMatch) {
+        const href = canonicalMatch[1];
+        const expected = `https://loadsaathi.in${route}`;
+        if (href === expected) {
+          canonicalOk++;
+        } else {
+          console.error(`  ✗ Canonical mismatch for ${route}: got ${href}, expected ${expected}`);
+          failures++;
+        }
+      } else {
+        console.error(`  ✗ Missing canonical tag in ${route}`);
+        failures++;
+      }
+    }
+    console.log(`  ℹ ${canonicalOk}/${canonicalPages.length} prerendered pages have correct canonical tags`);
+  }
 
   // Summary
   console.log(`\n[smoke] ${failures === 0 ? "ALL CHECKS PASSED ✓" : `${failures} CHECK(S) FAILED ✗`}`);

@@ -356,6 +356,19 @@ async function renderRoute(debugPort, url) {
   }
 }
 
+const STATUS_FILE = path.join(DIST, ".prerender-status.json");
+
+// Written on every exit path so smoke.mjs can tell whether prerender
+// actually ran (Vercel build images have no Chrome → prerender skips).
+function writeStatus(status) {
+  try {
+    if (!fs.existsSync(DIST)) return;
+    fs.writeFileSync(STATUS_FILE, JSON.stringify(status, null, 2), "utf-8");
+  } catch {
+    // best effort — smoke falls back to strict checks if marker is missing
+  }
+}
+
 async function main() {
   console.log("[prerender] Starting build-time prerender...");
 
@@ -367,6 +380,7 @@ async function main() {
   const chromePath = findChrome();
   if (!chromePath) {
     console.warn("[prerender] Chrome not found. Set CHROME_PATH env var. Skipping.");
+    writeStatus({ prerendered: false, reason: "chrome-not-found" });
     return;
   }
   console.log(`[prerender] Using Chrome: ${chromePath}`);
@@ -375,6 +389,7 @@ async function main() {
   const spaIndex = path.join(DIST, "index.html");
   if (!fs.existsSync(spaIndex)) {
     console.warn("[prerender] dist/index.html missing. Skipping.");
+    writeStatus({ prerendered: false, reason: "index-missing" });
     return;
   }
 
@@ -402,6 +417,7 @@ async function main() {
     console.warn("[prerender] Chrome debugger never came up. Skipping.");
     try { chrome.kill(); } catch { /* ignore */ }
     server.close();
+    writeStatus({ prerendered: false, reason: "debugger-timeout" });
     return;
   }
 
@@ -439,6 +455,7 @@ async function main() {
   console.log(
     `[prerender] Done. ${results.success} succeeded, ${results.failed} failed, ${results.skipped} skipped.`
   );
+  writeStatus({ prerendered: true, ...results });
 }
 
 main();
