@@ -15,29 +15,29 @@ describe('Agentic Readiness: vercel.json', () => {
     config = JSON.parse(readFile('vercel.json'));
   });
 
-  it('has a catch-all route that delegates to the edge function', () => {
-    const routes = config.routes as Array<{ src: string; dest: string }>;
-    expect(routes).toBeDefined();
-    expect(routes.length).toBeGreaterThan(0);
+  it('has a catch-all rewrite that delegates to the edge function', () => {
+    const rewrites = config.rewrites as Array<{ source: string; destination: string }>;
+    expect(rewrites).toBeDefined();
+    expect(rewrites.length).toBeGreaterThan(0);
 
-    const catchAll = routes.find(
-      (r) => r.src.includes('((?!assets/') && r.src.includes('.*)')
+    const catchAll = rewrites.find(
+      (r) => r.source.includes('((?!assets/') && r.source.includes('.*)')
     );
     expect(catchAll).toBeDefined();
-    expect(catchAll!.dest).toBe('/api/agent.js');
+    expect(catchAll!.destination).toBe('/api/agent.js');
   });
 
-  it('has an explicit route for the edge function itself', () => {
-    const routes = config.routes as Array<{ src: string; dest: string }>;
-    const agentRoute = routes.find((r) => r.src.includes('/api/agent'));
+  it('has an explicit rewrite for the edge function itself', () => {
+    const rewrites = config.rewrites as Array<{ source: string; destination: string }>;
+    const agentRoute = rewrites.find((r) => r.source.includes('/api/agent'));
     expect(agentRoute).toBeDefined();
-    expect(agentRoute!.dest).toBe('/api/agent.js');
+    expect(agentRoute!.destination).toBe('/api/agent.js');
   });
 
   it('does NOT have a catch-all rewrite to index.html', () => {
-    const routes = config.routes as Array<{ src: string; dest: string }>;
-    const spaRewrite = routes.find(
-      (r) => r.dest === '/index.html' && r.src.includes('.*')
+    const rewrites = config.rewrites as Array<{ source: string; destination: string }>;
+    const spaRewrite = rewrites.find(
+      (r) => r.destination === '/index.html' && r.source.includes('.*')
     );
     expect(spaRewrite).toBeUndefined();
   });
@@ -366,8 +366,8 @@ describe('Agentic Readiness: vercel.json Vary & install', () => {
     expect(c.framework).toBe('vite');
   });
 
-  it('has cleanUrls enabled', () => {
-    expect((config as unknown as { cleanUrls: boolean }).cleanUrls).toBe(true);
+  it('keeps cleanUrls off so .html trust pages serve with canonical tags', () => {
+    expect((config as unknown as { cleanUrls: boolean }).cleanUrls).toBe(false);
   });
 });
 

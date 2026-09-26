@@ -134,6 +134,32 @@ const Privacy = () => {
 
   return (
     <>
+    <noscript>
+      <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
+        <h1>Privacy Policy</h1>
+        <p>Last updated: September 18, 2026</p>
+        <p>
+          At LoadSaathi, we take your privacy seriously. This Privacy Policy explains how we collect, use,
+          disclose, and safeguard your information when you use our platform. Please read this policy carefully.
+          By using LoadSaathi, you consent to the data practices described in this policy.
+        </p>
+        {sections.map((section, i) => (
+          <div key={i}>
+            <h2>{section.title}</h2>
+            {section.content.map((item, j) => (
+              <div key={j}>
+                <h3>{item.heading}</h3>
+                <p>{item.text}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+        <p>
+          Questions about privacy? Contact our Data Protection Officer at privacy@loadsaathi.com.
+          LoadSaathi Technologies Pvt. Ltd., Bengaluru, Karnataka, India.
+        </p>
+      </div>
+    </noscript>
     <SeoMeta
       title="Privacy Policy"
       description="LoadSaathi's privacy policy — how we collect, use, and protect your personal data. We are committed to safeguarding your privacy on our freight marketplace."

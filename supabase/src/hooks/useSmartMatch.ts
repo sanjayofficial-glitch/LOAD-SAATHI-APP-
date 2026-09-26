@@ -3,7 +3,6 @@ import { useAuth as useClerkAuth } from '@clerk/clerk-react'
 
 import type { AIMatchResult } from '@/types'
 
-const SCORE_CACHE_STALE_TIME = 5 * 60_000
 const DEBOUNCE_MS = 300
 
 export function useSmartMatch<T extends { id: string }>(
@@ -62,6 +61,7 @@ export function useSmartMatch<T extends { id: string }>(
       for (let idx = 0; idx < queue.length; idx++) {
         if (cancelled) break
         const item = queue[idx]
+        if (!item) continue
         setLoadingId(item.id)
         await fetchScore(item)
         if (idx < queue.length - 1) await new Promise(r => setTimeout(r, 150))

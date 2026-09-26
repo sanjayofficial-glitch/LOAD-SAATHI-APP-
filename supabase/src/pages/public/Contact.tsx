@@ -47,7 +47,7 @@ const Contact = () => {
           <p>Have questions or need support? Contact LoadSaathi's team for demos, technical support, partnerships, or general inquiries.</p>
           <h2>General Inquiries</h2>
           <p><strong>Email:</strong> hello@loadsaathi.in</p>
-          <p><strong>Phone:</strong> +91-XXXXXXXXXX</p>
+          <p><strong>Phone:</strong> +91-83289-98031</p>
           <p><strong>Hours:</strong> Monday to Saturday, 9:00 AM - 7:00 PM IST</p>
           <h2>Head Office</h2>
           <p><strong>Address:</strong> LoadSaathi Technologies Pvt. Ltd., Near NIT Rourkela, Rourkela, Odisha 769008, India</p>

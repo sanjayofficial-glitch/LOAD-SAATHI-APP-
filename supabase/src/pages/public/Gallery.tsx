@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { ImageIcon, X, Camera, ArrowRight } from 'lucide-react';
+import { ImageIcon, X, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SeoMeta from '@/components/SeoMeta';
 
@@ -75,6 +75,7 @@ export default function Gallery() {
         title="Gallery — LoadSaathi | Our Story in Pictures"
         description="See LoadSaathi in action — our fleet, offices, corridors, and the team behind India's smart freight marketplace."
         canonical="/gallery"
+        jsonLd={ImageGallerySchema}
       />
 
       <div className="min-h-screen bg-background dark:bg-[#050816]">

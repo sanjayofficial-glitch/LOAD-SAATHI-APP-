@@ -35,7 +35,13 @@ const AdminPreview = lazy(() => import("./features/marketing/screens/AdminPrevie
 const BlogList = lazy(() => import("./pages/blog/BlogList"));
 const BlogArticle = lazy(() => import("./pages/blog/BlogArticle"));
 const LocationPage = lazy(() => import("./pages/public/locations/LocationPage"));
+const TransportServicePage = lazy(() => import("./pages/public/transport/TransportServicePage"));
 const GuidePage = lazy(() => import("./pages/public/guides/GuidePage"));
+const HiHome = lazy(() => import("./pages/public/hi/HiHome"));
+const HiPtlTransport = lazy(() => import("./pages/public/hi/HiPtlTransport"));
+const HiReturnLoad = lazy(() => import("./pages/public/hi/HiReturnLoad"));
+const HiBhadaGuide = lazy(() => import("./pages/public/hi/HiBhadaGuide"));
+const HiRouteRourkelaRanchi = lazy(() => import("./pages/public/hi/HiRouteRourkelaRanchi"));
 const RoutesIndex = lazy(() => import("./pages/public/RoutesIndex"));
 const RouteDetail = lazy(() => import("./pages/public/RouteDetail"));
 const Comparison = lazy(() => import("./pages/public/Comparison"));
@@ -72,6 +78,7 @@ const PtlTransport = lazy(() => import("./pages/public/commercial/PtlTransport")
 const LtlTransport = lazy(() => import("./pages/public/commercial/LtlTransport"));
 const TruckLoadBooking = lazy(() => import("./pages/public/commercial/TruckLoadBooking"));
 const FreightMarketplace = lazy(() => import("./pages/public/commercial/FreightMarketplace"));
+const TruckNearMe = lazy(() => import("./pages/public/TruckNearMe"));
 const TransportCostCalculator = lazy(() => import("./pages/public/tools/TransportCostCalculator"));
 const TruckLoadCalculator = lazy(() => import("./pages/public/tools/TruckLoadCalculator"));
 const PtlVsFtlCalculator = lazy(() => import("./pages/public/tools/PtlVsFtlCalculator"));
@@ -141,8 +148,18 @@ export const AppRoutes = () => (
       {/* Location Pages */}
       <Route path="/location/:city" element={<LocationPage />} />
 
+      {/* Transport Service Pages */}
+      <Route path="/transport-service/:city" element={<TransportServicePage />} />
+
       {/* Guide Pages */}
       <Route path="/guide/:slug" element={<GuidePage />} />
+
+      {/* Hindi Pages */}
+      <Route path="/hi" element={<HiHome />} />
+      <Route path="/hi/ptl-transport" element={<HiPtlTransport />} />
+      <Route path="/hi/return-load" element={<HiReturnLoad />} />
+      <Route path="/hi/bhada-kaise-book-kare" element={<HiBhadaGuide />} />
+      <Route path="/hi/route/rourkela-to-ranchi" element={<HiRouteRourkelaRanchi />} />
 
       {/* Gallery */}
       <Route path="/gallery" element={<Gallery />} />
@@ -153,6 +170,9 @@ export const AppRoutes = () => (
       <Route path="/ltl-transport" element={<LtlTransport />} />
       <Route path="/truck-load-booking" element={<TruckLoadBooking />} />
       <Route path="/freight-marketplace" element={<FreightMarketplace />} />
+
+      {/* Hyperlocal Landing */}
+      <Route path="/truck-near-me" element={<TruckNearMe />} />
 
       {/* Tools Index */}
       <Route path="/tools" element={<ToolsIndex />} />

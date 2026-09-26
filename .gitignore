@@ -30,6 +30,7 @@ dist-ssr
 .vercel
 
 # Local AI agent tooling (never commit these)
+.ua/
 .ruflo
 .agents-local
 .claude-flow/

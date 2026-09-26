@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoadSaathi — Visual Product Guide (for PMs)</title>
+<style>
+  :root{
+    --shipper:#2563eb; --shipper-bg:#eff6ff;
+    --trucker:#ea580c; --trucker-bg:#fff7ed;
+    --green:#16a34a; --green-bg:#f0fdf4;
+    --purple:#7c3aed; --purple-bg:#f5f3ff;
+    --amber:#d97706; --amber-bg:#fffbeb;
+    --red:#dc2626; --red-bg:#fef2f2;
+    --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --card:#ffffff; --page:#f9fafb;
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0;background:var(--page);color:var(--ink);line-height:1.55}
+  header.hero{background:linear-gradient(135deg,#111827,#1e3a8a 60%,#ea580c);
+    color:#fff;padding:48px 24px;text-align:center}
+  header.hero h1{margin:0 0 8px;font-size:2rem}
+  header.hero p{margin:4px 0;opacity:.92}
+  nav.toc{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;
+    padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  nav.toc a{font-size:.82rem;text-decoration:none;color:var(--ink);background:#f3f4f6;
+    padding:6px 12px;border-radius:999px}
+  nav.toc a:hover{background:#e5e7eb}
+  main{max-width:1060px;margin:0 auto;padding:24px 20px 80px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:28px;margin:26px 0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  section.card h2{margin-top:0;font-size:1.35rem;border-bottom:2px solid var(--line);padding-bottom:10px}
+  section.card h3{margin:22px 0 10px;font-size:1.05rem}
+  .kicker{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:4px 10px;border-radius:999px;margin-bottom:10px}
+  .k-shipper{background:var(--shipper-bg);color:var(--shipper)}
+  .k-trucker{background:var(--trucker-bg);color:var(--trucker)}
+  .k-money{background:var(--green-bg);color:var(--green)}
+  .k-trust{background:var(--purple-bg);color:var(--purple)}
+  .k-warn{background:var(--amber-bg);color:var(--amber)}
+  .k-risk{background:var(--red-bg);color:var(--red)}
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+  .stat{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .stat b{display:block;font-size:1.5rem}
+  .stat span{font-size:.8rem;color:var(--muted)}
+  /* two columns */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.cols{grid-template-columns:1fr}}
+  .role{border-radius:12px;padding:20px;border:2px solid}
+  .role.shipper{background:var(--shipper-bg);border-color:#bfdbfe}
+  .role.trucker{background:var(--trucker-bg);border-color:#fed7aa}
+  .role h3{margin-top:0}
+  .role ul{margin:8px 0;padding-left:20px;font-size:.92rem}
+  /* flow steps */
+  .flow{display:flex;flex-direction:column;gap:0;margin:14px 0}
+  .step{display:flex;gap:12px;align-items:flex-start}
+  .dot{flex:0 0 34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#fff;font-size:.9rem;margin-top:2px}
+  .d-blue{background:var(--shipper)} .d-orange{background:var(--trucker)}
+  .d-green{background:var(--green)} .d-purple{background:var(--purple)} .d-gray{background:#9ca3af}
+  .step-body{flex:1;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:4px}
+  .step-body b{display:block}
+  .step-body small{color:var(--muted)}
+  .arrow{text-align:center;color:var(--muted);font-size:1.1rem;line-height:1;margin:1px 0 1px 17px;text-align:left}
+  .decision{background:var(--amber-bg);border:1px dashed var(--amber)}
+  /* bars */
+  .bar-row{display:grid;grid-template-columns:170px 1fr 52px;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
+  .bar-track{background:#f1f5f9;border-radius:6px;height:22px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;
+    color:#fff;font-size:.72rem;font-weight:700;padding-right:6px;min-width:34px}
+  /* funnel */
+  .funnel{margin:14px auto;max-width:640px}
+  .f-level{text-align:center;color:#fff;font-weight:700;padding:11px;border-radius:8px;margin:6px auto;font-size:.9rem}
+  .f-level small{display:block;font-weight:400;opacity:.9;font-size:.76rem}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:.88rem;margin:12px 0}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+  th{background:#f8fafc}
+  /* callouts */
+  .callout{border-radius:10px;padding:14px 16px;margin:12px 0;font-size:.92rem;border:1px solid}
+  .callout.warn{background:var(--amber-bg);border-color:#fcd34d}
+  .callout.risk{background:var(--red-bg);border-color:#fca5a5}
+  .callout.good{background:var(--green-bg);border-color:#86efac}
+  .callout b{display:block;margin-bottom:2px}
+  footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.75rem;font-weight:700;margin:2px}
+  .p-green{background:var(--green-bg);color:var(--green)}
+  .p-emerald{background:#ecfdf5;color:#059669}
+  .p-yellow{background:#fefce8;color:#a16207}
+  .p-orange{background:var(--trucker-bg);color:var(--trucker)}
+  .p-gray{background:#f3f4f6;color:var(--muted)}
+  .p-purple{background:var(--purple-bg);color:var(--purple)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>LoadSaathi — Visual Product Guide</h1>
+  <p>AI-powered shared freight marketplace · East India · PTL / LTL</p>
+  <p>For product managers: what users see, pay, trust, and decide. Nothing else.</p>
+</header>
+
+<nav class="toc">
+  <a href="#s1">1 · Snapshot</a><a href="#s2">2 · Users</a><a href="#s3">3 · Journeys</a>
+  <a href="#s4">4 · Matching</a><a href="#s5">5 · Deal &amp; Chat</a><a href="#s6">6 · Trust</a>
+  <a href="#s7">7 · Tracking</a><a href="#s8">8 · Money</a><a href="#s9">9 · Funnel</a>
+  <a href="#s10">10 · Gaps</a><a href="#s11">11 · Dashboard map</a>
+</nav>
+
+<main>
+
+<!-- 1 SNAPSHOT -->
+<section class="card" id="s1">
+  <span class="kicker k-trust">1 · Snapshot</span>
+  <h2>The whole product in one screen</h2>
+  <div class="stats">
+    <div class="stat"><b>2</b><span>user sides: shippers + truckers</span></div>
+    <div class="stat"><b>6</b><span>steps per journey</span></div>
+    <div class="stat"><b>7</b><span>matching factors (0–100 score)</span></div>
+    <div class="stat"><b>300–900</b><span>credit score range</span></div>
+    <div class="stat"><b>1.5–3%</b><span>fee per completed deal</span></div>
+    <div class="stat"><b>30+</b><span>freight corridors covered</span></div>
+  </div>
+  <div class="callout good"><b>One-line story</b>
+    Trucks run empty on return legs; shippers overpay brokers 10–20% and can't track goods.
+    LoadSaathi matches them with AI, tracks live, holds money in escrow, and scores trust — taking ~2–3% per deal.</div>
+</section>
+
+<!-- 2 USERS -->
+<section class="card" id="s2">
+  <span class="kicker k-shipper">2 · Users</span>
+  <h2>Two users, two goals</h2>
+  <div class="cols">
+    <div class="role shipper">
+      <h3>Shipper (blue)</h3>
+      <ul>
+        <li><b>Goal:</b> move goods cheaply, reliably, visibly</li>
+        <li><b>Posts:</b> shipment — route, weight, goods, budget</li>
+        <li><b>Watches:</b> spending, live truck map, upcoming loads</li>
+        <li><b>Pays:</b> 1.5–3% of shipment value per deal</li>
+      </ul>
+    </div>
+    <div class="role trucker">
+      <h3>Trucker (orange)</h3>
+      <ul>
+        <li><b>Goal:</b> fill every kilometer, earn more, no empty returns</li>
+        <li><b>Posts:</b> trip — route, capacity, price, vehicle, date</li>
+        <li><b>Watches:</b> earnings, credit gauge, nearby loads</li>
+        <li><b>Pays:</b> 1.5–2.5% of trip value per deal</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Signup in 4 steps</h3>
+  <div class="flow">
+    <div class="step"><div class="dot d-gray">1</div><div class="step-body"><b>Register</b><small>Email/phone + password, or OAuth. Free.</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-purple">2</div><div class="step-body"><b>Choose role</b><small>Two big cards. Truckers see a bonus checkbox: "get help from an experienced trucker" (mentor opt-in).</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-purple">3</div><div class="step-body"><b>Onboarding</b><small>Welcome → name, phone, company → done. One screen.</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-green">4</div><div class="step-body"><b>Dashboard + first action</b><small>Role dashboard opens; the suggested first click is Post (trip or shipment).</small></div></div>
+  </div>
+</section>
+
+<!-- 3 JOURNEYS -->
+<section class="card" id="s3">
+  <span class="kicker k-shipper">3 · Journeys</span>
+  <h2>Both journeys, step by step</h2>
+  <div class="cols">
+    <div>
+      <h3>Shipper journey</h3>
+      <div class="flow">
+        <div class="step"><div class="dot d-blue">1</div><div class="step-body"><b>Post shipment</b><small>Route, weight, goods, budget. AI price hint. Quick vs Full mode.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-blue">2</div><div class="step-body"><b>Browse matched trips</b><small>Match %, trucker rating, verified shield. List / map / card.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-blue">3</div><div class="step-body"><b>Request a trip</b><small>Status: pending. Wait for trucker.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-green">4</div><div class="step-body"><b>Accepted → chat</b><small>Phone revealed. Negotiate, coordinate pickup.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-green">5</div><div class="step-body"><b>Track live GPS</b><small>Watch the truck move. Milestone alerts.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-purple">6</div><div class="step-body"><b>Confirm → pay → review</b><small>Escrow releases in 24–48h. Rate the trucker. Score updates.</small></div></div>
+      </div>
+    </div>
+    <div>
+      <h3>Trucker journey</h3>
+      <div class="flow">
+        <div class="step"><div class="dot d-orange">1</div><div class="step-body"><b>Post trip</b><small>Route, capacity, price, vehicle, date. Sees return-load odds.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-orange">2</div><div class="step-body"><b>Browse loads near you</b><small>Radius 50/75/100 km. Nearest first. Match %.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-orange">3</div><div class="step-body"><b>Accept request / offer price</b><small>Pick loads that fit schedule and wallet.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-green">4</div><div class="step-body"><b>Chat with shipper</b><small>Confirm details, pickup point, timing.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-green">5</div><div class="step-body"><b>Start trip → GPS live</b><small>One tap. Shipper watches. Drive.</small></div></div>
+        <div class="arrow">↓</div>
+        <div class="step"><div class="dot d-purple">6</div><div class="step-body"><b>Deliver → paid → review</b><small>Money in 24–48h. Rate the shipper. Score updates.</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 MATCHING -->
+<section class="card" id="s4">
+  <span class="kicker k-trust">4 · Matching</span>
+  <h2>The brain: 7 factors, one score out of 100</h2>
+  <div class="bar-row"><span>City / state match</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#2563eb">30</div></div><b>30</b></div>
+  <div class="bar-row"><span>GPS proximity</span><div class="bar-track"><div class="bar-fill" style="width:83%;background:#2563eb">25</div></div><b>25</b></div>
+  <div class="bar-row"><span>Route overlap</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#7c3aed">15</div></div><b>15</b></div>
+  <div class="bar-row"><span>Capacity fit</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#7c3aed">15</div></div><b>15</b></div>
+  <div class="bar-row"><span>Price compatibility</span><div class="bar-track"><div class="bar-fill" style="width:33%;background:#16a34a">10</div></div><b>10</b></div>
+  <div class="bar-row"><span>Date compatibility</span><div class="bar-track"><div class="bar-fill" style="width:17%;background:#16a34a">5</div></div><b>5</b></div>
+  <div class="bar-row"><span>Rating bonus</span><div class="bar-track"><div class="bar-fill" style="width:17%;background:#16a34a">+5</div></div><b>+5</b></div>
+  <h3>What the user sees</h3>
+  <p>
+    <span class="pill p-green">80+ strong fit</span>
+    <span class="pill p-emerald">60+ decent fit</span>
+    <span class="pill p-yellow">40+ partial fit</span>
+    <span class="pill p-orange">20+ limited fit</span>
+    <span class="pill p-gray">below poor fit</span>
+    <span class="pill p-purple">AI Suggestion: X%</span>
+  </p>
+  <p style="font-size:.9rem;color:var(--muted)">Two signals side by side: the rule score above, plus a purple AI badge (ML model, top-5 listings, high/medium/low confidence). Capacity logic favors small loads in big trucks — that is the shared-freight idea in one rule.</p>
+</section>
+
+<!-- 5 DEAL -->
+<section class="card" id="s5">
+  <span class="kicker k-money">5 · Deal &amp; chat</span>
+  <h2>From match to moving truck</h2>
+  <div class="flow">
+    <div class="step"><div class="dot d-blue">1</div><div class="step-body"><b>Request sent</b><small>Shipper → trip, or trucker → shipment (with offered price). Status: pending.</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-gray">2</div><div class="step-body decision"><b>Other side decides</b><small>Accept → chat unlocks + phone revealed. Decline → try the next match. Cancel anytime.</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-green">3</div><div class="step-body"><b>Chat (one thread per deal)</b><small>Real-time, instant-send, read receipts. Coordinate pickup and timing.</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-green">4</div><div class="step-body"><b>Trip runs, money moves</b><small>9 notifications fire along the way: booking → accepted → started → completed → delivered → paid → reviewed.</small></div></div>
+  </div>
+  <div class="callout warn"><b>PM watch-out: requests can rot</b>No expiry, no nudge for unanswered requests, no "time to first response" metric. Stale pending requests are silent churn.</div>
+</section>
+
+<!-- 6 TRUST -->
+<section class="card" id="s6">
+  <span class="kicker k-trust">6 · Trust</span>
+  <h2>Credit score 300–900: how it's earned</h2>
+  <div class="bar-row"><span>Trip completion</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#7c3aed">270</div></div><b>30%</b></div>
+  <div class="bar-row"><span>On-time delivery</span><div class="bar-track"><div class="bar-fill" style="width:83%;background:#7c3aed">225</div></div><b>25%</b></div>
+  <div class="bar-row"><span>Reviews (avg stars)</span><div class="bar-track"><div class="bar-fill" style="width:67%;background:#2563eb">180</div></div><b>20%</b></div>
+  <div class="bar-row"><span>Communication</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#2563eb">135</div></div><b>15%</b></div>
+  <div class="bar-row"><span>Tenure + volume</span><div class="bar-track"><div class="bar-fill" style="width:33%;background:#16a34a">90</div></div><b>10%</b></div>
+  <h3>How trust shows up to the other side</h3>
+  <table>
+    <tr><th>Signal</th><th>Where users see it</th><th>Effect</th></tr>
+    <tr><td>Credit pill (e.g. "Credit: 720")</td><td>Listings, profiles, map pins, share links</td><td>High score → lower fees, better loads, +rating boost in matching</td></tr>
+    <tr><td>Stars + "New"</td><td>Every listing card</td><td>Social proof at decision moment</td></tr>
+    <tr><td>Verified shield</td><td>Names everywhere</td><td>Supposed to mean KYC-checked (see gap below)</td></tr>
+    <tr><td>Past reviews list</td><td>Detail pages</td><td>Texture: what kind of partner is this?</td></tr>
+  </table>
+  <div class="callout risk"><b>PM must-know gaps</b>Verification is self-asserted today (button flips a flag — no document check). Reviews never decay (one 1-star on 2 reviews costs ~70 pts; recovery takes weeks). No blind reviews (retaliation risk). Three different tier-name sets for the same score. No achievements engine behind "Gold badge" copy.</div>
+</section>
+
+<!-- 7 TRACKING -->
+<section class="card" id="s7">
+  <span class="kicker k-shipper">7 · Tracking</span>
+  <h2>Live GPS: who sees what</h2>
+  <div class="cols">
+    <div class="role shipper"><h3>Shipper sees</h3>
+      <ul><li>"Trucks Around You" live map</li><li>LIVE (green) vs POSTED TRIPS (orange) badge</li><li>Filters: All / In Transit / Standing</li><li>Tap truck → route, price, name, rating, verified</li></ul></div>
+    <div class="role trucker"><h3>Trucker sees</h3>
+      <ul><li>"Loads within X km" (50 / 75 / 100 km)</li><li>Nearest-first list + blue "you are here" dot</li><li>Start/Stop tracking card: accuracy, speed, heading</li><li>One-tap trip start</li></ul></div>
+  </div>
+  <div class="callout warn"><b>Know the limits</b>Route = distance + time + orange line. No tolls, no live traffic, no auto ETA. "50 km arrival alert" is marketing copy — no such job exists yet. Web tracking stops when the tab closes (true background needs the Android app).</div>
+  <div class="callout good"><b>Bonus: emissions card</b>Shows kg CO₂e per route (+ per tonne-km). Free to compute, works offline — an enterprise/ESG wedge. Future: monthly sustainability reports for shippers.</div>
+</section>
+
+<!-- 8 MONEY -->
+<section class="card" id="s8">
+  <span class="kicker k-money">8 · Money</span>
+  <h2>Who pays, when, how</h2>
+  <div class="flow">
+    <div class="step"><div class="dot d-green">1</div><div class="step-body"><b>Join + use free</b><small>Browse, post, bid — all free. No subscription, no minimums.</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-green">2</div><div class="step-body"><b>Deal completes → fee 1.5–3%</b><small>Exact fee shown before confirming. Shippers 1.5–3%, truckers 1.5–2.5% (700+ score pays less).</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-purple">3</div><div class="step-body"><b>Escrow holds → releases in 24–48h</b><small>Money moves only after delivery confirmation. UPI, cards, net-banking, wallets, bank transfer.</small></div></div>
+    <div class="arrow">↓</div>
+    <div class="step"><div class="dot d-purple">4</div><div class="step-body"><b>Score compounds</b><small>Good behavior → higher score → lower future fees → better loads. The retention loop.</small></div></div>
+  </div>
+  <h3>Helpers that remove price fear</h3>
+  <table>
+    <tr><th>Tool</th><th>What the user gets</th></tr>
+    <tr><td>AI price suggestion (in both posting forms)</td><td>Recommended price + min/max + confidence + trend + fuel + per-km rate. One tap to apply.</td></tr>
+    <tr><td>14 free calculators (public site)</td><td>Cost, profit, PTL-vs-FTL, GST, toll+fuel, carbon… The SEO acquisition engine.</td></tr>
+    <tr><td>Enterprise tier (50+ loads/mo)</td><td>Custom fees, API for ERP/TMS, account manager, invoicing.</td></tr>
+  </table>
+  <p style="font-size:.9rem;color:var(--muted)">Take rate ~2–3% vs traditional brokers 10–20%. That gap is the pitch.</p>
+</section>
+
+<!-- 9 FUNNEL -->
+<section class="card" id="s9">
+  <span class="kicker k-warn">9 · Funnel</span>
+  <h2>The conversion funnel to instrument</h2>
+  <div class="funnel">
+    <div class="f-level" style="width:100%;background:#2563eb">Views<small>browse impressions per role</small></div>
+    <div class="f-level" style="width:82%;background:#4f46e5">Requests<small>browse → request rate</small></div>
+    <div class="f-level" style="width:64%;background:#7c3aed">Accepts<small>request → accept rate + median response time</small></div>
+    <div class="f-level" style="width:50%;background:#ea580c">Trips run<small>accept → start (GPS on?)</small></div>
+    <div class="f-level" style="width:38%;background:#16a34a">Completed + paid<small>delivery confirm → escrow release</small></div>
+    <div class="f-level" style="width:28%;background:#059669">Reviewed<small>review rate → score → repeat pairing</small></div>
+  </div>
+  <p style="font-size:.9rem;color:var(--muted)">Widths are illustrative — replace with real numbers. The two leakiest joints are usually request→accept (responsiveness) and completed→reviewed (ask timing).</p>
+</section>
+
+<!-- 10 GAPS -->
+<section class="card" id="s10">
+  <span class="kicker k-risk">10 · Gaps</span>
+  <h2>Top 5 frictions → top 5 opportunities</h2>
+  <table>
+    <tr><th>#</th><th>Friction (today)</th><th>Opportunity (next)</th></tr>
+    <tr><td>1</td><td>Verification is self-asserted; shield means little</td><td>Wire real KYC (docs + approval + expiry) — trust converts</td></tr>
+    <tr><td>2</td><td>Requests rot: no expiry, no nudge, no response-time metric</td><td>48h auto-expiry + "3 truckers respond in ~2h" social proof</td></tr>
+    <tr><td>3</td><td>One bad review buries new users for weeks</td><td>Time-decay scoring + blind reviews + public responses</td></tr>
+    <tr><td>4</td><td>Arrival alerts / tolls / traffic promised, not built</td><td>Build the 50 km job; add toll+traffic routing; or fix copy now</td></tr>
+    <tr><td>5</td><td>Admin sees counts, not funnels; no refunds/disputes flow</td><td>Funnel + cohort + LTV dashboards; dispute workflow before scale</td></tr>
+  </table>
+</section>
+
+<!-- 11 DASHBOARD MAP -->
+<section class="card" id="s11">
+  <span class="kicker k-trust">11 · Dashboard map</span>
+  <h2>Re-walk everything in Understand Anything</h2>
+  <table>
+    <tr><th>Area</th><th>Tour step</th><th>Search term</th></tr>
+    <tr><td>Users &amp; roles</td><td>—</td><td><code>ChooseRole</code></td></tr>
+    <tr><td>Posting</td><td>5</td><td><code>PostTrip</code> / <code>PostShipments</code></td></tr>
+    <tr><td>Matching</td><td>6</td><td><code>matching</code></td></tr>
+    <tr><td>Deal + chat</td><td>—</td><td><code>requests</code> / <code>Chat</code></td></tr>
+    <tr><td>Trust</td><td>8</td><td><code>CreditScore</code> / <code>ReviewDialog</code></td></tr>
+    <tr><td>Tracking</td><td>10</td><td><code>GpsTracker</code> / <code>LiveMap</code></td></tr>
+    <tr><td>Money</td><td>11</td><td><code>Pricing</code> / <code>PricePredictor</code></td></tr>
+    <tr><td>Coverage</td><td>—</td><td><code>routes</code> / <code>locations</code></td></tr>
+  </table>
+  <p style="font-size:.9rem;color:var(--muted)">Rule: if it doesn't change what a user sees, pays, trusts, or decides — skip it.</p>
+</section>
+
+</main>
+
+<footer>LoadSaathi Visual Product Guide · generated from code + knowledge graph · docs/PM_PRODUCT_BRIEF.md has the full text version</footer>
+</body>
+</html>

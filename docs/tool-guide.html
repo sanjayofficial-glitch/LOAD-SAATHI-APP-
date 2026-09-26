@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoadSaathi — Tool Guide: Understand Anything (for PMs)</title>
+<style>
+  :root{
+    --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --page:#f9fafb; --card:#fff;
+    --blue:#2563eb; --blue-bg:#eff6ff; --orange:#ea580c; --orange-bg:#fff7ed;
+    --green:#16a34a; --green-bg:#f0fdf4; --purple:#7c3aed; --purple-bg:#f5f3ff;
+    --amber:#d97706; --amber-bg:#fffbeb; --red:#dc2626; --red-bg:#fef2f2;
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0;background:var(--page);color:var(--ink);line-height:1.55}
+  header.hero{background:linear-gradient(135deg,#111827,#1e3a8a 60%,#7c3aed);color:#fff;
+    padding:44px 24px;text-align:center}
+  header.hero h1{margin:0 0 8px;font-size:1.9rem}
+  header.hero p{margin:4px 0;opacity:.92}
+  nav.toc{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;
+    padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  nav.toc a{font-size:.8rem;text-decoration:none;color:var(--ink);background:#f3f4f6;padding:6px 12px;border-radius:999px}
+  nav.toc a:hover{background:#e5e7eb}
+  main{max-width:1060px;margin:0 auto;padding:24px 20px 80px}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px;margin:26px 0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  section.card h2{margin-top:0;font-size:1.35rem;border-bottom:2px solid var(--line);padding-bottom:10px}
+  .kicker{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+  .k-see{background:var(--blue-bg);color:var(--blue)} .k-ask{background:var(--purple-bg);color:var(--purple)}
+  .k-read{background:var(--green-bg);color:var(--green)} .k-do{background:var(--orange-bg);color:var(--orange)}
+  table{width:100%;border-collapse:collapse;font-size:.87rem;margin:12px 0}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#f8fafc}
+  .tool{border:1px solid var(--line);border-radius:12px;padding:18px;margin:14px 0;background:#fff}
+  .tool h3{margin:0 0 4px;font-size:1.05rem}
+  .tool .tag{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+    padding:3px 10px;border-radius:999px;margin-right:6px}
+  .t-see{background:var(--blue-bg);color:var(--blue)} .t-ask{background:var(--purple-bg);color:var(--purple)}
+  .t-read{background:var(--green-bg);color:var(--green)} .t-do{background:var(--orange-bg);color:var(--orange)}
+  .row{display:grid;grid-template-columns:130px 1fr;gap:10px;margin:8px 0;font-size:.9rem}
+  .row b{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
+  code{background:#f3f4f6;padding:1px 7px;border-radius:6px;font-size:.82rem}
+  .say{background:#0d1730;color:#e5e7eb;border-radius:10px;padding:12px 14px;font-size:.86rem;margin:8px 0}
+  .say b{color:#93c5fd}
+  .warn{background:var(--amber-bg);border:1px solid #fcd34d;border-radius:10px;padding:12px 14px;margin:10px 0;font-size:.88rem}
+  .good{background:var(--green-bg);border:1px solid #86efac;border-radius:10px;padding:12px 14px;margin:10px 0;font-size:.88rem}
+  footer{text-align:center;color:var(--muted);font-size:.8rem;padding:24px}
+  ol.plan li{margin:10px 0}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>Tool Guide: Understand Anything</h1>
+  <p>Every tool at your desk, when to reach for it, and the exact clicks or words to use.</p>
+  <p>Built for a product manager. No engineering assumed.</p>
+</header>
+
+<nav class="toc">
+  <a href="#matrix">Which tool when</a><a href="#see">See (dashboard)</a>
+  <a href="#mine">Mine (my guides)</a><a href="#ask">Ask (me)</a>
+  <a href="#do">Do (live product)</a><a href="#week">First-week plan</a>
+</nav>
+
+<main>
+
+<!-- DECISION MATRIX -->
+<section class="card" id="matrix">
+  <span class="kicker k-see">Start here</span>
+  <h2>Which tool when — the decision table</h2>
+  <table>
+    <tr><th>You want to…</th><th>Reach for</th><th>How (short)</th></tr>
+    <tr><td>Get the 15-minute whole-product tour</td><td>Dashboard → Tour</td><td>Open URL → Tour panel → Next × 12</td></tr>
+    <tr><td>See everything in one product area</td><td>Dashboard → Layers</td><td>Layers panel → open UI Pages / Application Logic / Database Schema</td></tr>
+    <tr><td>Learn one feature end-to-end</td><td>Dashboard → Search</td><td>Search bar → type feature name → follow edges</td></tr>
+    <tr><td>Know what breaks if X changes</td><td>Dashboard → node edges</td><td>Click the node → read incoming + outgoing edges</td></tr>
+    <tr><td>Read the product in plain words</td><td>Visual Product Guide (Desktop)</td><td>Double-click HTML → read §1–§8</td></tr>
+    <tr><td>Watch data move through tables</td><td>Database Live Visual (Desktop)</td><td>Double-click HTML → Play full journey</td></tr>
+    <tr><td>Look up exact facts (fees, weights, factors)</td><td>PM Product Brief (docs/)</td><td>Open MD → find the section table</td></tr>
+    <tr><td>Ask a question in words</td><td>Ask me (chat)</td><td>Type the question — see § Ask for recipes</td></tr>
+    <tr><td>Go deep on one module</td><td>Ask me (explain)</td><td>"Explain &lt;module&gt; like I'm a PM"</td></tr>
+    <tr><td>See business flows, not code</td><td>Ask me (domain)</td><td>"Show the &lt;journey&gt; domain flow"</td></tr>
+    <tr><td>Review a change before approving</td><td>Ask me (diff)</td><td>"What does this PR touch?" + paste link</td></tr>
+    <tr><td>Feel the real thing</td><td>Live site, twice</td><td>Sign up as shipper, then trucker; post, request, chat</td></tr>
+    <tr><td>Settle a money question</td><td><code>public/pricing.md</code></td><td>Open the file — 84 lines, the pricing truth</td></tr>
+  </table>
+</section>
+
+<!-- SEE -->
+<section class="card" id="see">
+  <span class="kicker k-see">See · the dashboard</span>
+  <h2>Understand Anything dashboard — your microscope</h2>
+  <p>Address: your localhost URL with <code>?token=…</code> (token changes every restart — always use the newest URL). If the page won't load, the server is down: relaunch with the 3-line PowerShell command and copy the fresh URL.</p>
+
+  <div class="tool"><h3><span class="tag t-see">See</span>Tour — 12 stops</h3>
+    <div class="row"><b>When</b><span>First open, and whenever you join a new product area.</span></div>
+    <div class="row"><b>How</b><span>Tour panel → <b>Next</b> through all 12. Read node summaries, not code. Stops follow user order: overview → login → posting → matching → AI → credit → schema → tracking.</span></div>
+    <div class="row"><b>Ignore</b><span>Files under Infrastructure / Developer Tooling layers when they appear.</span></div>
+  </div>
+
+  <div class="tool"><h3><span class="tag t-see">See</span>Layers — 8 boxes</h3>
+    <div class="row"><b>When</b><span>You want "everything about X" grouped like a PM thinks.</span></div>
+    <div class="row"><b>How</b><span>Open only these 4: <b>UI Pages</b> (screens you own) → <b>Application Logic</b> (rules: matching, notifications) → <b>Database Schema</b> (things the business tracks) → <b>Documentation</b> (acquisition content). Skip the other 4 entirely.</span></div>
+    <div class="row"><b>Example</b><span>UI Pages → every <code>Dashboard</code>, <code>Browse*</code>, <code>Post*</code>, <code>Pricing</code>, <code>CreditScore</code> = your screen inventory.</span></div>
+  </div>
+
+  <div class="tool"><h3><span class="tag t-see">See</span>Search + edges</h3>
+    <div class="row"><b>When</b><span>Learning one feature, or answering "what breaks if we change X?"</span></div>
+    <div class="row"><b>How</b><span>Search the feature name → open top nodes → click a node → read <b>incoming edges</b> (who depends on it) and <b>outgoing edges</b> (what it needs). Favour <code>contains / calls / documents / routes</code> edges; ignore <code>imports</code>.</span></div>
+    <div class="row"><b>Starter searches</b><span><code>ChooseRole</code> · <code>PostTrip</code> · <code>matching</code> · <code>requests</code> · <code>CreditScore</code> · <code>Pricing</code></span></div>
+  </div>
+
+  <div class="tool"><h3><span class="tag t-see">See</span>Graph canvas — zoom out</h3>
+    <div class="row"><b>When</b><span>Monthly. Looking for complexity and dead weight.</span></div>
+    <div class="row"><b>How</b><span>Filter to the 4 PM layers, zoom out. Dense clusters = risky to change. Lonely nodes (62 orphans, mostly docs) = prune-or-link candidates.</span></div>
+  </div>
+</section>
+
+<!-- MINE -->
+<section class="card" id="mine">
+  <span class="kicker k-do">Mine · built for you</span>
+  <h2>Your three personal guides</h2>
+
+  <div class="tool"><h3><span class="tag t-do">Mine</span>Visual Product Guide <span style="color:var(--muted);font-weight:400">Desktop · LoadSaathi-Visual-Guide.html</span></h3>
+    <div class="row"><b>When</b><span>Learning or revising any product area; onboarding a teammate.</span></div>
+    <div class="row"><b>How</b><span>Double-click → sticky menu → 11 sections: snapshot, users, journeys, matching bars, deal flow, trust bars, tracking, money, funnel, gaps, dashboard map.</span></div>
+  </div>
+
+  <div class="tool"><h3><span class="tag t-do">Mine</span>Database Live Visual <span style="color:var(--muted);font-weight:400">Desktop · LoadSaathi-Database-Live.html</span></h3>
+    <div class="row"><b>When</b><span>"How does data actually flow?" — requests, statuses, triggers, realtime.</span></div>
+    <div class="row"><b>How</b><span>Double-click → <b>Play full journey</b> (or Next per step). 10 steps, real tables/SQL, packets fly, rows flash, SQL log fills. Speed 1×/2×/4×, Reset replays.</span></div>
+  </div>
+
+  <div class="tool"><h3><span class="tag t-do">Mine</span>PM Product Brief <span style="color:var(--muted);font-weight:400">docs/PM_PRODUCT_BRIEF.md</span></h3>
+    <div class="row"><b>When</b><span>Settling exact facts: fee %, factor weights, score formula, statuses, file locations.</span></div>
+    <div class="row"><b>How</b><span>Open in VS Code (Ctrl+Shift+V for preview) → jump via headings → §13 dashboard cheat sheet maps every area to tour step + search term.</span></div>
+  </div>
+</section>
+
+<!-- ASK -->
+<section class="card" id="ask">
+  <span class="kicker k-ask">Ask · me</span>
+  <h2>Ask me — question recipes that work</h2>
+  <p>Copy-paste these patterns. Replace the bracketed part. I read code; you get plain words.</p>
+
+  <div class="say"><b>Explain:</b> "Explain <b>[matching.ts / credit score / escrow flow]</b> like I'm a PM — what the user sees, what can go wrong, what I'd measure."</div>
+  <div class="say"><b>Impact:</b> "If we change <b>[review policy / matching weights / fees]</b>, what breaks? List affected screens, tables, and users."</div>
+  <div class="say"><b>Compare:</b> "Compare <b>[shipper vs trucker dashboard]</b> — every widget, what's missing for each?"</div>
+  <div class="say"><b>Funnel:</b> "Map the funnel for <b>[request → accept]</b> — every state, every drop-off, what to instrument."</div>
+  <div class="say"><b>Review a change:</b> "This PR touches <b>[paste files or link]</b> — what user-visible behavior changes, and what's the risk?"</div>
+  <div class="say"><b>Write it:</b> "Turn <b>[this decision]</b> into a one-page PRD: problem, users, scope, metrics, risks."</div>
+  <div class="say"><b>Quiz me:</b> "Quiz me on <b>[matching / trust / money]</b> — 5 questions, then grade me."</div>
+
+  <div class="warn"><b>How to get good answers:</b> name the feature + the decision ("…because I'm considering raising the trucker fee"). One question per message. If my answer has jargon, reply "simpler" — I'll redo it with zero technical terms.</div>
+</section>
+
+<!-- DO -->
+<section class="card" id="do">
+  <span class="kicker k-see">Do · live product + repo</span>
+  <h2>Touch the real thing</h2>
+  <table>
+    <tr><th>Tool</th><th>Exact how</th><th>PM payoff</th></tr>
+    <tr><td>Live site, role 1</td><td>Sign up as <b>shipper</b> → post a shipment → browse → request → chat</td><td>Feel demand-side friction; time each step</td></tr>
+    <tr><td>Live site, role 2</td><td>Sign up as <b>trucker</b> → post a trip → browse loads → accept → start GPS</td><td>Feel supply-side friction; compare with role 1</td></tr>
+    <tr><td><code>public/pricing.md</code></td><td>Open (84 lines): fees, escrow, enterprise, broker comparison table</td><td>Settles every money argument</td></tr>
+    <tr><td>FAQ page</td><td>Read shipper + trucker sections end to end</td><td>Hears objections in users' own words</td></tr>
+    <tr><td>14 calculators</td><td>Run fare + profit + PTL-vs-FTL calculators</td><td>See the acquisition engine working</td></tr>
+    <tr><td>Homepage (16 sections)</td><td>Scroll hero → corridors → safety → CTA as a first-time visitor</td><td>The pitch as the market hears it</td></tr>
+  </table>
+  <div class="good"><b>Golden rule:</b> dashboard tells you what <i>exists</i>, the live site tells you what it <i>feels like</i>, the brief tells you the <i>exact numbers</i>. Use all three — never just one.</div>
+</section>
+
+<!-- WEEK -->
+<section class="card" id="week">
+  <span class="kicker k-ask">First-week plan</span>
+  <h2>Your 5-day tool sequence</h2>
+  <ol class="plan">
+    <li><b>Day 1 — Orient:</b> Visual Guide §1–§3 (30 min) → Dashboard Tour × 12 (20 min) → write your one-page user/journey summary.</li>
+    <li><b>Day 2 — Feel:</b> Live site dual-role walkthrough (1 hr) → log 5 frictions → ask me "why does [friction] exist?"</li>
+    <li><b>Day 3 — Brain + trust:</b> Dashboard search <code>matching</code> + <code>CreditScore</code> (1 hr) → ask me to explain weights and score recovery.</li>
+    <li><b>Day 4 — Data + money:</b> Database Live Visual full play (25 min) → read <code>pricing.md</code> → map the funnel with real numbers.</li>
+    <li><b>Day 5 — Decide:</b> Pick one gap from the Brief §12 → ask me for impact + PRD → present it. You've now done a full PM loop.</li>
+  </ol>
+</section>
+
+</main>
+<footer>LoadSaathi Tool Guide · companions: Visual Product Guide + Database Live Visual (Desktop) + PM Product Brief (docs/)</footer>
+</body>
+</html>

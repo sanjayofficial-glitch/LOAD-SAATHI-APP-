@@ -55,24 +55,110 @@ const stats = [
   { value: '3x', label: 'Faster Return Loads', icon: MapPin },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "LoadSaathi vs Traditional Freight Brokers — Detailed Comparison",
-  description: "Compare LoadSaathi's AI-powered freight marketplace with traditional brokers. See pricing transparency, GPS tracking, credit scores, and AI matching advantages side-by-side.",
-  url: "https://loadsaathi.in/compare",
-  isPartOf: { "@type": "WebSite", name: "LoadSaathi", url: "https://loadsaathi.in" },
-  mainEntity: {
-    "@type": "ItemList",
-    name: "LoadSaathi vs Traditional Brokers Comparison",
-    itemListElement: comparisonData.map((item, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: item.feature,
-      description: `LoadSaathi: ${item.loadsaathi.value}. Traditional brokers: ${item.brokers.value}.`,
-    })),
+const platformComparisonData = [
+  {
+    feature: 'Platform type',
+    loadsaathi: 'Open freight marketplace — shippers and truckers connect directly',
+    vahak: 'Free load & lorry marketplace with bidding (per Vahak)',
+    blackbuck: 'Load listings marketplace plus freight brokerage service (per BlackBuck)',
+    trukky: 'Instant-priced online truck booking platform (per Trukky)',
   },
-};
+  {
+    feature: 'Load types',
+    loadsaathi: 'Full truckload and part load (PTL/LTL)',
+    vahak: 'Loads and lorries of all sizes via bidding (per Vahak)',
+    blackbuck: 'Full truckload marketplace (per BlackBuck)',
+    trukky: 'FTL and part load, door-to-door (per Trukky)',
+  },
+  {
+    feature: 'Upfront pricing',
+    loadsaathi: 'AI price estimate before you post',
+    vahak: 'Post your price, receive competing bids (per Vahak)',
+    blackbuck: 'Set your own price or bid on listed loads (per BlackBuck)',
+    trukky: 'Instant real-time price shown at booking (per Trukky)',
+  },
+  {
+    feature: 'Verification',
+    loadsaathi: 'Verified profile badges on truckers',
+    vahak: 'Aadhaar & GST verification stated by Vahak',
+    blackbuck: 'Verified transporters, ratings and caller ID (per BlackBuck)',
+    trukky: 'Verified transporters stated by Trukky',
+  },
+  {
+    feature: 'Live GPS tracking',
+    loadsaathi: 'Real-time tracking on every trip',
+    vahak: 'Live load tracking (per Vahak)',
+    blackbuck: 'GPS and telematics tracking (per BlackBuck)',
+    trukky: 'Live vehicle tracking (per Trukky)',
+  },
+  {
+    feature: 'Return loads',
+    loadsaathi: 'Return-load matching built in',
+    vahak: 'Return-load feature stated by Vahak',
+    blackbuck: 'Open load market searched by route (per BlackBuck)',
+    trukky: 'Not advertised as of Sep 2026',
+  },
+  {
+    feature: 'Freight credit score',
+    loadsaathi: '300–900 credit score for truckers and shippers',
+    vahak: 'Not advertised as of Sep 2026',
+    blackbuck: 'Not advertised as of Sep 2026',
+    trukky: 'Not advertised as of Sep 2026',
+  },
+  {
+    feature: 'Fees',
+    loadsaathi: 'Free to join; 1.5–3% fee only on completed bookings',
+    vahak: 'Free booking, no commission stated by Vahak',
+    blackbuck: 'Paid shipper plans for load posting (per BlackBuck)',
+    trukky: 'Pay at booking, balance on loading/unloading (per Trukky)',
+  },
+  {
+    feature: 'Coverage',
+    loadsaathi: 'East India: Odisha, Jharkhand, West Bengal — 25+ corridors',
+    vahak: 'Pan-India network (stated by Vahak)',
+    blackbuck: '300+ locations (stated by BlackBuck)',
+    trukky: '100+ cities, 3,000+ vehicles (stated by Trukky)',
+  },
+  {
+    feature: 'Beyond booking',
+    loadsaathi: 'Credit score, per-trip CO2, in-app chat',
+    vahak: 'WhatsApp business cards, transporter directory (per Vahak)',
+    blackbuck: 'FASTag, fuel payments, vehicle financing, telematics (per BlackBuck)',
+    trukky: 'Transit insurance and booking software (per Trukky)',
+  },
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "LoadSaathi vs Vahak vs BlackBuck vs Trukky — Detailed Comparison",
+    description: "Compare LoadSaathi with Vahak, BlackBuck, Trukky and traditional freight brokers as of September 2026: pricing, verification, GPS tracking, credit scores and coverage side-by-side.",
+    url: "https://loadsaathi.in/compare",
+    isPartOf: { "@type": "WebSite", name: "LoadSaathi", url: "https://loadsaathi.in" },
+    mainEntity: {
+      "@type": "ItemList",
+      name: "LoadSaathi vs Traditional Brokers Comparison",
+      itemListElement: comparisonData.map((item, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: item.feature,
+        description: `LoadSaathi: ${item.loadsaathi.value}. Traditional brokers: ${item.brokers.value}.`,
+      })),
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Online truck booking platforms compared with LoadSaathi (September 2026)",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "LoadSaathi", description: "East India freight marketplace covering Odisha, Jharkhand and West Bengal with AI load matching, a 300-900 freight credit score, per-trip CO2 tracking and free registration; 1.5-3% platform fee only on completed bookings." },
+      { "@type": "ListItem", position: 2, name: "Vahak", description: "Free load and lorry marketplace with bidding, Aadhaar and GST verification as stated by Vahak, live tracking and a pan-India network." },
+      { "@type": "ListItem", position: 3, name: "BlackBuck", description: "Truck marketplace and freight brokerage with load bidding, verified transporters, ratings, FASTag and fleet services across 300+ locations." },
+      { "@type": "ListItem", position: 4, name: "Trukky", description: "Online truck booking platform offering full truckload and part load with instant pricing, live tracking and transit insurance across 100+ cities as stated by Trukky." },
+    ],
+  },
+];
 
 export default function Comparison() {
   useEffect(() => { window.scrollTo(0, 0); }, []);
@@ -80,8 +166,9 @@ export default function Comparison() {
   return (
     <>
       <SeoMeta
-        title="LoadSaathi vs Traditional Freight Brokers — Full Comparison (2026)"
-        description="Compare LoadSaathi's AI-powered freight marketplace with traditional brokers. See pricing transparency, GPS tracking, credit scores, and AI matching advantages side-by-side."
+        title="LoadSaathi vs Vahak vs BlackBuck vs Trukky (Sep 2026)"
+        description="Compare LoadSaathi with Vahak, BlackBuck and Trukky as of Sep 2026: pricing, verification, tracking, credit scores and coverage — side by side."
+        keywords="book truck online, online truck booking app, truck booking without brokerage, load market India, Vahak vs BlackBuck, Trukky alternative"
         canonical="/compare"
         jsonLd={jsonLd}
         breadcrumbs={[
@@ -104,6 +191,8 @@ export default function Comparison() {
             <li>Digital freight credit score (300-900)</li>
           </ul>
           <p><strong>Traditional brokers</strong> rely on phone-based negotiation, opaque margins, manual check-in calls, no standardized trust metrics, paper-based records, and no systematic return-load solutions.</p>
+          <h2>LoadSaathi vs Vahak vs BlackBuck vs Trukky</h2>
+          <p>Compared as of September 2026 from each company's own website and app listings. Vahak runs a free load and lorry marketplace with bidding and states Aadhaar and GST verification for transporters. BlackBuck operates a truck marketplace and freight brokerage with load bidding, verified transporters, FASTag and fleet services across 300+ locations. Trukky offers instant-priced full truckload and part load booking with live tracking and transit insurance, covering 100+ cities. LoadSaathi is built for East India lanes (Odisha, Jharkhand, West Bengal, 25+ corridors) with AI load matching on 7 weighted factors, a 300-900 freight credit score, per-trip CO2 tracking and free registration; a 1.5-3% platform fee applies only when a booking completes.</p>
           <h2>Learn More</h2>
           <p>Visit <a href="https://loadsaathi.in/features">Features</a>, <a href="https://loadsaathi.in/pricing">Pricing</a>, or <a href="https://loadsaathi.in/about">About</a> for more details.</p>
         </div>
@@ -119,10 +208,10 @@ export default function Comparison() {
               <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">Comparison Guide</span>
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6 text-foreground dark:text-white">
-              LoadSaathi <span className="text-orange-600 dark:text-orange-400">vs</span> Traditional Brokers
+              LoadSaathi <span className="text-orange-600 dark:text-orange-400">vs</span> Vahak, BlackBuck <span className="text-orange-600 dark:text-orange-400">&amp;</span> Trukky
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              A side-by-side comparison of India's AI-powered freight marketplace against the traditional broker model. See why truckers and shippers are switching.
+              A side-by-side comparison of India's online truck booking platforms — plus how LoadSaathi stacks up against the traditional broker model. Compared as of September 2026.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register">
@@ -147,10 +236,46 @@ export default function Comparison() {
           </div>
         </section>
 
+        {/* Competitor Platform Comparison */}
+        <section className="py-20 sm:py-28 border-y border-border dark:border-white/5">
+          <div className="max-w-[1100px] mx-auto px-6 sm:px-12">
+            <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white text-center">LoadSaathi vs Vahak vs BlackBuck vs Trukky</h2>
+            <p className="text-lg text-muted-foreground text-center mb-3 max-w-3xl mx-auto">
+              The platforms shippers and truckers search most, compared side by side — covering pricing, verification, tracking, credit scores, fees and coverage.
+            </p>
+            <p className="text-sm text-muted-foreground/70 text-center mb-10 max-w-3xl mx-auto">
+              Compared as of September 2026 from each company's own website and app listings. Features, coverage and pricing change — confirm current details on each provider's site.
+            </p>
+            <div className="overflow-x-auto border border-border dark:border-white/10 rounded-2xl">
+              <div className="min-w-[940px]">
+                <div className="grid grid-cols-[minmax(150px,1.1fr)_repeat(4,minmax(175px,1fr))] bg-muted/80 dark:bg-white/5 border-b border-border dark:border-white/10">
+                  <div className="text-sm font-bold text-muted-foreground uppercase tracking-wider px-5 py-4">Capability</div>
+                  <div className="text-sm font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider text-center px-5 py-4">LoadSaathi</div>
+                  <div className="text-sm font-bold text-muted-foreground/60 uppercase tracking-wider text-center px-5 py-4">Vahak</div>
+                  <div className="text-sm font-bold text-muted-foreground/60 uppercase tracking-wider text-center px-5 py-4">BlackBuck</div>
+                  <div className="text-sm font-bold text-muted-foreground/60 uppercase tracking-wider text-center px-5 py-4">Trukky</div>
+                </div>
+                {platformComparisonData.map((row, i) => (
+                  <div key={row.feature} className={`grid grid-cols-[minmax(150px,1.1fr)_repeat(4,minmax(175px,1fr))] ${i < platformComparisonData.length - 1 ? 'border-b border-border dark:border-white/5' : ''}`}>
+                    <div className="text-sm font-semibold text-foreground px-5 py-4 bg-muted/30 dark:bg-white/[0.02]">{row.feature}</div>
+                    <div className="text-sm text-foreground px-5 py-4 bg-orange-500/5 dark:bg-orange-500/[0.06]">{row.loadsaathi}</div>
+                    <div className="text-sm text-muted-foreground px-5 py-4 text-center">{row.vahak}</div>
+                    <div className="text-sm text-muted-foreground px-5 py-4 text-center">{row.blackbuck}</div>
+                    <div className="text-sm text-muted-foreground px-5 py-4 text-center">{row.trukky}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-base text-muted-foreground mt-8 max-w-3xl mx-auto text-center">
+              <strong className="text-foreground">Where LoadSaathi fits:</strong> it is built for East India lanes — Odisha, Jharkhand and West Bengal across 25+ corridors — with a 300–900 freight credit score, AI matching on 7 weighted factors and per-trip CO2 tracking. Registration is free and the 1.5–3% platform fee applies only when a booking completes. For wider pan-India networks, Vahak, BlackBuck and Trukky all publish nationwide coverage.
+            </p>
+          </div>
+        </section>
+
         {/* Comparison Table */}
         <section className="py-20 sm:py-28">
           <div className="max-w-[1000px] mx-auto px-6 sm:px-12">
-            <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white text-center">Feature-by-Feature Comparison</h2>
+            <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white text-center">LoadSaathi vs Traditional Freight Brokers</h2>
             <p className="text-lg text-muted-foreground text-center mb-12 max-w-2xl mx-auto">Every advantage LoadSaathi offers over the traditional broker model — with specifics.</p>
             <div className="space-y-0 border border-border dark:border-white/10 rounded-2xl overflow-hidden">
               {/* Header */}

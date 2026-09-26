@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoadSaathi — How the Database Works (Live Animated Visual)</title>
+<style>
+  :root{
+    --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --page:#0b1220; --card:#ffffff;
+    --sel:#38bdf8; --ins:#4ade80; --upd:#fbbf24; --trig:#c084fc; --rt:#f472b6; --rls:#94a3b8;
+  }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    margin:0;background:var(--page);color:#e5e7eb;line-height:1.5}
+  header{background:linear-gradient(135deg,#0b1220,#1e3a8a 65%,#ea580c);color:#fff;
+    padding:30px 24px 22px;text-align:center}
+  header h1{margin:0 0 6px;font-size:1.6rem}
+  header p{margin:3px 0;opacity:.9;font-size:.92rem}
+  .controls{background:#111c33;border-bottom:1px solid #243154;padding:12px 16px;
+    display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;position:sticky;top:0;z-index:20}
+  .controls button{background:#2563eb;border:0;color:#fff;font-weight:700;font-size:.85rem;
+    padding:9px 18px;border-radius:999px;cursor:pointer}
+  .controls button:hover{background:#1d4ed8}
+  .controls button.ghost{background:#243154}
+  .controls button.ghost:hover{background:#2e3d63}
+  .controls button:disabled{opacity:.45;cursor:default}
+  .controls select{background:#243154;color:#fff;border:1px solid #3b4a73;border-radius:8px;padding:8px}
+  .controls label{font-size:.8rem;color:#9ca3af}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;background:#0b1220;padding:12px}
+  .stat{background:#131f3a;border:1px solid #243154;border-radius:10px;padding:8px 18px;text-align:center;min-width:130px}
+  .stat b{display:block;font-size:1.3rem;color:#fff}
+  .stat span{font-size:.72rem;color:#9ca3af}
+  .steps{background:#0b1220;padding:6px 12px 14px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+  .sdot{width:30px;height:30px;border-radius:50%;background:#1c2947;color:#8fa1c7;border:1px solid #2c3d68;
+    font-size:.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .sdot.done{background:#14532d;color:#bbf7d0;border-color:#16a34a}
+  .sdot.now{background:#2563eb;color:#fff;border-color:#60a5fa;box-shadow:0 0 0 3px rgba(37,99,235,.35)}
+  main{max-width:1280px;margin:0 auto;padding:10px 16px 30px}
+  .stage{display:grid;grid-template-columns:250px 120px 1fr;gap:12px;align-items:stretch}
+  @media(max-width:980px){.stage{grid-template-columns:1fr}}
+  .panel{background:#111c33;border:1px solid #243154;border-radius:12px;padding:14px}
+  .panel h3{margin:0 0 10px;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:#9ca3af}
+  .actor{background:#1a2745;border:1px solid #2c3d68;border-radius:10px;padding:10px;margin-bottom:10px}
+  .actor.s{border-left:4px solid #2563eb}
+  .actor.t{border-left:4px solid #ea580c}
+  .actor b{font-size:.9rem}
+  .actor small{display:block;color:#9ca3af;font-size:.75rem}
+  .actor.active{box-shadow:0 0 0 2px #60a5fa}
+  #narrate{background:#0d1730;border:1px dashed #3b82f6;border-radius:10px;padding:12px;font-size:.85rem;min-height:120px}
+  #narrate b{color:#93c5fd}
+  /* wire */
+  #wire{position:relative;background:#0d1730;border:1px solid #243154;border-radius:12px;overflow:hidden;min-height:120px}
+  #wire .cap{position:absolute;top:8px;left:0;right:0;text-align:center;font-size:.7rem;color:#64748b;letter-spacing:.08em}
+  .packet{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;margin-top:-7px;display:none;z-index:5}
+  .packet .tag{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:.62rem;font-weight:800;
+    padding:1px 7px;border-radius:999px;white-space:nowrap;color:#0b1220}
+  .fly-lr{display:block;animation:flyLR 1.15s linear forwards}
+  .fly-rl{display:block;animation:flyRL 1.15s linear forwards}
+  @keyframes flyLR{from{left:2%}to{left:94%}}
+  @keyframes flyRL{from{left:94%}to{left:2%}}
+  .burst{position:absolute;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+    border:3px solid #4ade80;display:none;z-index:6}
+  .burst.go{display:block;animation:burst .7s ease-out forwards}
+  @keyframes burst{from{transform:scale(.3);opacity:1}to{transform:scale(1.6);opacity:0}}
+  /* tables */
+  #db{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:980px){#db{grid-template-columns:1fr}}
+  .tbl{background:#fff;color:var(--ink);border-radius:10px;overflow:hidden;border:2px solid transparent;font-size:.72rem}
+  .tbl.hot{border-color:#fbbf24}
+  .tbl h4{margin:0;padding:7px 10px;background:#111827;color:#fff;font-size:.78rem;display:flex;justify-content:space-between;align-items:center}
+  .tbl h4 .cnt{background:#374151;border-radius:999px;padding:0 9px;font-size:.7rem}
+  .tbl table{width:100%;border-collapse:collapse}
+  .tbl th{background:#f3f4f6;text-align:left;padding:4px 7px;font-size:.66rem;color:#4b5563;white-space:nowrap}
+  .tbl td{border-top:1px solid #f1f5f9;padding:4px 7px;vertical-align:top;word-break:break-word}
+  tr.newrow td{animation:rowNew 2.2s ease-out}
+  tr.updrow td{animation:rowUpd 2.2s ease-out}
+  @keyframes rowNew{0%{background:#bbf7d0}100%{background:transparent}}
+  @keyframes rowUpd{0%{background:#fde68a}100%{background:transparent}}
+  .st{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.66rem;font-weight:700}
+  .st-active{background:#dcfce7;color:#166534}.st-pending{background:#fef9c3;color:#854d0e}
+  .st-accepted{background:#dbeafe;color:#1d4ed8}.st-in_transit{background:#ffedd5;color:#9a3412}
+  .st-delivered{background:#e0e7ff;color:#3730a3}.st-completed{background:#dcfce7;color:#166534}
+  .st-cancelled,.st-declined{background:#fee2e2;color:#991b1b}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  /* sql log */
+  #sqllog{background:#020617;border:1px solid #1e293b;border-radius:12px;padding:14px;margin-top:12px;
+    height:230px;overflow-y:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.74rem}
+  #sqllog div{margin:3px 0;white-space:pre-wrap;word-break:break-word}
+  .op{display:inline-block;min-width:74px;text-align:center;font-weight:800;border-radius:4px;
+    padding:0 6px;margin-right:8px;font-size:.68rem}
+  .op-SELECT{background:#0c4a6e;color:#7dd3fc}.op-INSERT{background:#14532d;color:#86efac}
+  .op-UPDATE{background:#713f12;color:#fcd34d}.op-TRIGGER{background:#581c87;color:#d8b4fe}
+  .op-REALTIME{background:#831843;color:#f9a8d4}.op-RLS{background:#334155;color:#cbd5e1}
+  .op-INDEX{background:#1c1917;color:#fdba74}.op-INFO{background:#1e293b;color:#94a3b8}
+  .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:.72rem;color:#9ca3af}
+  details.schema{background:#111c33;border:1px solid #243154;border-radius:12px;padding:14px;margin-top:12px;font-size:.78rem}
+  details.schema summary{cursor:pointer;font-weight:700}
+  details.schema td,details.schema th{border-color:#243154;color:#cbd5e1}
+  details.schema th{background:#1a2745;color:#93c5fd}
+  footer{text-align:center;color:#64748b;font-size:.75rem;padding:20px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>How the LoadSaathi database works — live animated visual</h1>
+  <p>Real tables, real columns, real SQL from the project schema · sample freight data (Rourkela → Ranchi)</p>
+  <p>Press <b>Play full journey</b> and watch one shipment travel from tap to payment through PostgreSQL.</p>
+</header>
+
+<div class="controls">
+  <button id="btnPlay">Play full journey</button>
+  <button id="btnPrev" class="ghost">← Prev step</button>
+  <button id="btnNext" class="ghost">Next step →</button>
+  <button id="btnReset" class="ghost">Reset</button>
+  <label>Speed
+    <select id="selSpeed"><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option></select>
+  </label>
+</div>
+
+<div class="stats">
+  <div class="stat"><b id="cStep">0 / 10</b><span>story step</span></div>
+  <div class="stat"><b id="cQ">0</b><span>queries run</span></div>
+  <div class="stat"><b id="cW">0</b><span>rows written</span></div>
+  <div class="stat"><b id="cR">0</b><span>realtime pushes</span></div>
+  <div class="stat"><b id="cT">0</b><span>tables touched</span></div>
+</div>
+
+<div class="steps" id="stepDots"></div>
+
+<main>
+  <div class="stage">
+    <div class="panel">
+      <h3>App — what the user taps</h3>
+      <div class="actor s" id="actorS"><b>Meera — Shipper</b><small>Sharma Steel Traders, Rourkela · score 640</small></div>
+      <div class="actor t" id="actorT"><b>Raju — Trucker</b><small>Eicher 14ft · OD-14-X-2211 · score 710</small></div>
+      <h3 style="margin-top:12px">What is happening</h3>
+      <div id="narrate">Press <b>Play full journey</b> (or step through with Next). Each step shows the tap, the SQL, and the rows changing — in plain language.</div>
+    </div>
+
+    <div id="wire">
+      <div class="cap">APP ⇄ DATABASE WIRE</div>
+      <div class="packet" id="packet"><span class="tag" id="packetTag">SELECT</span></div>
+      <div class="burst" id="burstL" style="left:6%"></div>
+      <div class="burst" id="burstR" style="left:94%"></div>
+    </div>
+
+    <div class="panel">
+      <h3>PostgreSQL on Supabase — real tables, live rows</h3>
+      <div id="db"></div>
+    </div>
+  </div>
+
+  <div id="sqllog"></div>
+  <div class="legend">
+    <span><span class="op op-SELECT">SELECT</span> reading data</span>
+    <span><span class="op op-INSERT">INSERT</span> new row</span>
+    <span><span class="op op-UPDATE">UPDATE</span> status / value change</span>
+    <span><span class="op op-RLS">RLS</span> security check: can this user touch this row?</span>
+    <span><span class="op op-INDEX">INDEX</span> fast lookup, no full-table scan</span>
+    <span><span class="op op-TRIGGER">TRIGGER</span> database reacts automatically</span>
+    <span><span class="op op-REALTIME">REALTIME</span> screens update instantly, no refresh</span>
+  </div>
+
+  <details class="schema">
+    <summary>Full real column lists per table (from final-schema.sql + migrations — click to expand)</summary>
+    <table>
+      <tr><th>Table</th><th>Real columns</th></tr>
+      <tr><td class="mono">users</td><td class="mono">id, email, user_type, full_name, phone, company_name, is_verified, rating, total_trips, created_at</td></tr>
+      <tr><td class="mono">trips</td><td class="mono">id, trucker_id, origin_city, destination_city, departure_date, available_capacity_tonnes, price_per_tonne, vehicle_type, vehicle_number, status, origin_state, destination_state, origin_lat, origin_lng, destination_lat, destination_lng, estimated_distance_km, estimated_duration_min, created_at, updated_at</td></tr>
+      <tr><td class="mono">shipments</td><td class="mono">id, shipper_id, origin_city, destination_city, origin_state, destination_state, departure_date, goods_description, weight_tonnes, pickup_address, delivery_address, budget_per_tonne, status, origin_lat, origin_lng, destination_lat, destination_lng, estimated_distance_km, estimated_duration_min, created_at</td></tr>
+      <tr><td class="mono">requests</td><td class="mono">id, trip_id, shipper_id, receiver_id, goods_description, weight_tonnes, pickup_address, delivery_address, status, shipment_id, created_at</td></tr>
+      <tr><td class="mono">shipment_requests</td><td class="mono">id, shipment_id, trucker_id, shipper_id, proposed_price_per_tonne, message, status, created_at, updated_at</td></tr>
+      <tr><td class="mono">reviews</td><td class="mono">id, trip_id, trucker_id, shipper_id, reviewer_role, rating, comment, created_at</td></tr>
+      <tr><td class="mono">messages</td><td class="mono">id, sender_id, recipient_id, content, request_id, shipment_request_id, is_read, created_at</td></tr>
+      <tr><td class="mono">notifications</td><td class="mono">id, user_id, message, is_read, related_trip_id, related_shipment_request_id, type, created_at</td></tr>
+      <tr><td class="mono">credit_scores</td><td class="mono">id, user_id, score (300–900), factors (jsonb), calculated_at</td></tr>
+      <tr><td class="mono">driver_locations</td><td class="mono">id, driver_id, trip_id, lat, lng, heading, speed, accuracy, updated_at</td></tr>
+    </table>
+  </details>
+</main>
+
+<footer>Tables, columns, statuses, triggers, indexes and realtime wiring mirror the real LoadSaathi Supabase schema. Sample rows are realistic demo data.</footer>
+
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const shortId = () => Math.random().toString(16).slice(2,6) + "…" + Math.random().toString(16).slice(2,6);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const sleep = ms => new Promise(r => setTimeout(r, ms / speed()));
+const speed = () => parseFloat($("selSpeed").value || "1");
+
+/* ---------- the database (mirrors real schema, key columns displayed) ---------- */
+const TABLES = ["users","trips","shipments","requests","messages","notifications","reviews","credit_scores","driver_locations"];
+const LABELS = {users:"users",trips:"trips",shipments:"shipments",requests:"requests",messages:"messages",
+  notifications:"notifications",reviews:"reviews",credit_scores:"credit_scores",driver_locations:"driver_locations"};
+const COLS = {
+  users:["full_name","user_type","rating","is_verified"],
+  trips:["route","departure_date","cap_t","price_t","vehicle","status"],
+  shipments:["route","goods","wt_t","budget_t","status"],
+  requests:["trip","shipper","wt_t","status"],
+  messages:["from_to","content","is_read"],
+  notifications:["to","message","is_read"],
+  reviews:["role","rating","comment"],
+  credit_scores:["user","score","tier"],
+  driver_locations:["driver","lat_lng","speed","updated_at"]
+};
+function seedDB(){
+  return {
+    users:[
+      {id:"u_meera",full_name:"Meera (shipper)",user_type:"shipper",rating:4.2,is_verified:true},
+      {id:"u_raju",full_name:"Raju (trucker)",user_type:"trucker",rating:4.6,is_verified:true}
+    ],
+    trips:[], shipments:[], requests:[], messages:[], notifications:[], reviews:[],
+    credit_scores:[
+      {id:"cs1",user:"Meera",score:640,tier:"fair"},
+      {id:"cs2",user:"Raju",score:710,tier:"good"}
+    ],
+    driver_locations:[]
+  };
+}
+let DB = seedDB();
+let flashRows = {};   // table -> {id: 'new'|'upd'}
+let counters = {q:0,w:0,r:0,tables:{}};
+let playing = false, curStep = -1;
+
+/* ---------- rendering ---------- */
+function pill(v){
+  const c = ["active","pending","accepted","in_transit","delivered","completed","cancelled","declined"].includes(v) ? v : "";
+  return '<span class="st ' + c + '">' + esc(v) + "</span>";
+}
+function cellVal(t,k,v){
+  if(k==="status") return pill(v);
+  if(k==="is_read") return v ? "read" : "<b>unread</b>";
+  if(k==="is_verified") return v ? "verified" : "—";
+  if(typeof v==="boolean") return v?"yes":"no";
+  return esc(v);
+}
+function renderTable(t){
+  const host = document.querySelector('[data-tbl="'+t+'"]');
+  if(!host) return;
+  const rows = DB[t];
+  let h = '<h4><span class="mono">'+LABELS[t]+'</span><span class="cnt">'+rows.length+" row"+(rows.length===1?"":"s")+"</span></h4>";
+  h += "<table><tr>" + COLS[t].map(c=>"<th>"+c+"</th>").join("") + "</tr>";
+  if(!rows.length) h += '<tr><td colspan="'+COLS[t].length+'" style="color:#9ca3af">— empty —</td></tr>';
+  rows.forEach(r=>{
+    const fl = (flashRows[t]||{})[r.id];
+    h += '<tr class="'+(fl==="new"?"newrow":fl==="upd"?"updrow":"")+'">' +
+      COLS[t].map(c=>"<td>"+cellVal(t,c,r[c])+"</td>").join("") + "</tr>";
+  });
+  h += "</table>";
+  host.innerHTML = h;
+  host.classList.add("hot");
+  setTimeout(()=>host.classList.remove("hot"), 2400);
+}
+function renderAll(){ TABLES.forEach(renderTable); }
+function buildTables(){
+  $("db").innerHTML = TABLES.map(t=>'<div class="tbl" data-tbl="'+t+'"></div>').join("");
+  renderAll();
+}
+function touch(t){ counters.tables[t]=1; $("cT").textContent = Object.keys(counters.tables).length; }
+
+/* ---------- sql log ---------- */
+function logSQL(op, text){
+  const box = $("sqllog");
+  const d = document.createElement("div");
+  d.innerHTML = '<span class="op op-'+op+'">'+op+"</span>" + esc(text);
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+  if(op==="SELECT"||op==="INSERT"||op==="UPDATE"){ counters.q++; $("cQ").textContent = counters.q; }
+  if(op==="INSERT"||op==="UPDATE"){ counters.w++; $("cW").textContent = counters.w; }
+  if(op==="REALTIME"){ counters.r++; $("cR").textContent = counters.r; }
+}
+
+/* ---------- packet animation ---------- */
+const PCOL = {SELECT:"#38bdf8",INSERT:"#4ade80",UPDATE:"#fbbf24",REALTIME:"#f472b6",TRIGGER:"#c084fc"};
+function packet(dir, label){
+  return new Promise(res=>{
+    const p = $("packet"), tag = $("packetTag");
+    const col = PCOL[label] || "#e5e7eb";
+    p.style.background = col; p.style.boxShadow = "0 0 12px "+col;
+    tag.textContent = label; tag.style.background = col;
+    p.classList.remove("fly-lr","fly-rl"); void p.offsetWidth;
+    p.classList.add(dir==="lr" ? "fly-lr" : "fly-rl");
+    const done = ()=>{ p.classList.remove("fly-lr","fly-rl"); p.removeEventListener("animationend",done); res(); };
+    p.addEventListener("animationend", done);
+    setTimeout(done, 1600); // safety
+  });
+}
+function burst(side){
+  const b = $(side==="l" ? "burstL" : "burstR");
+  b.classList.remove("go"); void b.offsetWidth; b.classList.add("go");
+}
+function setActor(who){
+  $("actorS").classList.toggle("active", who==="s");
+  $("actorT").classList.toggle("active", who==="t");
+}
+function narrate(html){ $("narrate").innerHTML = html; }
+function markDots(){
+  document.querySelectorAll(".sdot").forEach((d,i)=>{
+    d.classList.toggle("done", i < curStep);
+    d.classList.toggle("now", i === curStep);
+  });
+  $("cStep").textContent = Math.max(curStep+1,0) + " / 10";
+}
+
+/* ---------- story ---------- */
+const TRIP_ID = "9f2c…71ab", SHIP_ID = "b81d…04ef", REQ_ID = "c4e7…92aa";
+const STEPS = [
+{ title:"Login — the app reads your profile",
+  actor:"s",
+  html:"<b>Meera opens the app.</b> Before anything shows, the app asks the database: <i>who is this user, what role, what rating?</i> One indexed read on <b>users</b>. Security (RLS) checks the login token first — you can only ever read your own row.",
+  beats:[
+    {dir:"lr",label:"SELECT",sql:[["RLS","POLICY CHECK: auth user may SELECT own users row"], ["SELECT","SELECT full_name, user_type, rating FROM users WHERE id = 'u_meera';  → 1 row (Meera, shipper, 4.2)"]], tables:["users"], flash:[]}
+  ]},
+{ title:"Raju posts a trip — a row is born",
+  actor:"t",
+  html:"<b>Raju taps Post Trip:</b> Rourkela → Ranchi, Eicher 14ft, 9 tonnes free, ₹1,450/tonne. The app writes <b>one new row</b> into <b>trips</b> with status <b>active</b>. RLS verifies he is really Raju before the write is allowed.",
+  beats:[
+    {dir:"lr",label:"INSERT",sql:[["RLS","POLICY CHECK: trucker may INSERT trips with own trucker_id ✓"], ["INSERT","INSERT INTO trips (trucker_id, origin_city, destination_city, available_capacity_tonnes, price_per_tonne, vehicle_type, vehicle_number, estimated_distance_km, status) VALUES ('u_raju','Rourkela','Ranchi',9,1450,'Eicher 14ft','OD-14-X-2211',352,'active');"]],
+     tables:["trips"],
+     do(){ DB.trips.push({id:TRIP_ID,route:"Rourkela → Ranchi",departure_date:"2026-10-02",cap_t:9,price_t:1450,vehicle:"Eicher 14ft",status:"active"}); },
+     flash:[["trips",TRIP_ID,"new"]]}
+  ]},
+{ title:"Meera posts a shipment — demand enters",
+  actor:"s",
+  html:"<b>Meera taps Post Shipment:</b> 5 tonnes of steel coils, Rourkela → Ranchi, budget ₹1,600/tonne, pickup + delivery addresses. One new row in <b>shipments</b>, status <b>pending</b>. Supply and demand now both live in the database.",
+  beats:[
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO shipments (shipper_id, origin_city, destination_city, goods_description, weight_tonnes, budget_per_tonne, status) VALUES ('u_meera','Rourkela','Ranchi','Steel coils (TMT)',5,1600,'pending');"]],
+     tables:["shipments"],
+     do(){ DB.shipments.push({id:SHIP_ID,route:"Rourkela → Ranchi",goods:"Steel coils",wt_t:5,budget_t:1600,status:"pending"}); },
+     flash:[["shipments",SHIP_ID,"new"]]}
+  ]},
+{ title:"Meera browses — the fast indexed read + match score",
+  actor:"s",
+  html:"<b>Meera opens Browse Trips.</b> The app reads only <b>active</b> trips on this corridor — an <b>index</b> (like a book's index page) jumps straight to them instead of scanning everything. Then the 7-factor match runs: same cities, close pickup, fitting capacity, budget above price → <b>87% strong fit</b>.",
+  beats:[
+    {dir:"lr",label:"SELECT",sql:[["INDEX","USING INDEX idx_trips_status_origin_dest — jumps to active Rourkela→Ranchi rows, no full scan"], ["SELECT","SELECT * FROM trips WHERE status='active' AND origin_city='Rourkela' AND destination_city='Ranchi';  → 1 row (match 87% strong fit)"]], tables:["trips"], flash:[]}
+  ]},
+{ title:"Meera requests the trip — two writes, one bell",
+  actor:"s",
+  html:"<b>Meera taps Request.</b> Three things happen in one moment: a <b>pending</b> row lands in <b>requests</b> (linking her shipment to Raju's trip), a notification row lands for Raju, and <b>Realtime pushes</b> — Raju's bell rings instantly, no refresh needed.",
+  beats:[
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO requests (trip_id, shipper_id, receiver_id, goods_description, weight_tonnes, shipment_id, status) VALUES ('"+TRIP_ID+"','u_meera','u_raju','Steel coils (TMT)',5,'"+SHIP_ID+"','pending');"]],
+     tables:["requests"],
+     do(){ DB.requests.push({id:REQ_ID,trip:"Rourkela→Ranchi",shipper:"Meera",wt_t:5,status:"pending"}); },
+     flash:[["requests",REQ_ID,"new"]]},
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO notifications (user_id, message, related_trip_id, type) VALUES ('u_raju','New booking! Meera wants to ship 5t of Steel coils…','"+TRIP_ID+"','request');"]],
+     tables:["notifications"],
+     do(){ DB.notifications.push({id:"n1",to:"Raju",message:"New booking! Meera: 5t steel coils",is_read:false}); },
+     flash:[["notifications","n1","new"]]},
+    {dir:"rl",label:"REALTIME",sql:[["REALTIME","PUSH → Raju's screen: bell badge +1, request appears live"]], tables:[], flash:[]}
+  ]},
+{ title:"Raju accepts — statuses flip everywhere",
+  actor:"t",
+  html:"<b>Raju taps Accept.</b> The request row flips pending → <b>accepted</b>, and Meera instantly gets a notification <b>with Raju's phone number</b>. Chat unlocks. Both screens update live at the same moment.",
+  beats:[
+    {dir:"lr",label:"UPDATE",sql:[["UPDATE","UPDATE requests SET status='accepted' WHERE id='"+REQ_ID+"';"]],
+     tables:["requests"],
+     do(){ DB.requests.find(r=>r.id===REQ_ID).status="accepted"; },
+     flash:[["requests",REQ_ID,"upd"]]},
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO notifications (user_id, message, type) VALUES ('u_meera','Request Accepted! Raju is ready. Contact: +91 98…','accepted');"]],
+     tables:["notifications"],
+     do(){ DB.notifications.push({id:"n2",to:"Meera",message:"Accepted! Raju: +91 98…",is_read:false}); },
+     flash:[["notifications","n2","new"]]},
+    {dir:"rl",label:"REALTIME",sql:[["REALTIME","PUSH → both screens: chat unlocked, status badges refresh"]], tables:[], flash:[]}
+  ]},
+{ title:"They chat — messages stream in",
+  actor:"s",
+  html:"<b>Deal talk happens in-app.</b> Every message is a row in <b>messages</b>, tied to the request. Meera asks about loading time; Raju replies. When Meera opens the thread, her rows flip to <b>read</b> — that's the third write you see.",
+  beats:[
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO messages (sender_id, recipient_id, content, request_id) VALUES ('u_meera','u_raju','Loading ready at 8 AM at Kalunga yard?','"+REQ_ID+"');"]],
+     tables:["messages"],
+     do(){ DB.messages.push({id:"m1",from_to:"Meera→Raju",content:"Loading ready 8 AM?",is_read:false}); },
+     flash:[["messages","m1","new"]]},
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO messages (sender_id, recipient_id, content, request_id) VALUES ('u_raju','u_meera','Reaching by 7:30. Forklift available?','"+REQ_ID+"');"]],
+     tables:["messages"],
+     do(){ DB.messages.push({id:"m2",from_to:"Raju→Meera",content:"Reaching 7:30…",is_read:false}); },
+     flash:[["messages","m2","new"]]},
+    {dir:"rl",label:"REALTIME",sql:[["REALTIME","PUSH → Meera sees Raju's reply instantly"]], tables:[], flash:[]},
+    {dir:"lr",label:"UPDATE",sql:[["UPDATE","UPDATE messages SET is_read=true WHERE request_id='"+REQ_ID+"' AND recipient_id='u_meera';"]],
+     tables:["messages"],
+     do(){ DB.messages.forEach(m=>{ if(m.id==="m2") m.is_read=true; }); },
+     flash:[["messages","m2","upd"]]}
+  ]},
+{ title:"Trip starts — GPS pings stream live",
+  actor:"t",
+  html:"<b>Raju taps Start Trip.</b> The trip flips to <b>in_transit</b> — and his phone starts streaming GPS: a row in <b>driver_locations</b> overwritten every ~30 seconds. Watch the coordinates move. Meera's map follows him live via Realtime.",
+  beats:[
+    {dir:"lr",label:"UPDATE",sql:[["UPDATE","UPDATE trips SET status='in_transit' WHERE id='"+TRIP_ID+"';"]],
+     tables:["trips"],
+     do(){ DB.trips.find(r=>r.id===TRIP_ID).status="in_transit"; },
+     flash:[["trips",TRIP_ID,"upd"]]},
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO driver_locations (driver_id, trip_id, lat, lng, speed) VALUES ('u_raju','"+TRIP_ID+"',22.23,84.87,42);  -- ping 1: leaving Rourkela"]],
+     tables:["driver_locations"],
+     do(){ DB.driver_locations.push({id:"g1",driver:"Raju",lat_lng:"22.23, 84.87",speed:"42 km/h",updated_at:"10:02"}); },
+     flash:[["driver_locations","g1","new"]]},
+    {dir:"lr",label:"UPDATE",sql:[["UPDATE","UPDATE driver_locations SET lat=22.61, lng=85.12, speed=55 WHERE driver_id='u_raju';  -- ping 2: highway"]],
+     tables:["driver_locations"],
+     do(){ const g=DB.driver_locations.find(r=>r.id==="g1"); g.lat_lng="22.61, 85.12"; g.speed="55 km/h"; g.updated_at="10:32"; },
+     flash:[["driver_locations","g1","upd"]]},
+    {dir:"rl",label:"REALTIME",sql:[["REALTIME","PUSH → Meera's map marker glides forward, no refresh"]], tables:[], flash:[]}
+  ]},
+{ title:"Delivered — both sides close out",
+  actor:"s",
+  html:"<b>Coils unloaded in Ranchi.</b> Trip and shipment both flip to <b>delivered</b>. The database fires the 'please rate' notification to Meera. Money is now releasable from escrow (24–48h).",
+  beats:[
+    {dir:"lr",label:"UPDATE",sql:[["UPDATE","UPDATE trips SET status='delivered' WHERE id='"+TRIP_ID+"';  UPDATE shipments SET status='delivered' WHERE id='"+SHIP_ID+"';"]],
+     tables:["trips","shipments"],
+     do(){ DB.trips.find(r=>r.id===TRIP_ID).status="delivered"; DB.shipments.find(r=>r.id===SHIP_ID).status="delivered"; },
+     flash:[["trips",TRIP_ID,"upd"],["shipments",SHIP_ID,"upd"]]},
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO notifications (user_id, message, type) VALUES ('u_meera','Trip Completed! Please rate your experience.','completed');"]],
+     tables:["notifications"],
+     do(){ DB.notifications.push({id:"n3",to:"Meera",message:"Delivered! Please rate.",is_read:false}); },
+     flash:[["notifications","n3","new"]]}
+  ]},
+{ title:"5-star review — the database reacts by itself",
+  actor:"s",
+  html:"<b>Meera rates 5 stars: 'On time, careful with coils.'</b> The review row lands — then the magic: a <b>TRIGGER</b> auto-recalculates Raju's average rating (4.6 → 4.7), bumps his trip count, and the credit-score function lifts him <b>710 → 728</b>. No human, no extra code — the database does it.",
+  beats:[
+    {dir:"lr",label:"INSERT",sql:[["INSERT","INSERT INTO reviews (trip_id, trucker_id, shipper_id, reviewer_role, rating, comment) VALUES ('"+TRIP_ID+"','u_raju','u_meera','shipper',5,'On time, careful with coils');"]],
+     tables:["reviews"],
+     do(){ DB.reviews.push({id:"v1",role:"shipper→trucker",rating:"5 stars",comment:"On time, careful…"}); },
+     flash:[["reviews","v1","new"]]},
+    {dir:"db",label:"TRIGGER",sql:[["TRIGGER","trg_reviews_update_trucker_rating FIRES → UPDATE users SET rating=4.7, total_trips=total_trips+1 WHERE id='u_raju';"]],
+     tables:["users"],
+     do(){ const u=DB.users.find(r=>r.id==="u_raju"); u.rating=4.7; },
+     flash:[["users","u_raju","upd"]]},
+    {dir:"db",label:"TRIGGER",sql:[["TRIGGER","calculate_credit_score('u_raju') → completion+reliability+reviews up → credit_scores 710 → 728 (good)"]],
+     tables:["credit_scores"],
+     do(){ const c=DB.credit_scores.find(r=>r.id==="cs2"); c.score=728; },
+     flash:[["credit_scores","cs2","upd"]]}
+  ]}
+];
+
+/* ---------- engine ---------- */
+function buildDots(){
+  $("stepDots").innerHTML = STEPS.map((s,i)=>'<div class="sdot" data-i="'+i+'" title="'+esc(s.title)+'">'+(i+1)+"</div>").join("");
+  document.querySelectorAll(".sdot").forEach(d=>d.onclick=()=>{ stopPlay(); runStep(parseInt(d.dataset.i)); });
+}
+async function runBeat(b){
+  for(const [op,txt] of b.sql){ logSQL(op,txt); touch && b.tables && b.tables.forEach(touch); }
+  (b.tables||[]).forEach(touch);
+  if(b.dir==="db"){ burst("r"); await sleep(650); }
+  else { packet(b.dir, b.label); await sleep(1250); if(b.dir==="rl") burst("l"); else burst("r"); }
+  if(b.do) b.do();
+  flashRows = {};
+  (b.flash||[]).forEach(([t,id,mode])=>{ (flashRows[t]=flashRows[t]||{})[id]=mode; });
+  renderAll();
+  await sleep(500);
+}
+async function runStep(i){
+  if(i<0||i>=STEPS.length) return;
+  curStep = i; markDots();
+  const s = STEPS[i];
+  setActor(s.actor); narrate("<b>Step "+(i+1)+"/10 — "+esc(s.title)+"</b><br>"+s.html);
+  $("btnPrev").disabled = (i===0); $("btnNext").disabled = (i===STEPS.length-1);
+  for(const b of s.beats){ await runBeat(b); }
+  if(i===STEPS.length-1 && !playing){
+    logSQL("INFO","JOURNEY COMPLETE — 1 shipment delivered, 1 review banked, 1 credit score raised. Press Reset to replay.");
+  }
+}
+async function playAll(){
+  playing = true; $("btnPlay").disabled = true;
+  for(let i=0;i<STEPS.length && playing;i++){ await runStep(i); }
+  playing = false; $("btnPlay").disabled = false;
+}
+function stopPlay(){ playing = false; $("btnPlay").disabled = false; }
+function resetAll(){
+  stopPlay(); DB = seedDB(); flashRows = {};
+  counters = {q:0,w:0,r:0,tables:{}};
+  $("cQ").textContent="0"; $("cW").textContent="0"; $("cR").textContent="0"; $("cT").textContent="0";
+  $("sqllog").innerHTML = ""; curStep = -1; markDots(); renderAll();
+  setActor(null);
+  narrate("Press <b>Play full journey</b> (or step through with Next). Each step shows the tap, the SQL, and the rows changing — in plain language.");
+  logSQL("INFO","Database reset. Tables seeded: users (2), credit_scores (2). RLS on. Realtime on: trips, shipments, requests, messages, notifications.");
+  $("btnPrev").disabled = true; $("btnNext").disabled = false;
+}
+
+$("btnPlay").onclick = ()=>{ if(curStep>=STEPS.length-1) resetAll(); playAll(); };
+$("btnNext").onclick = ()=>{ stopPlay(); runStep(Math.min(curStep+1, STEPS.length-1)); };
+$("btnPrev").onclick = ()=>{ stopPlay(); runStep(Math.max(curStep-1, 0)); };
+$("btnReset").onclick = resetAll;
+
+buildTables(); buildDots(); resetAll();
+</script>
+</body>
+</html>

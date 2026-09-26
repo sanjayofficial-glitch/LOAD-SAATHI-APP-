@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { TrendingUp, Info, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -107,8 +107,8 @@ export default function PriceTrendChart({ origin, destination }: PriceTrendChart
                   <YAxis stroke="rgba(255,255,255,0.3)" fontSize={12} tickFormatter={(v: number) => `₹${v}`} domain={["dataMin - 100", "dataMax + 100"]} />
                   <Tooltip
                     contentStyle={{ background: "rgba(15,23,42,0.9)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px" }}
-                    labelFormatter={(label: string | number) => new Date(String(label)).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })}
-                    formatter={(value: number | string) => [`₹${Number(value)}`, "Price per tonne"] as unknown as React.ReactNode[]}
+                    labelFormatter={(label) => new Date(String(label)).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" })}
+                    formatter={(value) => [`₹${Number(value)}`, "Price per tonne"]}
                   />
                   <ReferenceLine y={stats.median} stroke="rgba(255,255,255,0.2)" strokeDasharray="4 4" />
                   <Line type="monotone" dataKey="price" stroke="#f97316" strokeWidth={3} dot={{ fill: "#f97316", r: 4 }} activeDot={{ r: 6 }} />
