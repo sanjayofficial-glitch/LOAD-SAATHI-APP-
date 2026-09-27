@@ -23,6 +23,7 @@ import { PricePredictor } from "@/components/PricePredictor";
 import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
 import { posthog } from "@/utils/posthog";
+import { trackEvent } from "@/utils/analytics";
 
 type LocationData = Record<string, Record<string, string[]>>;
 
@@ -137,7 +138,7 @@ const PostShipments = () => {
         }
       }
 
-posthog.capture('shipment_posted', {
+      trackEvent('shipment_posted', {
         shipment_id: shipmentData.id,
         origin_state: formData.origin_state,
         destination_state: formData.destination_state,

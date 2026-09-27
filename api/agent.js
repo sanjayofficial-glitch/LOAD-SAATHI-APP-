@@ -3629,6 +3629,41 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
         if (!/<meta\s+name="robots"/.test(html)) {
           html = html.replace("</head>", '  <meta name="robots" content="noindex, follow" />\n  </head>');
         }
+        // Public share links: swap index.html's generic og/twitter tags for
+        // per-item tags whose image is rendered by api/og.tsx. The id segment
+        // is URI-encoded, so it is safe to inline; no og:url in this branch.
+        const shareMatch = path.match(/^\/share\/(trip|shipment)\/([^/]+)$/);
+        if (shareMatch) {
+          const shareType = shareMatch[1];
+          const shareId = encodeURIComponent(shareMatch[2]);
+          const shareTitle =
+            shareType === "trip"
+              ? "Truck Space Available on LoadSaathi"
+              : "Freight Load Open on LoadSaathi";
+          const shareDesc =
+            shareType === "trip"
+              ? "An active truck route posted on LoadSaathi. Match your load to this truck in one tap."
+              : "An open shipment posted on LoadSaathi. Find a truck for this load in one tap.";
+          const shareImage = `https://loadsaathi.in/api/og?type=${shareType}&id=${shareId}`;
+          html = html
+            .replace(/<meta\s+property="og:[^"]*"[^>]*>/g, "")
+            .replace(/<meta\s+name="twitter:[^"]*"[^>]*>/g, "");
+          const shareTags =
+            `  <meta property="og:type" content="website" />\n` +
+            `  <meta property="og:title" content="${shareTitle}" />\n` +
+            `  <meta property="og:description" content="${shareDesc}" />\n` +
+            `  <meta property="og:image" content="${shareImage}" />\n` +
+            `  <meta property="og:image:width" content="1200" />\n` +
+            `  <meta property="og:image:height" content="630" />\n` +
+            `  <meta property="og:image:alt" content="${shareTitle}" />\n` +
+            `  <meta property="og:site_name" content="LoadSaathi" />\n` +
+            `  <meta property="og:locale" content="en_IN" />\n` +
+            `  <meta name="twitter:card" content="summary_large_image" />\n` +
+            `  <meta name="twitter:title" content="${shareTitle}" />\n` +
+            `  <meta name="twitter:description" content="${shareDesc}" />\n` +
+            `  <meta name="twitter:image" content="${shareImage}" />\n`;
+          html = html.replace("</head>", `${shareTags}  </head>`);
+        }
       }
       return new Response(html, {
         status: 200,

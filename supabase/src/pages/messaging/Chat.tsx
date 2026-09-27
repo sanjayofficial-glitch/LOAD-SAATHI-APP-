@@ -15,6 +15,7 @@ import { ArrowLeft, Send, Loader2, User as UserIcon, WifiOff, Phone } from 'luci
 import { showError } from '@/utils/toast';
 import { supabase } from '@/integrations/supabase/client';
 import { posthog } from '@/utils/posthog';
+import { trackEvent } from '@/utils/analytics';
 import { MessageStatus } from '@/components/MessageStatus';
 
 type MessageStatus = 'sending' | 'sent' | 'failed';
@@ -147,7 +148,7 @@ const Chat = () => {
     try {
       const sentMsg = await sendMessage({ recipientId: recipient.id, content, requestId, kind: chatKindRef.current, getToken: getTokenRef.current, userId: userProfile!.id });
       setMessages(prev => prev.map(m => (m.tempId === tempId ? { ...sentMsg, status: 'sent' as MessageStatus, tempId } : m)));
-      posthog.capture('message_sent', {
+      trackEvent('message_sent', {
         request_id: requestId,
         sender_role: userProfile?.user_type,
       });

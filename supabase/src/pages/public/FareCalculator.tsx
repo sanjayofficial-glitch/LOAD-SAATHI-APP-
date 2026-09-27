@@ -8,10 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SeoMeta from "@/components/SeoMeta";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { posthog } from "@/utils/posthog";
 import QuoteLeadCard from "@/components/QuoteLeadCard";
 import VehicleRateCard, { VEHICLE_RATES } from "@/components/VehicleRateCard";
-import { trackCalculatorStarted, trackEstimateGenerated } from "@/utils/analytics";
+import { trackCalculatorStarted, trackEstimateGenerated, trackEvent } from "@/utils/analytics";
 import PriceTrendChart from "@/components/PriceTrendChart";
 import { routes } from "@/data/routes";
 import distancesData from "@/data/distances.json";
@@ -125,7 +124,7 @@ export default function FareCalculator() {
     const fallback = buildStaticFallback(origin.trim(), destination.trim(), weightNum, vehicleClass, shipmentMode);
     if (!fallback) return false;
     setResult(fallback);
-    posthog.capture("fare_estimated", {
+      trackEvent("fare_estimated", {
       weight_tonnes: weightNum,
       recommended_price_per_tonne: fallback.avgPerTonne,
       historical_loads: 0,
@@ -209,7 +208,7 @@ export default function FareCalculator() {
         provider: data.provider,
       });
 
-      posthog.capture("fare_estimated", {
+    trackEvent("fare_estimated", {
         weight_tonnes: weightNum,
         recommended_price_per_tonne: recommended,
         historical_loads: data.historicalLoads || 0,
@@ -230,7 +229,7 @@ export default function FareCalculator() {
         source: data.provider || "market_data",
       });
     } catch (err) {
-      posthog.capture("fare_estimate_failed", {
+      trackEvent("fare_estimate_failed", {
         origin: origin.trim(),
         destination: destination.trim(),
         error: (err as Error).message,

@@ -39,6 +39,7 @@ import ReviewDialog from '@/components/ReviewDialog';
 import type { Trip, Request } from '@/types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { posthog } from '@/utils/posthog';
+import { trackEvent } from '@/utils/analytics';
 import { createLogger } from '@/lib/logger';
 
 const log = createLogger('TruckerTripDetail');
@@ -157,7 +158,7 @@ const TruckerTripDetail = () => {
         console.warn('[handleStartTrip] Failed to notify some shippers')
       );
 
-      posthog.capture('trip_status_updated', {
+      trackEvent('trip_status_updated', {
         trip_id: trip.id,
         previous_status: trip.status,
         new_status: 'in_transit',
@@ -210,7 +211,7 @@ const TruckerTripDetail = () => {
         console.warn('[handleMarkDelivered] Failed to notify some shippers')
       );
 
-      posthog.capture('trip_status_updated', {
+      trackEvent('trip_status_updated', {
         trip_id: trip.id,
         previous_status: trip.status,
         new_status: 'delivered',
@@ -268,7 +269,7 @@ const TruckerTripDetail = () => {
         console.warn('[handleCompleteTrip] Failed to notify some shippers')
       );
 
-      posthog.capture('trip_status_updated', {
+      trackEvent('trip_status_updated', {
         trip_id: trip.id,
         previous_status: trip.status,
         new_status: 'completed',
@@ -303,7 +304,7 @@ const TruckerTripDetail = () => {
 
       if (error) throw error;
 
-      posthog.capture('booking_request_updated', {
+      trackEvent('booking_request_updated', {
         trip_id: trip?.id,
         request_id: request.id,
         new_status: status,

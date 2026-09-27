@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MapPin, Mic, Loader2 } from 'lucide-react';
-import { posthog } from '@/utils/posthog';
+import { trackEvent } from '@/utils/analytics';
 
 type LocationResult = { state: string; district: string; city: string };
 
@@ -124,14 +124,14 @@ const VoiceLocationInput = forwardRef<HTMLInputElement, VoiceLocationInputProps>
       setShowSuggestions(true);
       const top = results[0];
       if (top && top.confidence >= 0.6) {
-        posthog.capture('voice_location_auto_selected', {
+        trackEvent('voice_location_auto_selected', {
           transcript,
           matched_city: top.city,
           confidence: top.confidence,
         });
         setTimeout(() => handleSelect(top), 300);
       } else {
-        posthog.capture('voice_location_weak_match', {
+        trackEvent('voice_location_weak_match', {
           transcript,
           top_match: top?.city ?? null,
           confidence: top?.confidence ?? 0,

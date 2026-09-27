@@ -301,10 +301,21 @@ DROP POLICY IF EXISTS "Authenticated users can read all users" ON public.users;
 CREATE POLICY "Authenticated users can read all users" ON public.users
   FOR SELECT TO authenticated USING (true);
 
+-- Public share pages embed a public profile (name, rating, badge).
+-- Column-level GRANT restricts anon to id, full_name, rating, is_verified only.
+DROP POLICY IF EXISTS "Anonymous can read public profile fields" ON public.users;
+CREATE POLICY "Anonymous can read public profile fields" ON public.users
+  FOR SELECT TO anon USING (true);
+
 -- ===================== TRIPS =====================
 DROP POLICY IF EXISTS "Anyone can see active trips" ON public.trips;
 CREATE POLICY "Anyone can see active trips" ON public.trips
   FOR SELECT TO authenticated USING (true);
+
+-- Anonymous visitors of /share/trip/:id may only see active trips
+DROP POLICY IF EXISTS "Anonymous can view active trips" ON public.trips;
+CREATE POLICY "Anonymous can view active trips" ON public.trips
+  FOR SELECT TO anon USING (status = 'active');
 
 DROP POLICY IF EXISTS "Truckers can create trips" ON public.trips;
 CREATE POLICY "Truckers can create trips" ON public.trips
@@ -323,6 +334,11 @@ CREATE POLICY "Truckers can delete own trips" ON public.trips
 DROP POLICY IF EXISTS "Anyone can see pending or own shipments" ON public.shipments;
 CREATE POLICY "Anyone can see pending or own shipments" ON public.shipments
   FOR SELECT TO authenticated USING (status = 'pending' OR auth.jwt()->>'sub' = shipper_id OR public.is_admin());
+
+-- Anonymous visitors of /share/shipment/:id may only see pending shipments
+DROP POLICY IF EXISTS "Anonymous can view pending shipments" ON public.shipments;
+CREATE POLICY "Anonymous can view pending shipments" ON public.shipments
+  FOR SELECT TO anon USING (status = 'pending');
 
 DROP POLICY IF EXISTS "Shippers can create shipments" ON public.shipments;
 CREATE POLICY "Shippers can create shipments" ON public.shipments
@@ -418,3 +434,13 @@ CREATE POLICY "Users can see their notifications" ON public.notifications
 DROP POLICY IF EXISTS "Users can create own notifications" ON public.notifications;
 CREATE POLICY "Users can create own notifications" ON public.notifications
   FOR INSERT TO authenticated WITH CHECK (auth.jwt()->>'sub' = user_id);
+
+-- ===================== ANON GRANTS (public share pages) =====================
+-- RLS policies alone are not enough: anon also needs SELECT grants.
+-- Kept narrow on purpose — users is column-level only (4 public profile fields).
+-- NOT granted to anon: gallery_images, function EXECUTE, and all DML
+-- (revoked by the 20260918_* migrations and intentionally left revoked).
+
+GRANT SELECT ON public.trips TO anon;
+GRANT SELECT ON public.shipments TO anon;
+GRANT SELECT (id, full_name, rating, is_verified) ON public.users TO anon;

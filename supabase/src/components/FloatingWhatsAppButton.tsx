@@ -1,6 +1,6 @@
 import { MessageCircle } from 'lucide-react';
 import { generateShareWhatsAppLink } from '@/utils/whatsapp';
-import { posthog } from '@/utils/posthog';
+import { trackEvent } from '@/utils/analytics';
 
 interface FloatingWhatsAppButtonProps {
   type?: 'trip' | 'shipment';
@@ -26,7 +26,7 @@ const FloatingWhatsAppButton = ({
       weight,
     });
     window.open(link, '_blank', 'noopener,noreferrer');
-    posthog.capture('whatsapp_booking_clicked', {
+    trackEvent('whatsapp_booking_clicked', {
       type,
       id,
       origin_city: originCity,

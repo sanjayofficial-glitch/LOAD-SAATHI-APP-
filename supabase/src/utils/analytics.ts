@@ -1,3 +1,4 @@
+import { track } from "@vercel/analytics/react";
 import { posthog } from "@/utils/posthog";
 
 declare global {
@@ -30,18 +31,39 @@ export const EVENTS = {
   ARTICLE_VIEW: "article_view",
 } as const;
 
-type EventName = (typeof EVENTS)[keyof typeof EVENTS];
-
 // Shared properties for public-funnel events
 interface BaseEventProps {
   role?: "shipper" | "trucker";
 }
 
-export function trackEvent(name: EventName, props?: Record<string, unknown> & BaseEventProps) {
+function toVercelProps(props?: Record<string, unknown>): Record<string, string | number | boolean> | undefined {
+  if (!props) return undefined;
+  const out: Record<string, string | number | boolean> = {};
+  for (const [key, value] of Object.entries(props)) {
+    if (typeof value === "string" || typeof value === "boolean") {
+      out[key] = value;
+    } else if (typeof value === "number" && Number.isFinite(value)) {
+      out[key] = value;
+    }
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+export function trackEvent(name: string, props?: Record<string, unknown> & BaseEventProps) {
   try {
     posthog.capture(name, props);
   } catch {
     // PostHog may not be loaded yet — silent no-op
+  }
+  try {
+    const vercelProps = toVercelProps(props);
+    if (vercelProps) {
+      track(name, vercelProps);
+    } else {
+      track(name);
+    }
+  } catch {
+    // Vercel analytics unavailable — silent no-op
   }
 }
 

@@ -23,6 +23,7 @@ import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
 import VehicleSelect from "@/components/VehicleSelect";
 import { posthog } from "@/utils/posthog";
+import { trackEvent } from "@/utils/analytics";
 
 type LocationData = Record<string, Record<string, string[]>>;
 
@@ -143,7 +144,7 @@ const PostTrip = () => {
         }
       }
 
-      posthog.capture('trip_posted', {
+      trackEvent('trip_posted', {
         trip_id: tripData.id,
         origin_state: formData.origin_state,
         destination_state: formData.destination_state,

@@ -6,6 +6,7 @@ import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { showError } from "@/utils/toast";
 import { posthog } from "@/utils/posthog";
+import { trackEvent } from "@/utils/analytics";
 
 interface FavoriteButtonProps {
   entityType: "trip" | "shipment" | "user";
@@ -64,7 +65,7 @@ export default function FavoriteButton({ entityType, entityId, userId, className
     },
     onSuccess: (_data, currentlyFavorited) => {
       queryClient.setQueryData(queryKey, !currentlyFavorited);
-      posthog.capture("favorite_updated", {
+      trackEvent("favorite_updated", {
         entity_type: entityType,
         action: currentlyFavorited ? "removed" : "added",
       });

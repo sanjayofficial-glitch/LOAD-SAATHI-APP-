@@ -29,6 +29,7 @@ import {
 import ReviewDialog from '@/components/ReviewDialog';
 import type { Shipment, User } from '@/types';
 import { posthog } from '@/utils/posthog';
+import { trackEvent } from '@/utils/analytics';
 
 const ShipmentDetail = () => {
   const { id } = useParams();
@@ -271,7 +272,7 @@ const ShipmentDetail = () => {
         getToken: () => getToken({ template: 'supabase' }),
       });
 
-      posthog.capture('shipment_offer_sent', {
+      trackEvent('shipment_offer_sent', {
         shipment_id: shipment.id,
         proposed_price_per_tonne: price,
         weight_tonnes: shipment.weight_tonnes,

@@ -17,6 +17,7 @@ import { Star, Loader2 } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
 import { notifyTruckerOfNewReview, notifyShipperOfNewReview } from '@/utils/notifications';
 import { posthog } from '@/utils/posthog';
+import { trackEvent } from '@/utils/analytics';
 
 interface ReviewDialogProps {
   isOpen: boolean;
@@ -114,7 +115,7 @@ const ReviewDialog = ({
         });
       }
 
-      posthog.capture('review_submitted', {
+      trackEvent('review_submitted', {
         trip_id: tripId,
         reviewer_role: reviewerRole,
         rating,
