@@ -1,29 +1,36 @@
 // Open Graph image generator for /share/trip/:id and /share/shipment/:id.
 //
-// This file is deliberately plain JavaScript rather than TypeScript.
+// Runtime and location are both load-bearing; do not "simplify" either.
 //
-// Vercel transpiles a .ts/.tsx entrypoint in api/ to .js but the Node runtime
-// then loads that output with the CommonJS loader, because no package.json is
-// present next to it inside the deployment bundle. Every request died with:
+// Runtime must be edge, not nodejs. @vercel/og@1.0.3 ships two builds behind
+// conditional exports: the "edge" condition resolves to dist/index.edge.js,
+// which is self-contained, while "node"/"import"/"default" all resolve to
+// dist/index.node.js, which pulls in harfbuzzjs@0.10.0 and performs a dynamic
+// require("fs"). On the Node runtime that file is loaded as ESM, where require()
+// is illegal, so every request died with:
 //
-//   Failed to load the ES module: /var/task/api/og.js ...
-//   SyntaxError: Unexpected token 'export'
+//   Error: Dynamic require of "fs" is not supported
+//     at @vercel/og/dist/index.node.js:13
 //
-// A native .js entrypoint is loaded as ESM correctly, which is why the sibling
-// api/cron/diesel.js (same export syntax, plain JS) works. The .mts extension
-// was also tried but Vercel did not register the route at all.
-//
-// Runtime is Node, not edge. On the edge runtime Vercel code-splits functions in
-// the same api/ directory into a shared chunk, and this file's @vercel/og import
-// (native @resvg/resvg-js WASM, unsupported on edge) was charged to the sibling
-// api/agent.js, failing the build with:
+// The edge build has no such problem. It does, however, hit a different
+// failure when this file sat directly in api/ next to api/agent.js: Vercel
+// code-splits edge functions within a directory into a shared chunk, charged
+// this file's @vercel/og import to its sibling, and failed the whole build:
 //
 //   The Edge Function "api/agent" is referencing unsupported modules:
 //   - @vercel: module
 //
-// Types are expressed as JSDoc so the file still documents its own shapes.
-// @ts-check is intentionally not enabled here: this file is outside the app
-// tsconfig include's typecheck coverage on Vercel anyway.
+// Moving the function into its own api/og/ directory isolates it from that
+// grouping. An index.js maps back to the same public URL, /api/og, so every
+// caller and the meta tags emitted by api/agent.js are unaffected.
+//
+// This file is plain JavaScript rather than TypeScript. Vercel transpiles a
+// .ts/.tsx entrypoint to .js and the resulting bundle then fails to load as
+// ESM (SyntaxError: Unexpected token 'export'), which cost an earlier deploy.
+// A native .js entrypoint loads correctly, exactly like the sibling
+// api/cron/diesel.js. The body is free of JSX -- it builds elements with
+// createElement, aliased to h -- so conversion was only ever a matter of
+// moving type annotations into JSDoc.
 
 /**
  * @typedef {"trip" | "shipment"} Kind
@@ -35,7 +42,7 @@
  *             budget_per_tonne?: number }} ShipmentRow
  */
 
-export const config = { runtime: "nodejs" };
+export const config = { runtime: "edge" };
 
 import { ImageResponse } from "@vercel/og";
 import { createElement as h } from "react";
