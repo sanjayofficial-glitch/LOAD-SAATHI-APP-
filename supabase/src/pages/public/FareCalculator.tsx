@@ -13,6 +13,8 @@ import QuoteLeadCard from "@/components/QuoteLeadCard";
 import VehicleRateCard, { VEHICLE_RATES } from "@/components/VehicleRateCard";
 import { trackCalculatorStarted, trackEstimateGenerated } from "@/utils/analytics";
 import PriceTrendChart from "@/components/PriceTrendChart";
+import { routes } from "@/data/routes";
+import distancesData from "@/data/distances.json";
 
 interface BreakdownItem {
   label: string;
@@ -38,6 +40,62 @@ interface FareResult {
 
 const VEHICLE_OPTIONS = VEHICLE_RATES.map((v) => ({ value: v.vehicleType, label: v.label }));
 
+interface DistanceEntry {
+  distanceKm: number;
+  transitHours: number;
+  highway?: string;
+}
+
+const DISTANCES: Record<string, DistanceEntry> = (distancesData as { routes: Record<string, DistanceEntry> }).routes;
+
+function lookupDistanceKm(from: string, to: string): number | null {
+  const a = from.trim().toLowerCase();
+  const b = to.trim().toLowerCase();
+  if (!a || !b || a === b) return null;
+  const route = routes.find(
+    (r) =>
+      (r.from.toLowerCase() === a && r.to.toLowerCase() === b) ||
+      (r.from.toLowerCase() === b && r.to.toLowerCase() === a)
+  );
+  if (route?.distanceKm) return route.distanceKm;
+  const leg = DISTANCES[`${a}-${b}`] ?? DISTANCES[`${b}-${a}`];
+  return leg?.distanceKm ?? null;
+}
+
+function buildStaticFallback(
+  from: string,
+  to: string,
+  weightTonnes: number,
+  vehicleClass: string,
+  shipmentMode: "ftl" | "ptl"
+): FareResult | null {
+  const km = lookupDistanceKm(from, to);
+  if (!km || !(weightTonnes > 0)) return null;
+  const vehicle =
+    (vehicleClass ? VEHICLE_RATES.find((v) => v.vehicleType === vehicleClass) : undefined) ??
+    VEHICLE_RATES.find((v) => v.capacityTonnes >= weightTonnes) ??
+    VEHICLE_RATES[VEHICLE_RATES.length - 1]!;
+  const ftl = km * vehicle.ratePerKm;
+  let total = ftl;
+  if (shipmentMode === "ptl" && weightTonnes < vehicle.capacityTonnes) {
+    const share = (weightTonnes / vehicle.capacityTonnes) * 1.25;
+    total = Math.max(500, ftl * share);
+  }
+  const minTotal = total * 0.85;
+  const maxTotal = total * 1.2;
+  const perTonne = total / weightTonnes;
+  return {
+    avgPrice: perTonne,
+    minPrice: minTotal / weightTonnes,
+    maxProduct: maxTotal / weightTonnes,
+    totalEstimate: total,
+    trend: "stable",
+    dataPoints: 0,
+    avgPerTonne: perTonne,
+    provider: "estimate",
+  };
+}
+
 export default function FareCalculator() {
   const [searchParams] = useSearchParams();
   const [origin, setOrigin] = useState("");
@@ -61,6 +119,34 @@ export default function FareCalculator() {
       });
     }
   }, [searchParams]);
+
+  const applyStaticFallback = useCallback((): boolean => {
+    const weightNum = Number(weight);
+    const fallback = buildStaticFallback(origin.trim(), destination.trim(), weightNum, vehicleClass, shipmentMode);
+    if (!fallback) return false;
+    setResult(fallback);
+    posthog.capture("fare_estimated", {
+      weight_tonnes: weightNum,
+      recommended_price_per_tonne: fallback.avgPerTonne,
+      historical_loads: 0,
+      estimate_source: "static_estimate",
+      vehicle_class: vehicleClass || "default",
+      shipment_mode: shipmentMode,
+      fuel_surcharge: 0,
+      diesel_price: null,
+    });
+    trackEstimateGenerated({
+      origin: origin.trim(),
+      destination: destination.trim(),
+      route: `${origin.trim()} → ${destination.trim()}`,
+      weight: weightNum,
+      avg_price: fallback.avgPerTonne,
+      min_price: fallback.minPrice,
+      max_price: fallback.maxProduct,
+      source: "fallback",
+    });
+    return true;
+  }, [origin, destination, weight, vehicleClass, shipmentMode]);
 
   const calculateFare = useCallback(async () => {
     if (!origin.trim() || !destination.trim() || !weight || Number(weight) <= 0) {
@@ -93,7 +179,9 @@ export default function FareCalculator() {
       });
 
       if (!response.ok) {
-        throw new Error("Could not fetch pricing data");
+        const httpErr = new Error(`HTTP_${response.status}`) as Error & { status?: number };
+        httpErr.status = response.status;
+        throw httpErr;
       }
 
       const data = await response.json();
@@ -142,16 +230,35 @@ export default function FareCalculator() {
         source: data.provider || "market_data",
       });
     } catch (err) {
-      setError("Unable to calculate fare. Please try again or contact support.");
       posthog.capture("fare_estimate_failed", {
         origin: origin.trim(),
         destination: destination.trim(),
         error: (err as Error).message,
       });
+
+      if (applyStaticFallback()) {
+        setError(null);
+        return;
+      }
+
+      const status = (err as { status?: number }).status;
+      if (status === 429) {
+        setError("Rate limit reached — please wait a minute and try again.");
+      } else if (status === 401) {
+        setError("Sign-in issue with the pricing service. Please try again in a moment.");
+      } else if (err instanceof DOMException && (err.name === "TimeoutError" || err.name === "AbortError")) {
+        setError("The request timed out. Please try again.");
+      } else if (err instanceof TypeError) {
+        setError("Network error — check your connection and try again.");
+      } else if ((err as Error).message === "Service unavailable") {
+        setError("Service temporarily unavailable. Please try again later.");
+      } else {
+        setError("Unable to calculate fare. Please try again or contact support.");
+      }
     } finally {
       setLoading(false);
     }
-  }, [origin, destination, weight, vehicleClass, shipmentMode]);
+  }, [origin, destination, weight, vehicleClass, shipmentMode, applyStaticFallback]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") calculateFare();

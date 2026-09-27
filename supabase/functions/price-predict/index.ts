@@ -671,14 +671,17 @@ Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return optionsResponse(headers);
   if (req.method !== "POST") return errorResponse("Method not allowed", 405, headers, requestId);
 
-  const token = extractBearerToken(req);
-  if (!token) return errorResponse("Unauthorized", 401, headers, requestId);
-  const authUser = await verifyJwt(token);
-  if (!authUser) return errorResponse("Invalid or expired token", 401, headers, requestId);
-
   const ip = getRequestIp(req);
   if (!checkRateLimit(ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)) {
     return errorResponse("Rate limit exceeded. Try again in 1 minute.", 429, headers, requestId);
+  }
+
+  // Auth is optional: verify the JWT only when a Bearer token is present.
+  // Anonymous callers are protected by the IP rate limit above.
+  const token = extractBearerToken(req);
+  if (token) {
+    const authUser = await verifyJwt(token);
+    if (!authUser) return errorResponse("Invalid or expired token", 401, headers, requestId);
   }
 
   try {

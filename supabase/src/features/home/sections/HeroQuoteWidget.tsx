@@ -15,17 +15,33 @@ interface DistanceEntry {
 const DISTANCES = (distancesData as { routes: Record<string, DistanceEntry> }).routes;
 
 const CITIES: string[] = [...new Set(routes.flatMap((r) => [r.from, r.to]))].sort();
+const CITIES_LOWER: string[] = CITIES.map((c) => c.toLowerCase());
+
+const ROUTE_FALLBACK: Record<string, DistanceEntry> = {};
+for (const r of routes) {
+  const entry: DistanceEntry = {
+    distanceKm: r.distanceKm,
+    transitHours: Number(r.transitTime) || 0,
+    highway: '',
+  };
+  ROUTE_FALLBACK[`${r.from.toLowerCase()}-${r.to.toLowerCase()}`] = entry;
+}
 
 function findCity(input: string): string | null {
   const q = input.trim().toLowerCase();
   if (!q) return null;
-  return CITIES.find((c) => c.toLowerCase() === q) ?? null;
+  const idx = CITIES_LOWER.indexOf(q);
+  if (idx >= 0) return CITIES[idx]!;
+  const starts = CITIES_LOWER.findIndex((c) => c.startsWith(q));
+  if (starts >= 0) return CITIES[starts]!;
+  const inc = CITIES_LOWER.findIndex((c) => c.includes(q));
+  return inc >= 0 ? CITIES[inc]! : null;
 }
 
 function lookupKm(from: string, to: string): DistanceEntry | null {
   const a = `${from.toLowerCase()}-${to.toLowerCase()}`;
   const b = `${to.toLowerCase()}-${from.toLowerCase()}`;
-  return DISTANCES[a] ?? DISTANCES[b] ?? null;
+  return DISTANCES[a] ?? DISTANCES[b] ?? ROUTE_FALLBACK[a] ?? ROUTE_FALLBACK[b] ?? null;
 }
 
 const inr = (n: number) => `₹${Math.round(n).toLocaleString('en-IN')}`;
@@ -63,7 +79,7 @@ export default function HeroQuoteWidget() {
     e.preventDefault();
     const fromCity = findCity(from);
     const toCity = findCity(to);
-    const tonnes = Number(weightKg) / 1000;
+    const tonnes = Number(weightKg.replace(/[^0-9.]/g, '')) / 1000;
     if (!fromCity || !toCity || !(tonnes > 0)) {
       setEstimate('unknown');
       return;

@@ -14,7 +14,7 @@ export const PricePredictor = React.memo(function PricePredictor(props: PricePre
     props.destinationCity.length > 0 &&
     props.weightTonnes > 0
 
-  const { data, isLoading, isError } = usePricePrediction({
+  const { data, isLoading, isError, isFetching, error, refetch } = usePricePrediction({
     originCity: props.originCity,
     destinationCity: props.destinationCity,
     originState: props.originState,
@@ -25,7 +25,7 @@ export const PricePredictor = React.memo(function PricePredictor(props: PricePre
 
   if (!shouldFetch) return null
 
-  if (isLoading) {
+  if (isLoading || (isError && isFetching)) {
     return (
       <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 mt-1">
         <Loader2 className="h-3 w-3 animate-spin" />
@@ -34,9 +34,28 @@ export const PricePredictor = React.memo(function PricePredictor(props: PricePre
     )
   }
 
-  if (isError || !data) {
-    return null
+  if (isError) {
+    return (
+      <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground mt-1">
+        <span>
+          {error instanceof Error && error.message
+            ? error.message
+            : 'AI price suggestion unavailable.'}
+        </span>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="h-7 text-xs"
+          onClick={() => refetch()}
+        >
+          Retry
+        </Button>
+      </div>
+    )
   }
+
+  if (!data) return null
 
   const TrendIcon =
     data.trend === 'rising'

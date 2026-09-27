@@ -86,6 +86,21 @@ export default function FreightRateCalculator() {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       let freightRange = { min: 0, max: 0, recommended: 0 };
       let perKmRate: number | undefined;
+
+      // Per-tonne distance-based estimate, used whenever the pricing service
+      // is unreachable, rate-limited, or returns no usable range (avoids "₹0 – ₹0").
+      const applyHeuristic = () => {
+        const estPerKm = 15 + w * 2; // rough heuristic (total truck ₹/km)
+        const perTonne = route.distance_km > 0 && w > 0
+          ? (route.distance_km * estPerKm) / w
+          : 0;
+        freightRange = {
+          min: Math.round(perTonne * 0.8),
+          max: Math.round(perTonne * 1.3),
+          recommended: Math.round(perTonne),
+        };
+      };
+
       if (supabaseUrl) {
         try {
           const truckClassMap: Record<string, string> = {
@@ -108,27 +123,36 @@ export default function FreightRateCalculator() {
               vehicleClass,
               shipmentMode: modeMap[shipmentType],
               includeFuelSurcharge: true,
+              originLat: originCoords.lat,
+              originLng: originCoords.lon,
+              destLat: destCoords.lat,
+              destLng: destCoords.lon,
             }),
             signal: AbortSignal.timeout(10000),
           });
           if (response.ok) {
             const data = await response.json();
-            freightRange = {
-              min: data.range?.min ?? 0,
-              max: data.range?.max ?? 0,
-              recommended: data.recommendedPrice ?? 0,
-            };
-            perKmRate = data.perKmRate;
+            const recommended = data.recommendedPrice ?? 0;
+            if (recommended > 0) {
+              freightRange = {
+                min: data.range?.min ?? 0,
+                max: data.range?.max ?? 0,
+                recommended,
+              };
+              perKmRate = data.perKmRate;
+            } else {
+              applyHeuristic();
+            }
+          } else {
+            // Non-ok response (401/429/5xx) — previously left the range at 0.
+            applyHeuristic();
           }
         } catch {
           // Price-predict unavailable — use distance-based estimate
-          const estPerKm = 15 + w * 2; // rough heuristic
-          freightRange = {
-            min: Math.round(route.distance_km * estPerKm * 0.8),
-            max: Math.round(route.distance_km * estPerKm * 1.3),
-            recommended: Math.round(route.distance_km * estPerKm),
-          };
+          applyHeuristic();
         }
+      } else {
+        applyHeuristic();
       }
 
       const totalFreight = freightRange.recommended * w;
@@ -152,7 +176,7 @@ export default function FreightRateCalculator() {
     } finally {
       setLoading(false);
     }
-  }, [origin, destination, weight, shipmentType]);
+  }, [origin, destination, weight, truckType, shipmentType]);
 
   return (
     <>

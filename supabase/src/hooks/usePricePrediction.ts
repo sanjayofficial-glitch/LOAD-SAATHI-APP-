@@ -80,7 +80,13 @@ export function usePricePrediction(input: PricePredictionInput) {
         },
       )
 
-      if (!response.ok) return null
+      if (!response.ok) {
+        const err = new Error(`Price prediction failed (${response.status})`) as Error & {
+          status?: number
+        }
+        err.status = response.status
+        throw err
+      }
       return await response.json()
     },
     enabled:
@@ -88,6 +94,11 @@ export function usePricePrediction(input: PricePredictionInput) {
       !!debouncedInput.destinationCity &&
       debouncedInput.weightTonnes > 0,
     staleTime: 5 * 60 * 1000,
-    retry: 1,
+    // Retry once, but not on client errors (401/429) — retrying just burns rate limit.
+    retry: (failureCount, error) => {
+      const status = (error as { status?: number }).status
+      if (status && status >= 400 && status < 500) return false
+      return failureCount < 1
+    },
   })
 }
