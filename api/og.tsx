@@ -1,4 +1,18 @@
-export const config = { runtime: "edge" };
+// Must stay on the Node.js runtime.
+//
+// Both this file and api/agent.js are serverless functions in the same api/
+// directory, and Vercel code-splits Edge Runtime functions there into a shared
+// chunk. With this file on `edge`, its `@vercel/og` import (which pulls in the
+// native @resvg/resvg-js WASM binary) was charged to the sibling function and
+// every deploy died at "Deploying outputs" with:
+//
+//   The Edge Function "api/agent" is referencing unsupported modules:
+//   - @vercel: module
+//
+// api/agent.js has no imports of its own — the shared chunk was the problem.
+// Running on `nodejs` keeps this function out of the edge bundle entirely, and
+// @vercel/og is supported on the Node.js runtime.
+export const config = { runtime: "nodejs" };
 
 import { ImageResponse } from "@vercel/og";
 import { createElement as h, type ReactElement, type ReactNode } from "react";
