@@ -14,7 +14,10 @@ jobs:
   quality:
     name: Lint · Typecheck · Test · Build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # `pnpm build` is vite build + prerender (179 routes) + smoke tests. That
+    # overruns 15 minutes on a 2-core runner; the Build step was being
+    # cancelled at the timeout while every earlier step passed.
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
