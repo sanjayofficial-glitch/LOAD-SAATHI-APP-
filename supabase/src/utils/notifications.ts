@@ -65,6 +65,7 @@ export const notifyShipperOfRequestAccepted = (params: {
   sendNotification({
     userId: params.shipperId,
     message: `✅ Request Accepted! ${params.truckerName} is ready for your trip from ${params.originCity} → ${params.destinationCity}. Contact them at ${params.truckerPhone}.`,
+    relatedShipmentRequestId: params.requestId,
     getToken: params.getToken,
   });
 
@@ -73,11 +74,13 @@ export const notifyShipperOfRequestDeclined = (params: {
   truckerName: string;
   originCity: string;
   destinationCity: string;
+  requestId: string;
   getToken: () => Promise<string | null>;
 }) =>
   sendNotification({
     userId: params.shipperId,
     message: `❌ ${params.truckerName} declined your booking request for ${params.originCity} → ${params.destinationCity}.`,
+    relatedShipmentRequestId: params.requestId,
     getToken: params.getToken,
   });
 
@@ -188,10 +191,12 @@ export const notifyShipperOfTruckerOffer = (params: {
   weightTonnes: number;
   originCity: string;
   destinationCity: string;
+  requestId?: string;
   getToken: () => Promise<string | null>;
 }) =>
   sendNotification({
     userId: params.shipperId,
     message: `🚛 ${params.truckerName} offered ₹${params.proposedPrice.toLocaleString()}/t for your ${params.weightTonnes}t load from ${params.originCity} → ${params.destinationCity}.`,
+    relatedShipmentRequestId: params.requestId,
     getToken: params.getToken,
   });

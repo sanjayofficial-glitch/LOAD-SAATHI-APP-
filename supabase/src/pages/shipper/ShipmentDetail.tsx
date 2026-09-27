@@ -253,11 +253,11 @@ const ShipmentDetail = () => {
       if (!token) throw new Error('No auth token');
       const supabase = createClerkSupabaseClient(token);
 
-      const { error } = await supabase.rpc('insert_shipment_request', {
+      const { data: createdRequest, error } = await supabase.rpc('insert_shipment_request', {
         p_shipment_id: shipment.id,
         p_trucker_id: userProfile.id,
         p_shipper_id: shipment.shipper_id,
-        p_proposed_price_per_tonne: price,
+        p_price: price,
         p_message: offerMessage.trim() || null,
       });
       if (error) throw error;
@@ -269,6 +269,7 @@ const ShipmentDetail = () => {
         weightTonnes: shipment.weight_tonnes,
         originCity: shipment.origin_city,
         destinationCity: shipment.destination_city,
+        requestId: createdRequest?.id,
         getToken: () => getToken({ template: 'supabase' }),
       });
 

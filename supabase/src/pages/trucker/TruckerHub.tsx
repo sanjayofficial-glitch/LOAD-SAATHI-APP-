@@ -292,6 +292,7 @@ const TruckerHub = () => {
           truckerName: userProfile?.full_name || 'The trucker',
           originCity: request.trip?.origin_city || '',
           destinationCity: request.trip?.destination_city || '',
+          requestId: request.id,
           getToken: () => getToken({ template: 'supabase' }),
         });
         showSuccess('Request declined.');

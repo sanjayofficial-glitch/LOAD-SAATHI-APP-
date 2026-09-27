@@ -328,6 +328,7 @@ const TruckerTripDetail = () => {
           truckerName: userProfile?.full_name || 'The trucker',
           originCity: trip?.origin_city || '',
           destinationCity: trip?.destination_city || '',
+          requestId: request.id,
           getToken: () => getToken({ template: 'supabase' }),
         });
         showSuccess('Request declined. Shipper has been notified.');
