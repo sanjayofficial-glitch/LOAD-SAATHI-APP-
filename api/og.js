@@ -1,21 +1,44 @@
-// Must stay on the Node.js runtime.
+// Open Graph image generator for /share/trip/:id and /share/shipment/:id.
 //
-// Both this file and api/agent.js are serverless functions in the same api/
-// directory, and Vercel code-splits Edge Runtime functions there into a shared
-// chunk. With this file on `edge`, its `@vercel/og` import (which pulls in the
-// native @resvg/resvg-js WASM binary) was charged to the sibling function and
-// every deploy died at "Deploying outputs" with:
+// This file is deliberately plain JavaScript rather than TypeScript.
+//
+// Vercel transpiles a .ts/.tsx entrypoint in api/ to .js but the Node runtime
+// then loads that output with the CommonJS loader, because no package.json is
+// present next to it inside the deployment bundle. Every request died with:
+//
+//   Failed to load the ES module: /var/task/api/og.js ...
+//   SyntaxError: Unexpected token 'export'
+//
+// A native .js entrypoint is loaded as ESM correctly, which is why the sibling
+// api/cron/diesel.js (same export syntax, plain JS) works. The .mts extension
+// was also tried but Vercel did not register the route at all.
+//
+// Runtime is Node, not edge. On the edge runtime Vercel code-splits functions in
+// the same api/ directory into a shared chunk, and this file's @vercel/og import
+// (native @resvg/resvg-js WASM, unsupported on edge) was charged to the sibling
+// api/agent.js, failing the build with:
 //
 //   The Edge Function "api/agent" is referencing unsupported modules:
 //   - @vercel: module
 //
-// api/agent.js has no imports of its own — the shared chunk was the problem.
-// Running on `nodejs` keeps this function out of the edge bundle entirely, and
-// @vercel/og is supported on the Node.js runtime.
+// Types are expressed as JSDoc so the file still documents its own shapes.
+// @ts-check is intentionally not enabled here: this file is outside the app
+// tsconfig include's typecheck coverage on Vercel anyway.
+
+/**
+ * @typedef {"trip" | "shipment"} Kind
+ * @typedef {{ origin_city?: string, destination_city?: string, departure_date?: string,
+ *             available_capacity_tonnes?: number, price_per_tonne?: number,
+ *             vehicle_type?: string }} TripRow
+ * @typedef {{ origin_city?: string, destination_city?: string, departure_date?: string,
+ *             goods_description?: string, weight_tonnes?: number,
+ *             budget_per_tonne?: number }} ShipmentRow
+ */
+
 export const config = { runtime: "nodejs" };
 
 import { ImageResponse } from "@vercel/og";
-import { createElement as h, type ReactElement, type ReactNode } from "react";
+import { createElement as h } from "react";
 
 const ACCENT = "rgb(255, 121, 26)";
 const BG = "#0f172a";
@@ -26,58 +49,52 @@ const SUB = "#cbd5e1";
 const DIVIDER = "#334155";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type Kind = "trip" | "shipment";
-
-type TripRow = {
-  origin_city?: string;
-  destination_city?: string;
-  departure_date?: string;
-  available_capacity_tonnes?: number;
-  price_per_tonne?: number;
-  vehicle_type?: string;
-};
-
-type ShipmentRow = {
-  origin_city?: string;
-  destination_city?: string;
-  departure_date?: string;
-  goods_description?: string;
-  weight_tonnes?: number;
-  budget_per_tonne?: number;
-};
-
-function clip(value: string, max: number): string {
-  const text = value.trim();
+/** @param {string} value @param {number} max */
+function clip(value, max) {
+  const text = String(value).trim();
   if (text.length <= max) return text;
   return `${text.slice(0, max - 1).trimEnd()}…`;
 }
 
-function padDate(raw?: string): string {
+/** @param {string} [raw] */
+function padDate(raw) {
   if (!raw) return "—";
   const date = new Date(raw);
-  if (Number.isNaN(date.getTime())) return raw.slice(0, 10);
+  if (Number.isNaN(date.getTime())) return String(raw).slice(0, 10);
   try {
-    return date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    return date.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
   } catch {
-    return raw.slice(0, 10);
+    return String(raw).slice(0, 10);
   }
 }
 
-function inr(value?: number): string | null {
+/** @param {number} [value] */
+function inr(value) {
   if (typeof value !== "number" || !Number.isFinite(value)) return null;
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
-function num(value?: number): string | null {
+/** @param {number} [value] */
+function num(value) {
   if (typeof value !== "number" || !Number.isFinite(value)) return null;
   return String(value);
 }
 
-function pick(value: string | undefined, fallback: string): string {
-  return value && value.trim() ? value.trim() : fallback;
+/** @param {string} [value] @param {string} fallback */
+function pick(value, fallback) {
+  return value && String(value).trim() ? String(value).trim() : fallback;
 }
 
-async function fetchRow(kind: Kind, id: string): Promise<TripRow | ShipmentRow | null> {
+/**
+ * @param {Kind} kind
+ * @param {string} id
+ * @returns {Promise<TripRow | ShipmentRow | null>}
+ */
+async function fetchRow(kind, id) {
   const supabaseUrl = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY;
   if (!supabaseUrl || !anonKey) return null;
@@ -99,8 +116,8 @@ async function fetchRow(kind: Kind, id: string): Promise<TripRow | ShipmentRow |
       signal: controller.signal,
     });
     if (!response.ok) return null;
-    const rows = (await response.json()) as Array<TripRow | ShipmentRow>;
-    return rows[0] ?? null;
+    const rows = await response.json();
+    return Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
   } catch {
     return null;
   } finally {
@@ -108,7 +125,8 @@ async function fetchRow(kind: Kind, id: string): Promise<TripRow | ShipmentRow |
   }
 }
 
-function shell(children: ReactNode): ReactElement {
+/** @param {any} children */
+function shell(children) {
   return h(
     "div",
     {
@@ -127,7 +145,8 @@ function shell(children: ReactNode): ReactElement {
   );
 }
 
-function header(badge: string): ReactNode {
+/** @param {string} badge */
+function header(badge) {
   return h(
     "div",
     {
@@ -142,7 +161,11 @@ function header(badge: string): ReactNode {
       "div",
       { style: { display: "flex", flexDirection: "column" } },
       h("span", { style: { fontSize: 46, color: ACCENT } }, "LoadSaathi"),
-      h("span", { style: { fontSize: 22, color: MUTED, marginTop: 6 } }, "Precision Freight Intelligence"),
+      h(
+        "span",
+        { style: { fontSize: 22, color: MUTED, marginTop: 6 } },
+        "Precision Freight Intelligence",
+      ),
     ),
     h(
       "div",
@@ -161,7 +184,8 @@ function header(badge: string): ReactNode {
   );
 }
 
-function routeLine(origin: string, dest: string): ReactNode {
+/** @param {string} origin @param {string} dest */
+function routeLine(origin, dest) {
   return h(
     "div",
     { style: { display: "flex", alignItems: "center", gap: 28, padding: "48px 64px 0" } },
@@ -171,7 +195,8 @@ function routeLine(origin: string, dest: string): ReactNode {
   );
 }
 
-function statCard(label: string, value: string, valueColor = FG): ReactNode {
+/** @param {string} label @param {string} value @param {string} [valueColor] */
+function statCard(label, value, valueColor = FG) {
   return h(
     "div",
     {
@@ -190,7 +215,7 @@ function statCard(label: string, value: string, valueColor = FG): ReactNode {
   );
 }
 
-function footer(): ReactNode {
+function footer() {
   return h(
     "div",
     {
@@ -206,19 +231,25 @@ function footer(): ReactNode {
   );
 }
 
-function accentBar(): ReactNode {
+function accentBar() {
   return h("div", { style: { height: 12, backgroundColor: ACCENT, width: "100%" } });
 }
 
-function subtitleLine(text: string): ReactNode {
-  return h("div", { style: { padding: "24px 64px 0", fontSize: 26, color: SUB } }, text);
+/** @param {string} text */
+function subtitleLine(text) {
+  return h(
+    "div",
+    { style: { padding: "24px 64px 0", fontSize: 26, color: SUB } },
+    text,
+  );
 }
 
-function cardRow(cards: ReactNode[]): ReactNode {
+/** @param {any[]} cards */
+function cardRow(cards) {
   return h("div", { style: { display: "flex", gap: 24, padding: "40px 64px 0" } }, ...cards);
 }
 
-function cardTail(): ReactNode[] {
+function cardTail() {
   return [
     h("div", { style: { flex: 1 } }),
     h("div", { style: { height: 1, backgroundColor: DIVIDER, margin: "0 64px" } }),
@@ -226,13 +257,19 @@ function cardTail(): ReactNode[] {
   ];
 }
 
-function buildCard(kind: Kind | null, row: TripRow | ShipmentRow | null): ReactElement {
+/**
+ * @param {Kind | null} kind
+ * @param {TripRow | ShipmentRow | null} row
+ */
+function buildCard(kind, row) {
   if (!row || !kind) {
     return shell([
       accentBar(),
       header("SHARED FREIGHT"),
       routeLine("PTL & LTL Freight", "Across East India"),
-      subtitleLine("Verified truckers, live routes and fair rates — book part loads online."),
+      subtitleLine(
+        "Verified truckers, live routes and fair rates — book part loads online.",
+      ),
       cardRow([
         statCard("PLATFORM", "PTL & LTL"),
         statCard("REGION", "East India"),
@@ -246,9 +283,12 @@ function buildCard(kind: Kind | null, row: TripRow | ShipmentRow | null): ReactE
   const dest = pick(row.destination_city, "Destination");
 
   if (kind === "trip") {
-    const trip = row as TripRow;
-    const parts: string[] = [];
-    if (trip.vehicle_type?.trim()) parts.push(trip.vehicle_type.trim());
+    /** @type {TripRow} */
+    const trip = row;
+    const parts = [];
+    if (trip.vehicle_type && String(trip.vehicle_type).trim()) {
+      parts.push(String(trip.vehicle_type).trim());
+    }
     const cap = num(trip.available_capacity_tonnes);
     if (cap) parts.push(`${cap}T available`);
     const rate = inr(trip.price_per_tonne);
@@ -266,8 +306,12 @@ function buildCard(kind: Kind | null, row: TripRow | ShipmentRow | null): ReactE
     ]);
   }
 
-  const shipment = row as ShipmentRow;
-  const goods = shipment.goods_description?.trim();
+  /** @type {ShipmentRow} */
+  const shipment = row;
+  const goods =
+    shipment.goods_description && String(shipment.goods_description).trim()
+      ? String(shipment.goods_description).trim()
+      : null;
   const weight = num(shipment.weight_tonnes);
   const budget = inr(shipment.budget_per_tonne);
   return shell([
@@ -284,16 +328,16 @@ function buildCard(kind: Kind | null, row: TripRow | ShipmentRow | null): ReactE
   ]);
 }
 
-export default async function handler(request: Request): Promise<Response> {
+export default async function handler(request) {
   const url = new URL(request.url);
   const rawType = url.searchParams.get("type");
   const rawId = url.searchParams.get("id") ?? "";
-  const kind: Kind | null = rawType === "trip" || rawType === "shipment" ? rawType : null;
+  const kind = rawType === "trip" || rawType === "shipment" ? rawType : null;
   const row = kind && UUID_RE.test(rawId) ? await fetchRow(kind, rawId) : null;
   const image = new ImageResponse(buildCard(kind, row), {
     width: 1200,
     height: 630,
     headers: { "cache-control": "public, max-age=300, must-revalidate" },
   });
-  return image as unknown as Response;
+  return image;
 }
