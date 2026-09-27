@@ -1,7 +1,7 @@
 export const config = { runtime: "edge" };
 
 import { ImageResponse } from "@vercel/og";
-import { createElement as h, type ReactNode } from "react";
+import { createElement as h, type ReactElement, type ReactNode } from "react";
 
 const ACCENT = "rgb(255, 121, 26)";
 const BG = "#0f172a";
@@ -94,7 +94,7 @@ async function fetchRow(kind: Kind, id: string): Promise<TripRow | ShipmentRow |
   }
 }
 
-function shell(children: ReactNode): ReactNode {
+function shell(children: ReactNode): ReactElement {
   return h(
     "div",
     {
@@ -212,7 +212,7 @@ function cardTail(): ReactNode[] {
   ];
 }
 
-function buildCard(kind: Kind | null, row: TripRow | ShipmentRow | null): ReactNode {
+function buildCard(kind: Kind | null, row: TripRow | ShipmentRow | null): ReactElement {
   if (!row || !kind) {
     return shell([
       accentBar(),

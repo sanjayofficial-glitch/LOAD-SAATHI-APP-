@@ -21,5 +21,5 @@
       "@/*": ["./supabase/src/*"]
     }
   },
-  "include": ["supabase/src"]
+  "include": ["supabase/src", "api"]
 }

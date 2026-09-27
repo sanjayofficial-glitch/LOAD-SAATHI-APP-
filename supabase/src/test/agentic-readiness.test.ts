@@ -21,10 +21,22 @@ describe('Agentic Readiness: vercel.json', () => {
     expect(rewrites.length).toBeGreaterThan(0);
 
     const catchAll = rewrites.find(
-      (r) => r.source.includes('((?!assets/') && r.source.includes('.*)')
+      (r) => r.source.includes('assets/') && r.source.includes('.*)')
     );
     expect(catchAll).toBeDefined();
     expect(catchAll!.destination).toBe('/api/agent.js');
+  });
+
+  it('excludes /api/ from the catch-all so serverless routes are not swallowed', () => {
+    // The catch-all must not match /api/og or /api/cron/diesel: those paths
+    // contain no dot, so without an explicit `api/` exclusion they were
+    // rewritten to the edge function and returned HTML instead of a PNG/JSON.
+    const rewrites = config.rewrites as Array<{ source: string; destination: string }>;
+    const catchAll = rewrites.find(
+      (r) => r.source.includes('assets/') && r.source.includes('.*)')
+    );
+    expect(catchAll).toBeDefined();
+    expect(catchAll!.source).toContain('(?!api/');
   });
 
   it('has an explicit rewrite for the edge function itself', () => {

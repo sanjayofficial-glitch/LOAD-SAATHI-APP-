@@ -79,7 +79,7 @@
       "destination": "/api/agent.js"
     },
     {
-      "source": "/((?!assets/|.*\\..*).*)",
+      "source": "/((?!api/|assets/|.*\\..*).*)",
       "destination": "/api/agent.js"
     }
   ]

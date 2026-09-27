@@ -139,7 +139,8 @@ export default function TeamManager() {
     if (!confirm(`Remove "${member.name}" from the team?`)) return;
     try {
       const client = await getClient();
-      await client.rpc('delete_team_member', { p_member_id: member.id });
+      const { error } = await client.rpc('delete_team_member', { p_id: member.id });
+      if (error) throw error;
       setMembers(prev => prev.filter(m => m.id !== member.id));
     } catch (err) {
       console.error('Delete failed:', err);
@@ -157,10 +158,14 @@ export default function TeamManager() {
     const b = sorted[swapIdx];
     if (!a || !b) return;
     const client = await getClient();
-    await client.rpc('reorder_team_members', {
+    const { error } = await client.rpc('reorder_team_members', {
       p_ids: [a.id, b.id],
-      p_sort_orders: [b.sort_order, a.sort_order],
+      p_orders: [b.sort_order, a.sort_order],
     });
+    if (error) {
+      console.error('Reorder failed:', error);
+      return;
+    }
     await fetchMembers();
   };
 
