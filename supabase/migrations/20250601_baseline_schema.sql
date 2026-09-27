@@ -224,16 +224,22 @@ DROP TRIGGER IF EXISTS trg_reviews_update_rating ON public.reviews;
 DROP TRIGGER IF EXISTS trg_reviews_update_trucker_rating ON public.reviews;
 DROP TRIGGER IF EXISTS trg_reviews_update_shipper_rating ON public.reviews;
 
+-- Column names in a trigger WHEN clause must be unqualified. PostgreSQL does
+-- not expose NEW/OLD as records there, so the NEW.reviewer_role spelling used
+-- in final-schema.sql fails with:
+--   ERROR: column new.reviewer_role does not exist (SQLSTATE 42703)
+-- A bare name resolves to NEW on INSERT/UPDATE and OLD on DELETE, which is
+-- the behaviour these two triggers want.
 CREATE TRIGGER trg_reviews_update_trucker_rating
   AFTER INSERT OR UPDATE OR DELETE ON public.reviews
   FOR EACH ROW
-  WHEN (NEW.reviewer_role IS NOT DISTINCT FROM 'shipper' OR OLD.reviewer_role IS NOT DISTINCT FROM 'shipper')
+  WHEN (reviewer_role IS NOT DISTINCT FROM 'shipper')
   EXECUTE FUNCTION public.update_trucker_rating();
 
 CREATE TRIGGER trg_reviews_update_shipper_rating
   AFTER INSERT OR UPDATE OR DELETE ON public.reviews
   FOR EACH ROW
-  WHEN (NEW.reviewer_role IS NOT DISTINCT FROM 'trucker' OR OLD.reviewer_role IS NOT DISTINCT FROM 'trucker')
+  WHEN (reviewer_role IS NOT DISTINCT FROM 'trucker')
   EXECUTE FUNCTION public.update_shipper_rating();
 
 -- ================================================================
