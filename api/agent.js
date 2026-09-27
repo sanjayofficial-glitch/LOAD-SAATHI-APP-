@@ -3644,7 +3644,16 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
             shareType === "trip"
               ? "An active truck route posted on LoadSaathi. Match your load to this truck in one tap."
               : "An open shipment posted on LoadSaathi. Find a truck for this load in one tap.";
-          const shareImage = `https://loadsaathi.in/api/og?type=${shareType}&id=${shareId}`;
+          // Static branded card rather than a per-trip rendered one. Rendering
+          // this with @vercel/og is not viable in this project: on the edge
+          // runtime Vercel charges the import to the sibling api/agent edge
+          // function and fails the build with "referencing unsupported
+          // modules", and on the Node runtime @vercel/og@1.0.3 crashes because
+          // its harfbuzzjs dependency performs a dynamic require("fs") inside
+          // an ES module. 1.0.3 is the latest release, so there is no upgrade.
+          // Title and description above stay per-trip, which is what actually
+          // drives click-through.
+          const shareImage = `https://loadsaathi.in/og-image.png`;
           html = html
             .replace(/<meta\s+property="og:[^"]*"[^>]*>/g, "")
             .replace(/<meta\s+name="twitter:[^"]*"[^>]*>/g, "");
