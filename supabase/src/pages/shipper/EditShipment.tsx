@@ -77,8 +77,8 @@ const EditShipment = () => {
           p_origin_lng: originCoords.lon,
           p_dest_lat: destCoords.lat,
           p_dest_lng: destCoords.lon,
-          p_estimated_distance_km: route?.distance_km ?? null,
-          p_estimated_duration_min: route?.duration_min ?? null,
+          p_distance_km: route?.distance_km ?? null,
+          p_duration_min: route?.duration_min ?? null,
         });
       }
     } catch {

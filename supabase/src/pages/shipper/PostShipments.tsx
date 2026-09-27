@@ -104,11 +104,14 @@ const PostShipments = () => {
       if (shipmentData?.id) {
         supabaseClient.rpc('insert_price_history', {
           p_origin_city: formData.origin_city.trim(),
-          p_destination_city: formData.destination_city.trim(),
+          p_dest_city: formData.destination_city.trim(),
           p_origin_state: formData.origin_state || null,
-          p_destination_state: formData.destination_state || null,
+          p_dest_state: formData.destination_state || null,
           p_weight_tonnes: weight,
           p_price_per_tonne: budget,
+          // A shipment has no vehicle, and this argument has no default, so
+          // it must be sent explicitly even though the value is null.
+          p_vehicle_type: null,
           p_user_id: userProfile.id,
           p_user_type: 'shipper',
         }).then(() => {}, () => {});
@@ -129,8 +132,8 @@ const PostShipments = () => {
               p_origin_lng: originCoords.lon,
               p_dest_lat: destCoords.lat,
               p_dest_lng: destCoords.lon,
-              p_estimated_distance_km: route?.distance_km ?? null,
-              p_estimated_duration_min: route?.duration_min ?? null,
+              p_distance_km: route?.distance_km ?? null,
+              p_duration_min: route?.duration_min ?? null,
             });
           }
         } catch {

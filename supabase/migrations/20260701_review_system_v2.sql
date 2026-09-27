@@ -2,8 +2,9 @@
 -- Supports both shipper→trucker and trucker→shipper reviews
 
 -- 1. Add reviewer_role column (default 'shipper' for existing reviews)
+-- IF NOT EXISTS because 20250601_baseline_schema.sql already creates it.
 ALTER TABLE public.reviews
-ADD COLUMN reviewer_role text NOT NULL DEFAULT 'shipper'
+ADD COLUMN IF NOT EXISTS reviewer_role text NOT NULL DEFAULT 'shipper'
 CHECK (reviewer_role IN ('shipper', 'trucker'));
 
 -- 2. Drop old constraint, add new per-role constraint
@@ -11,6 +12,11 @@ CHECK (reviewer_role IN ('shipper', 'trucker'));
 -- 'trucker' reviews: trucker reviews each shipper once
 ALTER TABLE public.reviews
 DROP CONSTRAINT IF EXISTS unique_trip_shipper_review;
+
+-- The baseline already creates this constraint, so drop before re-adding to
+-- keep the migration replay-safe.
+ALTER TABLE public.reviews
+DROP CONSTRAINT IF EXISTS unique_trip_role_review;
 
 ALTER TABLE public.reviews
 ADD CONSTRAINT unique_trip_role_review UNIQUE (trip_id, reviewer_role, shipper_id);
@@ -67,17 +73,22 @@ $$;
 
 -- 5. Drop old trigger, create role-specific triggers
 DROP TRIGGER IF EXISTS trg_reviews_update_rating ON public.reviews;
+DROP TRIGGER IF EXISTS trg_reviews_update_trucker_rating ON public.reviews;
+DROP TRIGGER IF EXISTS trg_reviews_update_shipper_rating ON public.reviews;
 
+-- No WHEN clause. It is not valid on a trigger firing for INSERT OR UPDATE OR
+-- DELETE: NEW does not exist for DELETE, and a bare column name is ambiguous,
+-- so PostgreSQL rejects both spellings with "column ... does not exist". The
+-- role filter is inside the two functions above instead. This also matches the
+-- definition these triggers have in production.
 CREATE TRIGGER trg_reviews_update_trucker_rating
   AFTER INSERT OR UPDATE OR DELETE ON public.reviews
   FOR EACH ROW
-  WHEN (NEW.reviewer_role IS NOT DISTINCT FROM 'shipper' OR OLD.reviewer_role IS NOT DISTINCT FROM 'shipper')
   EXECUTE FUNCTION public.update_trucker_rating();
 
 CREATE TRIGGER trg_reviews_update_shipper_rating
   AFTER INSERT OR UPDATE OR DELETE ON public.reviews
   FOR EACH ROW
-  WHEN (NEW.reviewer_role IS NOT DISTINCT FROM 'trucker' OR OLD.reviewer_role IS NOT DISTINCT FROM 'trucker')
   EXECUTE FUNCTION public.update_shipper_rating();
 
 -- 6. Update RLS policy to allow both roles to create reviews

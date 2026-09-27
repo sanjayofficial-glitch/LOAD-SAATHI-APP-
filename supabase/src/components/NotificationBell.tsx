@@ -109,7 +109,10 @@ const NotificationBell = React.memo(() => {
     if (unreadCount === 0 || !userProfile?.id) return;
     try {
       const supabaseClient = await getAuthenticatedClient();
-      await supabaseClient.rpc('mark_all_notifications_read', { p_user_id: userProfile.id });
+      // Takes no arguments. It scopes itself to the caller via
+      // auth.jwt() ->> 'sub', so passing p_user_id made PostgREST reject
+      // the call and "mark all read" silently did nothing.
+      await supabaseClient.rpc('mark_all_notifications_read');
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
     } catch (_err) {

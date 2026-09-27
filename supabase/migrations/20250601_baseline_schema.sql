@@ -224,22 +224,23 @@ DROP TRIGGER IF EXISTS trg_reviews_update_rating ON public.reviews;
 DROP TRIGGER IF EXISTS trg_reviews_update_trucker_rating ON public.reviews;
 DROP TRIGGER IF EXISTS trg_reviews_update_shipper_rating ON public.reviews;
 
--- Column names in a trigger WHEN clause must be unqualified. PostgreSQL does
--- not expose NEW/OLD as records there, so the NEW.reviewer_role spelling used
--- in final-schema.sql fails with:
---   ERROR: column new.reviewer_role does not exist (SQLSTATE 42703)
--- A bare name resolves to NEW on INSERT/UPDATE and OLD on DELETE, which is
--- the behaviour these two triggers want.
+-- No WHEN clause, deliberately. A WHEN clause is not usable on a trigger that
+-- fires for INSERT OR UPDATE OR DELETE, because NEW does not exist for DELETE
+-- and a bare name is ambiguous between NEW and OLD. Both spellings fail:
+--   WHEN (NEW.reviewer_role IS NOT DISTINCT FROM 'shipper')  -> column new.reviewer_role does not exist
+--   WHEN (reviewer_role IS NOT DISTINCT FROM 'shipper')      -> column "reviewer_role" does not exist
+--
+-- The role filter lives inside the two functions instead, each of which
+-- already restricts to reviewer_role = 'shipper' / 'trucker'. This matches how
+-- these triggers are defined in production.
 CREATE TRIGGER trg_reviews_update_trucker_rating
   AFTER INSERT OR UPDATE OR DELETE ON public.reviews
   FOR EACH ROW
-  WHEN (reviewer_role IS NOT DISTINCT FROM 'shipper')
   EXECUTE FUNCTION public.update_trucker_rating();
 
 CREATE TRIGGER trg_reviews_update_shipper_rating
   AFTER INSERT OR UPDATE OR DELETE ON public.reviews
   FOR EACH ROW
-  WHEN (reviewer_role IS NOT DISTINCT FROM 'trucker')
   EXECUTE FUNCTION public.update_shipper_rating();
 
 -- ================================================================
