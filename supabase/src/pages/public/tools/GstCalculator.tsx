@@ -59,7 +59,7 @@ export default function GstCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>GST Calculator for Freight — LoadSaathi</h1>
+          <h2>GST Calculator for Freight — LoadSaathi</h2>
           <p>Calculate GST for freight shipments. Enter charge amount, origin state, destination state, and service type to get IGST or CGST+SGST breakdown.</p>
         </div>
       </noscript>

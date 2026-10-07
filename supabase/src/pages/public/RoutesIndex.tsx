@@ -23,7 +23,7 @@ export default function RoutesIndex() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>India's Major Freight Routes — Popular Trucking Routes</h1>
+          <h2>India's Major Freight Routes — Popular Trucking Routes</h2>
           <p>Discover India's most important freight corridors, key highways, and strategic trucking routes connecting major industrial hubs, ports, and commercial centers.</p>
           <h2>Route Corridors</h2>
           <ul>

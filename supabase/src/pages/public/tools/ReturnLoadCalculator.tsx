@@ -104,7 +104,7 @@ export default function ReturnLoadCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Return Load Calculator India — LoadSaathi</h1>
+          <h2>Return Load Calculator India — LoadSaathi</h2>
           <p>Calculate how many empty kilometres your truck drives on the return journey and estimate the revenue you could earn by finding a return load. Reducing empty miles saves fuel, cuts costs, and increases truck utilisation.</p>
         </div>
       </noscript>

@@ -34,7 +34,7 @@ export default function DocumentChecklist() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Trucking Document Checklist Generator — LoadSaathi</h1>
+          <h2>Trucking Document Checklist Generator — LoadSaathi</h2>
           <p>Generate a printable checklist of documents required for your trucking route. Enter route, vehicle type, and commodity to get a complete list.</p>
         </div>
       </noscript>

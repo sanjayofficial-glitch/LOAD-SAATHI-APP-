@@ -19,7 +19,16 @@
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Vary", "value": "Accept, Accept-Encoding" }
+        { "key": "Vary", "value": "Accept, Accept-Encoding" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), interest-cohort=()"
+        },
+        {
+          "key": "Content-Security-Policy-Report-Only",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://clerk.loadsaathi.in https://*.clerk.accounts.dev https://*.clerk.com https://www.googletagmanager.com https://us.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com https://*.clerk.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.clerk.accounts.dev https://*.clerk.com https://router.project-osrm.org https://nominatim.openstreetmap.org https://us.posthog.com https://www.google-analytics.com https://region1.google-analytics.com https://in.loadsaathi.app; frame-src 'self' https://challenges.cloudflare.com https://*.clerk.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://*.clerk.com; frame-ancestors 'self'; upgrade-insecure-requests; report-uri /csp-report"
+        }
       ]
     },
     {
@@ -58,6 +67,20 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    },
+    {
+      "source": "/security.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" },
+        { "key": "Vary", "value": "Accept, Accept-Encoding" }
+      ]
+    },
+    {
+      "source": "/csp-report",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     },
     {

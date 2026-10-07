@@ -140,7 +140,7 @@ export default function RouteOptimizer() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Multi-Stop Route Optimizer — LoadSaathi</h1>
+          <h2>Multi-Stop Route Optimizer — LoadSaathi</h2>
           <p>Optimize your multi-stop truck route with our AI-powered route sequencing tool. Enter your origin and up to 6 destination stops to find the most efficient order that minimizes distance and fuel costs.</p>
           <h2>How Route Optimization Works</h2>
           <p>Our algorithm uses nearest-neighbor heuristics to reorder your stops, reducing empty kilometres and total trip distance. For 7 stops, optimization typically saves 15-30% on route distance compared to visiting stops in the order you entered them.</p>

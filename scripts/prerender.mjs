@@ -44,6 +44,7 @@ const STATIC_ROUTES = [
   "/screens/reviews",
   "/screens/admin",
   "/routes",
+  "/sitemap",
   "/blog",
   "/gallery",
   "/return-load",
@@ -114,20 +115,20 @@ const BLOG_SLUGS = extractSlugs(
 
 // Dynamic routes: guide pages
 const GUIDE_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/pages/public/guides/GuidePage.tsx"),
+  path.join(ROOT, "supabase/src/data/guides.ts"),
   /^\s+"([a-z0-9-]+)":\s*\{/gm
 );
 
 // Dynamic routes: location pages (vizag 301s to visakhapatnam — prerender the target only)
 const LOCATION_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/pages/public/locations/LocationPage.tsx"),
+  path.join(ROOT, "supabase/src/data/locations.ts"),
   /^\s+([a-z]+):\s*\{$/gm
 ).filter((s) => s !== "vizag" && s !== "serviceBlurbs" && s !== "about" && s !== "contactPoint" && s !== "speakable");
 if (!LOCATION_SLUGS.includes("visakhapatnam")) LOCATION_SLUGS.push("visakhapatnam");
 
 // Dynamic routes: transport-service pages
 const TRANSPORT_SERVICE_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/pages/public/transport/TransportServicePage.tsx"),
+  path.join(ROOT, "supabase/src/data/transportServices.ts"),
   /^  ([a-z-]+): \{$/gm
 ).filter((s) => !["serviceBlurbs", "about", "contactPoint"].includes(s));
 

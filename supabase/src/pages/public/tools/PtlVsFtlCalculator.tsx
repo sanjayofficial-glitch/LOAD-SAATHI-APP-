@@ -56,7 +56,7 @@ export default function PtlVsFtlCalculator() {
       />
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>PTL vs FTL Calculator — Which Freight Option is Right for You? | LoadSaathi</h1>
+          <h2>PTL vs FTL Calculator — Which Freight Option is Right for You? | LoadSaathi</h2>
           <p>Decide between PTL (Partial Truckload) and FTL (Full Truckload) based on your shipment weight and delivery urgency. PTL saves 30–40% for shipments under 3 tonnes. FTL is best for urgent or heavy loads over 7 tonnes.</p>
           <h2>When to Choose PTL (Partial Truckload)</h2>
           <p>PTL is ideal when your shipment is under 3 tonnes and you have flexible delivery timelines. You share truck space with other shippers, reducing your freight cost by 30–40% compared to booking an entire truck. Transit time adds 1–2 days for consolidation.</p>

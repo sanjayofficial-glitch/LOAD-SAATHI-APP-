@@ -62,7 +62,7 @@ export default function PayloadUtilization() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Payload Utilization Calculator — LoadSaathi</h1>
+          <h2>Payload Utilization Calculator — LoadSaathi</h2>
           <p>Calculate how much of your truck's payload capacity your cargo uses. Enter cargo dimensions and weight to get volume and weight utilization percentages.</p>
         </div>
       </noscript>

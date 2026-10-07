@@ -178,7 +178,7 @@ export default function Comparison() {
       />
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>LoadSaathi vs Traditional Freight Brokers</h1>
+          <h2>LoadSaathi vs Traditional Freight Brokers</h2>
           <p>LoadSaathi is an AI-powered freight marketplace that connects shippers directly with verified truckers. Compared to traditional brokers, LoadSaathi offers transparent AI-calculated pricing, real-time GPS tracking, a 300-900 credit score system, multi-factor AI matching (7 weighted criteria), return-load matching that reduces empty kilometers by up to 40%, in-app chat with dispute protection, digital documentation, and carbon emissions tracking.</p>
           <h2>Key Advantages</h2>
           <ul>

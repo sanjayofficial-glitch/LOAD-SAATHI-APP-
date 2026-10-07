@@ -186,8 +186,8 @@ describe('Agentic Readiness: index.html metadata', () => {
     content = readFile('index.html');
   });
 
-  it('has NO site-wide canonical (per-route canonicals are injected by api/agent.js and prerender; a hardcoded apex canonical would tell Google every URL is the homepage)', () => {
-    expect(content).not.toContain('<link rel="canonical"');
+  it('has the homepage canonical (index.html is served for /; every other route has its canonical stripped and re-injected by api/agent.js)', () => {
+    expect(content).toContain('<link rel="canonical" href="https://loadsaathi.in/" />');
   });
 
   it('has og:type', () => {
@@ -198,8 +198,8 @@ describe('Agentic Readiness: index.html metadata', () => {
     expect(content).toContain('<meta property="og:image" content="https://loadsaathi.in/og-image.png" />');
   });
 
-  it('has NO site-wide og:url (same reason as canonical above)', () => {
-    expect(content).not.toContain('property="og:url"');
+  it('has og:url matching the homepage canonical (same replacement contract as the canonical above)', () => {
+    expect(content).toContain('<meta property="og:url" content="https://loadsaathi.in/" />');
   });
 
   it('has lang attribute on html tag', () => {
@@ -231,15 +231,17 @@ describe('Agentic Readiness: index.html noscript content', () => {
     expect(mainNoscript!.length).toBeGreaterThanOrEqual(500);
   });
 
-  it('noscript contains H1 heading', () => {
+  it('noscript uses H2, not H1, so the page keeps exactly one H1', () => {
     expect(content).toContain('<noscript>');
-    // Find the main noscript (not the GTM iframe one) — it's the one with <div inside
     const allNoscriptMatches = [...content.matchAll(/<noscript>([\s\S]*?)<\/noscript>/g)];
     const mainNoscript = allNoscriptMatches.find(
-      (m) => m[1]?.includes('<div') && m[1]?.includes('<h1')
+      (m) => m[1]?.includes('<div') && m[1]?.includes('<h2')
     );
     expect(mainNoscript).toBeDefined();
-    expect(mainNoscript![1]).toContain('<h1>');
+    expect(mainNoscript![1]).toContain('<h2>');
+    // The noscript block sits alongside the live DOM, so an <h1> in here would
+    // give no-JS documents a second H1.
+    expect(mainNoscript![1]).not.toContain('<h1');
   });
 
   it('noscript describes what LoadSaathi does', () => {
@@ -390,9 +392,18 @@ describe('Agentic Readiness: index.html SSR fallback (no-JS content)', () => {
     content = readFile('index.html');
   });
 
-  it('has SSR fallback div with H1 visible without JS', () => {
+  it('has SSR fallback div with the injection slot api/agent.js writes the page H1 into', () => {
     expect(content).toContain('id="ssr-fallback"');
-    expect(content).toContain('<h1>LoadSaathi - India');
+    // The shell carries no H1 of its own: hasOwnH1() in api/agent.js checks
+    // for one and, finding none, emits the per-page content block as an <h1>.
+    expect(content).toContain('id="ssr-fallback-content"');
+    expect(content).toContain("LoadSaathi — India's AI-Powered Freight Marketplace");
+  });
+
+  it('SSR fallback carries no H1 of its own (the injected block supplies it)', () => {
+    const start = content.indexOf('id="ssr-fallback"');
+    const slice = content.slice(start, start + 2000);
+    expect(slice).not.toContain('<h1');
   });
 
   it('SSR fallback has 500+ chars of text', () => {

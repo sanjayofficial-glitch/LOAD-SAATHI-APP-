@@ -1,0 +1,53 @@
+Contact: mailto:security@loadsaathi.in
+Expires: 2027-10-05T00:00:00.000Z
+Preferred-Languages: en, hi
+Canonical: https://loadsaathi.in/.well-known/security.txt
+Policy: https://loadsaathi.in/privacy
+
+# Vulnerability reporting for LoadSaathi
+
+We take security reports seriously and aim to acknowledge every valid report
+within 2 business days.
+
+## What to report
+
+- Authentication bypass, session handling or authorization flaws
+- Cross-site scripting (XSS), CSRF or content injection
+- SQL injection, insecure direct object reference, or data exposure between
+  shipper, trucker and admin accounts
+- Payment, escrow or credit-score manipulation
+- GPS/location spoofing that materially affects trip integrity
+- Denial of service against the API or Realtime layer
+
+## What not to report
+
+- Missing security headers with no demonstrated impact
+- Rate-limit or scraping findings against public marketing pages
+- Findings from automated scanners without a working proof of concept
+- Social engineering, phishing, or physical attacks
+- Bugs that require an already-compromised account to reach
+
+## How to report
+
+Email **security@loadsaathi.in** with:
+
+1. Type of issue and affected area (for example "shipper dashboard")
+2. Steps to reproduce, ideally minimal
+3. Impact and any account IDs or request IDs involved
+4. Whether the issue is already public
+
+Please encrypt sensitive reports. Our PGP public key is available on request.
+
+You will receive an acknowledgement within 2 business days and a status update
+at least every 7 days until the issue is resolved.
+
+Do not access other users' data, run automated scans against production, or
+disrupt service while testing. We will not pursue legal action for good-faith
+research that stays within these bounds.
+
+## Disclosure
+
+We do not offer bug bounties at this time. Reporters may be credited in our
+release notes with their permission, or kept anonymous on request. We will give
+a target remediation window of 90 days for medium severity issues and 30 days for
+high or critical severity issues once a fix is confirmed.

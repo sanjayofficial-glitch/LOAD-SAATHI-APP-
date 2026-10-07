@@ -99,7 +99,7 @@ export default function TransportCostCalculator() {
       />
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Transport Cost Calculator — Estimate Freight Rates | LoadSaathi</h1>
+          <h2>Transport Cost Calculator — Estimate Freight Rates | LoadSaathi</h2>
           <p>Calculate estimated transport costs for PTL, LTL, and FTL shipments across India. Enter your origin city, destination city, and cargo weight to get an instant freight rate estimate.</p>
           <h2>How Transport Costs Are Calculated</h2>
           <p>Transport costs in India depend on distance (km), cargo weight (tonnes), shipment type (PTL/LTL/FTL), and market conditions. Typical rates range from ₹8–30 per km per tonne on East India corridors.</p>

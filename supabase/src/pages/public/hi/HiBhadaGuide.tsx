@@ -85,7 +85,7 @@ export default function HiBhadaGuide() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
-          <h1>ट्रक भाड़ा कैसे बुक करें — स्टेप-बाय-स्टेप गाइड</h1>
+          <h2>ट्रक भाड़ा कैसे बुक करें — स्टेप-बाय-स्टेप गाइड</h2>
           <p>बिना दलाल के ऑनलाइन ट्रक बुक करें: (1) माल की जानकारी डालें, (2) AI ट्रक मैच करे, (3) बुक करके GPS पर ट्रैक करें, (4) एस्क्रो से सुरक्षित पेमेंट करें।</p>
         </div>
       </noscript>

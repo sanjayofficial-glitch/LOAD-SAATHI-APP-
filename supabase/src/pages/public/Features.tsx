@@ -49,7 +49,7 @@ const Features = () => {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>LoadSaathi Features — AI-Powered Freight Platform</h1>
+          <h2>LoadSaathi Features — AI-Powered Freight Platform</h2>
           <p>LoadSaathi combines AI-powered matching, real-time tracking, predictive pricing, and a trusted network to eliminate empty kilometers and transform logistics profitability.</p>
           <h2>Shipper Operating System</h2>
           <ul>

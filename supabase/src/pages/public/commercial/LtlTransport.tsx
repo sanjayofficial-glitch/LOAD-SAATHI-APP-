@@ -80,7 +80,7 @@ export default function LtlTransport() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>LTL Transport in India | Less Than Truckload Shipping | LoadSaathi</h1>
+          <h2>LTL Transport in India | Less Than Truckload Shipping | LoadSaathi</h2>
           <p>LTL (Less Than Truckload) shipping lets businesses move 50kg–3 tonne shipments at shared-truck rates across East India. Pay only for the space your cargo uses with LoadSaathi's AI-matched trucks.</p>
           <h2>What is LTL Transport?</h2>
           <p>LTL freight consolidates multiple shippers' goods onto the same truck. Each shipper pays only for the weight and volume they use, making it cost-effective for small to medium shipments.</p>

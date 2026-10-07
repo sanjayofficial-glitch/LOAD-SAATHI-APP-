@@ -79,7 +79,7 @@ export default function TruckLoadBooking() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>Truck Load Booking in India | Book Trucks Online | LoadSaathi</h1>
+          <h2>Truck Load Booking in India | Book Trucks Online | LoadSaathi</h2>
           <p>Book trucks online for PTL, LTL, and FTL shipments across East India. AI-matched trucks, transparent pricing, GPS tracking, and secure payments on LoadSaathi.</p>
           <h2>How to Book a Truck</h2>
           <ol>

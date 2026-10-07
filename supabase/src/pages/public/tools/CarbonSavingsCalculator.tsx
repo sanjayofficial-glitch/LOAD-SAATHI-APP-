@@ -88,7 +88,7 @@ export default function CarbonSavingsCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Carbon Savings Calculator — LoadSaathi</h1>
+          <h2>Carbon Savings Calculator — LoadSaathi</h2>
           <p>Calculate CO2 emissions for dedicated versus shared freight. See how much carbon you save by sharing truck capacity.</p>
         </div>
       </noscript>

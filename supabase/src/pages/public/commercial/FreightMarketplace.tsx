@@ -105,7 +105,7 @@ export default function FreightMarketplace() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>Freight Marketplace in India | Digital Freight Platform | LoadSaathi</h1>
+          <h2>Freight Marketplace in India | Digital Freight Platform | LoadSaathi</h2>
           <p>LoadSaathi is India's AI-powered freight marketplace connecting shippers directly with verified truckers for PTL, LTL, and FTL loads across East India. Transparent pricing, GPS tracking, and secure payments.</p>
           <h2>What is a Freight Marketplace?</h2>
           <p>A freight marketplace is an online platform where shippers post loads and truckers offer capacity. LoadSaathi uses AI to match the best truck for each load based on route, price, capacity, and reliability.</p>

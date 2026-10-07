@@ -105,7 +105,7 @@ export default function EmptyKmSavings() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Empty Kilometer Savings Calculator — LoadSaathi</h1>
+          <h2>Empty Kilometer Savings Calculator — LoadSaathi</h2>
           <p>Calculate how much you save by sharing truck capacity instead of running dedicated trips. Compare dedicated truck costs versus shared freight costs for your route.</p>
           <h2>How Empty Kilometer Savings Work</h2>
           <p>A dedicated truck travels full load to destination and returns empty, doubling the kilometres. A shared truck carries cargo in both directions, eliminating empty return kilometres. This saves fuel, reduces CO2 emissions, and cuts costs by up to 50%.</p>

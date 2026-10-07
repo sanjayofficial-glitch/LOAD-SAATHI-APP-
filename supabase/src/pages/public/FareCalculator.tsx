@@ -267,7 +267,7 @@ export default function FareCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px', fontFamily: 'system-ui' }}>
-          <h1>AI Fare Calculator — Get Instant Freight Estimates</h1>
+          <h2>AI Fare Calculator — Get Instant Freight Estimates</h2>
           <p>LoadSaathi's AI-powered fare calculator provides accurate freight cost estimates in real-time. Enter your route and cargo details to get instant pricing with market intelligence, historical trends, and a fairness index.</p>
           <h2>How to Use the Fare Calculator</h2>
           <ol>

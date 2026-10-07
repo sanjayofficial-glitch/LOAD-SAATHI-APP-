@@ -42,7 +42,7 @@ export default function HiReturnLoad() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
-          <h1>रिटर्न लोड — खाली वापसी पर कमाई</h1>
+          <h2>रिटर्न लोड — खाली वापसी पर कमाई</h2>
           <p>माल उतारकर खाली लौटना ट्रक मालिकों का सबसे बड़ा नुकसान है। LoadSaathi वापसी रूट के लोड से मैच करता है — राउंड ट्रिप पर 40–60% ज़्यादा कमाई।</p>
         </div>
       </noscript>

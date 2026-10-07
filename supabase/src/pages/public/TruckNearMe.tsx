@@ -99,7 +99,7 @@ export default function TruckNearMe() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>Find a Truck Near You Without Calling a Broker — LoadSaathi</h1>
+          <h2>Find a Truck Near You Without Calling a Broker — LoadSaathi</h2>
           <p>Searching for "truck near me"? LoadSaathi is a truck booking platform for Indian shippers that shows available trucks on your route — with vehicle type, capacity, transparent market rates and trucker credit scores — so you can book a goods carrier nearby without calling multiple brokers. Live in Jharkhand, Odisha and West Bengal, including Tier-2 and Tier-3 towns.</p>
           <h2>Why Book a Truck Online Instead of Calling Brokers?</h2>
           <ul>

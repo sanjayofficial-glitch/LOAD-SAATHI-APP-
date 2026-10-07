@@ -84,7 +84,7 @@ export default function TruckLoadCalculator() {
       />
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Truck Load Calculator — Find the Right Truck for Your Cargo | LoadSaathi</h1>
+          <h2>Truck Load Calculator — Find the Right Truck for Your Cargo | LoadSaathi</h2>
           <p>Find the right truck for your cargo weight. From Tata Ace (0.5T) to tractor-trailers (25T). Enter your cargo weight below and get an instant truck recommendation.</p>
           <h2>Available Truck Types</h2>
           <ul>

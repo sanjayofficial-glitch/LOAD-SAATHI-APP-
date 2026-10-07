@@ -79,7 +79,7 @@ export default function PtlTransport() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>PTL Transport in India | Partial Truckload Shipping | LoadSaathi</h1>
+          <h2>PTL Transport in India | Partial Truckload Shipping | LoadSaathi</h2>
           <p>PTL (Partial Truckload) shipping lets MSMEs move 0.5–3 tonne shipments at 30–40% lower cost than FTL by sharing truck space on the same route. LoadSaathi's AI matches your cargo with the best available trucks across East India.</p>
           <h2>What is PTL Transport?</h2>
           <p>PTL is a freight method where your goods share space with other shipments heading the same direction. You pay only for the space your cargo occupies, making it the most cost-effective option for 0.5–3 tonne shipments.</p>

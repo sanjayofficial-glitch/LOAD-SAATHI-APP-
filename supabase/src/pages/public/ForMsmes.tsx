@@ -36,7 +36,7 @@ export default function ForMsmes() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Freight Transport for MSMEs — LoadSaathi</h1>
+          <h2>Freight Transport for MSMEs — LoadSaathi</h2>
           <p>LoadSaathi helps small businesses save 20–40% on freight costs by connecting them directly with verified truckers. Transparent pricing, AI rate predictions, PTL/LTL options, and GPS tracking.</p>
         </div>
       </noscript>

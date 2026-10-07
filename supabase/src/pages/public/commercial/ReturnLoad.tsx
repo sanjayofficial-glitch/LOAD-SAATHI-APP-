@@ -97,7 +97,7 @@ export default function ReturnLoad() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>Find Return Loads for Your Truck — LoadSaathi</h1>
+          <h2>Find Return Loads for Your Truck — LoadSaathi</h2>
           <p>Don't drive back empty. LoadSaathi connects truckers with available shipments on their return route, cutting empty kilometres by up to 40% and increasing earnings by 35%.</p>
           <h2>Why Find Return Loads?</h2>
           <ul>

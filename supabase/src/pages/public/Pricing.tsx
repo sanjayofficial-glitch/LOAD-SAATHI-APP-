@@ -137,7 +137,7 @@ const Pricing = () => {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>LoadSaathi Pricing — Simple, Transparent, No Hidden Fees</h1>
+          <h2>LoadSaathi Pricing — Simple, Transparent, No Hidden Fees</h2>
           <p>LoadSaathi offers a free platform for shippers and truckers to connect. No subscription fees, no registration costs, no minimum commitments. You only pay when you complete a transaction through the platform.</p>
           <h2>For Shippers</h2>
           <p>Free to join. Ship smarter, pay less. Includes free account registration and profile setup, AI-powered transporter matching, real-time shipment tracking, digital documentation and e-way bill integration, access to a verified transporter network, escrow-backed payment protection, and an analytics dashboard with reports.</p>

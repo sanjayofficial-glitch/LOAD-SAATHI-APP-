@@ -45,8 +45,11 @@
 
     <!-- Primary SEO (fallback for no-JS; per-route tags are injected
          server-side by api/agent.js and client-side by SeoMeta after hydration.
-         NOTE: no site-wide canonical or og:url here on purpose — a hardcoded
-         canonical would tell Google every URL is the homepage. -->
+         The canonical below is the homepage's own canonical, which is the only
+         static file Vercel serves from this document (about/contact/privacy are
+         separate prerendered files). Every other URL gets its canonical
+         replaced by api/agent.js on the server and by SeoMeta on hydration. -->
+    <link rel="canonical" href="https://loadsaathi.in/" />
     <title>Shared Freight Marketplace | PTL/LTL East India | LoadSaathi</title>
     <meta name="description" content="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs on the Rourkela–Ranchi–Burdwan corridor. Book part loads online." />
     <meta name="keywords" content="PTL freight Rourkela, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela" />
@@ -57,7 +60,7 @@
     <meta property="og:image" content="https://loadsaathi.in/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <!-- NOTE: no og:url here on purpose (see canonical note above) -->
+    <meta property="og:url" content="https://loadsaathi.in/" />
     <meta property="og:site_name" content="LoadSaathi" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -241,7 +244,7 @@
     <!-- End Google Tag Manager (noscript) -->
     <noscript>
       <div style="max-width:800px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif;line-height:1.6">
-        <h1>LoadSaathi - India's AI-Powered Freight Marketplace</h1>
+        <h2>LoadSaathi - India's AI-Powered Freight Marketplace</h2>
         <p>LoadSaathi connects shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%.</p>
         <h2>Who It's For</h2>
         <ul>
@@ -286,17 +289,14 @@
     <div id="root">
       <!-- SSR fallback: serves as LCP content + AI crawler seed. React replaces on hydration.
            Full no-JS content is in the noscript block below (crawlers read that). -->
+      <!-- ssr-fallback-content is the injection slot api/agent.js writes the
+           page's long-form copy into. It sits inside #ssr-fallback so the
+           injected block is hidden with the fallback the first inline script
+           hides, and it replaces this card so the page keeps exactly one h1
+           (the one in the injected block). JS clients never see it. -->
       <div id="ssr-fallback" style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif">
-        <div style="text-align:center;padding:2rem">
-          <h1 style="font-size:2.25rem;font-weight:800;margin:0 0 0.75rem;color:#1a1a2e">LoadSaathi</h1>
-          <p style="color:#6b7280;margin:0 0 1rem;font-size:1.125rem">India's AI-Powered Freight Marketplace</p>
-          <ul style="list-style:none;padding:0;margin:0 0 1.5rem;color:#374151;font-size:0.95rem">
-            <li>Freight route planner across 5000+ corridors</li>
-            <li>Live pricing: ₹/km by truck type</li>
-            <li>Smart matching for shippers and truckers</li>
-            <li>Fuel prices: ₹102.62 / Diesel (Delhi)</li>
-          </ul>
-          <a href="/register" style="display:inline-block;background:#2563eb;color:#fff;padding:0.75rem 1.75rem;border-radius:0.5rem;text-decoration:none;font-weight:600">Get Started Free</a>
+        <div id="ssr-fallback-content" style="text-align:center;padding:2rem">
+          <p style="color:#6b7280;margin:0;font-size:1.125rem">LoadSaathi — India's AI-Powered Freight Marketplace</p>
         </div>
       </div>
       <!-- Inline boot loader: visible instantly, replaced by React on mount (hidden when SSR fallback present, shown via JS) -->

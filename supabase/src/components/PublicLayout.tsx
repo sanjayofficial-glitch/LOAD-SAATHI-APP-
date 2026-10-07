@@ -107,6 +107,7 @@ const footerLinks = {
   Legal: [
     { label: "Privacy", path: "/privacy" },
     { label: "Terms", path: "/terms" },
+    { label: "Sitemap", path: "/sitemap" },
   ],
 };
 

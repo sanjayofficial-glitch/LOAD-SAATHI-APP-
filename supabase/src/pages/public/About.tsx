@@ -40,7 +40,7 @@ const About = () => {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>About LoadSaathi — India's AI Freight Operating System</h1>
+          <h2>About LoadSaathi — India's AI Freight Operating System</h2>
           <p>LoadSaathi is an AI-powered logistics platform founded by Sanjaya Sahu from Rourkela, Odisha. Our mission is to eliminate empty kilometers and build the most efficient freight network in India.</p>
           <h2>Our Mission</h2>
           <p>With 1 in 3 trucks returning empty and 67% of India's logistics still unorganized, we leverage AI to create a transparent, efficient, and trusted marketplace where every kilometer carries value.</p>

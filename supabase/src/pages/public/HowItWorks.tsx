@@ -54,7 +54,7 @@ const HowItWorks = () => {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>How LoadSaathi Works — Complete Logistics Platform Guide</h1>
+          <h2>How LoadSaathi Works — Complete Logistics Platform Guide</h2>
           <p>LoadSaathi uses AI to connect shippers and truckers for seamless freight operations.</p>
           <h2>How LoadSaathi Works for Shippers</h2>
           <h3>Step 1: Create and List Shipments</h3>

@@ -43,7 +43,7 @@ export default function HiHome() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
-          <h1>भारत में ऑनलाइन ट्रक बुकिंग — LoadSaathi</h1>
+          <h2>भारत में ऑनलाइन ट्रक बुकिंग — LoadSaathi</h2>
           <p>LoadSaathi भारत का AI-संचालित शेयर्ड फ्रेट मार्केटप्लेस है। शिपर्स अपना माल पोस्ट करते हैं, AI सबसे उपयुक्त ट्रक से मैच करता है, और दोनों पक्ष लाइव GPS से शिपमेंट ट्रैक करते हैं। PTL और LTL लोड पर 40% तक की बचत।</p>
           <h2>मुख्य सेवाएं</h2>
           <ul>

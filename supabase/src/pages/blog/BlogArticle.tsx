@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import SeoMeta from "@/components/SeoMeta";
 import { articles, parseDate } from "@/data/blog";
 import { routes } from "@/data/routes";
+import { clampMetaDescription } from "@/config/site";
 
 function parseInlineLinks(text: string): React.ReactNode[] {
   const parts: React.ReactNode[] = [];
@@ -186,7 +187,7 @@ export default function BlogArticle() {
       {
         "@type": "BlogPosting",
         headline: article.title,
-        description: article.summary.substring(0, 160),
+        description: clampMetaDescription(article.summary),
         author: {
           "@type": "Person",
           name: article.author,
@@ -250,7 +251,7 @@ export default function BlogArticle() {
     <>
     <SeoMeta
       title={article.title}
-      description={article.summary.substring(0, 160)}
+      description={clampMetaDescription(article.summary)}
       canonical={`${article.canonicalUrl ?? `/blog/${slug}`}`}
       type="article"
       image={coverImage}
@@ -267,7 +268,7 @@ export default function BlogArticle() {
 
     <noscript>
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
-        <h1>{article.title}</h1>
+        <h2>{article.title}</h2>
         <p><strong>{article.category}</strong> | {article.author} | {article.date} | {article.readTime}</p>
         {article.lastUpdated && <p>Last updated: {article.lastUpdated}</p>}
         <p>{article.summary}</p>

@@ -21,7 +21,7 @@ export const routes: RouteInfo[] = [
     distanceKm: 180,
     transitTime: "4",
     description: "Connect the steel city of Odisha with the capital of Jharkhand via LoadSaathi's AI-powered freight marketplace. Book PTL and LTL truck loads on the Rourkela–Ranchi corridor with GPS tracking, transparent pricing, and digital credit scores.",
-    metaDescription: "Book PTL/LTL freight from Rourkela to Ranchi. Save up to 40% with LoadSaathi's shared truck network. GPS tracking, AI matching, and transparent pricing on the Rourkela–Ranchi corridor.",
+    metaDescription: "Book PTL/LTL freight from Rourkela to Ranchi. Save up to 40% on a shared truck network with GPS tracking, AI matching and transparent pricing.",
     keywords: "PTL freight Rourkela to Ranchi, LTL transport Rourkela Ranchi, truck booking Rourkela Jharkhand, part load Rourkela, shared freight Odisha Jharkhand, LoadSaathi Rourkela Ranchi",
   },
   {
@@ -57,7 +57,7 @@ export const routes: RouteInfo[] = [
     distanceKm: 220,
     transitTime: "5",
     description: "Find efficient PTL and LTL freight from Jamshedpur to Rourkela. Leverage LoadSaathi's returning trucks and AI matching for cost-effective shipping on this key industrial corridor.",
-    metaDescription: "Book cost-effective PTL freight from Jamshedpur to Rourkela. LoadSaathi offers AI-matched trucks, real-time tracking, and fair pricing on the Jamshedpur–Rourkela route.",
+    metaDescription: "Book cost-effective PTL freight from Jamshedpur to Rourkela, with AI-matched trucks, real-time tracking and fair pricing on the route.",
     keywords: "PTL freight Jamshedpur to Rourkela, LTL transport Jamshedpur Rourkela, truck booking Jharkhand Odisha, Jamshedpur Rourkela load, freight transport Jamshedpur",
   },
   {
@@ -69,7 +69,7 @@ export const routes: RouteInfo[] = [
     distanceKm: 340,
     transitTime: "7",
     description: "Reliable PTL and LTL freight from Rourkela to Bhubaneswar — the capital of Odisha. LoadSaathi connects these key Odisha cities with AI-optimized truck matching and live GPS tracking.",
-    metaDescription: "Book PTL/LTL freight from Rourkela to Bhubaneswar. Save up to 40% on shipping within Odisha. AI truck matching, GPS tracking, and digital credit scores on LoadSaathi.",
+    metaDescription: "Book PTL/LTL freight from Rourkela to Bhubaneswar. Save up to 40% within Odisha with AI truck matching, GPS tracking and credit scores.",
     keywords: "PTL freight Rourkela to Bhubaneswar, LTL transport Rourkela Bhubaneswar, Odisha freight, truck booking Rourkela Bhubaneswar, part load Bhubaneswar",
   },
   {
@@ -81,7 +81,7 @@ export const routes: RouteInfo[] = [
     distanceKm: 320,
     transitTime: "7",
     description: "Seamless PTL and LTL freight from Rourkela to Burdwan across the Odisha–West Bengal border. LoadSaathi's platform handles cross-state logistics with AI matching and transparent pricing.",
-    metaDescription: "Book PTL freight from Rourkela to Burdwan. Cross-border trucking made easy with LoadSaathi — AI matching, live GPS tracking, and fair rates on the Odisha–West Bengal route.",
+    metaDescription: "Book PTL freight from Rourkela to Burdwan. Odisha–West Bengal trucking with AI matching, live GPS tracking and fair rates.",
     keywords: "PTL freight Rourkela to Burdwan, LTL transport Rourkela Burdwan, Odisha West Bengal freight, truck booking Burdwan, cross-state PTL shipping",
   },
   {
@@ -189,7 +189,7 @@ export const routes: RouteInfo[] = [
     distanceKm: 440,
     transitTime: "8",
     description: "Major PTL and LTL freight corridor connecting the capital of Odisha with the commercial capital of East India. LoadSaathi offers the best rates and reliable trucking on this busy route.",
-    metaDescription: "Book PTL/LTL freight from Bhubaneswar to Kolkata. Odisha to West Bengal shipping with LoadSaathi — AI-matched trucks, live GPS tracking, and competitive pricing.",
+    metaDescription: "Book PTL/LTL freight from Bhubaneswar to Kolkata. Odisha–West Bengal shipping with AI-matched trucks, live GPS tracking and competitive pricing.",
     keywords: "PTL freight Bhubaneswar to Kolkata, LTL transport Bhubaneswar Kolkata, Odisha West Bengal freight, truck booking Kolkata, Bhubaneswar logistics",
   },
   {
@@ -225,7 +225,7 @@ export const routes: RouteInfo[] = [
     distanceKm: 280,
     transitTime: "6",
     description: "Efficient PTL and LTL freight from Ranchi to Dhanbad within Jharkhand. LoadSaathi connects Jharkhand's capital with its coal mining hub for seamless intra-state logistics.",
-    metaDescription: "Book PTL/LTL freight from Ranchi to Dhanbad. Intra-Jharkhand shipping with LoadSaathi — AI matching, live GPS tracking, competitive rates on the Ranchi–Dhanbad route.",
+    metaDescription: "Book PTL/LTL freight from Ranchi to Dhanbad. Intra-Jharkhand shipping with AI matching, live GPS tracking and competitive rates.",
     keywords: "PTL freight Ranchi to Dhanbad, LTL transport Ranchi Dhanbad, Jharkhand freight, truck booking Dhanbad, coal corridor logistics Jharkhand",
   },
   {
@@ -237,7 +237,7 @@ export const routes: RouteInfo[] = [
     distanceKm: 450,
     transitTime: "8",
     description: "Coastal corridor PTL and LTL freight from Bhubaneswar to Visakhapatnam. LoadSaathi's AI platform streamlines cross-state shipping along the East Coast with real-time tracking and fair pricing.",
-    metaDescription: "Book PTL/LTL freight from Bhubaneswar to Visakhapatnam. Coastal corridor shipping with LoadSaathi — AI matching, GPS tracking, transparent rates on the Odisha–AP route.",
+    metaDescription: "Book PTL/LTL freight from Bhubaneswar to Visakhapatnam. Coastal corridor shipping with AI matching, GPS tracking and transparent Odisha–AP rates.",
     keywords: "PTL freight Bhubaneswar to Visakhapatnam, LTL transport Bhubaneswar Vizag, Odisha Andhra Pradesh freight, truck booking Vizag, coastal corridor logistics",
   },
   {

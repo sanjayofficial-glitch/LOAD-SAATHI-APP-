@@ -1,0 +1,72 @@
+/**
+ * Site-level facts for the React app.
+ *
+ * Mirrors api/site.js, which is the copy the Edge function (api/agent.js) and
+ * the build-time scripts read. The two must stay in sync — scripts/smoke.mjs
+ * asserts the COVERAGE counts against the generated sitemap.
+ */
+
+export const SITE_URL = 'https://loadsaathi.in';
+export const BRAND = 'LoadSaathi';
+export const TAGLINE = "India's AI-Powered Freight Marketplace";
+
+export const PHONE_DISPLAY = '+91-83289-98031';
+export const PHONE_E164 = '+918328998031';
+export const PHONE_COMPACT = '+91 83289 98031';
+export const EMAIL = 'support@loadsaathi.in';
+
+export const ADDRESS = {
+  street: 'First Floor, FTBI, T1-109, National Institute of Technology, Sector 1',
+  city: 'Rourkela',
+  region: 'Odisha',
+  postalCode: '769008',
+  country: 'IN',
+} as const;
+
+export interface SocialProfile {
+  name: string;
+  url: string;
+}
+
+/** The six profiles asserted in index.html's Organization.sameAs. */
+export const SOCIALS: SocialProfile[] = [
+  { name: 'X', url: 'https://x.com/LoadSaathi' },
+  { name: 'Facebook', url: 'https://www.facebook.com/people/Load-Saathi/61590859902405/' },
+  { name: 'Instagram', url: 'https://www.instagram.com/loadsaathi/' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/load-saathi-119867422/' },
+  { name: 'Reddit', url: 'https://www.reddit.com/user/Loadsaathi/' },
+  { name: 'Threads', url: 'https://www.threads.com/@loadsaathi' },
+];
+
+export const OG_IMAGE = `${SITE_URL}/og-image.png`;
+
+/**
+ * Verifiable counts. `sitemapUrls` must equal the number of <url> entries in
+ * public/sitemap.xml; `freightRoutes` / `cityPages` must equal the number of
+ * /routes/* and /location/* entries in it.
+ */
+export const COVERAGE = {
+  sitemapUrls: 174,
+  freightRoutes: 28,
+  cityPages: 14,
+} as const;
+
+/** Fee percentages quoted on /pricing, /about and the trust pages. */
+export const FEES = {
+  shipper: '1.5–3%',
+  trucker: '1.5–2.5%',
+} as const;
+
+/**
+ * Trim a summary/description to a search-snippet-safe length without cutting a
+ * word in half. Mirrors clampMetaDescription in api/site.js so the
+ * server-injected description and this one are byte-identical.
+ */
+export function clampMetaDescription(text: string | undefined, max = 160): string {
+  const value = String(text ?? '').replace(/\s+/g, ' ').trim();
+  if (value.length <= max) return value;
+  const cut = value.slice(0, max + 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  const trimmed = lastSpace > 60 ? cut.slice(0, lastSpace) : cut.slice(0, max);
+  return trimmed.replace(/[\s,;:.\-–—]+$/, '').trim();
+}

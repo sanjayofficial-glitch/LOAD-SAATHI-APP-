@@ -44,6 +44,7 @@ const HiBhadaGuide = lazy(() => import("./pages/public/hi/HiBhadaGuide"));
 const HiRouteRourkelaRanchi = lazy(() => import("./pages/public/hi/HiRouteRourkelaRanchi"));
 const RoutesIndex = lazy(() => import("./pages/public/RoutesIndex"));
 const RouteDetail = lazy(() => import("./pages/public/RouteDetail"));
+const SitemapPage = lazy(() => import("./pages/public/SitemapPage"));
 const Comparison = lazy(() => import("./pages/public/Comparison"));
 const TruckerDashboard = lazy(() => import("./pages/trucker/Dashboard"));
 const PostTrip = lazy(() => import("./pages/trucker/PostTrip"));
@@ -144,6 +145,9 @@ export const AppRoutes = () => (
       {/* Freight Routes */}
       <Route path="/routes" element={<RoutesIndex />} />
       <Route path="/routes/:slug" element={<RouteDetail />} />
+
+      {/* HTML sitemap */}
+      <Route path="/sitemap" element={<SitemapPage />} />
 
       {/* Location Pages */}
       <Route path="/location/:city" element={<LocationPage />} />

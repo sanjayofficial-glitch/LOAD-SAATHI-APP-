@@ -43,7 +43,7 @@ const Contact = () => {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>Contact LoadSaathi — Get in Touch</h1>
+          <h2>Contact LoadSaathi — Get in Touch</h2>
           <p>Have questions or need support? Contact LoadSaathi's team for demos, technical support, partnerships, or general inquiries.</p>
           <h2>General Inquiries</h2>
           <p><strong>Email:</strong> hello@loadsaathi.in</p>

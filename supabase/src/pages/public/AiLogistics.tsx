@@ -17,7 +17,7 @@ export default function AiLogistics() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>AI in Truck Transportation — LoadSaathi</h1>
+          <h2>AI in Truck Transportation — LoadSaathi</h2>
           <p>LoadSaathi uses artificial intelligence for freight matching, price prediction, smart routing, and credit scoring — reducing empty trucks, fair pricing, and faster delivery across India.</p>
         </div>
       </noscript>

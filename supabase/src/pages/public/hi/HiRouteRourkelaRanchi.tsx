@@ -42,7 +42,7 @@ export default function HiRouteRourkelaRanchi() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
-          <h1>राउरकेला से रांची भाड़ा — PTL/FTL ट्रक बुकिंग</h1>
+          <h2>राउरकेला से रांची भाड़ा — PTL/FTL ट्रक बुकिंग</h2>
           <p>राउरकेला–रांची (180 किमी) कॉरिडोर: PTL लगभग ₹14–22/किलो, FTL लगभग ₹15,300–21,600। समय ~4 घंटे। LoadSaathi पर सत्यापित ट्रक, GPS ट्रैकिंग।</p>
         </div>
       </noscript>

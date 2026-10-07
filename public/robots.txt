@@ -23,6 +23,7 @@ Disallow: /trips/
 # Block internal
 Disallow: /api/
 Disallow: /dashboard
+Disallow: /csp-report
     
 # AI crawlers — explicit allow for GEO visibility
 User-agent: GPTBot

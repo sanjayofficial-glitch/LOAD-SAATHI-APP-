@@ -186,7 +186,7 @@ const FAQ = () => {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>Frequently Asked Questions — LoadSaathi AI Freight Platform</h1>
+          <h2>Frequently Asked Questions — LoadSaathi AI Freight Platform</h2>
           <h2>Getting Started</h2>
           <h3>What is LoadSaathi?</h3>
           <p>LoadSaathi is India's AI-powered freight operating system that connects shippers with verified truckers. We use AI matching, real-time tracking, credit scoring, and secure payments to make logistics simple and transparent.</p>

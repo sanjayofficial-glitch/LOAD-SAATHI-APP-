@@ -90,7 +90,7 @@ export default function TruckerSolution() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>LoadSaathi for Truckers — AI-Powered Load Discovery</h1>
+          <h2>LoadSaathi for Truckers — AI-Powered Load Discovery</h2>
           <p>Transform your trucking business with LoadSaathi. Get AI-matched loads, optimize routes, maximize earnings, and eliminate empty returns with India's leading freight platform.</p>
           <h2>Why Truckers Choose LoadSaathi</h2>
           <ul>

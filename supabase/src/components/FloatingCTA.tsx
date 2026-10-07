@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { MessageCircle, Phone, X } from "lucide-react";
+import { PHONE_COMPACT, PHONE_E164 } from "@/config/site";
 
-const PHONE = "918328998031";
+const PHONE = PHONE_E164.replace("+", "");
 const WHATSAPP_URL = `https://wa.me/${PHONE}?text=${encodeURIComponent("Hi LoadSaathi, I need help with freight booking.")}`;
-const TEL_URL = `tel:+918328998031`;
+const TEL_URL = `tel:${PHONE_E164}`;
 
 export default function FloatingCTA() {
   const [visible, setVisible] = useState(false);
@@ -66,7 +67,7 @@ export default function FloatingCTA() {
             </div>
             <div className="text-left">
               <p className="text-sm font-bold text-gray-900 dark:text-white">Call Now</p>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400">+91 83289 98031</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400">{PHONE_COMPACT}</p>
             </div>
           </a>
         </div>

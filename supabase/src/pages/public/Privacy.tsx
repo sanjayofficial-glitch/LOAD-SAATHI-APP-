@@ -136,7 +136,7 @@ const Privacy = () => {
     <>
     <noscript>
       <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-        <h1>Privacy Policy</h1>
+        <h2>Privacy Policy</h2>
         <p>Last updated: September 18, 2026</p>
         <p>
           At LoadSaathi, we take your privacy seriously. This Privacy Policy explains how we collect, use,

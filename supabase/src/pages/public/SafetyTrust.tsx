@@ -122,7 +122,7 @@ const SafetyTrust = () => {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>Safety &amp; Trust — LoadSaathi Verified Freight Network</h1>
+          <h2>Safety &amp; Trust — LoadSaathi Verified Freight Network</h2>
           <p>LoadSaathi ensures safe, verified, and trusted freight operations through KYC verification, freight credit scoring, secure payments, real-time tracking, and AI fraud detection.</p>
           <h2>Multi-Layered Verification System</h2>
           <h3>For Transporters</h3>

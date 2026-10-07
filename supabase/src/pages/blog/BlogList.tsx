@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Calendar, Clock, ArrowRight, Tag, User } from "lucide-react";
 import SeoMeta from "@/components/SeoMeta";
 import { getBlogListItems } from "@/data/blog";
+import { clampMetaDescription } from "@/config/site";
 
 const articles = getBlogListItems();
 
@@ -31,7 +32,7 @@ const collectionPageSchema = {
           position: i + 1,
           url: `https://loadsaathi.in/blog/${a.slug}`,
           name: a.title,
-          description: a.excerpt.substring(0, 160),
+          description: clampMetaDescription(a.excerpt),
         })),
       },
     },
@@ -135,7 +136,7 @@ export default function BlogList() {
     </div>
     <noscript>
       <div style={{maxWidth:'800px',margin:'0 auto',padding:'24px',fontFamily:'system-ui,sans-serif'}}>
-        <h1>LoadSaathi Blog — Freight &amp; Logistics Insights</h1>
+        <h2>LoadSaathi Blog — Freight &amp; Logistics Insights</h2>
         <p>Insights, guides, and stories from India's intelligent freight network.</p>
         <ul>
           {articles.map((a) => (

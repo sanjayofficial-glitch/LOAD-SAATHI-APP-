@@ -80,6 +80,7 @@ const STATIC = [
   ["/data", "monthly", "0.8"],
   ["/blog", "weekly", "0.9"],
   ["/routes", "weekly", "0.9"],
+  ["/sitemap", "monthly", "0.5"],
   ["/hi", "monthly", "0.8"],
   ["/hi/ptl-transport", "monthly", "0.8"],
   ["/hi/return-load", "monthly", "0.8"],
@@ -97,16 +98,16 @@ const BLOG_SLUGS = extractSlugs(
   /^\s+"([a-z0-9-]+)":\s*\{/gm
 );
 const GUIDE_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/pages/public/guides/GuidePage.tsx"),
+  path.join(ROOT, "supabase/src/data/guides.ts"),
   /^\s+"([a-z0-9-]+)":\s*\{/gm
 );
 const LOCATION_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/pages/public/locations/LocationPage.tsx"),
+  path.join(ROOT, "supabase/src/data/locations.ts"),
   /^\s+([a-z]+):\s*\{$/gm
 ).filter((s) => s !== "vizag" && s !== "serviceBlurbs" && s !== "about" && s !== "contactPoint" && s !== "speakable");
 if (!LOCATION_SLUGS.includes("visakhapatnam")) LOCATION_SLUGS.push("visakhapatnam");
 const TRANSPORT_SERVICE_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/pages/public/transport/TransportServicePage.tsx"),
+  path.join(ROOT, "supabase/src/data/transportServices.ts"),
   /^  ([a-z-]+): \{$/gm
 ).filter((s) => !["serviceBlurbs", "about", "contactPoint"].includes(s));
 

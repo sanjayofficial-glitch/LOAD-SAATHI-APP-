@@ -90,7 +90,7 @@ export default function ShipperSolution() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>LoadSaathi for Shippers — AI-Powered Transport Solutions</h1>
+          <h2>LoadSaathi for Shippers — AI-Powered Transport Solutions</h2>
           <p>Ship with confidence using LoadSaathi's AI-powered platform. Instant quotes, verified transporters, real-time tracking, and AI-powered analytics — all in one place.</p>
           <h2>Why Shippers Choose LoadSaathi</h2>
           <ul>

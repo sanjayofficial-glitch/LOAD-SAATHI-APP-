@@ -206,7 +206,7 @@ export default function Gallery() {
       </Dialog>
       <noscript>
         <div style={{maxWidth:960, margin:'0 auto', padding:24}}>
-          <h1>LoadSaathi — Our Story in Pictures</h1>
+          <h2>LoadSaathi — Our Story in Pictures</h2>
           <p>See LoadSaathi in action — our fleet, offices, corridors, and the team behind India's smart freight marketplace.</p>
           <h2>Gallery Categories</h2>
           <ul>

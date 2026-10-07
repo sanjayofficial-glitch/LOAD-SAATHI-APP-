@@ -83,7 +83,7 @@ export default function TollFuelCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Toll + Fuel Cost Calculator — LoadSaathi</h1>
+          <h2>Toll + Fuel Cost Calculator — LoadSaathi</h2>
           <p>Calculate toll and fuel costs for your truck route. Enter origin, destination, and vehicle type to get a detailed cost breakdown.</p>
         </div>
       </noscript>

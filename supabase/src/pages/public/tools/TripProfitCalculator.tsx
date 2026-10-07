@@ -120,7 +120,7 @@ export default function TripProfitCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Trip Profit Calculator for Truckers — LoadSaathi</h1>
+          <h2>Trip Profit Calculator for Truckers — LoadSaathi</h2>
           <p>Calculate net profit for a truck trip by entering origin, destination, vehicle type, and load weight. See fuel costs, tolls, driver wages, and maintenance breakdown.</p>
         </div>
       </noscript>

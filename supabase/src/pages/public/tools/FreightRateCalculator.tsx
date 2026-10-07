@@ -182,7 +182,7 @@ export default function FreightRateCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Freight Rate Calculator India — LoadSaathi</h1>
+          <h2>Freight Rate Calculator India — LoadSaathi</h2>
           <p>Estimate truck freight rates across India. Enter origin, destination, weight, truck type, and shipment type to get distance, cost per km, and estimated freight range.</p>
         </div>
       </noscript>

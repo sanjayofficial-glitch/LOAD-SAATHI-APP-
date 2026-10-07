@@ -42,7 +42,7 @@ export default function HiPtlTransport() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1.5rem", fontFamily: "system-ui, sans-serif" }}>
-          <h1>PTL ट्रांसपोर्ट भारत — पार्ट ट्रक लोड बुकिंग</h1>
+          <h2>PTL ट्रांसपोर्ट भारत — पार्ट ट्रक लोड बुकिंग</h2>
           <p>PTL (पार्ट ट्रक लोड) में आपका माल दूसरे शिपर्स के माल के साथ एक ही ट्रक में जाता है। 0.5–3 टन के शिपमेंट पर FTL से 30–40% सस्ता। LoadSaathi पर AI-मैच्ड ट्रक, लाइव GPS ट्रैकिंग के साथ।</p>
         </div>
       </noscript>

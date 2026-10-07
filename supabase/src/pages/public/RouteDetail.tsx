@@ -263,7 +263,7 @@ export default function RouteDetail() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>{route.from} to {route.to} Freight Route — LoadSaathi</h1>
+          <h2>{route.from} to {route.to} Freight Route — LoadSaathi</h2>
           <p>{route.description}</p>
           <ul>
             <li><strong>Distance:</strong> {route.distanceKm} km</li>

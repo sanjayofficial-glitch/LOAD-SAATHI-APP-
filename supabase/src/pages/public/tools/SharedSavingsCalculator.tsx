@@ -104,7 +104,7 @@ export default function SharedSavingsCalculator() {
     <>
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
-          <h1>Shared Freight Savings Calculator — LoadSaathi</h1>
+          <h2>Shared Freight Savings Calculator — LoadSaathi</h2>
           <p>Calculate how much you save by choosing shared freight (PTL) instead of dedicated trucks (FTL). Compare costs, CO2 emissions, and truck utilisation.</p>
         </div>
       </noscript>

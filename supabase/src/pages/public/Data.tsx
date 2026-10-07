@@ -49,7 +49,7 @@ export default function Data() {
     <>
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
-          <h1>LoadSaathi Freight Intelligence — East India Market Data</h1>
+          <h2>LoadSaathi Freight Intelligence — East India Market Data</h2>
           <p>Key freight market insights for East India: PTL rates, empty kilometre trends, truck utilization, and corridor-specific data from LoadSaathi's marketplace.</p>
           <h2>Freight Rate Insights</h2>
           <ul>
