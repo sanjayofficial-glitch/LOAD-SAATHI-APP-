@@ -26,6 +26,7 @@ export const EVENTS = {
   ESTIMATE_GENERATED: "estimate_generated",
   ROUTE_VIEW: "route_view",
   QUOTE_REQUESTED: "quote_requested",
+  TOOL_COMPLETED: "tool_completed",
   WHATSAPP_CLICKED: "whatsapp_clicked",
   REGISTER_STARTED: "register_started",
   ARTICLE_VIEW: "article_view",
@@ -130,4 +131,12 @@ export function trackArticleView(props: {
   category?: string;
 }) {
   trackEvent(EVENTS.ARTICLE_VIEW, props);
+}
+
+/**
+ * Fired when a public tool produces a result (a "tool completion").
+ * Used to measure tool completions rather than raw page visits.
+ */
+export function trackToolCompleted(props: { tool: string; [key: string]: unknown }) {
+  trackEvent(EVENTS.TOOL_COMPLETED, props);
 }

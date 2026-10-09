@@ -18,15 +18,26 @@ interface TollFuelResult {
   tollCost: number;
   totalCost: number;
   perKmCost: number;
+  fuelLiters: number;
+  dieselPriceUsed: number;
+  mileageUsed: number;
 }
 
-const DIESEL_RATE = 95;
-const TRUCK_MPG = 4;
+// Assumed defaults — NOT live fuel prices. The default rate is a planning
+// assumption with an explicit "set" date shown in the UI, and users can
+// overwrite it with their local pump price.
+const DEFAULT_DIESEL_RATE = 95;
+const DEFAULT_DIESEL_RATE_AS_OF = "October 2026";
+const DEFAULT_MILEAGE_KM_PER_L = 4;
+const SCENARIO_PERCENTS = [-10, -5, 5, 10, 15];
 
 export default function TollFuelCalculator() {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [vehicleType, setVehicleType] = useState("");
+  const [dieselPrice, setDieselPrice] = useState(String(DEFAULT_DIESEL_RATE));
+  const [mileage, setMileage] = useState(String(DEFAULT_MILEAGE_KM_PER_L));
+  const [scenarioPct, setScenarioPct] = useState(5);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TollFuelResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -51,8 +62,10 @@ export default function TollFuelCalculator() {
       if (!route) throw new Error("Could not calculate route.");
 
       const distanceKm = route.distance_km;
-      const fuelLiters = distanceKm / TRUCK_MPG;
-      const fuelCost = Math.round(fuelLiters * DIESEL_RATE);
+      const priceUsed = Number(dieselPrice) > 0 ? Number(dieselPrice) : DEFAULT_DIESEL_RATE;
+      const mileageUsed = Number(mileage) > 0 ? Number(mileage) : DEFAULT_MILEAGE_KM_PER_L;
+      const fuelLiters = distanceKm / mileageUsed;
+      const fuelCost = Math.round(fuelLiters * priceUsed);
 
       const highway = "NH-33";
       const tollCost = lookupToll(highway, origin.trim(), destination.trim(), vehicleType || "heavy");
@@ -60,7 +73,7 @@ export default function TollFuelCalculator() {
       const totalCost = fuelCost + tollCost;
       const perKmCost = Math.round((totalCost / distanceKm) * 100) / 100;
 
-      setResult({ distanceKm, fuelCost, tollCost, totalCost, perKmCost });
+      setResult({ distanceKm, fuelCost, tollCost, totalCost, perKmCost, fuelLiters, dieselPriceUsed: priceUsed, mileageUsed });
 
       trackEstimateGenerated({
         origin: origin.trim(),
@@ -77,7 +90,7 @@ export default function TollFuelCalculator() {
     } finally {
       setLoading(false);
     }
-  }, [origin, destination, vehicleType]);
+  }, [origin, destination, vehicleType, dieselPrice, mileage]);
 
   return (
     <>
@@ -89,8 +102,8 @@ export default function TollFuelCalculator() {
       </noscript>
       <SeoMeta
         title="Toll + Fuel Cost Calculator India | Truck Operating Cost Breakdown"
-        description="Calculate toll and fuel costs for your truck route in India. Get detailed cost breakdown per kilometre for trip planning."
-        keywords="toll cost calculator India, fuel cost calculator truck, truck operating costs, per km cost calculator, diesel cost calculator"
+        description="Calculate toll and fuel costs for truck routes in India with your own diesel price and mileage assumptions, plus a fuel price scenario comparison. Get detailed cost breakdown per kilometre for trip planning."
+        keywords="toll cost calculator India, fuel cost calculator truck, truck operating costs, per km cost calculator, diesel cost calculator, fuel price scenario calculator"
         canonical="/tools/toll-fuel"
         breadcrumbs={[{ name: "Toll + Fuel", url: "/tools/toll-fuel" }]}
         jsonLd={[
@@ -155,6 +168,23 @@ export default function TollFuelCalculator() {
                 </Select>
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-semibold text-muted-foreground">Diesel Price (₹/litre)</Label>
+                  <Input type="number" min="0" step="0.01" value={dieselPrice} onChange={(e) => setDieselPrice(e.target.value)} className="mt-1" />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Defaults to an assumed ₹{DEFAULT_DIESEL_RATE}/L (set {DEFAULT_DIESEL_RATE_AS_OF}) — enter your local pump price.
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-muted-foreground">Mileage (km/litre)</Label>
+                  <Input type="number" min="0" step="0.1" value={mileage} onChange={(e) => setMileage(e.target.value)} className="mt-1" />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Defaults to an assumed {DEFAULT_MILEAGE_KM_PER_L} km/L for a loaded truck.
+                  </p>
+                </div>
+              </div>
+
               <Button onClick={calculate} disabled={loading || !origin.trim() || !destination.trim()} className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold">
                 {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Calculating...</> : <><TrendingUp className="h-4 w-4 mr-2" /> Calculate Costs</>}
               </Button>
@@ -191,15 +221,63 @@ export default function TollFuelCalculator() {
                   <p className="text-xs text-muted-foreground">for {result.distanceKm} km route</p>
                 </div>
 
+                <div className="p-4 rounded-xl bg-background/50 border border-border space-y-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <p className="text-sm font-bold text-foreground">Fuel price scenario</p>
+                    <div className="flex gap-1.5">
+                      {SCENARIO_PERCENTS.map((pct) => (
+                        <button
+                          key={pct}
+                          type="button"
+                          onClick={() => setScenarioPct(pct)}
+                          className={`px-2 py-1 text-xs font-bold rounded-md border transition-colors ${
+                            scenarioPct === pct
+                              ? "bg-orange-600 border-orange-500 text-white"
+                              : "bg-background border-border text-muted-foreground hover:border-orange-500/50"
+                          }`}
+                        >
+                          {pct > 0 ? `+${pct}` : pct}%
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {(() => {
+                    const scenarioFuel = Math.round(result.fuelLiters * result.dieselPriceUsed * (1 + scenarioPct / 100));
+                    const delta = scenarioFuel - result.fuelCost;
+                    return (
+                      <div className="grid grid-cols-3 gap-3 text-center">
+                        <div className="p-3 rounded-lg bg-background/60 border border-border">
+                          <p className="text-lg font-black text-foreground">₹{result.fuelCost.toLocaleString()}</p>
+                          <p className="text-xs text-muted-foreground">baseline fuel</p>
+                        </div>
+                        <div className="p-3 rounded-lg bg-background/60 border border-border">
+                          <p className="text-lg font-black text-orange-400">₹{scenarioFuel.toLocaleString()}</p>
+                          <p className="text-xs text-muted-foreground">at {scenarioPct > 0 ? "+" : ""}{scenarioPct}%</p>
+                        </div>
+                        <div className="p-3 rounded-lg bg-background/60 border border-border">
+                          <p className={`text-lg font-black ${delta > 0 ? "text-red-400" : delta < 0 ? "text-green-400" : "text-foreground"}`}>
+                            {delta > 0 ? "+" : ""}₹{delta.toLocaleString()}
+                          </p>
+                          <p className="text-xs text-muted-foreground">change</p>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  <p className="text-xs text-muted-foreground">
+                    Scenario comparison only — a what-if on your entered assumptions, not a verified current or future fuel price.
+                  </p>
+                </div>
+
                 <p className="text-xs text-muted-foreground">
-                  Estimates based on diesel rate ₹{DIESEL_RATE}/L and ~{TRUCK_MPG} km/L. Actual tolls may vary.
+                  Estimate based on your inputs: diesel ₹{result.dieselPriceUsed}/L, mileage {result.mileageUsed} km/L over {result.distanceKm} km.
+                  Default assumptions (₹{DEFAULT_DIESEL_RATE}/L, {DEFAULT_MILEAGE_KM_PER_L} km/L) were set {DEFAULT_DIESEL_RATE_AS_OF} and are not live prices. Actual tolls may vary.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <Link to="/register?type=trucker" className="flex-1">
                     <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold">Book This Route</Button>
                   </Link>
-                  <Link to="/trip-profit" className="flex-1">
+                  <Link to="/tools/trip-profit" className="flex-1">
                     <Button variant="outline" className="w-full font-bold">Trip Profit Calculator</Button>
                   </Link>
                 </div>

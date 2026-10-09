@@ -159,10 +159,9 @@ const ROUTE_DATA = {
     toState: "Odisha",
     distanceKm: 210,
     transitTime: "4",
+    dataStatus: "needs_review",
     description: "Fast PTL and LTL freight from Balasore to Bhubaneswar within Odisha. LoadSaathi helps you find trucks quickly on this busy NH-16 corridor with AI matching and live GPS tracking.",
-    metaDescription: "Book PTL/LTL freight from Balasore to Bhubaneswar. Intra-Odisha shipping with LoadSaathi — AI truck matching, GPS tracking, and competitive pricing.",
-    keywords: "PTL freight Balasore to Bhubaneswar, LTL transport Balasore Bhubaneswar, Odisha freight, truck booking Balasore, NH-16 logistics Odisha",
-    seoTitle: "PTL Freight Balasore to Bhubaneswar | LoadSaathi",
+    keywords: "part load Balasore to Bhubaneswar, PTL freight Balasore to Bhubaneswar, LTL transport Balasore Bhubaneswar, Odisha freight, truck booking Balasore, NH-16 logistics Odisha",
   },
   "berhampur-to-bhubaneswar": {
     from: "Berhampur",
@@ -171,10 +170,31 @@ const ROUTE_DATA = {
     toState: "Odisha",
     distanceKm: 180,
     transitTime: "4",
+    dataStatus: "needs_review",
     description: "Reliable PTL and LTL freight from Berhampur (Brahmapur) to Bhubaneswar. Connect southern Odisha to the capital with LoadSaathi's AI-optimized truck matching.",
-    metaDescription: "Book PTL/LTL freight from Berhampur to Bhubaneswar. Southern Odisha to capital shipping with LoadSaathi — AI matching, GPS tracking, fair pricing.",
-    keywords: "PTL freight Berhampur to Bhubaneswar, LTL transport Brahmapur Bhubaneswar, Odisha freight, truck booking Berhampur, southern Odisha logistics",
-    seoTitle: "PTL Freight Berhampur to Bhubaneswar | LoadSaathi",
+    keywords: "part load Berhampur to Bhubaneswar, PTL freight Berhampur to Bhubaneswar, LTL transport Brahmapur Bhubaneswar, Odisha freight, truck booking Berhampur, southern Odisha logistics",
+  },
+  "bhubaneswar-to-balasore": {
+    from: "Bhubaneswar",
+    to: "Balasore",
+    fromState: "Odisha",
+    toState: "Odisha",
+    distanceKm: 210,
+    transitTime: "4",
+    dataStatus: "needs_review",
+    description: "Fast part load, PTL and LTL freight from Bhubaneswar to Balasore within Odisha on the NH-16 corridor. Quick, affordable shipping north along the coast with LoadSaathi.",
+    keywords: "part load Bhubaneswar to Balasore, PTL freight Bhubaneswar to Balasore, LTL transport Bhubaneswar Balasore, truck booking Balasore, Odisha freight, NH-16 logistics Odisha",
+  },
+  "bhubaneswar-to-berhampur": {
+    from: "Bhubaneswar",
+    to: "Berhampur",
+    fromState: "Odisha",
+    toState: "Odisha",
+    distanceKm: 180,
+    transitTime: "4",
+    dataStatus: "needs_review",
+    description: "Reliable part load, PTL and LTL freight from Bhubaneswar to Berhampur (Brahmapur) — connecting the capital with southern Odisha. AI-matched trucks and transparent rates on LoadSaathi.",
+    keywords: "part load Bhubaneswar to Berhampur, PTL freight Bhubaneswar to Berhampur, Bhubaneswar to Brahmapur part load, LTL transport Bhubaneswar Berhampur, truck booking Berhampur, southern Odisha logistics",
   },
   "bhubaneswar-to-burdwan": {
     from: "Bhubaneswar",
@@ -183,10 +203,31 @@ const ROUTE_DATA = {
     toState: "West Bengal",
     distanceKm: 420,
     transitTime: "8",
-    description: "Cost-effective PTL and LTL freight from Bhubaneswar to Burdwan. LoadSaathi's AI matches your shipment with the most suitable trucks on this cross-state Odisha–Bengal route.",
-    metaDescription: "Book PTL/LTL freight from Bhubaneswar to Burdwan. Cross-state Odisha–West Bengal shipping with LoadSaathi — AI matching, GPS tracking, fair rates.",
-    keywords: "PTL freight Bhubaneswar to Burdwan, LTL transport Bhubaneswar Burdwan, Odisha West Bengal freight, truck booking Burdwan, Bhubaneswar PTL",
-    seoTitle: "PTL Freight Bhubaneswar to Burdwan | LoadSaathi",
+    dataStatus: "needs_review",
+    description: "Cost-effective PTL and LTL freight from Bhubaneswar to Burdwan (Bardhaman). LoadSaathi's AI matches your shipment with the most suitable trucks on this cross-state Odisha–Bengal route.",
+    keywords: "part load Bhubaneswar to Burdwan, PTL freight Bhubaneswar to Burdwan, Bhubaneswar to Bardhaman part load, LTL transport Bhubaneswar Burdwan, Odisha West Bengal freight, truck booking Burdwan",
+  },
+  "bhubaneswar-to-cuttack": {
+    from: "Bhubaneswar",
+    to: "Cuttack",
+    fromState: "Odisha",
+    toState: "Odisha",
+    distanceKm: 30,
+    transitTime: "1",
+    dataStatus: "needs_review",
+    description: "Quick part load, PTL and LTL freight from Bhubaneswar to Cuttack — Odisha's twin cities corridor. LoadSaathi's local trucker network ensures fast, affordable intrastate shipping.",
+    keywords: "part load Bhubaneswar to Cuttack, PTL freight Bhubaneswar to Cuttack, LTL transport Bhubaneswar Cuttack, Odisha intrastate freight, truck booking Cuttack",
+  },
+  "bhubaneswar-to-jamshedpur": {
+    from: "Bhubaneswar",
+    to: "Jamshedpur",
+    fromState: "Odisha",
+    toState: "Jharkhand",
+    distanceKm: 347,
+    transitTime: "7",
+    dataStatus: "corrected",
+    description: "Book part load, PTL and LTL freight from Bhubaneswar to Jamshedpur on the NH-16 / NH-220 corridor. Move goods from Odisha's capital to Jharkhand's steel city with AI-matched trucks and live GPS tracking.",
+    keywords: "part load Bhubaneswar to Jamshedpur, PTL freight Bhubaneswar to Jamshedpur, LTL transport Bhubaneswar Jamshedpur, truck booking Jamshedpur, Odisha Jharkhand freight, steel city transport",
   },
   "bhubaneswar-to-kolkata": {
     from: "Bhubaneswar",
@@ -195,22 +236,97 @@ const ROUTE_DATA = {
     toState: "West Bengal",
     distanceKm: 440,
     transitTime: "8",
-    description: "Major PTL and LTL freight corridor connecting the capital of Odisha with the commercial capital of East India. LoadSaathi offers the best rates and reliable trucking on this busy route.",
-    metaDescription: "Book PTL/LTL freight from Bhubaneswar to Kolkata. Odisha–West Bengal shipping with AI-matched trucks, live GPS tracking and competitive pricing.",
-    keywords: "PTL freight Bhubaneswar to Kolkata, LTL transport Bhubaneswar Kolkata, Odisha West Bengal freight, truck booking Kolkata, Bhubaneswar logistics",
-    seoTitle: "PTL Freight Bhubaneswar to Kolkata | LoadSaathi",
+    dataStatus: "verified",
+    description: "Major PTL and LTL freight corridor connecting the capital of Odisha with the commercial capital of East India. LoadSaathi offers competitive rates and reliable trucking on this busy route.",
+    keywords: "part load Bhubaneswar to Kolkata, PTL freight Bhubaneswar to Kolkata, LTL transport Bhubaneswar Kolkata, Odisha West Bengal freight, truck booking Kolkata, Bhubaneswar logistics",
+  },
+  "bhubaneswar-to-ranchi": {
+    from: "Bhubaneswar",
+    to: "Ranchi",
+    fromState: "Odisha",
+    toState: "Jharkhand",
+    distanceKm: 470,
+    transitTime: "9.8",
+    dataStatus: "corrected",
+    description: "Book part load, PTL and LTL freight from Bhubaneswar to Ranchi via the NH-20 corridor. LoadSaathi matches your shipment with trucks returning to Jharkhand's capital at transparent, GPS-tracked rates.",
+    keywords: "part load Bhubaneswar to Ranchi, PTL freight Bhubaneswar to Ranchi, LTL transport Bhubaneswar Ranchi, truck booking Ranchi, Odisha Jharkhand freight, NH-20 freight corridor",
+  },
+  "bhubaneswar-to-rourkela": {
+    from: "Bhubaneswar",
+    to: "Rourkela",
+    fromState: "Odisha",
+    toState: "Odisha",
+    distanceKm: 340,
+    transitTime: "7",
+    dataStatus: "needs_review",
+    description: "Book part load, PTL and LTL freight from Bhubaneswar to Rourkela — the return leg into Odisha's steel capital. LoadSaathi's AI matching finds trucks heading west across the state with transparent pricing and live GPS tracking.",
+    keywords: "part load Bhubaneswar to Rourkela, PTL freight Bhubaneswar to Rourkela, LTL transport Bhubaneswar Rourkela, truck booking Rourkela, Odisha freight, return load Bhubaneswar Rourkela",
+  },
+  "bhubaneswar-to-sambalpur": {
+    from: "Bhubaneswar",
+    to: "Sambalpur",
+    fromState: "Odisha",
+    toState: "Odisha",
+    distanceKm: 350,
+    transitTime: "7",
+    dataStatus: "needs_review",
+    description: "Book part load, PTL and LTL freight from Bhubaneswar to Sambalpur — from the state capital into western Odisha's industrial belt. AI-matched trucks and fair pricing on LoadSaathi.",
+    keywords: "part load Bhubaneswar to Sambalpur, PTL freight Bhubaneswar to Sambalpur, LTL transport Bhubaneswar Sambalpur, truck booking Sambalpur, Odisha freight, intra-Odisha logistics",
   },
   "bhubaneswar-to-vizag": {
     from: "Bhubaneswar",
     to: "Visakhapatnam",
     fromState: "Odisha",
     toState: "Andhra Pradesh",
-    distanceKm: 450,
+    distanceKm: 445,
+    transitTime: "7",
+    dataStatus: "corrected",
+    description: "Coastal corridor PTL and LTL freight from Bhubaneswar to Visakhapatnam (Vizag). LoadSaathi's AI platform streamlines cross-state shipping along the East Coast with real-time tracking and fair pricing.",
+    keywords: "part load Bhubaneswar to Visakhapatnam, PTL freight Bhubaneswar to Visakhapatnam, LTL transport Bhubaneswar Vizag, Odisha Andhra Pradesh freight, truck booking Vizag, coastal corridor logistics",
+  },
+  "burdwan-to-bhubaneswar": {
+    from: "Burdwan",
+    to: "Bhubaneswar",
+    fromState: "West Bengal",
+    toState: "Odisha",
+    distanceKm: 420,
     transitTime: "8",
-    description: "Coastal corridor PTL and LTL freight from Bhubaneswar to Visakhapatnam. LoadSaathi's AI platform streamlines cross-state shipping along the East Coast with real-time tracking and fair pricing.",
-    metaDescription: "Book PTL/LTL freight from Bhubaneswar to Visakhapatnam. Coastal corridor shipping with AI matching, GPS tracking and transparent Odisha–AP rates.",
-    keywords: "PTL freight Bhubaneswar to Visakhapatnam, LTL transport Bhubaneswar Vizag, Odisha Andhra Pradesh freight, truck booking Vizag, coastal corridor logistics",
-    seoTitle: "PTL Freight Bhubaneswar to Visakhapatnam | LoadSaathi",
+    dataStatus: "needs_review",
+    description: "Book part load, PTL and LTL freight from Burdwan (Bardhaman) to Bhubaneswar across West Bengal and Odisha. AI-matched trucks, transparent pricing and live tracking on LoadSaathi.",
+    keywords: "part load Burdwan to Bhubaneswar, PTL freight Burdwan to Bhubaneswar, Bardhaman to Bhubaneswar part load, LTL transport Burdwan Bhubaneswar, West Bengal Odisha freight, truck booking Bhubaneswar",
+  },
+  "burdwan-to-jamshedpur": {
+    from: "Burdwan",
+    to: "Jamshedpur",
+    fromState: "West Bengal",
+    toState: "Jharkhand",
+    distanceKm: 200,
+    transitTime: "4",
+    dataStatus: "needs_review",
+    description: "Ship part load, PTL and LTL freight from Burdwan (Bardhaman) to Jamshedpur across the Bengal–Jharkhand border. Competitive rates and live GPS tracking with LoadSaathi.",
+    keywords: "part load Burdwan to Jamshedpur, PTL freight Burdwan to Jamshedpur, Bardhaman to Jamshedpur part load, LTL transport Burdwan Jamshedpur, West Bengal Jharkhand freight, truck booking Jamshedpur",
+  },
+  "burdwan-to-kolkata": {
+    from: "Burdwan",
+    to: "Kolkata",
+    fromState: "West Bengal",
+    toState: "West Bengal",
+    distanceKm: 110,
+    transitTime: "2.5",
+    dataStatus: "needs_review",
+    description: "Quick part load, PTL and LTL freight from Burdwan (Bardhaman) to Kolkata within West Bengal. Fast, affordable intrastate shipping with LoadSaathi's local trucker network.",
+    keywords: "part load Burdwan to Kolkata, PTL freight Burdwan to Kolkata, Bardhaman to Kolkata part load, LTL transport Burdwan Kolkata, West Bengal freight, truck booking Kolkata",
+  },
+  "burdwan-to-rourkela": {
+    from: "Burdwan",
+    to: "Rourkela",
+    fromState: "West Bengal",
+    toState: "Odisha",
+    distanceKm: 320,
+    transitTime: "7",
+    dataStatus: "needs_review",
+    description: "Book part load, PTL and LTL freight from Burdwan (Bardhaman) to Rourkela across West Bengal and Odisha. AI-matched trucks and transparent rates on LoadSaathi.",
+    keywords: "part load Burdwan to Rourkela, PTL freight Burdwan to Rourkela, Bardhaman to Rourkela part load, LTL transport Burdwan Rourkela, West Bengal Odisha freight, truck booking Rourkela",
   },
   "cuttack-to-bhubaneswar": {
     from: "Cuttack",
@@ -219,46 +335,53 @@ const ROUTE_DATA = {
     toState: "Odisha",
     distanceKm: 30,
     transitTime: "1",
+    dataStatus: "needs_review",
     description: "Quick PTL and LTL freight from Cuttack to Bhubaneswar — the twin cities of Odisha. LoadSaathi's local trucker network ensures fast, affordable intrastate shipping on this high-traffic corridor.",
-    metaDescription: "Book PTL/LTL freight from Cuttack to Bhubaneswar. Intrastate Odisha shipping on the twin-city corridor with LoadSaathi — AI matching and GPS tracking.",
-    keywords: "PTL freight Cuttack to Bhubaneswar, LTL transport Cuttack Bhubaneswar, Odisha intrastate freight, truck booking Cuttack Bhubaneswar",
-    seoTitle: "PTL Freight Cuttack to Bhubaneswar | LoadSaathi",
+    keywords: "part load Cuttack to Bhubaneswar, PTL freight Cuttack to Bhubaneswar, LTL transport Cuttack Bhubaneswar, Odisha intrastate freight, truck booking Cuttack Bhubaneswar",
   },
   "cuttack-to-rourkela": {
     from: "Cuttack",
     to: "Rourkela",
     fromState: "Odisha",
     toState: "Odisha",
-    distanceKm: 320,
-    transitTime: "7",
-    description: "PTL and LTL freight from Cuttack to Rourkela across Odisha. Connect the coastal trading hub with the steel city via LoadSaathi's AI-matched trucks and transparent pricing.",
-    metaDescription: "Book PTL/LTL freight from Cuttack to Rourkela. Odisha intrastate shipping with LoadSaathi — AI matching, GPS tracking, and competitive rates.",
-    keywords: "PTL freight Cuttack to Rourkela, LTL transport Cuttack Rourkela, Odisha freight, truck booking Cuttack Rourkela, coastal to western Odisha",
-    seoTitle: "PTL Freight Cuttack to Rourkela | LoadSaathi",
+    distanceKm: 300,
+    transitTime: "6.4",
+    dataStatus: "corrected",
+    description: "PTL and LTL freight from Cuttack to Rourkela within Odisha. Connect the coastal trading hub with the steel city via LoadSaathi's AI-matched trucks and transparent pricing.",
+    keywords: "part load Cuttack to Rourkela, PTL freight Cuttack to Rourkela, LTL transport Cuttack Rourkela, Odisha freight, truck booking Cuttack Rourkela, coastal to western Odisha",
   },
   "dhanbad-to-jamshedpur": {
     from: "Dhanbad",
     to: "Jamshedpur",
     fromState: "Jharkhand",
     toState: "Jharkhand",
-    distanceKm: 170,
-    transitTime: "3.5",
+    distanceKm: 145,
+    transitTime: "3.7",
+    dataStatus: "corrected",
     description: "Move freight between Jharkhand's coal hub and its steel city. LoadSaathi connects Dhanbad and Jamshedpur with AI-matched PTL and LTL trucks for efficient intra-state logistics.",
-    metaDescription: "Book PTL/LTL freight from Dhanbad to Jamshedpur. Intra-Jharkhand shipping with LoadSaathi — AI matching, GPS tracking, and competitive rates.",
-    keywords: "PTL freight Dhanbad to Jamshedpur, LTL transport Dhanbad Jamshedpur, Jharkhand freight, truck booking Dhanbad Jamshedpur, coal steel corridor logistics",
-    seoTitle: "PTL Freight Dhanbad to Jamshedpur | LoadSaathi",
+    keywords: "part load Dhanbad to Jamshedpur, PTL freight Dhanbad to Jamshedpur, LTL transport Dhanbad Jamshedpur, Jharkhand freight, truck booking Dhanbad Jamshedpur, coal steel corridor logistics",
+  },
+  "dhanbad-to-ranchi": {
+    from: "Dhanbad",
+    to: "Ranchi",
+    fromState: "Jharkhand",
+    toState: "Jharkhand",
+    distanceKm: 155,
+    transitTime: "4",
+    dataStatus: "corrected",
+    description: "Book part load, PTL and LTL freight from Dhanbad to Ranchi within Jharkhand. Move coal-country cargo to the state capital with AI-matched trucks, transparent rates and live GPS tracking.",
+    keywords: "part load Dhanbad to Ranchi, PTL freight Dhanbad to Ranchi, LTL transport Dhanbad Ranchi, truck booking Ranchi, Jharkhand freight, coal corridor logistics",
   },
   "jamshedpur-to-bhubaneswar": {
     from: "Jamshedpur",
     to: "Bhubaneswar",
     fromState: "Jharkhand",
     toState: "Odisha",
-    distanceKm: 340,
-    transitTime: "8-10",
-    description: "Get live 2026 freight rates for Jamshedpur to Bhubaneswar. Book verified PTL and FTL trucks, track your cargo via GPS, and save up to 30% on shared loads.",
-    metaDescription: "Get live 2026 freight rates for Jamshedpur to Bhubaneswar. Book verified PTL and FTL trucks, track your cargo via GPS, and save up to 30% on shared loads.",
-    keywords: "PTL freight Jamshedpur to Bhubaneswar, LTL transport Jamshedpur Bhubaneswar, Jharkhand Odisha freight, truck booking Bhubaneswar, Jamshedpur logistics, steel transport Bhubaneswar, Jamshedpur to Bhubaneswar truck rates 2026",
-    seoTitle: "PTL Freight Jamshedpur to Bhubaneswar | LoadSaathi",
+    distanceKm: 347,
+    transitTime: "7",
+    dataStatus: "corrected",
+    description: "Book part load, PTL and LTL freight from Jamshedpur to Bhubaneswar on the NH-220 / NH-16 corridor. LoadSaathi's AI matching connects Jharkhand's steel hub with Odisha's capital with transparent pricing and live GPS tracking.",
+    keywords: "part load Jamshedpur to Bhubaneswar, PTL freight Jamshedpur to Bhubaneswar, LTL transport Jamshedpur Bhubaneswar, Jharkhand Odisha freight, truck booking Bhubaneswar, steel transport Bhubaneswar",
   },
   "jamshedpur-to-burdwan": {
     from: "Jamshedpur",
@@ -267,10 +390,20 @@ const ROUTE_DATA = {
     toState: "West Bengal",
     distanceKm: 200,
     transitTime: "4",
-    description: "Cross-state PTL and LTL shipping from Jamshedpur to Burdwan. LoadSaathi makes it easy to ship across the Jharkhand–West Bengal border with AI matching and live tracking.",
-    metaDescription: "Book PTL freight from Jamshedpur to Burdwan. Cross-border Jharkhand–West Bengal shipping with LoadSaathi's AI truck matching and real-time GPS tracking.",
-    keywords: "PTL freight Jamshedpur to Burdwan, LTL transport Jamshedpur Burdwan, Jharkhand West Bengal freight, truck booking Burdwan, cross-state PTL shipping",
-    seoTitle: "PTL Freight Jamshedpur to Burdwan | LoadSaathi",
+    dataStatus: "needs_review",
+    description: "Cross-state PTL and LTL shipping from Jamshedpur to Burdwan (Bardhaman). LoadSaathi makes it easy to ship across the Jharkhand–West Bengal border with AI matching and live tracking.",
+    keywords: "part load Jamshedpur to Burdwan, PTL freight Jamshedpur to Burdwan, Jamshedpur to Bardhaman part load, LTL transport Jamshedpur Burdwan, Jharkhand West Bengal freight, truck booking Burdwan",
+  },
+  "jamshedpur-to-dhanbad": {
+    from: "Jamshedpur",
+    to: "Dhanbad",
+    fromState: "Jharkhand",
+    toState: "Jharkhand",
+    distanceKm: 145,
+    transitTime: "3.7",
+    dataStatus: "corrected",
+    description: "Ship part load, PTL and LTL freight from Jamshedpur to Dhanbad on the coal-to-steel corridor. LoadSaathi matches steel-city shipments with trucks heading to Jharkhand's coal hub.",
+    keywords: "part load Jamshedpur to Dhanbad, PTL freight Jamshedpur to Dhanbad, LTL transport Jamshedpur Dhanbad, truck booking Dhanbad, Jharkhand freight, coal steel corridor logistics",
   },
   "jamshedpur-to-kolkata": {
     from: "Jamshedpur",
@@ -279,10 +412,9 @@ const ROUTE_DATA = {
     toState: "West Bengal",
     distanceKm: 280,
     transitTime: "6",
+    dataStatus: "needs_review",
     description: "Ship PTL and LTL loads from Jamshedpur to Kolkata efficiently. This busy industrial-to-commercial corridor is a key route on LoadSaathi's AI-powered freight matching network.",
-    metaDescription: "Find PTL/LTL freight from Jamshedpur to Kolkata. Save on Jamshedpur–Kolkata shipping with LoadSaathi — AI matching, GPS tracking, transparent pricing.",
-    keywords: "PTL freight Jamshedpur to Kolkata, LTL transport Jamshedpur Kolkata, truck booking Kolkata, Jharkhand West Bengal logistics, Jamshedpur Kolkata freight",
-    seoTitle: "PTL Freight Jamshedpur to Kolkata | LoadSaathi",
+    keywords: "part load Jamshedpur to Kolkata, PTL freight Jamshedpur to Kolkata, LTL transport Jamshedpur Kolkata, truck booking Kolkata, Jharkhand West Bengal logistics, Jamshedpur Kolkata freight",
   },
   "jamshedpur-to-ranchi": {
     from: "Jamshedpur",
@@ -291,22 +423,42 @@ const ROUTE_DATA = {
     toState: "Jharkhand",
     distanceKm: 130,
     transitTime: "3",
+    dataStatus: "verified",
     description: "Efficient PTL and LTL freight from Jamshedpur to Ranchi. LoadSaathi helps you find the right truck at the right price with AI matching and transparent booking on this Jharkhand corridor.",
-    metaDescription: "Book PTL freight from Jamshedpur to Ranchi. Cost-effective intra-Jharkhand shipping with LoadSaathi's AI truck matching and live tracking.",
-    keywords: "PTL freight Jamshedpur to Ranchi, LTL transport Jamshedpur Ranchi, Jharkhand freight, truck booking Jamshedpur Ranchi, Jamshedpur logistics",
-    seoTitle: "PTL Freight Jamshedpur to Ranchi | LoadSaathi",
+    keywords: "part load Jamshedpur to Ranchi, PTL freight Jamshedpur to Ranchi, LTL transport Jamshedpur Ranchi, Jharkhand freight, truck booking Jamshedpur Ranchi, Jamshedpur logistics",
   },
   "jamshedpur-to-rourkela": {
     from: "Jamshedpur",
     to: "Rourkela",
     fromState: "Jharkhand",
     toState: "Odisha",
-    distanceKm: 220,
-    transitTime: "5",
+    distanceKm: 198,
+    transitTime: "4.5",
+    dataStatus: "corrected",
     description: "Find efficient PTL and LTL freight from Jamshedpur to Rourkela. Leverage LoadSaathi's returning trucks and AI matching for cost-effective shipping on this key industrial corridor.",
-    metaDescription: "Book cost-effective PTL freight from Jamshedpur to Rourkela, with AI-matched trucks, real-time tracking and fair pricing on the route.",
-    keywords: "PTL freight Jamshedpur to Rourkela, LTL transport Jamshedpur Rourkela, truck booking Jharkhand Odisha, Jamshedpur Rourkela load, freight transport Jamshedpur",
-    seoTitle: "PTL Freight Jamshedpur to Rourkela | LoadSaathi",
+    keywords: "part load Jamshedpur to Rourkela, PTL freight Jamshedpur to Rourkela, LTL transport Jamshedpur Rourkela, truck booking Jharkhand Odisha, Jamshedpur Rourkela load, return load Jamshedpur Rourkela",
+  },
+  "jharsuguda-to-sambalpur": {
+    from: "Jharsuguda",
+    to: "Sambalpur",
+    fromState: "Odisha",
+    toState: "Odisha",
+    distanceKm: 50,
+    transitTime: "1.5",
+    dataStatus: "corrected",
+    description: "Short-haul part load, PTL and LTL freight from Jharsuguda to Sambalpur in western Odisha. Quick, affordable trucking between these two industrial towns with LoadSaathi.",
+    keywords: "part load Jharsuguda to Sambalpur, PTL freight Jharsuguda to Sambalpur, LTL transport Jharsuguda Sambalpur, truck booking Sambalpur, Odisha freight, western Odisha logistics",
+  },
+  "kolkata-to-bhubaneswar": {
+    from: "Kolkata",
+    to: "Bhubaneswar",
+    fromState: "West Bengal",
+    toState: "Odisha",
+    distanceKm: 440,
+    transitTime: "8",
+    dataStatus: "verified",
+    description: "Book part load, PTL and LTL freight from Kolkata to Bhubaneswar — the return direction of East India's busiest commercial corridor. Competitive rates, AI-matched trucks and live GPS tracking on LoadSaathi.",
+    keywords: "part load Kolkata to Bhubaneswar, PTL freight Kolkata to Bhubaneswar, LTL transport Kolkata Bhubaneswar, truck booking Bhubaneswar, West Bengal Odisha freight, return load Kolkata Bhubaneswar",
   },
   "kolkata-to-burdwan": {
     from: "Kolkata",
@@ -315,34 +467,64 @@ const ROUTE_DATA = {
     toState: "West Bengal",
     distanceKm: 110,
     transitTime: "2.5",
-    description: "Quick PTL and LTL freight from Kolkata to Burdwan within West Bengal. LoadSaathi's network of local truckers ensures fast, affordable shipping on this busy intrastate route.",
-    metaDescription: "Book PTL/LTL freight from Kolkata to Burdwan. Intra-West Bengal shipping with LoadSaathi — AI matching, GPS tracking, best rates on the Kolkata–Burdwan route.",
-    keywords: "PTL freight Kolkata to Burdwan, LTL transport Kolkata Burdwan, West Bengal freight, truck booking Burdwan, intra-West Bengal logistics",
-    seoTitle: "PTL Freight Kolkata to Burdwan | LoadSaathi",
+    dataStatus: "needs_review",
+    description: "Quick PTL and LTL freight from Kolkata to Burdwan (Bardhaman) within West Bengal. LoadSaathi's network of local truckers ensures fast, affordable shipping on this busy intrastate route.",
+    keywords: "part load Kolkata to Burdwan, PTL freight Kolkata to Burdwan, Kolkata to Bardhaman part load, LTL transport Kolkata Burdwan, West Bengal freight, truck booking Burdwan",
+  },
+  "kolkata-to-jamshedpur": {
+    from: "Kolkata",
+    to: "Jamshedpur",
+    fromState: "West Bengal",
+    toState: "Jharkhand",
+    distanceKm: 280,
+    transitTime: "6",
+    dataStatus: "needs_review",
+    description: "Ship part load, PTL and LTL freight from Kolkata to Jamshedpur on this busy industrial corridor. LoadSaathi's AI matching and transparent pricing make commercial shipping into the steel city simple.",
+    keywords: "part load Kolkata to Jamshedpur, PTL freight Kolkata to Jamshedpur, LTL transport Kolkata Jamshedpur, truck booking Jamshedpur, West Bengal Jharkhand freight, industrial corridor transport",
+  },
+  "kolkata-to-ranchi": {
+    from: "Kolkata",
+    to: "Ranchi",
+    fromState: "West Bengal",
+    toState: "Jharkhand",
+    distanceKm: 420,
+    transitTime: "8",
+    dataStatus: "needs_review",
+    description: "Find part load, PTL and LTL freight from Kolkata to Ranchi across West Bengal and Jharkhand. LoadSaathi's returning-truck network keeps this high-value commercial corridor affordable and fully tracked.",
+    keywords: "part load Kolkata to Ranchi, PTL freight Kolkata to Ranchi, LTL transport Kolkata Ranchi, truck booking Ranchi, West Bengal Jharkhand freight, return load Kolkata Ranchi",
+  },
+  "kolkata-to-rourkela": {
+    from: "Kolkata",
+    to: "Rourkela",
+    fromState: "West Bengal",
+    toState: "Odisha",
+    distanceKm: 420,
+    transitTime: "8.8",
+    dataStatus: "corrected",
+    description: "Ship part load, PTL and LTL freight from Kolkata to Rourkela across West Bengal and Odisha. Returning trucks from Kolkata make this direction competitive — compare transparent rates and book on LoadSaathi.",
+    keywords: "part load Kolkata to Rourkela, PTL freight Kolkata to Rourkela, LTL transport Kolkata Rourkela, truck booking Rourkela, West Bengal Odisha freight, return load Kolkata Rourkela",
   },
   "ranchi-to-bhubaneswar": {
     from: "Ranchi",
     to: "Bhubaneswar",
     fromState: "Jharkhand",
     toState: "Odisha",
-    distanceKm: 450,
-    transitTime: "10",
+    distanceKm: 470,
+    transitTime: "9.8",
+    dataStatus: "corrected",
     description: "Cross-state PTL and LTL freight from Ranchi to Bhubaneswar via the NH-20 corridor. LoadSaathi's AI platform matches your shipment with the best trucks for this inter-state route.",
-    metaDescription: "Book PTL/LTL freight from Ranchi to Bhubaneswar. Cross-state shipping across Jharkhand–Odisha with LoadSaathi — AI matching, GPS tracking, fair pricing.",
-    keywords: "PTL freight Ranchi to Bhubaneswar, LTL transport Ranchi Bhubaneswar, Jharkhand Odisha freight, truck booking Bhubaneswar, NH-20 freight corridor",
-    seoTitle: "PTL Freight Ranchi to Bhubaneswar | LoadSaathi",
+    keywords: "part load Ranchi to Bhubaneswar, PTL freight Ranchi to Bhubaneswar, LTL transport Ranchi Bhubaneswar, Jharkhand Odisha freight, truck booking Bhubaneswar, NH-20 freight corridor",
   },
   "ranchi-to-dhanbad": {
     from: "Ranchi",
     to: "Dhanbad",
     fromState: "Jharkhand",
     toState: "Jharkhand",
-    distanceKm: 280,
-    transitTime: "6",
+    distanceKm: 155,
+    transitTime: "4",
+    dataStatus: "corrected",
     description: "Efficient PTL and LTL freight from Ranchi to Dhanbad within Jharkhand. LoadSaathi connects Jharkhand's capital with its coal mining hub for seamless intra-state logistics.",
-    metaDescription: "Book PTL/LTL freight from Ranchi to Dhanbad. Intra-Jharkhand shipping with AI matching, live GPS tracking and competitive rates.",
-    keywords: "PTL freight Ranchi to Dhanbad, LTL transport Ranchi Dhanbad, Jharkhand freight, truck booking Dhanbad, coal corridor logistics Jharkhand",
-    seoTitle: "PTL Freight Ranchi to Dhanbad | LoadSaathi",
+    keywords: "part load Ranchi to Dhanbad, PTL freight Ranchi to Dhanbad, LTL transport Ranchi Dhanbad, Jharkhand freight, truck booking Dhanbad, coal corridor logistics Jharkhand",
   },
   "ranchi-to-jamshedpur": {
     from: "Ranchi",
@@ -351,10 +533,9 @@ const ROUTE_DATA = {
     toState: "Jharkhand",
     distanceKm: 130,
     transitTime: "3",
+    dataStatus: "verified",
     description: "Fast and reliable PTL and LTL freight between two of Jharkhand's largest cities. LoadSaathi connects Ranchi and Jamshedpur with AI-matched trucks and real-time GPS tracking.",
-    metaDescription: "Book PTL/LTL freight from Ranchi to Jamshedpur. Intra-Jharkhand shipping made easy with LoadSaathi's AI matching and transparent pricing.",
-    keywords: "PTL freight Ranchi to Jamshedpur, LTL transport Ranchi Jamshedpur, Jharkhand freight, truck booking Ranchi Jamshedpur, intra-state trucking Jharkhand",
-    seoTitle: "PTL Freight Ranchi to Jamshedpur | LoadSaathi",
+    keywords: "part load Ranchi to Jamshedpur, PTL freight Ranchi to Jamshedpur, LTL transport Ranchi Jamshedpur, Jharkhand freight, truck booking Ranchi Jamshedpur, intra-state trucking Jharkhand",
   },
   "ranchi-to-kolkata": {
     from: "Ranchi",
@@ -363,10 +544,9 @@ const ROUTE_DATA = {
     toState: "West Bengal",
     distanceKm: 420,
     transitTime: "8",
+    dataStatus: "needs_review",
     description: "Ship PTL and LTL loads from Ranchi to Kolkata across Jharkhand and West Bengal. LoadSaathi's AI matching and real-time GPS tracking make this key cross-state route simple and transparent.",
-    metaDescription: "Find PTL/LTL freight from Ranchi to Kolkata. Book trucks on the Ranchi–Kolkata corridor with LoadSaathi — AI matching, live tracking, transparent pricing.",
-    keywords: "PTL freight Ranchi to Kolkata, LTL transport Ranchi Kolkata, truck booking Kolkata, Jharkhand West Bengal logistics, Ranchi Kolkata freight",
-    seoTitle: "PTL Freight Ranchi to Kolkata | LoadSaathi",
+    keywords: "part load Ranchi to Kolkata, PTL freight Ranchi to Kolkata, LTL transport Ranchi Kolkata, truck booking Kolkata, Jharkhand West Bengal logistics, Ranchi Kolkata freight",
   },
   "ranchi-to-rourkela": {
     from: "Ranchi",
@@ -375,10 +555,9 @@ const ROUTE_DATA = {
     toState: "Odisha",
     distanceKm: 180,
     transitTime: "4",
+    dataStatus: "needs_review",
     description: "Ship goods from the capital of Jharkhand to the steel hub of Odisha. Find returning trucks and competitive rates on the Ranchi–Rourkela route with LoadSaathi's real-time matching and transparent pricing.",
-    metaDescription: "Find affordable PTL/LTL freight from Ranchi to Rourkela. Book trucks on the Ranchi–Rourkela corridor with LoadSaathi's AI matching and live GPS tracking.",
-    keywords: "PTL freight Ranchi to Rourkela, LTL transport Ranchi Rourkela, truck booking Jharkhand Odisha, Ranchi to Rourkela load, freight transport Ranchi",
-    seoTitle: "PTL Freight Ranchi to Rourkela | LoadSaathi",
+    keywords: "part load Ranchi to Rourkela, PTL freight Ranchi to Rourkela, LTL transport Ranchi Rourkela, truck booking Jharkhand Odisha, return load Ranchi Rourkela, freight transport Ranchi",
   },
   "rourkela-to-bhubaneswar": {
     from: "Rourkela",
@@ -387,10 +566,9 @@ const ROUTE_DATA = {
     toState: "Odisha",
     distanceKm: 340,
     transitTime: "7",
+    dataStatus: "needs_review",
     description: "Reliable PTL and LTL freight from Rourkela to Bhubaneswar — the capital of Odisha. LoadSaathi connects these key Odisha cities with AI-optimized truck matching and live GPS tracking.",
-    metaDescription: "Book PTL/LTL freight from Rourkela to Bhubaneswar. Save up to 40% within Odisha with AI truck matching, GPS tracking and credit scores.",
-    keywords: "PTL freight Rourkela to Bhubaneswar, LTL transport Rourkela Bhubaneswar, Odisha freight, truck booking Rourkela Bhubaneswar, part load Bhubaneswar",
-    seoTitle: "PTL Freight Rourkela to Bhubaneswar | LoadSaathi",
+    keywords: "part load Rourkela to Bhubaneswar, PTL freight Rourkela to Bhubaneswar, LTL transport Rourkela Bhubaneswar, Odisha freight, truck booking Rourkela Bhubaneswar, part load Bhubaneswar",
   },
   "rourkela-to-burdwan": {
     from: "Rourkela",
@@ -399,46 +577,42 @@ const ROUTE_DATA = {
     toState: "West Bengal",
     distanceKm: 320,
     transitTime: "7",
-    description: "Seamless PTL and LTL freight from Rourkela to Burdwan across the Odisha–West Bengal border. LoadSaathi's platform handles cross-state logistics with AI matching and transparent pricing.",
-    metaDescription: "Book PTL freight from Rourkela to Burdwan. Odisha–West Bengal trucking with AI matching, live GPS tracking and fair rates.",
-    keywords: "PTL freight Rourkela to Burdwan, LTL transport Rourkela Burdwan, Odisha West Bengal freight, truck booking Burdwan, cross-state PTL shipping",
-    seoTitle: "PTL Freight Rourkela to Burdwan | LoadSaathi",
+    dataStatus: "needs_review",
+    description: "Seamless PTL and LTL freight from Rourkela to Burdwan (Bardhaman) across the Odisha–West Bengal border. LoadSaathi's platform handles cross-state logistics with AI matching and transparent pricing.",
+    keywords: "part load Rourkela to Burdwan, PTL freight Rourkela to Burdwan, Rourkela to Bardhaman part load, LTL transport Rourkela Burdwan, Odisha West Bengal freight, truck booking Burdwan",
   },
   "rourkela-to-cuttack": {
     from: "Rourkela",
     to: "Cuttack",
     fromState: "Odisha",
     toState: "Odisha",
-    distanceKm: 320,
-    transitTime: "7",
-    description: "PTL and LTL freight from Rourkela to Cuttack — connecting the steel city of western Odisha with the commercial hub of the coastal belt. LoadSaathi's AI-matched trucks and transparent pricing make this cross-state corridor affordable.",
-    metaDescription: "Book PTL/LTL freight from Rourkela to Cuttack. Odisha intrastate shipping with LoadSaathi — AI matching, GPS tracking, and competitive rates.",
-    keywords: "PTL freight Rourkela to Cuttack, LTL transport Rourkela Cuttack, Odisha freight, truck booking Rourkela Cuttack, steel city to coastal Odisha",
-    seoTitle: "PTL Freight Rourkela to Cuttack | LoadSaathi",
+    distanceKm: 300,
+    transitTime: "6.4",
+    dataStatus: "corrected",
+    description: "PTL and LTL freight from Rourkela to Cuttack — connecting the steel city of western Odisha with the commercial hub of the coastal belt. LoadSaathi's AI-matched trucks and transparent pricing make this intra-Odisha corridor affordable.",
+    keywords: "part load Rourkela to Cuttack, PTL freight Rourkela to Cuttack, LTL transport Rourkela Cuttack, Odisha freight, truck booking Rourkela Cuttack, steel city to coastal Odisha",
   },
   "rourkela-to-jamshedpur": {
     from: "Rourkela",
     to: "Jamshedpur",
     fromState: "Odisha",
     toState: "Jharkhand",
-    distanceKm: 220,
-    transitTime: "5",
+    distanceKm: 198,
+    transitTime: "4.5",
+    dataStatus: "corrected",
     description: "Move freight between two of India's largest steel cities. LoadSaathi connects Rourkela and Jamshedpur with AI-matched PTL and LTL trucks, real-time tracking, and competitive rates.",
-    metaDescription: "Book PTL/LTL freight from Rourkela to Jamshedpur. Save on steel corridor shipping with LoadSaathi — AI matching, GPS tracking, transparent pricing.",
-    keywords: "PTL freight Rourkela to Jamshedpur, LTL transport Rourkela Jamshedpur, truck booking Rourkela Jharkhand, steel corridor freight, Rourkela Jamshedpur load",
-    seoTitle: "PTL Freight Rourkela to Jamshedpur | LoadSaathi",
+    keywords: "part load Rourkela to Jamshedpur, PTL freight Rourkela to Jamshedpur, LTL transport Rourkela Jamshedpur, truck booking Rourkela Jharkhand, steel corridor freight, Rourkela Jamshedpur load",
   },
   "rourkela-to-kolkata": {
     from: "Rourkela",
     to: "Kolkata",
     fromState: "Odisha",
     toState: "West Bengal",
-    distanceKm: 440,
-    transitTime: "9",
-    description: "Ship PTL and LTL loads from Rourkela to Kolkata — the commercial capital of East India. LoadSaathi offers AI-matched trucks, real-time tracking, and the best rates on this busy corridor.",
-    metaDescription: "Find PTL/LTL freight from Rourkela to Kolkata. Save on East India's busiest freight corridor with LoadSaathi — AI matching, GPS tracking, transparent pricing.",
-    keywords: "PTL freight Rourkela to Kolkata, LTL transport Rourkela Kolkata, truck booking Kolkata, Odisha West Bengal logistics, Kolkata freight corridor",
-    seoTitle: "PTL Freight Rourkela to Kolkata | LoadSaathi",
+    distanceKm: 420,
+    transitTime: "8.8",
+    dataStatus: "corrected",
+    description: "Ship PTL and LTL loads from Rourkela to Kolkata — the commercial capital of East India. LoadSaathi offers AI-matched trucks, real-time tracking, and competitive rates on this busy corridor.",
+    keywords: "part load Rourkela to Kolkata, PTL freight Rourkela to Kolkata, LTL transport Rourkela Kolkata, truck booking Kolkata, Odisha West Bengal logistics, Kolkata freight corridor",
   },
   "rourkela-to-ranchi": {
     from: "Rourkela",
@@ -447,10 +621,9 @@ const ROUTE_DATA = {
     toState: "Jharkhand",
     distanceKm: 180,
     transitTime: "4",
+    dataStatus: "needs_review",
     description: "Connect the steel city of Odisha with the capital of Jharkhand via LoadSaathi's AI-powered freight marketplace. Book PTL and LTL truck loads on the Rourkela–Ranchi corridor with GPS tracking, transparent pricing, and digital credit scores.",
-    metaDescription: "Book PTL/LTL freight from Rourkela to Ranchi. Save up to 40% on a shared truck network with GPS tracking, AI matching and transparent pricing.",
-    keywords: "PTL freight Rourkela to Ranchi, LTL transport Rourkela Ranchi, truck booking Rourkela Jharkhand, part load Rourkela, shared freight Odisha Jharkhand, LoadSaathi Rourkela Ranchi",
-    seoTitle: "PTL Freight Rourkela to Ranchi | LoadSaathi",
+    keywords: "part load Rourkela to Ranchi, PTL freight Rourkela to Ranchi, LTL transport Rourkela Ranchi, truck booking Rourkela Jharkhand, shared freight Odisha Jharkhand, LoadSaathi Rourkela Ranchi",
   },
   "rourkela-to-sambalpur": {
     from: "Rourkela",
@@ -459,10 +632,9 @@ const ROUTE_DATA = {
     toState: "Odisha",
     distanceKm: 120,
     transitTime: "2.5",
+    dataStatus: "needs_review",
     description: "Quick and reliable PTL and LTL freight from Rourkela to Sambalpur within Odisha. LoadSaathi's AI matches local truckers to your shipment for fast, cost-effective delivery.",
-    metaDescription: "Book PTL/LTL freight from Rourkela to Sambalpur. Intra-Odisha shipping made simple with LoadSaathi — AI matching, GPS tracking, transparent pricing.",
-    keywords: "PTL freight Rourkela to Sambalpur, LTL transport Rourkela Sambalpur, Odisha freight, truck booking Sambalpur, intra-Odisha logistics",
-    seoTitle: "PTL Freight Rourkela to Sambalpur | LoadSaathi",
+    keywords: "part load Rourkela to Sambalpur, PTL freight Rourkela to Sambalpur, LTL transport Rourkela Sambalpur, Odisha freight, truck booking Sambalpur, intra-Odisha logistics",
   },
   "sambalpur-to-bhubaneswar": {
     from: "Sambalpur",
@@ -471,22 +643,42 @@ const ROUTE_DATA = {
     toState: "Odisha",
     distanceKm: 350,
     transitTime: "7",
+    dataStatus: "needs_review",
     description: "PTL and LTL freight from Sambalpur to Bhubaneswar — connecting western Odisha's industrial belt with the state capital. LoadSaathi offers AI-matched trucks and fair pricing.",
-    metaDescription: "Book PTL/LTL freight from Sambalpur to Bhubaneswar. Odisha intrastate shipping with LoadSaathi — AI matching, GPS tracking, and competitive rates.",
-    keywords: "PTL freight Sambalpur to Bhubaneswar, LTL transport Sambalpur Bhubaneswar, Odisha freight, truck booking Sambalpur Bhubaneswar",
-    seoTitle: "PTL Freight Sambalpur to Bhubaneswar | LoadSaathi",
+    keywords: "part load Sambalpur to Bhubaneswar, PTL freight Sambalpur to Bhubaneswar, LTL transport Sambalpur Bhubaneswar, Odisha freight, truck booking Sambalpur Bhubaneswar",
   },
   "sambalpur-to-jharsuguda": {
     from: "Sambalpur",
     to: "Jharsuguda",
     fromState: "Odisha",
     toState: "Odisha",
-    distanceKm: 100,
-    transitTime: "2",
+    distanceKm: 50,
+    transitTime: "1.5",
+    dataStatus: "corrected",
     description: "Short-haul PTL and LTL freight from Sambalpur to Jharsuguda in western Odisha. LoadSaathi connects these industrial towns with quick, affordable trucking solutions.",
-    metaDescription: "Book PTL/LTL freight from Sambalpur to Jharsuguda. Quick intrastate Odisha shipping with LoadSaathi — AI matching, GPS tracking, and competitive rates.",
-    keywords: "PTL freight Sambalpur to Jharsuguda, LTL transport Sambalpur Jharsuguda, Odisha freight, truck booking Jharsuguda, western Odisha logistics",
-    seoTitle: "PTL Freight Sambalpur to Jharsuguda | LoadSaathi",
+    keywords: "part load Sambalpur to Jharsuguda, PTL freight Sambalpur to Jharsuguda, LTL transport Sambalpur Jharsuguda, Odisha freight, truck booking Jharsuguda, western Odisha logistics",
+  },
+  "sambalpur-to-rourkela": {
+    from: "Sambalpur",
+    to: "Rourkela",
+    fromState: "Odisha",
+    toState: "Odisha",
+    distanceKm: 120,
+    transitTime: "2.5",
+    dataStatus: "needs_review",
+    description: "Quick part load, PTL and LTL freight from Sambalpur to Rourkela within Odisha. Local truckers, transparent pricing and live tracking for western Odisha's industrial belt.",
+    keywords: "part load Sambalpur to Rourkela, PTL freight Sambalpur to Rourkela, LTL transport Sambalpur Rourkela, truck booking Rourkela, Odisha freight, intra-Odisha logistics",
+  },
+  "visakhapatnam-to-bhubaneswar": {
+    from: "Visakhapatnam",
+    to: "Bhubaneswar",
+    fromState: "Andhra Pradesh",
+    toState: "Odisha",
+    distanceKm: 445,
+    transitTime: "7",
+    dataStatus: "corrected",
+    description: "Book part load, PTL and LTL freight from Visakhapatnam (Vizag) to Bhubaneswar along the East Coast corridor. LoadSaathi's AI matching connects the port city with Odisha's capital at transparent rates.",
+    keywords: "part load Visakhapatnam to Bhubaneswar, PTL freight Visakhapatnam to Bhubaneswar, Vizag to Bhubaneswar part load, LTL transport Vizag Bhubaneswar, Andhra Pradesh Odisha freight, truck booking Bhubaneswar",
   },
 };
 
@@ -591,7 +783,7 @@ const STATIC_PAGE_DATA = {
   },
   "/hi/route/rourkela-to-ranchi": {
     title: "राउरकेला से रांची भाड़ा — PTL/FTL ट्रक बुकिंग | LoadSaathi",
-    metaDescription: "राउरकेला–रांची (180 किमी) कॉरिडोर पर PTL ₹14–₹22/किलो, FTL ₹15,300–₹21,600। लाइव GPS ट्रैकिंग के साथ बुक करें।",
+    metaDescription: "राउरकेला–रांची (180 किमी) कॉरिडोर पर PTL ₹3,060–₹4,320/टन, FTL ₹15,300–₹21,600। लाइव GPS ट्रैकिंग के साथ बुक करें।",
     keywords: ["rourkela ranchi bhada", "rourkela se ranchi truck", "ranchi freight rate hindi"],
     summary: "राउरकेला–रांची कॉरिडोर की PTL/FTL भाड़ा दरें और बुकिंग।"
   },
@@ -608,10 +800,10 @@ const STATIC_PAGE_DATA = {
     summary: "Articles and guides covering trucking business advice, freight market trends, and shipping best practices in India."
   },
   "/routes": {
-    title: "Freight Routes - 30+ India Corridors | LoadSaathi",
-    metaDescription: "Explore 30+ freight routes across India: distance, transit time, truck rates, and toll costs for corridors like Jamshedpur-Delhi and Rourkela-Kolkata.",
+    title: "Freight Routes - 48 India Corridors | LoadSaathi",
+    metaDescription: "Explore 48 freight routes across India: distance, transit time, truck rates, and toll costs for corridors like Rourkela-Ranchi and Bhubaneswar-Kolkata.",
     keywords: ["freight routes india", "truck routes", "transport corridor india", "loadsaathi routes"],
-    summary: "Directory of 30+ intercity freight routes with distance, transit time, and rate estimates for planning shipments."
+    summary: "Directory of 48 intercity freight routes with distance, transit time, and rate estimates for planning shipments."
   },
   "/sitemap": {
     title: "Sitemap - All Pages & Freight Routes | LoadSaathi",
@@ -762,6 +954,36 @@ const STATIC_PAGE_DATA = {
     metaDescription: "Estimate how much empty return trips cost you and what you save by booking backhaul loads on LoadSaathi instead.",
     keywords: ["return load savings", "empty km calculator", "backhaul savings calculator", "truck fuel savings"],
     summary: "Shows the cost of empty return runs and savings from filling them with backhaul loads."
+  },
+  "/tools/shipment-brief": {
+    title: "Free Shipment Brief Builder India | Freight Request Template | LoadSaathi",
+    metaDescription: "Build a complete shipment brief in minutes. Enter pickup, drop-off, cargo type, weight, dimensions, ready date and loading needs — then copy or download a clean freight request to share with transporters.",
+    keywords: ["shipment brief template", "freight request builder", "load request format", "cargo details format for transporter", "shipment specification sheet India"],
+    summary: "Build a complete shipment brief in minutes — pickup, drop-off, cargo type, weight, dimensions, ready date and loading needs — and share a clean freight request with transporters."
+  },
+  "/tools/waiting-time-cost": {
+    title: "Truck Waiting Time Cost Calculator India | Detention Cost Estimate | LoadSaathi",
+    metaDescription: "Estimate the cost of truck waiting time at loading and unloading points in India. Enter wait hours, truck and driver costs, and missed-trip costs to see a transparent estimate with assumptions shown.",
+    keywords: ["truck waiting time calculator", "detention cost calculator India", "truck demurrage charges", "loading waiting charges calculator", "truck delay cost estimate"],
+    summary: "Estimate detention costs: enter wait hours, truck and driver costs and missed-trip costs for a transparent waiting-time estimate with assumptions shown."
+  },
+  "/tools/freight-quote-comparison": {
+    title: "Freight Quote Comparison Worksheet India | Compare Transport Rates | LoadSaathi",
+    metaDescription: "Compare up to three freight quotes side by side — base freight, fuel surcharge, tolls, loading, waiting, taxes and insurance — and get an all-in total with transit time and payment terms.",
+    keywords: ["freight quote comparison", "transport rate comparison India", "compare truck quotes", "lorry rate comparison worksheet", "all-in freight cost calculator"],
+    summary: "Compare up to three freight quotes side by side across base freight, fuel surcharge, tolls, loading, waiting, taxes and insurance for an all-in total."
+  },
+  "/tools/cargo-volume-planner": {
+    title: "PTL Cargo Volume & Space Planner India | Part Load Size Calculator | LoadSaathi",
+    metaDescription: "Plan your part-load shipment: enter package dimensions, quantity and weight to get total volume (cbm and cu ft), weight, density and a basic space estimate for PTL cargo.",
+    keywords: ["cargo volume calculator", "cbm calculator for transport", "part load volume calculator", "PTL space planner", "shipment volume calculator India", "cubic meter calculator freight"],
+    summary: "Plan a part-load shipment: enter package dimensions, quantity and weight to get total volume in cbm and cu ft, density and a basic space estimate."
+  },
+  "/tools/load-securing-checklist": {
+    title: "Load Securing & Dispatch Checklist Builder India | Cargo Preparation | LoadSaathi",
+    metaDescription: "Build a free packing, loading and dispatch checklist for your cargo. Choose cargo category and handling needs to get practical load-securing steps before your truck leaves.",
+    keywords: ["load securing checklist", "cargo loading checklist India", "truck loading procedure checklist", "dispatch checklist logistics", "lashing and securing cargo guide"],
+    summary: "Build a packing, loading and dispatch checklist for your cargo — choose the cargo category and handling needs for practical load-securing steps before dispatch."
   },
   "/solutions/shippers": {
     title: "LoadSaathi for Shippers - Book Trucks at Best Rates",
@@ -2664,7 +2886,228 @@ const BLOG_DATA = {
     ],
     "category": "Trucker Tips",
     "lastUpdated": "2026-09-25"
-  }
+  },
+  "electric-trucks-small-fleets-india": {
+    title: "Are Electric Trucks Viable for Small Fleets in India? A Practical Cost Checklist",
+    keywords: ["electric trucks india", "electric truck for small fleet", "electric truck operating cost india", "e truck viability india", "electric truck tco india", "e-freight india"],
+    summary: "Electric trucks are becoming viable for some small fleets in India — the ones with fixed routes and confirmed charging. E-freight deployments grew from 201 vehicles in FY25 to 826 in FY26. A five-number checklist to test your own route before you talk to a dealer.",
+    author: "LoadSaathi Team",
+    authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry, with a focus on practical cost decisions for MSME shippers and small fleet operators.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "9 min read",
+    faq: [
+      { question: "Are electric trucks cheaper to run than diesel in India?", answer: "Per-kilometre energy cost is generally lower for an electric truck, but total cost depends on your annual kilometres, charging tariff, downtime and financing. Model your own lane rather than relying on a national average — LoadSaathi's fare calculator at loadsaathi.in/tools/fare-calculator gives you a starting benchmark." },
+      { question: "How many electric trucks operate in India?", answer: "More than 3,000 electric medium- and heavy-duty trucks are in operation, with annual e-freight deployments rising from 201 vehicles in FY25 to 826 in FY26, according to NITI Aayog's e-FAST India (PIB, 7 September 2026)." },
+      { question: "Do I need my own charger to run an electric truck?", answer: "Depot charging is the simplest starting point and the right default for a small fleet on a fixed route. Public corridor charging is improving but must be verified stop by stop for your vehicle class before you commit." },
+      { question: "Which fleets should wait before buying an electric truck?", answer: "Fleets with unpredictable spot loads, no confirmed charging on their lanes, or low annual kilometres should wait. A diesel truck that keeps running earns more than an electric truck that sits idle waiting for a plug." },
+    ],
+    category: "Industry Insights",
+  },
+  "electric-truck-charging-guide-india": {
+    title: "Where Can Electric Trucks Charge? A Fleet Owner's Guide to Planning Routes and Downtime",
+    keywords: ["electric truck charging stations india", "electric truck charging infrastructure", "electric truck route planning", "depot charging trucks india", "corridor charging india"],
+    summary: "Charging, not the vehicle, decides whether an electric truck works. How to plan depot, destination and corridor charging for Indian routes — and why turnaround time, not charger headline numbers, decides viability.",
+    author: "LoadSaathi Team",
+    authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry, with a focus on practical cost decisions for MSME shippers and small fleet operators.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "8 min read",
+    faq: [
+      { question: "Can I run a long-haul electric truck in India today?", answer: "On some corridors with confirmed charging, yes. On most, depot-plus-destination charging on a fixed lane is the realistic starting point. Confirm each en-route stop for your vehicle class before committing to a long-haul plan." },
+      { question: "Is public charging reliable enough for trucks?", answer: "It is improving but uneven. National charger counts include cars and two-wheelers, so they overstate truck coverage. Confirm your specific lane with charge point operators before purchase." },
+      { question: "Does charging time affect the freight rate I can charge?", answer: "It affects turnaround, which affects revenue per truck per day. Price the lane with charging time included, and compare against your diesel baseline using a profit-per-trip calculation rather than fuel cost alone." },
+      { question: "What is the first step to plan charging for an e-truck?", answer: "Name your most frequent lane, then confirm depot power availability with your electricity provider and destination charging with your largest customer. En-route charging comes last, stop by stop." },
+    ],
+    category: "Industry Insights",
+  },
+  "trucks-on-trains-india": {
+    title: "Trucks on Trains in India: How Road–Rail Freight Works and When to Consider It",
+    keywords: ["trucks on trains india", "road rail freight india", "multimodal freight transport india", "trucks on train dfc", "rewari palanpur trucks on trains", "indian railways truck transport"],
+    summary: "Trucks-on-Trains carries loaded trucks on flat wagons on the Western Dedicated Freight Corridor. Currently it runs on one stretch — New Rewari to New Palanpur, roughly 636 km — not nationwide. How it works, what it costs and when to use it.",
+    author: "LoadSaathi Team",
+    authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry, with a focus on practical cost decisions for MSME shippers and small fleet operators.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "10 min read",
+    faq: [
+      { question: "Is Trucks-on-Trains available across India?", answer: "No. As of January 2026, the service operates between New Rewari and New Palanpur on the Western Dedicated Freight Corridor, roughly 636 km. Indian Railways has signalled expansion through new terminals and Flat Multipurpose wagons, but no other sections are bookable yet." },
+      { question: "How much does Trucks-on-Trains cost?", answer: "Freight is charged per wagon on weight slabs: ₹25,543 for trucks up to 25 tonnes, ₹29,191 for 25–45 tonnes, ₹32,000 for 45–58 tonnes, and ₹21,894 for empty trucks (PIB, 22 January 2026). Milk tankers are exempt from GST." },
+      { question: "How much time does Trucks-on-Trains save?", answer: "On the New Rewari–New Palanpur stretch, end-to-end transit time has fallen from nearly 30 hours by road to around 12 hours through the road–rail model, according to Indian Railways." },
+      { question: "Who uses Trucks-on-Trains?", answer: "Uptake has been strongest in dairy, automobile, FMCG and food processing, with Amul (GCMMF) as the anchor customer on the Rewari–Palanpur stretch. In FY25 (April–December) the service moved over 3 lakh tonnes across 545 rakes." },
+    ],
+    category: "Industry Guide",
+  },
+  "gati-shakti-cargo-terminals-guide": {
+    title: "Gati Shakti Cargo Terminals: How Shippers Can Check Access and Plan a Rail-Linked Move",
+    keywords: ["gati shakti cargo terminals", "gct policy indian railways", "multimodal cargo terminal india", "rail freight terminals india", "rail linked logistics india"],
+    summary: "Gati Shakti Multi-Modal Cargo Terminals are rail-linked logistics hubs under the GCT Policy 2021, refreshed by a 2026 Master Circular — 306 approved, 118 commissioned. A five-step check for shippers on commodity fit, distance, rake size and road legs.",
+    author: "LoadSaathi Team",
+    authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry, with a focus on practical cost decisions for MSME shippers and small fleet operators.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "8 min read",
+    faq: [
+      { question: "What is the Gati Shakti Cargo Terminal policy?", answer: "A Ministry of Railways policy introduced in 2021 and refreshed by a Master Circular in 2026, designed to develop multi-modal cargo terminals with private participation. As of January 2026, 306 GCTs were approved and 118 commissioned, with about 192 million tonnes per annum of combined capacity (PIB)." },
+      { question: "Do I need huge volumes to use a GCT?", answer: "Full-rake economics suit large, steady volumes, but requirements vary by terminal, commodity and operator. Confirm the minimum volume and rake frequency directly with the terminal operator or zonal railway before planning a move." },
+      { question: "Can I combine a GCT move with road transport?", answer: "Yes — most GCT moves are road–rail–road, with trucks aggregating at the origin terminal and distributing from the destination terminal. Price the road legs door-to-door when comparing against an all-road move." },
+      { question: "How many GCTs are operational in India?", answer: "Indian Railways reported 306 approved GCTs with 118 commissioned as of January 2026, out of a combined approved capacity of roughly 192 million tonnes per annum (PIB, 13 January 2026)." },
+    ],
+    category: "Industry Guide",
+  },
+  "electric-truck-battery-health": {
+    title: "Electric Truck Battery Health: What Fleet Owners Should Track Before Buying or Financing",
+    keywords: ["electric truck battery health", "ev battery monitoring india", "electric truck resale value", "battery health monitoring system", "electric truck financing india"],
+    summary: "Battery condition drives an electric truck's resale value and financing risk. What Indian fleet owners should check before buying — state of health, charge history, warranty thresholds — and what to log monthly, per NITI Aayog's e-freight push.",
+    author: "LoadSaathi Team",
+    authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry, with a focus on practical cost decisions for MSME shippers and small fleet operators.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "7 min read",
+    faq: [
+      { question: "Does battery health affect an electric truck's resale value?", answer: "Yes — battery condition is expected to be the dominant factor in e-truck resale pricing, which is why India's transport ministry has highlighted battery health monitoring as a way to strengthen resale value and reduce financing risk (PIB, 7 September 2026)." },
+      { question: "How often should I check battery state of health?", answer: "Establish a baseline at purchase, then review at least monthly, and more often in heavy-use or extreme-temperature months. Track state of health, usable range at your typical load, charging time drift and any derating events." },
+      { question: "Is fast charging bad for an electric truck battery?", answer: "Frequent high-power charging, especially in high heat, is generally harder on packs than slower depot charging. Track your fast-versus-slow charging mix and follow the OEM's guidance; exact warranty thresholds vary by manufacturer." },
+      { question: "Will lenders ask for battery data when financing an e-truck?", answer: "The policy direction points that way — battery health monitoring is being positioned as a way to reduce financing risk for electric freight (PIB, September 2026). Keeping records from day one makes future financing easier." },
+    ],
+    category: "Trucker Tips",
+  },
+  "reduce-truck-waiting-time": {
+    title: "How to Reduce Truck Waiting Time at Factories and Warehouses",
+    keywords: ["truck waiting time warehouse", "truck detention time india", "loading unloading turnaround time", "dock scheduling india", "reduce vehicle turnaround"],
+    summary: "Truck waiting time at factories and warehouses is a cost nobody budgets for but everyone pays. A practical routine — dock slots, pre-cleared paperwork, measured turnaround and symmetric detention terms — to cut detention for shippers and truckers.",
+    author: "Amit Verma",
+    authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "8 min read",
+    faq: [
+      { question: "What is normal free time for loading or unloading a truck in India?", answer: "It is set by the contract, not by a national rule — road freight agreements commonly allow a short free period before detention charges begin. Check your own transport agreement and state the free time and rate explicitly in future contracts (co3, Road Freight Demurrage and Detention)." },
+      { question: "How do detention charges work?", answer: "After the agreed free time, charges typically accrue hourly or daily at the rate written into the contract. Because rates vary widely by site and agreement, the fix is to measure your own gate timestamps and negotiate explicit terms rather than quote a market figure." },
+      { question: "Does faster turnaround help the shipper, not just the trucker?", answer: "Yes — a truck that turns around faster is available for your next load sooner and is more likely to accept your rate. Wasted driver hours eventually come back as higher quotes or lower carrier priority on your lane." },
+      { question: "What is the first step to reduce waiting time at my warehouse?", answer: "Log arrival, dock-start and dock-finish times for every truck for one week. The baseline shows which of the five causes — unscheduled arrivals, paperwork, equipment, space or communication — is actually eating your hours." },
+    ],
+    category: "Shipper Guide",
+  },
+  "truck-driver-fatigue-dispatch": {
+    title: "Truck Driver Fatigue in India: Dispatch Practices That Can Make Long Trips Safer",
+    keywords: ["truck driver fatigue india", "truck driver safety", "fleet driver hours india", "long haul driver rest", "driver scheduling india"],
+    summary: "Driver fatigue is a dispatch problem before it is a driver problem. Realistic transit planning, scheduled rest, capped consecutive days and penalty-free fatigue reporting — five dispatch practices Indian fleets can apply without wrecking schedules.",
+    author: "Rajesh Kumar",
+    authorBio: "Rajesh Kumar is a logistics operations specialist with 12 years of experience in Indian trucking corridors.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "7 min read",
+    faq: [
+      { question: "Are there driving-hour limits for truck drivers in India?", answer: "India does not have a US-style federal hours-of-service regime for truck drivers; fleet policy and general provisions do much of the work. Confirm the current statutory position applicable to your operations before formalising a policy, as rules evolve." },
+      { question: "Does driver fatigue really cause crashes?", answer: "Long driving hours and poor rest are widely recognised safety risks. Research on Indian drivers' work-rest patterns has documented long working hours and extended shifts (Mahajan et al., 2019, Transportation Research Part F)." },
+      { question: "How can I reduce fatigue without slowing deliveries?", answer: "Plan realistic transit times, schedule rest as a named task, cap consecutive road days, and coordinate dock timing so waiting does not eat the rest budget. Better planning usually recovers more time than it costs through fewer delays and breakdowns." },
+      { question: "Should a driver accept a backhaul if they are already tired?", answer: "No. Fatigue and a rushed backhaul are a dangerous combination. Find the return load a day ahead rather than at the delivery gate — see our return load guide for planning tactics." },
+    ],
+    category: "Trucker Tips",
+  },
+  "cargo-damage-prevention-checklist": {
+    title: "How to Prevent Cargo Damage in Transit: A Loading and Securing Checklist for Shippers",
+    keywords: ["cargo damage prevention", "truck load securing india", "goods packaging for transport", "transit damage checklist", "load securing checklist"],
+    summary: "Most transit damage is preventable and happens before the truck moves. A pre-dispatch checklist covering vehicle choice, packaging, weight distribution, lashing, photographs and delivery inspection — for Indian shippers.",
+    author: "Amit Verma",
+    authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "8 min read",
+    faq: [
+      { question: "What is the most common cause of transit damage?", answer: "Poor load securing and load shifting, followed by wrong vehicle selection — for example an open body for rain-sensitive goods. Both are decided before the truck moves, which is why the pre-dispatch checklist matters more than in-transit checks." },
+      { question: "Should I photograph the load before dispatch?", answer: "Yes — photograph the packed goods before loading and the sealed load after loading. Photos are the simplest evidence for a claim and settle the question of when damage occurred." },
+      { question: "Who pays for cargo damaged in transit?", answer: "It depends on your contract, the carrier's liability terms and whether you hold cargo insurance. Agree liability terms in writing before dispatch and consider coverage for high-value loads — see our cargo insurance guide for how coverage works in India." },
+      { question: "How do I know if my truck is overloaded?", answer: "Compare the load's weight and dimensions against the vehicle's legal payload and axle limits before loading. Payload calculation tools can check fit; overloading risks penalties as well as safety and damage." },
+    ],
+    category: "Shipper Guide",
+  },
+  "reverse-logistics-msme-india": {
+    title: "Reverse Logistics for Indian MSMEs: What to Do When a Delivery Is Rejected or Returned",
+    keywords: ["reverse logistics india", "returned goods logistics", "failed delivery process", "reverse pickup india", "returns handling msme"],
+    summary: "A rejected delivery is a logistics problem with a clock on it. A fixed first-24-hours sequence for Indian MSMEs — secure, photograph, decide disposition fast, and move goods back on a return load instead of an empty truck.",
+    author: "Amit Verma",
+    authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "8 min read",
+    faq: [
+      { question: "What is reverse logistics?", answer: "The supply-chain process of moving goods back from the customer for return, repair, refurbishment or disposal, with distinct stages — initiation, inspection, sorting, processing and disposition (Flowspace)." },
+      { question: "How fast should I decide what to do with a returned delivery?", answer: "Set a fixed internal clock — often days, not weeks. Decide disposition before arranging transport, because the two decisions together determine the real cost of the return." },
+      { question: "How do I cut the cost of collecting returned goods?", answer: "Source a return load — a truck already heading your way — instead of sending an empty vehicle. Post the return leg as its own shipment with flexible pickup timing so it can match with existing capacity." },
+      { question: "Why do the same customers keep rejecting deliveries?", answer: "Track reasons by customer and product. Recurring rejections usually point to packaging, documentation or specification issues rather than transport failures, and fixing the cause is cheaper than any return flow." },
+    ],
+    category: "Shipper Guide",
+  },
+  "factory-to-port-export-checklist": {
+    title: "From Factory to Port: An Export-Readiness Checklist for MSME Shipments from Eastern India",
+    keywords: ["export logistics india msme", "shipping goods to port from odisha", "export cargo documentation india", "factory to port transport", "eastern india logistics corridor"],
+    summary: "For eastern India MSMEs, the hardest part of exporting is often the factory-to-port ground leg. Documentation, packaging, vehicle choice, buffer timing — a checklist you can work through, with India's logistics cost at 7.97% of GDP in the 2025 DPIIT-NCAER assessment.",
+    author: "Amit Verma",
+    authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "9 min read",
+    faq: [
+      { question: "What is the biggest cause of missed sailings for MSME exporters?", answer: "Late ground transport and incomplete documentation cause far more missed sailings than ocean-side issues. Confirm documentation cut-off and cargo cut-off separately with your shipping line and CHA, and build a buffer day into the plan." },
+      { question: "Do I need an e-way bill for export cargo movement?", answer: "An e-way bill generally applies to the inland movement of goods under GST rules, subject to current thresholds and exemptions. Confirm the applicable requirements for your shipment with your customs house agent before dispatch." },
+      { question: "How do I cut factory-to-port transport cost?", answer: "Match the right vehicle to the cargo, book in advance instead of at the last minute, price the lane against a benchmark before negotiating, and avoid empty return legs by planning backhauls — see our return load guide." },
+      { question: "Should I compare road with rail for the port leg?", answer: "If your plant is near a viable rail-linked terminal, compare door-to-door costs including drayage on both ends — our Gati Shakti cargo terminals guide has a five-step access check. Road usually wins when volumes are small, urgent or far from a terminal." },
+    ],
+    category: "Industry Guide",
+  },
+  "reliable-trucking-partner-checklist": {
+    title: "What Makes a Reliable Trucking Partner? A Shipper's Checklist Beyond the Lowest Quote",
+    keywords: ["how to choose a transporter in india", "freight carrier checklist", "verified trucking partner", "transporter selection criteria", "reliable trucking partner"],
+    summary: "The lowest quote is often the most expensive decision — it hides delay, damage and no-show costs. Six criteria for choosing a trucking partner in India: capacity, reliability, communication, safety, documentation and financial stability.",
+    author: "Amit Verma",
+    authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "7 min read",
+    faq: [
+      { question: "Should I always choose the cheapest carrier?", answer: "No. Evaluate on capacity, reliability, communication, safety, documentation and financial stability, with rate as one factor among them. A 10% cheaper quote that delivers two days late costs far more than it saved." },
+      { question: "How many carriers should I keep per lane?", answer: "At least two per key lane, so a single failure — breakdown, no-show, capacity crunch — does not stop your supply chain. Pilot new carriers on one lane before giving them your regular freight." },
+      { question: "How do I know a freight rate is fair?", answer: "Compare it against a live benchmark for your corridor rather than a national average — the LoadSaathi fare calculator gives an indicative rate, and our truck transport cost per km guide explains which components move the number." },
+      { question: "How do I verify a transporter's credentials?", answer: "Check GST registration status free on the GST portal under Search Taxpayer, confirm invoice details match, and review trip history and references for the lanes you run. See our GST-verified transporters guide for the step-by-step." },
+    ],
+    category: "Shipper Guide",
+  },
+  "load-board-safety-checklist": {
+    title: "Load Board Safety Checklist: What to Verify Before Accepting a Load",
+    keywords: ["load board safety", "verify a freight load", "load verification truckers india", "fake load listing india", "before accepting a load"],
+    summary: "A posted load is not a verified load. What truckers should check before accepting — shipper identity, GST status, documents, payment terms, cargo reality and route fit — with a one-page checklist and clear red flags.",
+    author: "Rajesh Kumar",
+    authorBio: "Rajesh Kumar is a logistics operations specialist with 12 years of experience in Indian trucking corridors.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "7 min read",
+    faq: [
+      { question: "How do I verify a shipper before accepting a load?", answer: "Check the registered business name and contact details, verify the GSTIN is Active on the GST portal (free, Search Taxpayer), confirm the e-way bill exists or will exist before departure, and get payment terms in writing. See our GST-verified transporters guide for the lookup steps." },
+      { question: "What are the biggest red flags in a load listing?", answer: "Pressure to skip documents, moving cargo without an e-way bill, vague consignee details, advance-payment demands on first business, and rates far above market without explanation. Any of these should stop the deal until explained." },
+      { question: "Do I need an e-way bill before I start driving?", answer: "The e-way bill should cover the movement before the vehicle moves, and Part-B must carry the transporter's vehicle details — otherwise the load is exposed to detention at checkpoints. Confirm with the shipper that it is generated and correct before departure." },
+      { question: "How does verifying loads help my business long-term?", answer: "Documented, dispute-free trips build your credit score and track record, which drives better matching and better-paying loads over time — see our trucker credit score guide for how the score is calculated." },
+    ],
+    category: "Trucker Tips",
+  },
+  "choose-right-truck-for-cargo": {
+    title: "How to Choose the Right Truck for Your Cargo: Capacity and Vehicle-Type Checklist",
+    keywords: ["truck capacity for cargo", "choose truck for goods transport", "commercial truck types india", "which truck for my shipment", "vehicle selection freight india"],
+    summary: "Choosing a truck by price instead of fit is how cargo gets damaged and loads get fined. Match vehicle type to cargo — open, covered, container, flatbed, tanker — then check payload, axle limits and route before you book.",
+    author: "Rajesh Kumar",
+    authorBio: "Rajesh Kumar is a logistics operations specialist with 12 years of experience in Indian trucking corridors.",
+    date: "2026-10-06",
+    lastUpdated: "2026-10-06",
+    readTime: "8 min read",
+    faq: [
+      { question: "Which truck type should I use for general packaged goods?", answer: "A closed or covered body is the default for packaged goods, FMCG, textiles and electronics — it protects from rain and pilferage. Use open trucks only for rugged, weather-insensitive cargo, containers for high-value or sealed loads, and flatbeds for coils, machinery and oversize items." },
+      { question: "How do I calculate what truck capacity my shipment needs?", answer: "Take the gross weight — cargo plus packaging — and match it against the vehicle's legal payload, then check axle distribution. Payload calculation tools can verify the fit in a minute; overloading risks penalties and safety issues." },
+      { question: "When should I book PTL instead of FTL?", answer: "When the shipment is smaller than a full truck and can share compatible consignments — PTL typically costs less, trading slightly longer transit for the savings. If the cargo fills a truck or needs exclusive handling, FTL is the better fit. See the PTL vs FTL guide for the full framework." },
+      { question: "Does season affect which truck I should book?", answer: "Yes — monsoon conditions change road access on eastern corridors and increase weather risk for exposed cargo. Check route conditions for your travel window and prefer covered transport for weather-sensitive goods during June to September." },
+    ],
+    category: "Shipper Guide",
+  },
 };
 
 // ── Guide SEO metadata (3 guides) ─────────────────────────────────────────────
@@ -3006,13 +3449,60 @@ const TRANSPORT_SERVICE_DATA = {
   }
 };
 
+/** Indian digit grouping — must match formatINR() in supabase/src/data/routes.ts. */
+function inr(n) {
+  const s = String(Math.round(n));
+  if (s.length <= 3) return s;
+  const last3 = s.slice(-3);
+  let rest = s.slice(0, -3);
+  const parts = [];
+  while (rest.length > 2) {
+    parts.unshift(rest.slice(-2));
+    rest = rest.slice(0, -2);
+  }
+  if (rest) parts.unshift(rest);
+  return parts.join(',') + ',' + last3;
+}
+
+/**
+ * Canonical rate band — must stay in sync with rateBand() in
+ * supabase/src/data/routes.ts (single source of truth for published rates).
+ */
+function laneRates(km) {
+  return {
+    perTonneMin: Math.max(km * 17, 1200),
+    perTonneMax: Math.max(km * 24, 1500),
+    perTruckMin: km * 85,
+    perTruckMax: km * 120,
+  };
+}
+
+/**
+ * Lane title/meta generated with the SAME formula as the React app
+ * (laneTitle / laneMetaDescription in supabase/src/data/routes.ts), so the
+ * edge-served head tags and the prerendered page can never disagree — the
+ * rate-contradiction failure mode this replaces.
+ */
+function laneSeoMeta(r) {
+  const bands = laneRates(r.distanceKm);
+  const statusPart =
+    r.dataStatus === 'needs_review'
+      ? `${r.distanceKm} km, ~${r.transitTime} hrs (distance pending re-verification)`
+      : `Verified ${r.distanceKm} km, ~${r.transitTime} hrs`;
+  return {
+    seoTitle: `Part Load Transport ${r.from} to ${r.to} | PTL & LTL Truck Booking | LoadSaathi`,
+    metaDescription: `${statusPart}. Book part load, PTL & LTL trucks ${r.from} to ${r.to}. Rates from ₹${inr(bands.perTonneMin)}/tonne. Updated October 2026.`,
+  };
+}
+
 function getSeoMeta(path) {
   const n = normalizePath(path);
 
   // /routes/[slug]
   const routeMatch = n.match(/^\/routes\/(.+)$/);
   if (routeMatch && ROUTE_DATA[routeMatch[1]]) {
-    return { ...ROUTE_DATA[routeMatch[1]], type: 'route', slug: routeMatch[1] };
+    const r = ROUTE_DATA[routeMatch[1]];
+    return { ...r, ...laneSeoMeta(r), type: 'route', slug: routeMatch[1] };
   }
 
   // /blog/[slug]
@@ -3021,7 +3511,10 @@ function getSeoMeta(path) {
     const entry = BLOG_DATA[blogMatch[1]];
     return {
       seoTitle: entry.title,
-      metaDescription: entry.metaDescription,
+      // Blog entries store a summary; clampMetaDescription is the same helper
+      // BlogArticle uses client-side, so server- and client-rendered
+      // descriptions stay byte-identical.
+      metaDescription: entry.metaDescription || clampMetaDescription(entry.summary || entry.title || ''),
       keywords: entry.keywords,
       summary: entry.summary,
       author: entry.author,
@@ -3042,7 +3535,7 @@ function getSeoMeta(path) {
     const entry = GUIDE_DATA[guideMatch[1]];
     return {
       seoTitle: entry.title,
-      metaDescription: entry.metaDescription,
+      metaDescription: entry.metaDescription || clampMetaDescription(entry.summary || entry.title || ''),
       keywords: entry.keywords,
       summary: entry.summary,
       author: entry.author,
@@ -3099,7 +3592,7 @@ function getSeoMeta(path) {
     const entry = TRANSPORT_SERVICE_DATA[tsMatch[1]];
     return {
       seoTitle: entry.title,
-      metaDescription: entry.metaDescription,
+      metaDescription: entry.metaDescription || clampMetaDescription(entry.summary || entry.title || ''),
       keywords: entry.keywords,
       summary: entry.summary,
       faq: entry.faq || null,
@@ -4102,21 +4595,21 @@ const CITY_SLUGS = new Set([
 ]);
 
 /** Published highway designations per route slug, for corridor pages. */
+// Mirrors the verified `highway` fields in supabase/src/data/routes.ts.
+// Highway numbers are a common E-E-A-T failure — only publish designations
+// verified against road routing; the old NH-215/NH-203/NH-17 entries were
+// unverified and have been removed rather than guessed at.
 const ROUTE_HIGHWAY = {
-  'rourkela-to-ranchi': 'NH-215',
-  'rourkela-to-bhubaneswar': 'NH-203',
-  'bhubaneswar-to-kolkata': 'NH-16 and NH-17',
-  'jamshedpur-to-kolkata': 'NH-33',
-  'dhanbad-to-kolkata': 'NH-2',
+  'ranchi-to-bhubaneswar': 'NH-20',
+  'bhubaneswar-to-ranchi': 'NH-20',
+  'balasore-to-bhubaneswar': 'NH-16',
+  'bhubaneswar-to-balasore': 'NH-16',
+  'jamshedpur-to-bhubaneswar': 'NH-220 / NH-16',
+  'bhubaneswar-to-jamshedpur': 'NH-220 / NH-16',
+  'rourkela-to-jamshedpur': 'NH-220',
+  'jamshedpur-to-rourkela': 'NH-220',
+  'bhubaneswar-to-kolkata': 'NH-16',
 };
-
-/** Per-km bands by road distance, used for the indicative rate line on corridors. */
-function rateBandsFor(km) {
-  if (km < 150) return { perKmLow: 12, perKmHigh: 18 };
-  if (km < 300) return { perKmLow: 14, perKmHigh: 22 };
-  if (km < 600) return { perKmLow: 16, perKmHigh: 26 };
-  return { perKmLow: 18, perKmHigh: 30 };
-}
 
 /** Questions every corridor page answers, in route-agnostic terms. */
 function routeFaq(seoMeta) {
@@ -4129,7 +4622,7 @@ function routeFaq(seoMeta) {
     },
     {
       q: `How long does a ${from} to ${to} shipment take?`,
-      a: `Published transit time for this lane is around ${seoMeta.duration || 'a day'} of driving. Add time for loading and consolidation if it is a part load, because the vehicle collects and drops several consignments on the way.`,
+      a: `Published transit time for this lane is around ${seoMeta.transitTime ? `~${seoMeta.transitTime} hours` : seoMeta.duration || 'a day'} of driving. Add time for loading and consolidation if it is a part load, because the vehicle collects and drops several consignments on the way.`,
     },
     {
       q: `Can I get a return load from ${to} back to ${from}?`,
@@ -4273,7 +4766,7 @@ const HINDI_PAGE_NOTES = {
   '/hi/ptl-transport': 'पार्ट ट्रक लोड (PTL) यानी किसी और के ट्रक में जगह भाड़ा करना — एक ही ट्रक में एक से चार माल एक साथ चलते हैं। ईंधन, टोल और ड्राइवर की लागत सभी कार्गो में बँट जाती है, इसलिए पूरा ट्रक भाड़ा करने से लगभग 30–40% कम खर्च आता है। यह 0.5 से 3 टन तक के माल के लिए सही है। बदला यह है कि ट्रक पहले कई माल लेकर चलता है, इसलिए डिलीवरी में एक से दो दिन अतिरिक्त लग सकते हैं। जल्दी माल पहुँचाना हो तो फुल ट्रक बेहतर रहता है। LoadSaathi पर आप अपने माल की वज़न और आकार डालते हैं, और मैचिंग उसी के आधार पर उपयुक्त ट्रकर दिखाती है।',
   '/hi/return-load': 'डिलीवरी के बाद खाली वापसी का ट्रक भी ईंधन, ड्राइवर और टोल का पूरा खर्च चुकाता है, इसलिए खाली चलने वाला हर किलोमीटर सबसे महँगा व्यर्थ समय है। LoadSaathi पर वापसी के रास्ते की लोड ट्रिप शुरू होने से पहले ही दिखने लगती है — चाहे वह माल बाहर से आ रहा हो या उसी शहर की दूसरी मंडी के लिए जा रहा हो। सही समय पर पोस्टिंग और सही वाहन क्षमता दर्ज करने से मैचिंग तेज़ होती है। रिटर्न लोड भर लेने पर उसी ट्रिप का खर्च निकल जाता है, और क्रेडिट स्कोर भी बेहतर होता है, जिससे अगली बार मैच होने की प्राथमिकता मिलती है।',
   '/hi/bhada-kaise-book-kare': 'बिना दलाल के ट्रक बुक करने की प्रक्रिया चार कदमों में है: माल की असली वज़न, आकार और पैकिंग का तरीका दर्ज करें; लोड होने का पता, समय और डिलीवरी की तारीख भरें; कई सत्यापित ट्रकरों की दर, रेटिंग और क्रेडिट स्कोर एक साथ देखें; और जो वाहन सबसे सही लगे उसे बुक करें। बुकिंग के बाद GPS ट्रैकिंग चालू रहती है और पेमेंट एस्क्रो में तब तक रुकी रहती है जब तक डिलीवरी कन्फर्म न हो। दोनों पक्ष एक-दूसरे को रिव्यू देते हैं, इसलिए अगली बुकिंग का अनुभव बेहतर होता है। पहली बार का अनुभव हो तो पार्ट लोड से शुरू करना सबसे कम जोखिम वाला तरीका है।',
-  '/hi/route/rourkela-to-ranchi': 'राउरकेला से रांची 180 किमी की दूरी पर है और यह NH-215 पर चलने वाली मुख्य लोड-करrying लेन है। पार्ट लोड लगभग ₹14–₹22 प्रति किलो, और पूरा ट्रक ₹15,300–₹21,600 के बीच चलता है। दोनों शहर औद्योगिक केंद्र हैं — राउरकेला इस्पात और सीमेंट, रांची कोयला और मशीनरी — इसलिए दोनों दिशाओं में माल रहता है, और वापसी का लोड मिलना आसान होता है। राउरकेला से कोयला, सीमेंट और इस्पात का सामान लोड होता है, जबकि रांची से मशीनरी पार्ट्स, खाद्य और FMCG माल उत्तर की ओर जाता है। शाम को निकलने वाली ट्रिप सुबह डिलीवरी तक पहुँच जाती है, इसलिए इस लेन पर समय का फ़ैसला रेट से ज़्यादा अहम है।',
+  '/hi/route/rourkela-to-ranchi': 'राउरकेला से रांची 180 किमी की दूरी पर है और यह ओडिशा–झारखंड की मुख्य माल-ढुलाई लेन है। पार्ट लोड लगभग ₹3,060–₹4,320 प्रति टन, और पूरा ट्रक ₹15,300–₹21,600 के बीच चलता है (दरें अक्टूबर 2026 में अपडेट की गई हैं)। दोनों शहर औद्योगिक केंद्र हैं — राउरकेला इस्पात और सीमेंट, रांची कोयला और मशीनरी — इसलिए दोनों दिशाओं में माल रहता है, और वापसी का लोड मिलना आसान होता है। राउरकेला से कोयला, सीमेंट और इस्पात का सामान लोड होता है, जबकि रांची से मशीनरी पार्ट्स, खाद्य और FMCG माल उत्तर की ओर जाता है। शाम को निकलने वाली ट्रिप सुबह डिलीवरी तक पहुँच जाती है, इसलिए इस लेन पर समय का फ़ैसला रेट से ज़्यादा अहम है।',
 };
 
 /**
@@ -4605,7 +5098,7 @@ const STATIC_CONTENT_NOTES = {
   '/hi/ptl-transport': 'पार्ट ट्रक लोड (PTL) यानी किसी दूसरे के ट्रक में जगह भाड़ा करना। ईंधन, टोल और ड्राइवर की लागत कई कार्गो के बीच बँट जाती है, इसलिए पूरा ट्रक भाड़ा करने से लगभग 30–40% कम खर्च आता है। यह 0.5 से 3 टन तक के माल के लिए सही है। बदला यह है कि ट्रक पहले कई माल लेकर चलता है, इसलिए डिलीवरी में एक से दो दिन अतिरिक्त लग सकते हैं।',
   '/hi/return-load': 'डिलीवरी के बाद खाली लौटने वाला ट्रक पहले ही ईंधन, ड्राइवर और टोल खर्च चुका चुका होता है — और उसमें माल न होने से कमाई शून्य। LoadSaathi पर वापसी के रास्ते की लोड पहले से दिखती है, जिससे ट्रकर वही ट्रिप दोबारा चलाकर अपना खर्च निकाल सकता है। यही एक ट्रकर की प्रति किलोमीटर लागत सबसे ज़्यादा घटाती है।',
   '/hi/bhada-kaise-book-kare': 'बिना दलाल के ट्रक बुक करने की प्रक्रिया चार कदमों में है: माल की वज़न और आकार डालें, लोड होने का पता और समय भरें, कई सत्यापित ट्रकरों की दर और रेटिंग की तुलना करें, और फिर पुष्टि करें। बुकिंग के बाद GPS ट्रैकिंग चालू रहती है और पेमेंट एस्क्रो में तब तक रुकी रहती है जब तक डिलीवरी कन्फर्म न हो।',
-  '/hi/route/rourkela-to-ranchi': `राउरकेला से रांची 180 किमी की दूरी पर है और यह NH-215 पर चलने वाली मुख्य लोड-करrying लेन है। पार्ट लोड लगभग ₹14–₹22 प्रति किलो, और पूरा ट्रक ₹15,300–₹21,600 के बीच चलता है। दोनों शहर औद्योगिक केंद्र हैं — राउरकेला इस्पात और सीमेंट, रांची कोयला और मशीनरी — इसलिए दोनों दिशाओं में माल रहता है, और वापसी का लोड मिलना आसान होता है।`,
+  '/hi/route/rourkela-to-ranchi': `राउरकेला से रांची 180 किमी की दूरी पर है और यह ओडिशा–झारखंड की मुख्य माल-ढुलाई लेन है। पार्ट लोड लगभग ₹3,060–₹4,320 प्रति टन, और पूरा ट्रक ₹15,300–₹21,600 के बीच चलता है (दरें अक्टूबर 2026 में अपडेट की गई हैं)। दोनों शहर औद्योगिक केंद्र हैं — राउरकेला इस्पात और सीमेंट, रांची कोयला और मशीनरी — इसलिए दोनों दिशाओं में माल रहता है, और वापसी का लोड मिलना आसान होता है।`,
 };
 
 function contentFor(path, seoMeta) {
@@ -4628,9 +5121,9 @@ function contentFor(path, seoMeta) {
       ...(fromData ? fromData.commodities.slice(0, 3) : []),
       ...(toData ? toData.commodities.slice(0, 2) : []),
     ];
-    const bands = rateBandsFor(distanceKm);
-    const rateTotalLow = distanceKm * bands.perKmLow;
-    const rateTotalHigh = distanceKm * bands.perKmHigh;
+    const bands = laneRates(distanceKm);
+    const rateTotalLow = bands.perTruckMin;
+    const rateTotalHigh = bands.perTruckMax;
     const mode = distanceKm < 120 ? 'short-haul' : crossState ? 'cross-state' : 'intra-state';
 
     heading = `PTL and LTL freight from ${from} to ${to}`;
@@ -4644,7 +5137,7 @@ function contentFor(path, seoMeta) {
       });
     }
     blocks.push({
-      p: `A full truck on this lane runs about ₹${rateTotalLow.toLocaleString('en-IN')} to ₹${rateTotalHigh.toLocaleString('en-IN')} for ${distanceKm} km, or roughly ₹${bands.perKmLow}–₹${bands.perKmHigh} per kilometre before tolls. Part loads are quoted per kilogram and normally land 30–40% below a dedicated vehicle for anything under three tonnes.`,
+      p: `A full truck on this lane runs about ₹${inr(rateTotalLow)} to ₹${inr(rateTotalHigh)} for ${distanceKm} km, or roughly ₹85–₹120 per kilometre before tolls. Part loads are quoted per tonne — ₹${inr(bands.perTonneMin)}–₹${inr(bands.perTonneMax)} per tonne on this lane — and normally land 30–40% below a dedicated vehicle for anything under three tonnes. Rates updated October 2026.`,
     });
     blocks.push({
       h2: `How LoadSaathi handles the ${from}–${to} lane`,
@@ -5285,7 +5778,7 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 - [Pricing](https://loadsaathi.in/pricing) - Plans and transaction fees
 - [FAQ](https://loadsaathi.in/faq) - Frequently asked questions
 - [Blog](https://loadsaathi.in/blog) - Articles and guides
-- [All Freight Routes](https://loadsaathi.in/routes) - 30+ freight corridors
+- [All Freight Routes](https://loadsaathi.in/routes) - ${COVERAGE.freightRoutes} freight corridors
 - [Privacy Policy](https://loadsaathi.in/privacy) - Data handling and privacy
 - [Terms of Service](https://loadsaathi.in/terms) - Platform terms
 

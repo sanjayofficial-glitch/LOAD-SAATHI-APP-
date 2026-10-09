@@ -46,8 +46,8 @@ export const OG_IMAGE = `${SITE_URL}/og-image.png`;
  * /routes/* and /location/* entries in it.
  */
 export const COVERAGE = {
-  sitemapUrls: 174,
-  freightRoutes: 28,
+  sitemapUrls: 212,
+  freightRoutes: 48,
   cityPages: 14,
 } as const;
 

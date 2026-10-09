@@ -62,7 +62,7 @@ Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha
 - [LoadSaathi vs Traditional Brokers](https://loadsaathi.in/compare) - Comparison page
 - [About](https://loadsaathi.in/about) - Company story and team
 - [Contact](https://loadsaathi.in/contact) - Get in touch
-- [All Freight Routes](https://loadsaathi.in/routes) - 30+ freight corridors
+- [All Freight Routes](https://loadsaathi.in/routes) - 48 freight corridors
 - [Privacy Policy](https://loadsaathi.in/privacy) - Data handling and privacy
 - [Terms of Service](https://loadsaathi.in/terms) - Platform terms
 

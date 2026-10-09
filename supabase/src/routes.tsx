@@ -94,6 +94,11 @@ const CarbonSavingsCalculator = lazy(() => import("./pages/public/tools/CarbonSa
 const TollFuelCalculator = lazy(() => import("./pages/public/tools/TollFuelCalculator"));
 const GstCalculator = lazy(() => import("./pages/public/tools/GstCalculator"));
 const PayloadUtilization = lazy(() => import("./pages/public/tools/PayloadUtilization"));
+const ShipmentBriefBuilder = lazy(() => import("./pages/public/tools/ShipmentBriefBuilder"));
+const WaitingTimeCostCalculator = lazy(() => import("./pages/public/tools/WaitingTimeCostCalculator"));
+const FreightQuoteComparison = lazy(() => import("./pages/public/tools/FreightQuoteComparison"));
+const CargoVolumePlanner = lazy(() => import("./pages/public/tools/CargoVolumePlanner"));
+const LoadSecuringChecklist = lazy(() => import("./pages/public/tools/LoadSecuringChecklist"));
 const ToolsIndex = lazy(() => import("./pages/public/Tools"));
 const ForMsmes = lazy(() => import("./pages/public/ForMsmes"));
 const AiLogistics = lazy(() => import("./pages/public/AiLogistics"));
@@ -201,6 +206,11 @@ export const AppRoutes = () => (
       <Route path="/tools/toll-fuel" element={<TollFuelCalculator />} />
       <Route path="/tools/gst-calculator" element={<GstCalculator />} />
       <Route path="/tools/payload-utilization" element={<PayloadUtilization />} />
+      <Route path="/tools/shipment-brief" element={<ShipmentBriefBuilder />} />
+      <Route path="/tools/waiting-time-cost" element={<WaitingTimeCostCalculator />} />
+      <Route path="/tools/freight-quote-comparison" element={<FreightQuoteComparison />} />
+      <Route path="/tools/cargo-volume-planner" element={<CargoVolumePlanner />} />
+      <Route path="/tools/load-securing-checklist" element={<LoadSecuringChecklist />} />
 
       {/* Cluster Pages */}
       <Route path="/for-msmes" element={<ForMsmes />} />

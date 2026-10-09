@@ -64,7 +64,7 @@ export default function RoutesIndex() {
       </noscript>
       <SeoMeta
         title="PTL & LTL Freight Routes — East India"
-        description="Browse PTL and LTL freight routes across East India. Book shared truck loads from Rourkela, Ranchi, Jamshedpur, Bhubaneswar, Kolkata, and more. Save up to 40% on shipping."
+        description={`Browse all ${routes.length} PTL and LTL freight routes across East India. Book part load trucks from Rourkela, Ranchi, Jamshedpur, Bhubaneswar, Kolkata and more with AI-matched pricing and live GPS tracking.`}
         canonical="/routes"
         keywords="PTL freight routes East India, LTL transport corridors Odisha Jharkhand, truck booking routes Ranchi Rourkela, shared freight East India, part load routes"
       />
@@ -83,7 +83,7 @@ export default function RoutesIndex() {
                 <span className="text-orange-600 dark:text-orange-400">East India</span>
               </h1>
               <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Browse our network of freight corridors connecting key industrial and commercial cities across Odisha, Jharkhand, West Bengal, and beyond. Book PTL and LTL loads with AI-matched trucking.
+                Browse all {routes.length} freight corridors connecting key industrial and commercial cities across Odisha, Jharkhand, West Bengal, and beyond. Book part load, PTL and LTL loads with AI-matched trucking.
               </p>
             </div>
 

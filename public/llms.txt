@@ -56,6 +56,11 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 - [Toll & Fuel Cost Calculator](https://loadsaathi.in/tools/toll-fuel) — Estimate toll and fuel costs by route
 - [GST Calculator](https://loadsaathi.in/tools/gst-calculator) — Calculate GST on freight invoices
 - [Payload Utilization Calculator](https://loadsaathi.in/tools/payload-utilization) — Optimize truck payload usage
+- [Shipment Brief Builder](https://loadsaathi.in/tools/shipment-brief) — Build a complete freight request to share with transporters
+- [Waiting-Time Cost Calculator](https://loadsaathi.in/tools/waiting-time-cost) — Estimate the cost of truck waiting time (estimate only)
+- [Freight Quote Comparison Worksheet](https://loadsaathi.in/tools/freight-quote-comparison) — Compare freight quotes on an all-in basis
+- [Cargo Volume Planner](https://loadsaathi.in/tools/cargo-volume-planner) — Total volume and space estimate for part-load cargo
+- [Load-Securing Checklist](https://loadsaathi.in/tools/load-securing-checklist) — Packing, loading and dispatch checklist by cargo type
 
 ## Routes & Locations
 
@@ -121,7 +126,7 @@ Q: How is LoadSaathi different from a broker or LoanSathi?
 A: LoadSaathi (a freight marketplace) connects shippers directly with truckers using AI matching, eliminating middlemen and saving up to 40% on freight costs. It is not a loan consultancy and is unrelated to LoanSathi or LoadSarthi.
 
 Q: Which cities does LoadSaathi serve?
-A: LoadSaathi covers Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal with 25+ active freight corridors including Rourkela–Ranchi–Burdwan, Rourkela–Kolkata, and Bhubaneswar–Kolkata.
+A: LoadSaathi covers Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal with 48 active freight corridors including Rourkela–Ranchi–Burdwan, Rourkela–Kolkata, and Bhubaneswar–Kolkata.
 
 Q: How much does LoadSaathi cost?
 A: LoadSaathi is free to join for both shippers and truckers. A transaction fee of 1.5–3% per completed shipment applies (1.5–2.5% for truckers), with no subscriptions or hidden fees. Escrow-backed payments protect funds until delivery confirmation.
@@ -129,43 +134,63 @@ A: LoadSaathi is free to join for both shippers and truckers. A transaction fee 
 Q: How does LoadSaathi's AI matching work?
 A: LoadSaathi's AI scoring engine analyzes route alignment, capacity fit, price compatibility, timeliness, historical performance, communication responsiveness, and tenure to match shippers with the best-suited truckers in seconds.
 
-## Corridor Rate Guide (indicative, September 2026)
+## Corridor Rate Guide (indicative, October 2026)
 
-Indicative East-India freight bands computed from LoadSaathi's per-km rate model (FTL ₹85–120/km trip rate; PTL ₹0.08–0.12/kg-km). Live quotes vary by truck type, season, and load — verify with the fare calculator.
+Indicative East-India freight bands computed from LoadSaathi's rate model (FTL ₹85–120/km trip rate; PTL at 2× the FTL per-tonne rate, floored at ₹1,200/tonne). Live quotes vary by truck type, season, and load — verify with the fare calculator.
 
 | Corridor | Distance | Full truck (FTL) | Shared (PTL) |
 |---|---|---|---|
-| Rourkela → Ranchi | 180 km | ₹15,300–₹21,600 | ₹14–₹22/kg |
-| Ranchi → Rourkela | 180 km | ₹15,300–₹21,600 | ₹14–₹22/kg |
-| Rourkela → Jamshedpur | 220 km | ₹18,700–₹26,400 | ₹18–₹26/kg |
-| Jamshedpur → Rourkela | 220 km | ₹18,700–₹26,400 | ₹18–₹26/kg |
-| Rourkela → Bhubaneswar | 340 km | ₹28,900–₹40,800 | ₹27–₹41/kg |
-| Rourkela → Burdwan | 320 km | ₹27,200–₹38,400 | ₹26–₹38/kg |
-| Rourkela → Kolkata | 440 km | ₹37,400–₹52,800 | ₹35–₹53/kg |
-| Ranchi → Jamshedpur | 130 km | ₹11,050–₹15,600 | ₹10–₹16/kg |
-| Jamshedpur → Ranchi | 130 km | ₹11,050–₹15,600 | ₹10–₹16/kg |
-| Ranchi → Bhubaneswar | 450 km | ₹38,250–₹54,000 | ₹36–₹54/kg |
-| Ranchi → Kolkata | 420 km | ₹35,700–₹50,400 | ₹34–₹50/kg |
-| Jamshedpur → Bhubaneswar | 340 km | ₹28,900–₹40,800 | ₹27–₹41/kg |
-| Jamshedpur → Burdwan | 200 km | ₹17,000–₹24,000 | ₹16–₹24/kg |
-| Jamshedpur → Kolkata | 280 km | ₹23,800–₹33,600 | ₹22–₹34/kg |
-| Bhubaneswar → Kolkata | 440 km | ₹37,400–₹52,800 | ₹35–₹53/kg |
-| Bhubaneswar → Burdwan | 420 km | ₹35,700–₹50,400 | ₹34–₹50/kg |
-| Rourkela → Sambalpur | 120 km | ₹10,200–₹14,400 | ₹10–₹14/kg |
-| Ranchi → Dhanbad | 280 km | ₹23,800–₹33,600 | ₹22–₹34/kg |
-| Bhubaneswar → Visakhapatnam | 450 km | ₹38,250–₹54,000 | ₹36–₹54/kg |
-| Balasore → Bhubaneswar | 210 km | ₹17,850–₹25,200 | ₹17–₹25/kg |
-| Berhampur → Bhubaneswar | 180 km | ₹15,300–₹21,600 | ₹14–₹22/kg |
-| Dhanbad → Jamshedpur | 170 km | ₹14,450–₹20,400 | ₹14–₹20/kg |
-| Kolkata → Burdwan | 110 km | ₹9,350–₹13,200 | ₹9–₹13/kg |
-| Sambalpur → Jharsuguda | 100 km | ₹8,500–₹12,000 | ₹8–₹12/kg |
-| Cuttack → Bhubaneswar | 30 km | ₹2,550–₹3,600 | ₹2–₹4/kg |
-| Cuttack → Rourkela | 320 km | ₹27,200–₹38,400 | ₹26–₹38/kg |
-| Sambalpur → Bhubaneswar | 350 km | ₹29,750–₹42,000 | ₹28–₹42/kg |
-| Rourkela → Cuttack | 320 km | ₹27,200–₹38,400 | ₹26–₹38/kg |
+| Rourkela → Ranchi | 180 km | ₹15,300–₹21,600 | ₹3,060–₹4,320/tonne |
+| Ranchi → Rourkela | 180 km | ₹15,300–₹21,600 | ₹3,060–₹4,320/tonne |
+| Rourkela → Jamshedpur | 198 km | ₹16,830–₹23,760 | ₹3,366–₹4,752/tonne |
+| Jamshedpur → Rourkela | 198 km | ₹16,830–₹23,760 | ₹3,366–₹4,752/tonne |
+| Rourkela → Bhubaneswar | 340 km | ₹28,900–₹40,800 | ₹5,780–₹8,160/tonne |
+| Rourkela → Burdwan | 320 km | ₹27,200–₹38,400 | ₹5,440–₹7,680/tonne |
+| Rourkela → Kolkata | 420 km | ₹35,700–₹50,400 | ₹7,140–₹10,080/tonne |
+| Ranchi → Jamshedpur | 130 km | ₹11,050–₹15,600 | ₹2,210–₹3,120/tonne |
+| Jamshedpur → Ranchi | 130 km | ₹11,050–₹15,600 | ₹2,210–₹3,120/tonne |
+| Ranchi → Bhubaneswar | 470 km | ₹39,950–₹56,400 | ₹7,990–₹11,280/tonne |
+| Ranchi → Kolkata | 420 km | ₹35,700–₹50,400 | ₹7,140–₹10,080/tonne |
+| Jamshedpur → Bhubaneswar | 347 km | ₹29,495–₹41,640 | ₹5,899–₹8,328/tonne |
+| Jamshedpur → Burdwan | 200 km | ₹17,000–₹24,000 | ₹3,400–₹4,800/tonne |
+| Jamshedpur → Kolkata | 280 km | ₹23,800–₹33,600 | ₹4,760–₹6,720/tonne |
+| Bhubaneswar → Kolkata | 440 km | ₹37,400–₹52,800 | ₹7,480–₹10,560/tonne |
+| Bhubaneswar → Burdwan | 420 km | ₹35,700–₹50,400 | ₹7,140–₹10,080/tonne |
+| Rourkela → Sambalpur | 120 km | ₹10,200–₹14,400 | ₹2,040–₹2,880/tonne |
+| Ranchi → Dhanbad | 155 km | ₹13,175–₹18,600 | ₹2,635–₹3,720/tonne |
+| Bhubaneswar → Visakhapatnam | 445 km | ₹37,825–₹53,400 | ₹7,565–₹10,680/tonne |
+| Balasore → Bhubaneswar | 210 km | ₹17,850–₹25,200 | ₹3,570–₹5,040/tonne |
+| Berhampur → Bhubaneswar | 180 km | ₹15,300–₹21,600 | ₹3,060–₹4,320/tonne |
+| Dhanbad → Jamshedpur | 145 km | ₹12,325–₹17,400 | ₹2,465–₹3,480/tonne |
+| Kolkata → Burdwan | 110 km | ₹9,350–₹13,200 | ₹1,870–₹2,640/tonne |
+| Sambalpur → Jharsuguda | 50 km | ₹4,250–₹6,000 | ₹1,200–₹1,500/tonne |
+| Cuttack → Bhubaneswar | 30 km | ₹2,550–₹3,600 | ₹1,200–₹1,500/tonne |
+| Cuttack → Rourkela | 300 km | ₹25,500–₹36,000 | ₹5,100–₹7,200/tonne |
+| Sambalpur → Bhubaneswar | 350 km | ₹29,750–₹42,000 | ₹5,950–₹8,400/tonne |
+| Rourkela → Cuttack | 300 km | ₹25,500–₹36,000 | ₹5,100–₹7,200/tonne |
+| Bhubaneswar → Rourkela | 340 km | ₹28,900–₹40,800 | ₹5,780–₹8,160/tonne |
+| Kolkata → Rourkela | 420 km | ₹35,700–₹50,400 | ₹7,140–₹10,080/tonne |
+| Bhubaneswar → Ranchi | 470 km | ₹39,950–₹56,400 | ₹7,990–₹11,280/tonne |
+| Kolkata → Ranchi | 420 km | ₹35,700–₹50,400 | ₹7,140–₹10,080/tonne |
+| Bhubaneswar → Jamshedpur | 347 km | ₹29,495–₹41,640 | ₹5,899–₹8,328/tonne |
+| Kolkata → Jamshedpur | 280 km | ₹23,800–₹33,600 | ₹4,760–₹6,720/tonne |
+| Kolkata → Bhubaneswar | 440 km | ₹37,400–₹52,800 | ₹7,480–₹10,560/tonne |
+| Dhanbad → Ranchi | 155 km | ₹13,175–₹18,600 | ₹2,635–₹3,720/tonne |
+| Jamshedpur → Dhanbad | 145 km | ₹12,325–₹17,400 | ₹2,465–₹3,480/tonne |
+| Sambalpur → Rourkela | 120 km | ₹10,200–₹14,400 | ₹2,040–₹2,880/tonne |
+| Burdwan → Rourkela | 320 km | ₹27,200–₹38,400 | ₹5,440–₹7,680/tonne |
+| Burdwan → Jamshedpur | 200 km | ₹17,000–₹24,000 | ₹3,400–₹4,800/tonne |
+| Burdwan → Bhubaneswar | 420 km | ₹35,700–₹50,400 | ₹7,140–₹10,080/tonne |
+| Visakhapatnam → Bhubaneswar | 445 km | ₹37,825–₹53,400 | ₹7,565–₹10,680/tonne |
+| Bhubaneswar → Balasore | 210 km | ₹17,850–₹25,200 | ₹3,570–₹5,040/tonne |
+| Bhubaneswar → Berhampur | 180 km | ₹15,300–₹21,600 | ₹3,060–₹4,320/tonne |
+| Burdwan → Kolkata | 110 km | ₹9,350–₹13,200 | ₹1,870–₹2,640/tonne |
+| Jharsuguda → Sambalpur | 50 km | ₹4,250–₹6,000 | ₹1,200–₹1,500/tonne |
+| Bhubaneswar → Cuttack | 30 km | ₹2,550–₹3,600 | ₹1,200–₹1,500/tonne |
+| Bhubaneswar → Sambalpur | 350 km | ₹29,750–₹42,000 | ₹5,950–₹8,400/tonne |
 
 Q: How much does PTL freight cost per kg in East India?
-A: Indicative shared-load (PTL) rates on LoadSaathi corridors range from about ₹2/kg on short hops (Cuttack–Bhubaneswar, 30 km) to about ₹54/kg on long hauls (Ranchi–Bhubaneswar, 450 km). Full-truck (FTL) trip rates range from roughly ₹2,550 to ₹54,000 by the same model. See the corridor table above; live quotes depend on truck type and season.
+A: Indicative shared-load (PTL) rates on LoadSaathi corridors range from about ₹1.2/kg on short hops (Cuttack–Bhubaneswar, 30 km) to about ₹11/kg on long hauls (Ranchi–Bhubaneswar, 470 km). Full-truck (FTL) trip rates range from roughly ₹2,550 to ₹56,400 by the same model. See the corridor table above; live quotes depend on truck type and season. Rates updated October 2026.
 
 Q: What is the cheapest way to ship a small load between Odisha cities?
 A: Sharing truck space (PTL) via LoadSaathi: you pay only for the weight you ship instead of hiring a full truck, typically saving up to 40%. Enter origin, destination, and weight in the fare calculator for an exact quote.

@@ -50,6 +50,7 @@ export const guideData: Record<string, {
       { label: "Browse Freight Routes", path: "/routes" },
       { label: "Post a Shipment", path: "/register" },
       { label: "Fare Calculator", path: "/tools/fare-calculator" },
+      { label: "Cargo Volume Planner", path: "/tools/cargo-volume-planner" },
     ],
   },
   "freight-rates-east-india": {
@@ -85,6 +86,7 @@ export const guideData: Record<string, {
       { label: "Browse All Routes", path: "/routes" },
       { label: "Rourkela Logistics Guide", path: "/blog/rourkela-logistics-guide" },
       { label: "AI Price Predictor", path: "/features" },
+      { label: "Freight Quote Comparison", path: "/tools/freight-quote-comparison" },
     ],
   },
   "shipping-steel": {
@@ -109,6 +111,7 @@ export const guideData: Record<string, {
       { label: "Rourkela–Jamshedpur Route", path: "/routes/rourkela-to-jamshedpur" },
       { label: "Jamshedpur–Kolkata Route", path: "/routes/jamshedpur-to-kolkata" },
       { label: "Post a Steel Shipment", path: "/register" },
+      { label: "Load-Securing Checklist", path: "/tools/load-securing-checklist" },
     ],
   },
 };

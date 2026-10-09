@@ -89,6 +89,7 @@ const footerLinks = {
     { label: "Return Load Calculator", path: "/tools/return-load-calculator" },
     { label: "Truck Load Calculator", path: "/tools/truck-load-calculator" },
     { label: "PTL vs FTL", path: "/tools/ptl-vs-ftl-calculator" },
+    { label: "Shipment Brief Builder", path: "/tools/shipment-brief" },
   ],
   Freight: [
     { label: "All Routes", path: "/routes" },

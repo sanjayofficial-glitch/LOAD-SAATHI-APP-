@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calculator, Route, MapPin, Truck, FileCheck, Leaf, Fuel, Receipt, Box, TrendingUp, Scale, IndianRupee, BarChart3 } from "lucide-react";
+import { ArrowLeft, Calculator, Route, MapPin, Truck, FileCheck, Leaf, Fuel, Receipt, Box, TrendingUp, Scale, IndianRupee, BarChart3, FileText, Clock, GitCompareArrows, Boxes, ClipboardList } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SeoMeta from "@/components/SeoMeta";
 
@@ -19,6 +19,11 @@ const tools = [
   { title: "Toll & Fuel Calculator", desc: "Get toll and fuel cost estimates for any Indian highway route.", path: "/tools/toll-fuel", icon: Fuel },
   { title: "GST Calculator", desc: "Calculate GST on freight invoices with HSN code lookup.", path: "/tools/gst-calculator", icon: Receipt },
   { title: "Payload Utilization", desc: "Maximize cargo volume per trip with space utilisation insights.", path: "/tools/payload-utilization", icon: Box },
+  { title: "Shipment Brief Builder", desc: "Build a complete freight request to share with transporters for accurate quotes.", path: "/tools/shipment-brief", icon: FileText },
+  { title: "Waiting-Time Cost Calculator", desc: "Estimate what truck waiting time at loading and unloading really costs.", path: "/tools/waiting-time-cost", icon: Clock },
+  { title: "Freight Quote Comparison", desc: "Compare quotes all-in — every charge, transit time and payment terms.", path: "/tools/freight-quote-comparison", icon: GitCompareArrows },
+  { title: "Cargo Volume Planner", desc: "Total volume, weight and space estimate for part-load shipments.", path: "/tools/cargo-volume-planner", icon: Boxes },
+  { title: "Load-Securing Checklist", desc: "Packing, loading and dispatch checklist by cargo type and handling needs.", path: "/tools/load-securing-checklist", icon: ClipboardList },
 ];
 
 export default function Tools() {
@@ -26,7 +31,7 @@ export default function Tools() {
     <>
       <SeoMeta
         title="Logistics Tools & Calculators for Indian Truckers & Shippers"
-        description="14 free freight calculators and logistics tools for Indian truckers and shippers — fare estimates, route optimisation, GST, carbon savings, and more."
+        description="20 free freight tools and logistics calculators for Indian truckers and shippers — fare estimates, shipment briefs, quote comparison, route optimisation, GST, carbon savings, and more."
         canonical="/tools"
         breadcrumbs={[{ name: "Tools", url: "/tools" }]}
       />
