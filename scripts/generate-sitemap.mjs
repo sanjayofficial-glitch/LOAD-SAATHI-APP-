@@ -42,6 +42,7 @@ const STATIC = [
   ["/", "weekly", "1.0"],
   ["/features", "monthly", "0.9"],
   ["/how-it-works", "monthly", "0.9"],
+  ["/guide", "weekly", "0.9"],
   ["/about", "monthly", "0.8"],
   ["/pricing", "monthly", "0.8"],
   ["/faq", "monthly", "0.7"],

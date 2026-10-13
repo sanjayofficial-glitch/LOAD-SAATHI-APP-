@@ -41,6 +41,7 @@ const EXACT_ROUTES = new Set([
   '/routes',
   '/sitemap',
   '/gallery',
+  '/guide',
   '/return-load',
   '/ptl-transport',
   '/ltl-transport',
@@ -828,6 +829,12 @@ const STATIC_PAGE_DATA = {
     metaDescription: "See the LoadSaathi app: screenshots of dashboards, load matching, GPS tracking, chat, and credit score for shippers and truckers.",
     keywords: ["loadsaathi screenshots", "freight app demo", "truck booking app images", "loadsaathi gallery"],
     summary: "Screenshots and previews of the LoadSaathi web and mobile app across its core features."
+  },
+  "/guide": {
+    title: "Guide — LoadSaathi Walkthrough",
+    metaDescription: "A step-by-step guide to using LoadSaathi: post shipments, find loads, get AI-matched, track in real time, and get paid — all on one platform.",
+    keywords: ["how to use loadsaathi", "loadsaathi walkthrough", "freight booking guide", "shipper trucker guide"],
+    summary: "A step-by-step guide to using LoadSaathi: post shipments, find loads, get AI-matched, track in real time, and get paid — all on one platform."
   },
   "/for-msmes": {
     title: "LoadSaathi for MSMEs - Freight Savings for Small Business",
