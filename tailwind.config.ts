@@ -71,6 +71,17 @@ export default {
         smooth: "cubic-bezier(0.25, 0.1, 0.25, 1)",
         "apple-spring": "cubic-bezier(0.25, 0.1, 0.25, 1.02)",
         "ease-spring": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        /* Apple-aligned curves (mirror the --ease-* tokens in globals.css) */
+        ios: "cubic-bezier(0.32, 0.72, 0, 1)",
+        snappy: "cubic-bezier(0.22, 1, 0.36, 1)",
+        quart: "cubic-bezier(0.76, 0, 0.24, 1)",
+      },
+      transitionDuration: {
+        press: "80ms",
+        fast: "120ms",
+        base: "180ms",
+        slow: "260ms",
+        reveal: "420ms",
       },
       keyframes: {
         "accordion-down": {

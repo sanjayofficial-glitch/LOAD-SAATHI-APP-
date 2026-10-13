@@ -11,6 +11,7 @@ interface VehicleSelectProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  onFocus?: () => void;
 }
 
 interface FlatItem {
@@ -30,6 +31,7 @@ export default function VehicleSelect({
   placeholder = 'Select Vehicle',
   className,
   disabled,
+  onFocus,
 }: VehicleSelectProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -96,6 +98,7 @@ export default function VehicleSelect({
           disabled={disabled}
           aria-haspopup="listbox"
           aria-expanded={open}
+          onFocus={onFocus}
           className={cn(
             'flex h-10 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
             value ? 'text-foreground' : 'text-muted-foreground',

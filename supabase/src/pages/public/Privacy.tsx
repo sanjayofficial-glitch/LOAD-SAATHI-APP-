@@ -1,5 +1,6 @@
 
-import { useEffect } from "react";
+import { Reveal } from "@/components/motion";
+
 import { Link } from "react-router-dom";
 import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -115,21 +116,7 @@ const sections = [
 ];
 
 const Privacy = () => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll(".fade-section").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
+  
   const lastUpdated = "September 18, 2026";
 
   return (
@@ -227,7 +214,7 @@ const Privacy = () => {
       </section>
 
       {/* CONTENT */}
-      <section className="fade-section py-16 relative">
+      <Reveal as="section" className="py-16 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10">
           <div className="glass-card p-8 sm:p-10 rounded-xl border-border dark:border-white/[0.08] mb-10">
             <p className="text-muted-foreground leading-relaxed">
@@ -253,10 +240,10 @@ const Privacy = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* CTA */}
-      <section className="fade-section py-16 relative overflow-hidden bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
+      <Reveal as="section" className="py-16 relative overflow-hidden bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10 text-center">
           <Shield className="h-10 w-10 text-orange-500 mx-auto mb-6" />
           <h2 className="text-3xl font-black text-foreground dark:text-white mb-4">Questions About Privacy?</h2>
@@ -274,7 +261,7 @@ const Privacy = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
     </>
   );

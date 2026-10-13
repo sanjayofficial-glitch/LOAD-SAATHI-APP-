@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, Brain, MessageSquare, Shield, Star, Activity, ArrowRight } from 'lucide-react';
@@ -12,7 +13,7 @@ const items = [
 ] as const;
 
 const AppPreview = React.memo(() => (
-  <section className="fade-section py-24 relative">
+  <Reveal as="section" className="py-24 relative">
     <div className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
       style={{ background: "radial-gradient(circle, #f97316 0%, transparent 70%)", filter: "blur(60px)" }} />
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -24,21 +25,23 @@ const AppPreview = React.memo(() => (
         {items.map((item, i) => {
           const Icon = item.icon;
           return (
-            <Link key={i} to={item.link} className="glass-card p-6 rounded-xl border border-border hover:border-orange-500/30 transition-all duration-300 group">
-              <div className="bg-orange-100 dark:bg-orange-900/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Icon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-              </div>
-              <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{item.title}</h3>
-              <p className="text-sm text-muted-foreground">{item.desc}</p>
-              <div className="flex items-center gap-1 text-xs font-semibold text-orange-500 mt-4">
-                Preview <ArrowRight className="h-3 w-3" />
-              </div>
-            </Link>
+            <Reveal key={i} as="div" index={i} className="h-full">
+              <Link to={item.link} className="glass-card p-6 rounded-xl h-full block border border-border hover:border-orange-500/30 elevate group">
+                <div className="bg-orange-100 dark:bg-orange-900/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <Icon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                <div className="flex items-center gap-1 text-xs font-semibold text-orange-500 mt-4">
+                  Preview <ArrowRight className="h-3 w-3" />
+                </div>
+              </Link>
+            </Reveal>
           );
         })}
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 AppPreview.displayName = "AppPreview";
 

@@ -37,9 +37,9 @@ const ErrorState = ({
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 sm:mt-8">
           <Button
             onClick={retry}
-            className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 shadow-md text-sm sm:text-base w-full sm:w-auto"
+            className="group bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 shadow-md text-sm sm:text-base w-full sm:w-auto"
           >
-            <RefreshCw className="h-4 w-4 mr-2" />
+            <RefreshCw className="h-4 w-4 mr-2 transition-transform duration-500 group-hover:rotate-180" />
             {retryLabel}
           </Button>
         </div>

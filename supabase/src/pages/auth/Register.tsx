@@ -7,12 +7,17 @@ import LogoMark from "@/components/LogoMark";
 import SeoMeta from "@/components/SeoMeta";
 import { Loader2, Eye, EyeOff, ArrowLeft, Package, Truck, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDisha } from "@/components/DishaContext";
+import { useDishaGuide } from "@/components/DishaGuideProvider";
+import { useMascotFormWatcher } from "@/hooks/useMascotFormWatcher";
 import { trackRegisterStarted } from "@/utils/analytics";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const { isSignedIn } = useUser();
   const { userProfile } = useAuth();
+  const { triggerErrorReaction, triggerSuccessReaction } = useDisha();
+  const { handleClick: guideHandleClick } = useDishaGuide();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const roleType = searchParams.get("type");
@@ -27,6 +32,32 @@ const Register = () => {
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [code, setCode] = useState("");
+
+  useMascotFormWatcher({
+    autoStartFlow: 'signup',
+    fields: [
+      {
+        key: 'email',
+        selector: '[data-guide="email"]',
+        tip: 'Enter your email address to get started.',
+      },
+      {
+        key: 'password',
+        selector: '[data-guide="password"]',
+        tip: 'Use 8+ characters with a mix of letters, numbers, and symbols.',
+      },
+      {
+        key: 'fullName',
+        selector: '[data-guide="full-name"]',
+        tip: 'This is how other users will know you on the platform.',
+      },
+      {
+        key: 'oauth',
+        selector: '[data-guide="oauth-google"]',
+        tip: 'Or sign up quickly with your Google account.',
+      },
+    ],
+  });
 
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return;
@@ -50,6 +81,7 @@ const Register = () => {
   }, []);
 
   const handleRoleSelect = (role: "trucker" | "shipper") => {
+    guideHandleClick('[data-guide="role-shipper"], [data-guide="role-trucker"]');
     setSelectedRole(role);
     setStep("sign");
   };
@@ -77,6 +109,7 @@ const Register = () => {
       console.error("Google sign-up error:", err);
       const msg = (err as { message?: string })?.message || "Google sign-up failed. Please try again.";
       setError(msg.includes("network") ? "Network error. Check your connection and try again." : msg);
+      triggerErrorReaction(msg.includes("network") ? "Network error. Check your connection and try again." : msg);
       setLoading(false);
     }
   };
@@ -99,6 +132,7 @@ const Register = () => {
       console.error("Email sign-up error:", err);
       const signUpErr = err as { errors?: { message?: string }[] } | undefined;
       setError(signUpErr?.errors?.[0]?.message || "Sign up failed. Please try again.");
+      triggerErrorReaction(signUpErr?.errors?.[0]?.message || "Sign up failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -113,14 +147,17 @@ const Register = () => {
       const result = await signUp.attemptEmailAddressVerification({ code });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
+        triggerSuccessReaction("Account created! Let's choose your role.");
         navigate("/choose-role", { replace: true });
       } else {
         setError("Invalid verification code.");
+        triggerErrorReaction("Invalid verification code.");
       }
     } catch (err) {
       console.error("Verification error:", err);
       const verifyErr = err as { errors?: { message?: string }[] } | undefined;
       setError(verifyErr?.errors?.[0]?.message || "Verification failed.");
+      triggerErrorReaction(verifyErr?.errors?.[0]?.message || "Verification failed.");
     } finally {
       setLoading(false);
     }
@@ -136,8 +173,8 @@ const Register = () => {
         </Link>
         <ThemeToggle />
       </div>
-      <div className="flex-1 flex items-center justify-center">
-        <div className="w-full max-w-sm animate-scale-in">
+      <div className="flex-1 flex items-start justify-center" data-avoid-disha>
+        <div className="w-full max-w-sm animate-scale-in overflow-y-auto" data-avoid-disha>
           {step === "role" ? (
             <div className="space-y-6">
               <div className="text-center">
@@ -146,8 +183,9 @@ const Register = () => {
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Select how you want to use LoadSaathi</p>
               </div>
               <button
-                onClick={() => handleRoleSelect("shipper")}
-                className="w-full text-left bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:border-orange-500 dark:hover:border-orange-500 transition-all hover:shadow-lg group"
+                 onClick={() => handleRoleSelect("shipper")}
+                 data-guide="role-shipper"
+                 className="w-full text-left bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:border-orange-500 dark:hover:border-orange-500 transition-all hover:shadow-lg group"
               >
                 <div className="flex items-center gap-4 mb-3">
                   <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
@@ -176,8 +214,9 @@ const Register = () => {
                 </ul>
               </button>
               <button
-                onClick={() => handleRoleSelect("trucker")}
-                className="w-full text-left bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:border-orange-500 dark:hover:border-orange-500 transition-all hover:shadow-lg group"
+                 onClick={() => handleRoleSelect("trucker")}
+                 data-guide="role-trucker"
+                 className="w-full text-left bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:border-orange-500 dark:hover:border-orange-500 transition-all hover:shadow-lg group"
               >
                 <div className="flex items-center gap-4 mb-3">
                   <div className="bg-orange-50 dark:bg-orange-900/30 p-3 rounded-xl group-hover:bg-orange-100 dark:group-hover:bg-orange-900/50 transition-colors">
@@ -279,6 +318,7 @@ const Register = () => {
               <button
                 onClick={handleGoogleSignUp}
                 disabled={loading || !isLoaded}
+                data-guide="oauth-google"
                 className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl py-3 px-4 font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all disabled:opacity-50"
               >
                 {loading ? (
@@ -305,14 +345,16 @@ const Register = () => {
 
               <form onSubmit={handleEmailSignUp} className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
-                  <input
-                    type="text"
-                    placeholder="First name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
-                  />
+                   <input
+                     type="text"
+                     placeholder="First name"
+                     value={firstName}
+                     onChange={(e) => setFirstName(e.target.value)}
+                     required
+                     name="fullName"
+                     data-guide="full-name"
+                     className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
+                   />
                   <input
                     type="text"
                     placeholder="Last name"
@@ -327,6 +369,7 @@ const Register = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  data-guide="email"
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
                 />
                 <div className="relative">
@@ -337,6 +380,7 @@ const Register = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={8}
+                    data-guide="password"
                     className="w-full px-4 py-3 pr-12 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
                   />
                   <button
@@ -348,8 +392,9 @@ const Register = () => {
                   </button>
                 </div>
                 <button
-                  type="submit"
-                  disabled={loading || !isLoaded || !firstName || !email || !password}
+                   type="submit"
+                   data-guide="submit"
+                   disabled={loading || !isLoaded || !firstName || !email || !password}
                   className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50"
                 >
                   {loading ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Create Account"}

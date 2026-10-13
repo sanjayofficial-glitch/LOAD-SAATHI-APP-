@@ -4,8 +4,10 @@ import { useUser, useSession } from '@clerk/clerk-react';
 import { Loader2, User, Truck, CheckCircle2 } from 'lucide-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { showSuccess, showError } from '@/utils/toast';
+import { extractErrorMessage } from '@/utils/errorMessage';
 import { useAuth } from '@/contexts/AuthContext';
 import { User as UserType } from '@/types';
+import { useDishaGuide } from '@/components/DishaGuideProvider';
 import LogoMark from '@/components/LogoMark';
 import SeoMeta from '@/components/SeoMeta';
 
@@ -41,7 +43,9 @@ const ChooseRole = () => {
     }
   }, [userProfile, navigate]);
 
-  const handleRoleSelection = async (role: 'shipper' | 'trucker') => {
+const { handleClick: guideHandleClick } = useDishaGuide();
+
+const handleRoleSelection = async (role: 'shipper' | 'trucker') => {
     if (!user || !session) return;
 
     setLoading(true);
@@ -126,7 +130,7 @@ const ChooseRole = () => {
 
       navigate('/onboarding', { replace: true });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to set role';
+      const msg = extractErrorMessage(err, 'Failed to set role');
       console.error('[ChooseRole] Error:', err);
       setError(msg);
       showError(msg);
@@ -151,9 +155,9 @@ const ChooseRole = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
+    <div className="min-h-screen w-full flex items-start justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
       <SeoMeta title="Choose Your Role" description="Choose whether to join LoadSaathi as a shipper or trucker." canonical="/choose-role" robots="noindex, nofollow" />
-      <div className="max-w-2xl w-full mx-auto animate-scale-in">
+      <div className="max-w-2xl w-full mx-auto animate-scale-in overflow-y-auto">
         <div className="text-center mb-12">
           <LogoMark size="h-16 w-16" className="mx-auto mb-6" />
           <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-4">Welcome to LoadSaathi!</h1>
@@ -168,8 +172,9 @@ const ChooseRole = () => {
 
         <div className="grid md:grid-cols-2 gap-8 max-w-xl mx-auto">
           <button
-            onClick={() => handleRoleSelection('shipper')}
+       onClick={() => { guideHandleClick('[data-guide="role-shipper"]'); handleRoleSelection('shipper'); }}
             disabled={loading}
+            data-guide="role-shipper"
             className={`group relative flex flex-col items-center text-center bg-white dark:bg-gray-900 hover:border-blue-500 dark:hover:border-blue-500 border-2 border-gray-100 dark:border-gray-800 transition-all p-8 rounded-2xl shadow-sm hover:shadow-xl disabled:opacity-50 hover:-translate-y-1 duration-300 ${
               suggestedRole === 'shipper' ? 'ring-2 ring-blue-500/50 shadow-lg shadow-blue-500/10' : ''
             }`}
@@ -187,8 +192,9 @@ const ChooseRole = () => {
           </button>
 
           <button
-            onClick={() => handleRoleSelection('trucker')}
+             onClick={() => { guideHandleClick('[data-guide="role-trucker"]'); handleRoleSelection('trucker'); }}
             disabled={loading}
+            data-guide="role-trucker"
             className={`group relative flex flex-col items-center text-center bg-white dark:bg-gray-900 hover:border-orange-500 dark:hover:border-orange-500 border-2 border-gray-100 dark:border-gray-800 transition-all p-8 rounded-2xl shadow-sm hover:shadow-xl disabled:opacity-50 hover:-translate-y-1 duration-300 ${
               suggestedRole === 'trucker' ? 'ring-2 ring-orange-500/50 shadow-lg shadow-orange-500/10' : ''
             }`}
@@ -201,11 +207,12 @@ const ChooseRole = () => {
               I have a truck and want to find loads to fill my empty space and earn more.
             </p>
             <div className="mt-4 flex items-center gap-2">
-              <input
-                id="mentor-opt-in"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-              />
+                <input
+                  id="mentor-opt-in"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                  data-guide="mentor"
+                />
               <label htmlFor="mentor-opt-in" className="text-xs text-left text-gray-600 dark:text-gray-400">
                 Get help from an experienced trucker on my route
               </label>

@@ -1,5 +1,6 @@
 
-import { useEffect } from "react";
+import { Reveal } from "@/components/motion";
+
 import { Link } from "react-router-dom";
 import { Shield, Star, CheckCircle, UserCheck, FileText, Award, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -103,21 +104,7 @@ const trustComponents = [
 ];
 
 const SafetyTrust = () => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll(".fade-section").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
+  
   return (
     <>
       <noscript>
@@ -254,14 +241,14 @@ const SafetyTrust = () => {
       </section>
 
       {/* TRUST COMPONENTS */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {trustComponents.map((component, i) => {
               const colors = colorMap[component.color as ColorKey] ?? colorMap.orange;
               const Icon = component.icon;
               return (
-                <div key={i} className={`glass-card p-8 sm:p-10 rounded-xl border ${colors.border} transition-all duration-300`}>
+                <div key={i} className={`glass-card p-8 sm:p-10 rounded-xl border ${colors.border} elevate`}>
                   <div className="flex items-center gap-4 mb-6">
                     <div className={`w-14 h-14 rounded-xl ${colors.bg} flex items-center justify-center`}>
                       <Icon className={`h-7 w-7 ${colors.icon}`} />
@@ -305,10 +292,10 @@ const SafetyTrust = () => {
             })}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* HOW SCORING WORKS */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">How Your Credit Score Is Calculated</h2>
@@ -330,10 +317,10 @@ const SafetyTrust = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* CTA */}
-      <section className="fade-section py-24 relative overflow-hidden">
+      <Reveal as="section" className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
           <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">
@@ -347,7 +334,7 @@ const SafetyTrust = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
     </>
   );

@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Package, Brain, Map } from 'lucide-react';
@@ -21,7 +22,7 @@ const items = [
 ] as const;
 
 const WhatIsLoadSaathi = React.memo(() => (
-  <section className="fade-section py-24 relative">
+  <Reveal as="section" className="py-24 relative">
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
       <div className="max-w-3xl mx-auto text-center mb-16">
         <h2 className="text-3xl sm:text-4xl font-black mb-6 text-foreground dark:text-white">
@@ -49,20 +50,21 @@ const WhatIsLoadSaathi = React.memo(() => (
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {items.map((item, i) => (
-          <div
-            key={i}
-            className="glass-card p-8 rounded-xl border border-border hover:border-orange-500/30 transition-all duration-300 group text-center"
-          >
-            <div className="bg-orange-100 dark:bg-orange-900/20 w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-              <item.icon className="h-7 w-7 text-orange-600 dark:text-orange-400" />
+          <Reveal key={i} as="div" index={i} className="h-full">
+            <div
+              className="glass-card p-8 rounded-xl h-full border border-border hover:border-orange-500/30 elevate group text-center"
+            >
+              <div className="bg-orange-100 dark:bg-orange-900/20 w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <item.icon className="h-7 w-7 text-orange-600 dark:text-orange-400" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
+              <p className="text-sm text-muted-foreground">{item.desc}</p>
             </div>
-            <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
-            <p className="text-sm text-muted-foreground">{item.desc}</p>
-          </div>
+          </Reveal>
         ))}
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 WhatIsLoadSaathi.displayName = 'WhatIsLoadSaathi';
 

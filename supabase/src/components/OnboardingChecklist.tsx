@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle2, Circle, X, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Circle, X, Phone, ArrowRight } from 'lucide-react';
+import { formatIndianPhone } from '@/utils/phone';
 
 interface ChecklistItem {
   label: string;
@@ -13,9 +14,10 @@ interface OnboardingChecklistProps {
   accent: 'orange' | 'blue';
   userId: string;
   items: ChecklistItem[];
+  userPhone?: string | null;
 }
 
-const OnboardingChecklist = ({ accent, userId, items }: OnboardingChecklistProps) => {
+const OnboardingChecklist = ({ accent, userId, items, userPhone }: OnboardingChecklistProps) => {
   const storageKey = `loadsaathi-checklist-dismissed-${userId}`;
   const [dismissed, setDismissed] = useState<boolean>(() => {
     try {
@@ -25,8 +27,25 @@ const OnboardingChecklist = ({ accent, userId, items }: OnboardingChecklistProps
     }
   });
 
-  const doneCount = items.filter(i => i.done).length;
-  const allDone = items.length > 0 && doneCount === items.length;
+  // Phone item is non-dismissible and always shown when the user has no phone.
+  const phoneMissing = !userPhone || !formatIndianPhone(userPhone);
+
+  const displayItems = useMemo(() => {
+    if (!phoneMissing) return items;
+    // Replace any existing phone item with a hard requirement.
+    const withoutPhone = items.filter(i => !i.label.toLowerCase().includes('phone'));
+    return [
+      {
+        label: 'Add phone number',
+        done: false,
+        to: '/profile',
+      },
+      ...withoutPhone,
+    ];
+  }, [items, phoneMissing]);
+
+  const doneCount = displayItems.filter(i => i.done).length;
+  const allDone = displayItems.length > 0 && doneCount === displayItems.length;
 
   if (dismissed || allDone) return null;
 
@@ -65,22 +84,24 @@ const OnboardingChecklist = ({ accent, userId, items }: OnboardingChecklistProps
             type="button"
             onClick={handleDismiss}
             aria-label="Dismiss checklist"
-            className="text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-300 transition-colors shrink-0"
+            className="text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-300 press shrink-0"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-          <div className={`h-full rounded-full transition-all duration-700 ${progressClass}`} style={{ width: `${progress}%` }} />
+          <div className={`h-full rounded-full transition-[width] duration-700 ease-ios ${progressClass}`} style={{ width: `${progress}%` }} />
         </div>
 
         <ul className="mt-3 space-y-1">
           {items.map((item) => (
             <li key={item.label}>
               {item.to && !item.done ? (
-                <Link to={item.to} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all group ${hoverBg}`}>
-                  <Circle className="h-5 w-5 shrink-0 text-gray-300 dark:text-gray-600" />
+                <Link to={item.to} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 press group ${hoverBg}`}>
+                  {item.label.toLowerCase().includes('phone')
+                    ? <Phone className="h-5 w-5 shrink-0 text-orange-400 dark:text-orange-500" />
+                    : <Circle className="h-5 w-5 shrink-0 text-gray-300 dark:text-gray-600" />}
                   <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex-1">{item.label}</span>
                   <ArrowRight className="h-4 w-4 text-gray-300 dark:text-gray-600 group-hover:translate-x-0.5 transition-transform shrink-0" />
                 </Link>

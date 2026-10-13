@@ -31,7 +31,18 @@ const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 function ThemedToaster() {
   const { isDark } = useTheme();
-  return <Toaster position="bottom-center" richColors theme={isDark ? 'dark' : 'light'} key={String(isDark)} />;
+  return (
+    <Toaster
+      position="bottom-center"
+      richColors
+      theme={isDark ? 'dark' : 'light'}
+      key={String(isDark)}
+      gap={10}
+      // Clear the fixed mobile tab bar / FABs so toasts never sit under chrome.
+      offset={76}
+      toastOptions={{ className: 'animate-materialize' }}
+    />
+  );
 }
 
 function ClerkProviderWithRouter({ children }: { children: ReactNode }) {

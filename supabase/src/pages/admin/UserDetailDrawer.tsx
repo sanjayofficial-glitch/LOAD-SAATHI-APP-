@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Ban, Shield, Truck, Package, MessageSquare } from 'lucide-react';
+import { Star, Ban, Shield, Truck, Package, MessageSquare, Phone } from 'lucide-react';
 import VerificationBadge from '@/components/VerificationBadge';
 import type { User, Trip, Shipment, Request, Review, Message } from '@/types';
 
@@ -149,6 +149,27 @@ const UserDetailDrawer = ({ userId, open, onOpenChange }: UserDetailDrawerProps)
                   <p className="text-lg font-mono font-bold text-white">{user.total_trips || 0}</p>
                 </CardContent>
               </Card>
+              {user.phone ? (
+                <Card className="bg-slate-900 border-slate-700/60">
+                  <CardContent className="p-3">
+                    <p className="text-[9px] text-slate-400 uppercase font-black tracking-wider">Phone</p>
+                    <a
+                      href={`tel:${user.phone.replace(/\D/g, '')}`}
+                      className="flex items-center gap-1 mt-1 text-sm font-mono font-medium text-orange-400 hover:text-orange-300"
+                    >
+                      <Phone className="h-3.5 w-3.5 text-orange-400" />
+                      {user.phone.replace(/^\+91\s*/, '+91 ').replace(/(\d{5})(\d{5})/, '$1 $2')}
+                    </a>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card className="bg-slate-900 border-slate-700/60">
+                  <CardContent className="p-3">
+                    <p className="text-[9px] text-slate-400 uppercase font-black tracking-wider">Phone</p>
+                    <p className="text-xs text-slate-500 mt-1">Not provided</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             {user.suspended && user.suspended_reason && (

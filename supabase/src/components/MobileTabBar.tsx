@@ -69,11 +69,11 @@ const MobileTabBar = React.memo(
     const menuActive = !tabActive && !centerActive;
 
     const itemClass =
-      "flex min-h-[3.5rem] min-w-0 flex-1 flex-col items-center justify-center gap-1 px-1 py-2";
+      "press flex min-h-[3.5rem] min-w-0 flex-1 flex-col items-center justify-center gap-1 px-1 py-2";
 
     const labelClass = (active: boolean) =>
       cn(
-        "max-w-full truncate text-[11px] font-semibold transition-colors duration-150",
+        "max-w-full truncate text-[11px] font-semibold transition-colors duration-fast ease-ios",
         active ? a.text : "text-gray-500 dark:text-gray-400"
       );
 
@@ -159,15 +159,16 @@ const MobileTabBar = React.memo(
               </SheetDescription>
             </SheetHeader>
             <div className="grid grid-cols-3 gap-1 px-3 pb-4 pt-2">
-              {menuItems.map((item) => {
+              {menuItems.map((item, i) => {
                 const active = isActive(item.path);
                 return (
                   <Link
                     key={item.path}
                     to={item.path}
                     onClick={() => setOpen(false)}
+                    style={{ animationDelay: `${i * 25}ms` }}
                     className={cn(
-                      "flex flex-col items-center justify-center gap-1.5 rounded-2xl px-2 py-4 text-[11px] font-medium transition-colors duration-150",
+                      "animate-materialize flex flex-col items-center justify-center gap-1.5 rounded-2xl px-2 py-4 text-[11px] font-medium transition-colors duration-fast ease-ios",
                       active
                         ? `${a.pill} ${a.text}`
                         : "text-gray-600 hover:bg-black/5 dark:text-gray-300 dark:hover:bg-white/5"

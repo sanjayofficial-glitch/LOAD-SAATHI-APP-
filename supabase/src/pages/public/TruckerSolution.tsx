@@ -1,5 +1,6 @@
 
-import { useEffect } from 'react';
+import { Reveal } from "@/components/motion";
+
 import { Link } from 'react-router-dom';
 import { Truck, Route, DollarSign, Shield, MessageSquare, TrendingUp, Clock, Star, MapPin, ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -71,21 +72,7 @@ const stats = [
 ];
 
 export default function TruckerSolution() {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll('.fade-section').forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
+  
   return (
     <>
       <noscript>
@@ -264,7 +251,7 @@ export default function TruckerSolution() {
       </section>
 
       {/* PROBLEMS */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
           style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)', filter: 'blur(60px)' }} />
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -274,7 +261,7 @@ export default function TruckerSolution() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {problems.map((problem, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 transition-all duration-300 group">
+              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 elevate group">
                 <problem.icon className={`${problem.color} text-3xl mb-4 group-hover:scale-110 transition-transform duration-300`} />
                 <h3 className="text-lg font-bold text-foreground mb-2">{problem.title}</h3>
                 <p className="text-sm text-muted-foreground">{problem.desc}</p>
@@ -282,10 +269,10 @@ export default function TruckerSolution() {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* FEATURES */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative overflow-hidden">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative overflow-hidden">
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
           style={{ background: 'radial-gradient(circle, #22c55e 0%, transparent 70%)', filter: 'blur(60px)' }} />
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -295,7 +282,7 @@ export default function TruckerSolution() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {features.map((feature, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 transition-all duration-300 group">
+              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 elevate group">
                 <div className="flex items-start gap-5">
                   <div className="bg-orange-600/10 dark:bg-orange-900/20 p-3 rounded-xl shrink-0">
                     <feature.icon className="text-orange-500 text-2xl group-hover:scale-110 transition-transform duration-300" />
@@ -313,10 +300,10 @@ export default function TruckerSolution() {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* DASHBOARD MOCKUP */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="mb-16 text-center">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Your Trucker Dashboard</h2>
@@ -383,10 +370,10 @@ export default function TruckerSolution() {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* STATS */}
-      <section className="fade-section border-y border-border dark:border-white/5 bg-muted/50 dark:bg-[#010f1f]/80 backdrop-blur-sm">
+      <Reveal as="section" className="border-y border-border dark:border-white/5 bg-muted/50 dark:bg-[#010f1f]/80 backdrop-blur-sm">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 py-12 flex flex-col md:flex-row justify-around items-center gap-8">
           {stats.map((stat, i) => (
             <div key={i} className="text-center">
@@ -395,10 +382,10 @@ export default function TruckerSolution() {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* FAQ */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-3xl mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Trucker FAQ</h2>
@@ -418,10 +405,10 @@ export default function TruckerSolution() {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* CTA */}
-      <section className="fade-section py-32 relative overflow-hidden flex items-center justify-center">
+      <Reveal as="section" className="py-32 relative overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
           <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">
@@ -446,7 +433,7 @@ export default function TruckerSolution() {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
     </div>
     </>

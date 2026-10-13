@@ -2,12 +2,19 @@ import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+interface ScrollToTopFabProps {
+  /** Tailwind classes controlling the bottom offset (e.g. to stack above a chat FAB). */
+  bottomClass?: string;
+}
+
 /**
  * Floating action button that appears when the user scrolls down.
  * Tapping it instantly scrolls to the top. Uses CSS transitions for
  * the appear/disappear animation — no Framer Motion needed.
  */
-export default function ScrollToTopFab() {
+export default function ScrollToTopFab({
+  bottomClass = "bottom-[calc(8rem+env(safe-area-inset-bottom,0px))] md:bottom-6",
+}: ScrollToTopFabProps) {
   const [visible, setVisible] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
 
@@ -42,13 +49,12 @@ export default function ScrollToTopFab() {
       className={cn(
         "fixed right-4 z-[90] flex h-11 w-11 items-center justify-center rounded-full",
         "bg-orange-600 text-white shadow-lg shadow-orange-600/25",
-        "transition-all duration-200 ease-out",
+        "transition-all duration-fast ease-ios",
         "motion-safe:transition-all motion-reduce:transition-none",
         "hover:bg-orange-700 hover:shadow-xl hover:scale-105",
         "active:scale-95",
-        "md:bottom-6",
         "backdrop-blur-sm",
-        "bottom-[calc(8rem+env(safe-area-inset-bottom,0px))]",
+        bottomClass,
         visible && !fabOpen
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-4 pointer-events-none"

@@ -11,6 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from '@/components/ui/skeleton';
 import { showSuccess, showError } from '@/utils/toast';
+import { isValidIndianMobile, normalizeIndianPhone } from '@/utils/phone';
+import { trackEvent } from '@/utils/analytics';
 import { cn } from '@/lib/utils';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCreditScore } from '@/hooks/useCreditScore';
@@ -147,14 +149,22 @@ const Profile = () => {
       
       const supabase = createClerkSupabaseClient(supabaseToken);
       
+      const phoneToSave = isValidIndianMobile(phone)
+        ? normalizeIndianPhone(phone).replace(/^(\d{5})(\d{5})$/, '$1 $2')
+        : '';
+
       const { error } = await supabase
         .from('users')
         .update({ 
           full_name: fullName.trim(), 
-          phone,
+          phone: phoneToSave,
           company_name: companyName.trim() || null
         })
         .eq('id', userProfile?.id);
+
+      if (!error && phoneToSave) {
+        trackEvent('phone_added');
+      }
 
       if (error) {
         showError(error.message);

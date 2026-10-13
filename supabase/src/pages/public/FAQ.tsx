@@ -1,5 +1,6 @@
 
-import { useEffect, useRef } from "react";
+import { Reveal } from "@/components/motion";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Check, Truck, Package, Shield, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -162,26 +163,7 @@ const FAQ = () => {
   const accordionRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const refs = [accordionRef.current, ctaRef.current].filter(Boolean);
-    refs.forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
+  
   return (
     <>
       <noscript>
@@ -256,7 +238,7 @@ const FAQ = () => {
       </section>
 
       {/* FAQ ACCORDIONS */}
-      <section ref={accordionRef} className="fade-section py-24 relative">
+      <Reveal as="section" ref={accordionRef} className="py-24 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10 space-y-16">
           {faqData.map((category, idx) => {
             const Icon = category.icon;
@@ -284,10 +266,10 @@ const FAQ = () => {
             );
           })}
         </div>
-      </section>
+      </Reveal>
 
       {/* CTA */}
-      <section ref={ctaRef} className="fade-section py-24 relative overflow-hidden bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
+      <Reveal as="section" ref={ctaRef} className="py-24 relative overflow-hidden bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
         <div className="max-w-2xl mx-auto px-6 sm:px-12 relative z-10 text-center">
           <h2 className="text-3xl sm:text-4xl font-black text-foreground dark:text-white mb-4">Still Have Questions?</h2>
           <p className="text-muted-foreground mb-8">Our support team is here to help you 24/7.</p>
@@ -304,7 +286,7 @@ const FAQ = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
     </>
   );

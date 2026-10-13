@@ -55,7 +55,7 @@ export const LocationPermissionBanner = React.memo(function LocationPermissionBa
 
   return (
     <TooltipProvider>
-      <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2.5 text-center text-sm font-medium flex items-center justify-center gap-2 sticky top-0 z-[55] shadow-sm">
+      <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2.5 text-center text-sm font-medium flex items-center justify-center gap-2 sticky top-0 z-[55] shadow-sm animate-in fade-in slide-in-from-top-1 duration-300 ease-ios">
         <MapPin className="h-4 w-4 shrink-0" />
         <span className="flex-1 text-center">
           {isPrompt && (
@@ -98,7 +98,7 @@ export const LocationPermissionBanner = React.memo(function LocationPermissionBa
           <button
             type="button"
             onClick={handleDismiss}
-            className="p-1 rounded hover:bg-white/20 transition-colors"
+            className="press p-1 rounded hover:bg-white/20"
             aria-label="Dismiss"
           >
             <X className="h-3.5 w-3.5" />

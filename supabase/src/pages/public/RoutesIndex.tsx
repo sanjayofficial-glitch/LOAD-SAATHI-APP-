@@ -108,7 +108,7 @@ export default function RoutesIndex() {
                   <Link
                     key={route.slug}
                     to={`/routes/${route.slug}`}
-                    className="group glass-card p-6 rounded-xl border border-border dark:border-white/[0.08] hover:border-orange-500/30 hover:shadow-[0_0_30px_rgba(249,115,22,0.08)] transition-all duration-300"
+                    className="group glass-card p-6 rounded-xl border border-border dark:border-white/[0.08] hover:border-orange-500/30 hover:shadow-[0_0_30px_rgba(249,115,22,0.08)] elevate"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">

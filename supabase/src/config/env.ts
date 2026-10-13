@@ -7,6 +7,7 @@ const envSchema = z.object({
   VITE_POSTHOG_API_KEY: z.string().min(1, 'PostHog API key is required'),
   VITE_POSTHOG_HOST: z.string().url('PostHog host must be a valid URL'),
   VITE_ADMIN_USER_ID: z.string().optional(),
+  VITE_OWNER_WHATSAPP: z.string().regex(/^[6-9]\d{9}$/, 'Owner WhatsApp must be a 10-digit Indian mobile'),
 });
 
 function validateEnv() {
@@ -17,6 +18,7 @@ function validateEnv() {
     VITE_POSTHOG_API_KEY: import.meta.env.VITE_POSTHOG_API_KEY,
     VITE_POSTHOG_HOST: import.meta.env.VITE_POSTHOG_HOST,
     VITE_ADMIN_USER_ID: import.meta.env.VITE_ADMIN_USER_ID,
+    VITE_OWNER_WHATSAPP: import.meta.env.VITE_OWNER_WHATSAPP,
   };
 
   const result = envSchema.safeParse(raw);

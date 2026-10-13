@@ -28,13 +28,15 @@ const ThemeToggle = React.memo(() => {
       aria-label={`Theme: ${label}. Click to change.`}
       title={`${label} — click to change`}
     >
-      {mode === 'light' ? (
-        <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
-      ) : mode === 'dark' ? (
-        <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
-      ) : (
-        <Monitor className="h-4 w-4 sm:h-5 sm:w-5" />
-      )}
+      <span key={mode} className="inline-flex animate-materialize" aria-hidden="true">
+            {mode === 'light' ? (
+              <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
+            ) : mode === 'dark' ? (
+              <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
+            ) : (
+              <Monitor className="h-4 w-4 sm:h-5 sm:w-5" />
+            )}
+          </span>
     </Button>
   );
 });

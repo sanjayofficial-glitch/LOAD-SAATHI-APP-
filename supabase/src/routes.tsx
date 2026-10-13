@@ -4,6 +4,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 
 const Layout = lazy(() => import("./components/Layout"));
+const AuthLayout = lazy(() => import("./components/AuthLayout"));
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/auth/Login"));
 const Register = lazy(() => import("./pages/auth/Register"));
@@ -36,7 +37,7 @@ const BlogList = lazy(() => import("./pages/blog/BlogList"));
 const BlogArticle = lazy(() => import("./pages/blog/BlogArticle"));
 const LocationPage = lazy(() => import("./pages/public/locations/LocationPage"));
 const TransportServicePage = lazy(() => import("./pages/public/transport/TransportServicePage"));
-const GuidePage = lazy(() => import("./pages/public/guides/GuidePage"));
+const GuidePagePublic = lazy(() => import("./pages/public/guides/GuidePage"));
 const HiHome = lazy(() => import("./pages/public/hi/HiHome"));
 const HiPtlTransport = lazy(() => import("./pages/public/hi/HiPtlTransport"));
 const HiReturnLoad = lazy(() => import("./pages/public/hi/HiReturnLoad"));
@@ -109,18 +110,21 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 export const AppRoutes = () => (
   <Routes>
-    {/* Public routes with individual error boundaries */}
-    <Route path="/login" element={<ErrorBoundary><Login /></ErrorBoundary>} />
-    <Route path="/register" element={<ErrorBoundary><Register /></ErrorBoundary>} />
-    <Route path="/choose-role" element={<ErrorBoundary><ChooseRole /></ErrorBoundary>} />
-    <Route path="/onboarding" element={<ErrorBoundary><OnboardingFlow /></ErrorBoundary>} />
-    <Route path="/forgot-password" element={<ErrorBoundary><ForgotPassword /></ErrorBoundary>} />
+     {/* Auth routes wrapped in AuthLayout (Disha mascot + guide engine) */}
+    <Route element={<AuthLayout><Outlet /></AuthLayout>}>
+      <Route path="/login" element={<ErrorBoundary><Login /></ErrorBoundary>} />
+      <Route path="/register" element={<ErrorBoundary><Register /></ErrorBoundary>} />
+      <Route path="/choose-role" element={<ErrorBoundary><ChooseRole /></ErrorBoundary>} />
+      <Route path="/onboarding" element={<ErrorBoundary><OnboardingFlow /></ErrorBoundary>} />
+      <Route path="/forgot-password" element={<ErrorBoundary><ForgotPassword /></ErrorBoundary>} />
+    </Route>
 
     {/* Public info pages wrapped in PublicLayout */}
     <Route element={<PublicLayout><Outlet /></PublicLayout>}>
       <Route index element={<Index />} />
       <Route path="/features" element={<Features />} />
       <Route path="/how-it-works" element={<HowItWorks />} />
+      <Route path="/guide" element={<ErrorBoundary><GuidePagePublic /></ErrorBoundary>} />
       <Route path="/about" element={<About />} />
       <Route path="/pricing" element={<Pricing />} />
       <Route path="/faq" element={<Faq />} />
@@ -161,7 +165,7 @@ export const AppRoutes = () => (
       <Route path="/transport-service/:city" element={<TransportServicePage />} />
 
       {/* Guide Pages */}
-      <Route path="/guide/:slug" element={<GuidePage />} />
+      <Route path="/guide/:slug" element={<GuidePagePublic />} />
 
       {/* Hindi Pages */}
       <Route path="/hi" element={<HiHome />} />

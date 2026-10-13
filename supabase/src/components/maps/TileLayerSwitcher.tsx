@@ -10,7 +10,18 @@ export interface TileLayerOption {
   icon: React.ReactNode;
   url: string;
   attribution: string;
+  /**
+   * Optional transparent label/place-name overlay drawn on top of `url`.
+   * Used to keep a dark base map readable without a keyed tile provider.
+   */
+  labelsUrl?: string;
 }
+
+// NOTE: All basemaps below are keyless. CARTO basemaps now require an API key
+// (legacy URLs watermarked "API key required" after 23 Sep 2026), so dark
+// styles fall back to Esri's free World Dark Gray Canvas instead.
+const ESRI_DARK_ATTRIBUTION =
+  '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 export const TILE_LAYERS: TileLayerOption[] = [
   {
@@ -31,15 +42,17 @@ export const TILE_LAYERS: TileLayerOption[] = [
     id: 'dark',
     label: 'Dark',
     icon: <Moon className="h-4 w-4" />,
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    labelsUrl:
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+    attribution: ESRI_DARK_ATTRIBUTION,
   },
   {
     id: 'night',
     label: 'Night',
     icon: <Moon className="h-4 w-4" />,
-    url: 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attribution: ESRI_DARK_ATTRIBUTION,
   },
 ];
 

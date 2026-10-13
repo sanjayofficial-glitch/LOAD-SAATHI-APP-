@@ -207,7 +207,11 @@ const TripMap: React.FC<TripMapProps> = ({ trips, shipments }) => {
       <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: '100%', width: '100%', background: '#020617', position: 'relative' }} scrollWheelZoom touchZoom zoomControl={false}>
         <MapResizer />
         <ZoomControls positions={allPositions} />
-        <TileLayer attribution='&copy; OSM' url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+        <TileLayer
+          attribution='&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+        />
+        <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}" />
 
         {resolvedTrips.map(t => (
           <React.Fragment key={`t-${t.id}`}>

@@ -17,6 +17,9 @@ import {
 } from 'lucide-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDisha } from '@/components/DishaContext';
+import { useDishaGuide } from '@/components/DishaGuideProvider';
+import { useMascotFormWatcher } from '@/hooks/useMascotFormWatcher';
 import { User as UserType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +27,9 @@ import { Label } from '@/components/ui/label';
 import LogoMark from '@/components/LogoMark';
 import SeoMeta from '@/components/SeoMeta';
 import { showSuccess, showError } from '@/utils/toast';
+import { extractErrorMessage } from '@/utils/errorMessage';
+import { isValidIndianMobile, normalizeIndianPhone } from '@/utils/phone';
+import { trackEvent } from '@/utils/analytics';
 
 type Step = 'welcome' | 'profile' | 'done';
 
@@ -31,6 +37,8 @@ const OnboardingFlow = () => {
   const { user, isLoaded, isSignedIn } = useUser();
   const { session } = useSession();
   const { userProfile, setProfile } = useAuth();
+  const { triggerErrorReaction, triggerSuccessReaction } = useDisha();
+  const { handleClick: guideHandleClick } = useDishaGuide();
   const navigate = useNavigate();
 
   const [step, setStep] = useState<Step>('welcome');
@@ -39,8 +47,31 @@ const OnboardingFlow = () => {
   const [phone, setPhone] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [phoneSkipped, setPhoneSkipped] = useState(false);
 
-  const role = userProfile?.user_type || null;
+  useMascotFormWatcher({
+    autoStartFlow: 'signup',
+    fields: [
+      {
+        key: 'fullName',
+        selector: '[data-guide="full-name"]',
+        tip: 'Your full name helps others know who they\'re working with.',
+      },
+      {
+        key: 'phone',
+        selector: '[data-guide="phone"]',
+        tip: 'A valid phone number helps truckers reach you about loads.',
+        validate: (value) => isValidIndianMobile(value) || value.length === 0,
+      },
+      {
+        key: 'company',
+        selector: '[data-guide="company"]',
+        tip: 'Your company name builds trust with partners.',
+      },
+    ],
+  });
+
+  const role = (userProfile?.user_type || null) as UserType['user_type'] | null;
 
   const onboardedKey = user ? `loadsaathi-onboarded-${user.id}` : 'loadsaathi-onboarded';
 
@@ -55,6 +86,10 @@ const OnboardingFlow = () => {
     if (role === 'trucker') return '/trucker/post-trip';
     return '/shipper/post-shipment';
   };
+
+  // Phone is a soft gate: required for contactability, but user can skip with "Do later".
+  const isPhoneValid = isValidIndianMobile(phone);
+  const canSaveProfile = fullName.trim() && (isPhoneValid || phoneSkipped);
 
   // Guard: not authed, no role, or already onboarded
   useEffect(() => {
@@ -120,7 +155,7 @@ const OnboardingFlow = () => {
 
       const payload: { full_name: string; phone: string; company_name?: string } = {
         full_name: fullName.trim() || user.fullName || '',
-        phone: phone.trim(),
+        phone: isPhoneValid ? normalizeIndianPhone(phone).replace(/^(\d{5})(\d{5})$/, '$1 $2') : '',
       };
       if (companyName.trim()) payload.company_name = companyName.trim();
 
@@ -133,7 +168,7 @@ const OnboardingFlow = () => {
 
       const updatedProfile: UserType = {
         id: user.id,
-        user_type: (role || 'trucker') as UserType['user_type'],
+        user_type: (role === 'trucker' || role === 'shipper' ? role : 'trucker') as UserType['user_type'],
         full_name: payload.full_name,
         phone: payload.phone,
         company_name: payload.company_name,
@@ -145,15 +180,28 @@ const OnboardingFlow = () => {
       setProfile(updatedProfile);
 
       showSuccess('Profile saved!');
+      triggerSuccessReaction('Profile saved! Let\'s get you started.');
+      if (isPhoneValid) {
+        trackEvent('phone_added', { role: (role === 'trucker' || role === 'shipper' ? role : undefined) });
+      } else if (phoneSkipped) {
+        trackEvent('phone_skipped', { role: (role === 'trucker' || role === 'shipper' ? role : undefined) });
+      }
       setStep('done');
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to save your profile';
+      const msg = extractErrorMessage(err, 'Failed to save your profile');
       console.error('[Onboarding] Error saving profile:', err);
       setError(msg);
+      triggerErrorReaction(msg);
       showError(msg);
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSkipPhone = () => {
+    setPhoneSkipped(true);
+    trackEvent('phone_skipped', { role: (role === 'trucker' || role === 'shipper' ? role : undefined) });
+    // Move past the phone field visually but keep the form saveable.
   };
 
   if (!isLoaded || !isSignedIn || !user) {
@@ -280,10 +328,12 @@ const OnboardingFlow = () => {
                 </Label>
                 <Input
                   id="onboarding-name"
+                  name="fullName"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Your full name"
                   className="h-12 text-base"
+                  data-guide="full-name"
                 />
               </div>
 
@@ -291,20 +341,53 @@ const OnboardingFlow = () => {
                 <Label htmlFor="onboarding-phone">
                   <span className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-gray-400" /> Phone number
-                    <span className="text-xs font-normal text-gray-400 dark:text-gray-500">(recommended)</span>
+                    {!phoneSkipped ? (
+                      <span className="text-xs font-normal text-orange-500 dark:text-orange-400">(needed to get loads)</span>
+                    ) : null}
                   </span>
                 </Label>
-                <Input
-                  id="onboarding-phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="e.g. 98765 43210"
-                  className="h-12 text-base"
-                />
-                <p className="text-xs text-gray-400 dark:text-gray-500">
-                  Used by the other side to reach you about a load.
-                </p>
+                <div className="relative">
+                  <Input
+                    id="onboarding-phone"
+                    type="tel"
+                    name="phone"
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      setPhoneSkipped(false);
+                    }}
+                    placeholder="e.g. 98765 43210"
+                    className={`h-12 text-base ${!phoneSkipped && !isPhoneValid && phone ? 'ring-2 ring-red-400 dark:ring-red-500' : ''}`}
+                    data-guide="phone"
+                  />
+                  {phoneSkipped ? (
+                    <button
+                      type="button"
+                      onClick={handleSkipPhone}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400 hover:text-orange-500 transition-colors"
+                    >
+                      Not now
+                    </button>
+                  ) : isPhoneValid ? (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-green-500">
+                      Looks good
+                    </span>
+                  ) : phone ? (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-red-400">
+                      Enter 10 digits
+                    </span>
+                  ) : null}
+                </div>
+                {!phoneSkipped && phone && !isPhoneValid && (
+                  <p className="text-xs text-red-500">
+                    Please enter a valid 10-digit Indian mobile number.
+                  </p>
+                )}
+                {!phoneSkipped && !phone && (
+                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                    Used by the other side to reach you about a load.
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -316,18 +399,21 @@ const OnboardingFlow = () => {
                 </Label>
                 <Input
                   id="onboarding-company"
+                  name="companyName"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder={isTrucker ? 'e.g. Singh Logistics' : 'e.g. Acme Exports'}
                   className="h-12 text-base"
+                  data-guide="company"
                 />
               </div>
             </div>
 
             <Button
-              onClick={handleSaveProfile}
-              disabled={saving}
-              className={`w-full h-12 text-base mt-8 ${isTrucker ? 'bg-orange-600 hover:bg-orange-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+              onClick={() => { guideHandleClick('[data-guide="complete-onboarding"]'); handleSaveProfile(); }}
+              disabled={saving || !canSaveProfile}
+              data-guide="complete-onboarding"
+              className={`w-full h-12 text-base mt-8 ${isTrucker ? 'bg-orange-600 hover:bg-orange-700' : 'bg-blue-600 hover:bg-blue-700'} ${!canSaveProfile ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {saving ? (
                 <>
@@ -340,6 +426,11 @@ const OnboardingFlow = () => {
               )}
             </Button>
 
+            {!phoneSkipped && phone && !isPhoneValid && (
+              <p className="text-xs text-red-500 mt-3 text-center">
+                Add a phone number to get loads, or skip for now.
+              </p>
+            )}
             <button
               onClick={() => completeOnboarding()}
               className="w-full text-center text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 mt-4 transition-colors"

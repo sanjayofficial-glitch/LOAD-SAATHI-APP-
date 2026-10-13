@@ -1,5 +1,6 @@
 
-import { useEffect } from "react";
+import { Reveal } from "@/components/motion";
+
 import { Link } from "react-router-dom";
 import { Search, Bell, Map, Package, Truck, Route, Shield, TrendingUp, Brain, BarChart3, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,21 +31,7 @@ const aiFeatures = [
 ];
 
 const Features = () => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll(".fade-section").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
+  
   return (
     <>
       <noscript>
@@ -160,7 +147,7 @@ const Features = () => {
       </section>
 
       {/* SHIPPER OS */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
           style={{ background: "radial-gradient(circle, #f97316 0%, transparent 70%)", filter: "blur(60px)" }} />
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -173,7 +160,7 @@ const Features = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {shipperFeatures.map((feature, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 transition-all duration-300 group border-border dark:border-white/[0.08]">
+              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 elevate group border-border dark:border-white/[0.08]">
                 <div className="w-12 h-12 rounded-lg bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
@@ -183,10 +170,10 @@ const Features = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* TRANSPORTER OS */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
           style={{ background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)", filter: "blur(60px)" }} />
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -199,7 +186,7 @@ const Features = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {truckerFeatures.map((feature, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl hover:border-blue-500/30 transition-all duration-300 group border-border dark:border-white/[0.08]">
+              <div key={i} className="glass-card p-8 rounded-xl hover:border-blue-500/30 elevate group border-border dark:border-white/[0.08]">
                 <div className="w-12 h-12 rounded-lg bg-blue-600/10 dark:bg-blue-500/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
@@ -216,10 +203,10 @@ const Features = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* AI COMMAND CENTER */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="mb-12 text-center">
             <div className="inline-flex items-center gap-2 mb-4">
@@ -231,7 +218,7 @@ const Features = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {aiFeatures.map((feature, i) => (
-              <div key={i} className="glass-card p-10 rounded-xl border border-orange-500/10 hover:border-orange-500/30 transition-all duration-300 group relative overflow-hidden">
+              <div key={i} className="glass-card p-10 rounded-xl border border-orange-500/10 hover:border-orange-500/30 elevate group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-[0.06] pointer-events-none"
                   style={{ background: "radial-gradient(circle, #f97316 0%, transparent 70%)" }} />
                 <feature.icon className="h-10 w-10 text-orange-600 dark:text-orange-400 mb-6 group-hover:scale-110 transition-transform duration-300" />
@@ -241,10 +228,10 @@ const Features = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* FAQ */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-3xl mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Features FAQ</h2>
@@ -264,10 +251,10 @@ const Features = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* CTA */}
-      <section className="fade-section py-24 relative overflow-hidden">
+      <Reveal as="section" className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
           <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">
@@ -290,7 +277,7 @@ const Features = () => {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
     </>
   );

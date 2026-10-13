@@ -602,7 +602,7 @@ export default function RouteDetail() {
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {benefits.map((benefit) => (
-                <div key={benefit.title} className="glass-card p-6 rounded-xl border border-border dark:border-white/[0.08] hover:border-orange-500/30 transition-all duration-300">
+                <div key={benefit.title} className="glass-card p-6 rounded-xl border border-border dark:border-white/[0.08] hover:border-orange-500/30 elevate">
                   <div className="bg-orange-100 dark:bg-orange-900/30 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
                     <benefit.icon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                   </div>

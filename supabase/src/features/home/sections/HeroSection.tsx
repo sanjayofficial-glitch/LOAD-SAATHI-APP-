@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, ChevronDown, ShieldCheck, MapPin, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useDishaGuide } from '@/components/DishaGuideProvider';
 import HeroQuoteWidget from './HeroQuoteWidget';
 
 const HeroSection = React.memo(() => {
+  const { handleClick: guideHandleClick } = useDishaGuide();
   const stats = [
     { value: '40%', label: 'Empty Trucks' },
     { value: '10x', label: 'Slow Matching' },
@@ -43,16 +45,24 @@ const HeroSection = React.memo(() => {
               heartland of Odisha, Jharkhand, and West Bengal.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/register?type=shipper">
+              <Link
+                to="/register?type=shipper"
+                data-guide="hero-shipper-cta"
+                onClick={() => guideHandleClick('[data-guide="hero-shipper-cta"]')}
+              >
                 <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg w-full sm:w-auto shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-transform duration-150 active:scale-[0.97]">
                   I Want to Ship Goods <ArrowRight className="ml-2 h-5 w-5 icon-hover" />
                 </Button>
               </Link>
-              <Link to="/register?type=trucker">
+              <Link
+                to="/register?type=trucker"
+                data-guide="hero-trucker-cta"
+                onClick={() => guideHandleClick('[data-guide="hero-trucker-cta"]')}
+              >
                 <Button
                   variant="outline"
                   className="text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg border-foreground/20 dark:border-white/20 text-foreground dark:text-white hover:bg-foreground/5 dark:hover:bg-white/5 w-full sm:w-auto transition-transform duration-150 active:scale-[0.97]"
-                >
+                  >
                   I Have Truck Space <ArrowRight className="ml-2 h-5 w-5 icon-hover" />
                 </Button>
               </Link>
@@ -82,7 +92,7 @@ const HeroSection = React.memo(() => {
                     const el = document.getElementById(target);
                     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-orange-600 dark:hover:text-orange-400 transition-colors px-3 py-1.5 rounded-full border border-border/60 hover:border-orange-300 dark:hover:border-orange-700"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-orange-600 dark:hover:text-orange-400 press px-3 py-1.5 rounded-full border border-border/60 hover:border-orange-300 dark:hover:border-orange-700"
                 >
                   {label} <ChevronDown className="h-3 w-3" />
                 </button>

@@ -3,6 +3,14 @@ export function getShareUrl(type: "trip" | "shipment", id: string): string {
   return `${base}/share/${type}/${id}`;
 }
 
+export function generateOwnerWhatsAppLink(pretext?: string): string {
+  const raw = import.meta.env.VITE_OWNER_WHATSAPP || '918328998031';
+  const digits = raw.replace(/\D/g, '');
+  const ownerNumber = digits.length === 10 ? `91${digits}` : digits;
+  const text = encodeURIComponent(pretext || 'Hi, I found LoadSaathi and would like to know more.');
+  return `https://wa.me/${ownerNumber}?text=${text}`;
+}
+
 export function generateShareWhatsAppLink(type: "trip" | "shipment", id: string, details: {
   origin_city: string;
   destination_city: string;

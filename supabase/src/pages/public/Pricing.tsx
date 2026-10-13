@@ -209,7 +209,7 @@ const Pricing = () => {
               return (
                 <div
                   key={plan.id}
-                  className={`glass-card p-8 sm:p-10 rounded-xl border transition-all duration-300 relative ${
+                  className={`glass-card p-8 sm:p-10 rounded-xl border elevate relative ${
                     plan.popular
                       ? "border-orange-500/40 shadow-[0_0_30px_rgba(249,115,22,0.1)]"
                       : "border-border dark:border-white/[0.08] hover:border-orange-500/30"

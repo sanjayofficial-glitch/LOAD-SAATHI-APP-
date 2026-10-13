@@ -1,5 +1,6 @@
 
-import { useEffect, useState } from "react";
+import { Reveal } from "@/components/motion";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, MessageSquare, Clock, MapPin, Send, ArrowRight, Truck, Phone, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SeoMeta from "@/components/SeoMeta";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { trackEvent } from '@/utils/analytics';
 
 const supportInfo = [
   { icon: Mail, label: "Email Us", value: "support@loadsaathi.com", detail: "We respond within 2-4 hours" },
@@ -19,23 +21,22 @@ const Contact = () => {
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll(".fade-section").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    trackEvent('phone_lead_started', { source: 'contact_form' });    try {
+      const { insertLead } = await import('@/lib/leadCapture');
+      await insertLead({
+        phone: '',
+        name: formData.name || '',
+        source: 'contact_form',
+        page_path: '/contact',
+        user_id: '',
+        message: [formData.subject, formData.message].filter(Boolean).join(' | '),
+      });
+    } catch {
+      // Never block the form submit on lead capture failure.
+    }
     setSubmitted(true);
   };
 
@@ -155,7 +156,7 @@ const Contact = () => {
       </section>
 
       {/* CONTACT FORM & INFO */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             {/* Form */}
@@ -233,7 +234,7 @@ const Contact = () => {
               {supportInfo.map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-orange-500/30 transition-all duration-300 group">
+                  <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-orange-500/30 elevate group">
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-lg bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
                         <Icon className="h-5 w-5 text-orange-600 dark:text-orange-400" />
@@ -284,7 +285,7 @@ const Contact = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
               {/* CEO */}
-              <div className="glass-card p-8 rounded-xl border border-orange-500/10 hover:border-orange-500/30 transition-all duration-300 group">
+              <div className="glass-card p-8 rounded-xl border border-orange-500/10 hover:border-orange-500/30 elevate group">
                 <div className="flex items-center gap-4 mb-6">
                   <Avatar className="w-28 h-28 ring-2 ring-orange-500/25 ring-offset-2 ring-offset-background transition-all duration-500 group-hover:ring-orange-500/60 group-hover:shadow-lg group-hover:shadow-orange-500/10">
                     <AvatarImage className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.08]" src="/team/sanjaya-sahu.webp" alt="Sanjaya Sahu" />
@@ -311,7 +312,7 @@ const Contact = () => {
               </div>
 
               {/* COO */}
-              <div className="glass-card p-8 rounded-xl border border-blue-500/10 hover:border-blue-500/30 transition-all duration-300 group">
+              <div className="glass-card p-8 rounded-xl border border-blue-500/10 hover:border-blue-500/30 elevate group">
                 <div className="flex items-center gap-4 mb-6">
                   <Avatar className="w-28 h-28 ring-2 ring-blue-500/25 ring-offset-2 ring-offset-background transition-all duration-500 group-hover:ring-blue-500/60 group-hover:shadow-lg group-hover:shadow-blue-500/10">
                     <AvatarImage className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.08]" src="/team/prince-mallik.webp" alt="Prince Mallik" />
@@ -339,10 +340,10 @@ const Contact = () => {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* CTA */}
-      <section className="fade-section py-24 relative overflow-hidden bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
+      <Reveal as="section" className="py-24 relative overflow-hidden bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10 text-center">
           <Truck className="h-10 w-10 text-orange-500 mx-auto mb-6" />
           <h2 className="text-3xl sm:text-4xl font-black text-foreground dark:text-white mb-4">Ready to Get Started?</h2>
@@ -353,7 +354,7 @@ const Contact = () => {
             </Button>
           </Link>
         </div>
-      </section>
+      </Reveal>
     </div>
     </>
   );

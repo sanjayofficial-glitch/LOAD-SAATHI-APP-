@@ -42,6 +42,23 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* ─── Motion tokens (Apple-aligned) ───
+       Fluid interfaces respond instantly, move continuously, carry momentum,
+       and can be reversed mid-flight. These tokens are the shared vocabulary. */
+    --ease-ios: cubic-bezier(0.32, 0.72, 0, 1); /* fluid, decelerating */
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1); /* snappy settle */
+    --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+    --ease-spring-soft: cubic-bezier(0.34, 1.36, 0.64, 1); /* gentle overshoot */
+
+    --dur-press: 80ms; /* fires on pointer-down */
+    --dur-fast: 120ms; /* micro state change */
+    --dur-base: 180ms; /* element enter/exit */
+    --dur-slow: 260ms; /* surface / large reposition */
+    --dur-reveal: 420ms; /* scroll reveal */
+
+    --reveal-distance: 16px;
+    --reveal-delay: 0ms;
   }
 
   .dark {
@@ -100,8 +117,6 @@
     text-size-adjust: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    /* Hint the browser this is the root scrolling container. */
-    overflow-clip: clip;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -113,6 +128,47 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+
+    /* Motion is neutralized, but reduced motion is not *no* feedback — it is a
+       gentler, non-vestibular equivalent. Force every reveal/translate back to
+       its resting state and allow a short opacity-only cross-fade. Higher
+       specificity than the blanket `*` rule, so it wins. */
+    .reveal,
+    .reveal.is-revealed {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .motion-fade {
+      transition-property: opacity !important;
+      transition-duration: 220ms !important;
+      transition-delay: 0ms !important;
+      transition-timing-function: ease !important;
+    }
+  }
+
+  /* Reduced transparency: make translucent materials frostier/solid so text
+     legibility does not depend on the backdrop. */
+  @media (prefers-reduced-transparency: reduce) {
+    .material,
+    .material-strong,
+    .glass-panel {
+      background: hsl(var(--card)) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+  }
+
+  /* Increased contrast: near-solid surfaces with a defined border. */
+  @media (prefers-contrast: more) {
+    .material,
+    .material-strong,
+    .glass-panel,
+    .glass-card {
+      background: hsl(var(--card)) !important;
+      border-color: hsl(var(--foreground) / 0.55) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
   }
 
@@ -189,6 +245,98 @@
   }
   .icon-float:hover {
     transform: translateY(-2px);
+  }
+
+  /* ─── Press feedback ───
+     Feedback lives on the press (pointer-down), not the release — and it is
+     instant. Shared by buttons, tabs, cards, and any tappable surface. */
+  .press {
+    transition:
+      transform var(--dur-fast) var(--ease-out-quint),
+      box-shadow var(--dur-base) var(--ease-out-quint),
+      background-color var(--dur-base) ease,
+      border-color var(--dur-base) ease,
+      color var(--dur-base) ease;
+    will-change: transform;
+  }
+  .press:active {
+    transform: scale(0.97);
+    transition-duration: var(--dur-press);
+  }
+
+  /* ─── Card lift ───
+     Hover raises, tap settles — transform/opacity only (compositor-friendly). */
+  .elevate {
+    transition:
+      transform var(--dur-slow) var(--ease-ios),
+      box-shadow var(--dur-slow) var(--ease-ios),
+      border-color var(--dur-slow) ease;
+    will-change: transform;
+  }
+  .elevate:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 18px 32px -14px hsl(var(--foreground) / 0.18),
+      0 8px 14px -10px hsl(var(--foreground) / 0.12);
+  }
+  .elevate:active {
+    transform: translateY(-1px) scale(0.995);
+    transition-duration: var(--dur-press);
+  }
+
+  /* ─── Translucent materials ───
+     A floating functional layer that brings structure without stealing focus.
+     Weight encodes hierarchy: never stack a light material on another. */
+  .material {
+    background: hsl(var(--card) / 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+  .material-strong {
+    background: hsl(var(--card) / 0.86);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+  }
+
+  /* Scroll-edge fade — replaces a hard 1px divider where content meets
+     floating chrome. Only render where floating UI actually overlaps content. */
+  .scroll-edge-top {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background)) 0%,
+      hsl(var(--background) / 0.86) 45%,
+      transparent 100%
+    );
+  }
+  .scroll-edge-bottom {
+    background: linear-gradient(
+      to top,
+      hsl(var(--background)) 0%,
+      hsl(var(--background) / 0.86) 45%,
+      transparent 100%
+    );
+  }
+
+  /* ─── Reveal ───
+     Content is visible by default (no flash of hidden content, no "second
+     tap"); the shared observer flips `data-reveal` to `out` for below-the-fold
+     elements before paint, then to `in` when they scroll into view. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal[data-reveal="out"] {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance, 16px));
+    will-change: opacity, transform;
+  }
+  .reveal[data-reveal="in"] {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--dur-reveal) var(--ease-out-quint),
+      transform var(--dur-reveal) var(--ease-ios);
+    transition-delay: calc(var(--reveal-i, 0) * 60ms + var(--reveal-delay, 0ms));
   }
 
   /* Glass morphism panels — use lighter blur on mobile */
@@ -281,26 +429,6 @@
     width: 100%;
   }
 
-  /* Scroll-triggered fade-in — faster, GPU accelerated.
-     Content is visible by default so navigation shows pages immediately.
-     IntersectionObserver adds .visible to trigger the entrance animation;
-     if the observer hasn't fired yet (e.g. first paint after navigation),
-     content is still fully visible — no "second tap" needed. */
-  .fade-section {
-    opacity: 1;
-    transform: none;
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-    will-change: opacity, transform;
-  }
-  .fade-section.animate-in {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  .fade-section.animate-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
   /* Globe pulse dot */
   .globe-pulse {
     animation: globePulse 3s ease-in-out infinite;
@@ -318,6 +446,35 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Optical sizing: large display text wants negative tracking (letters read
+     too far apart as they grow); body stays near zero. */
+  .type-display {
+    letter-spacing: -0.022em;
+    line-height: 1.05;
+    font-optical-sizing: auto;
+  }
+  .type-title {
+    letter-spacing: -0.014em;
+    line-height: 1.15;
+  }
+  /* iOS-standard minimum tap target (44×44) without changing visual size. */
+  .tap-target {
+    position: relative;
+  }
+  .tap-target::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+    width: 100%;
+    height: 100%;
   }
   /* Notch / Dynamic Island: extra top padding for fixed & sticky headers. */
   .safe-area-top {
@@ -353,8 +510,16 @@
   0% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.5); }
   100% { box-shadow: 0 0 0 15px rgba(255, 107, 0, 0); }
 }
+@keyframes bounceGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
 
-/* Hyphenated alias used by the Leaflet marker DivIcons (trucker/shipper/on-trip). */
+/* Gentle bounce for Freddy when guiding */
+  .animate-bounce-gentle {
+    animation: bounceGentle 2s ease-in-out infinite;
+    will-change: transform;
+  }
 @keyframes pulse-ring {
   0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.45); }
   70% { box-shadow: 0 0 0 12px rgba(249, 115, 22, 0); }
@@ -363,6 +528,24 @@
 @keyframes globePulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.05); }
+}
+/* Materialize: a surface arriving as a real material (scale + opacity), not a
+   plain fade. Used by popovers/menus/toasts that did not opt into a spring. */
+@keyframes materializeIn {
+  from { opacity: 0; transform: scale(0.96) translateY(2px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+/* Badge pop — for unread counts and status dots. */
+@keyframes badgePop {
+  0% { transform: scale(0.5); }
+  55% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.animate-materialize {
+  animation: materializeIn var(--dur-base) var(--ease-out-quint) both;
+}
+.animate-badge-pop {
+  animation: badgePop 0.28s var(--ease-spring-soft) both;
 }
 
 /* Smooth page transitions — fast 200ms with GPU layers */
@@ -375,6 +558,35 @@
   transform: translateY(0);
   transition: opacity 200ms ease-out, transform 200ms ease-out;
   will-change: opacity, transform;
+}
+
+/* Route enter — opacity-only so it never establishes a containing block for
+   fixed-position children (dock, FABs, tab bar). Applied to <main> on path
+   change; the hook restarts the animation each navigation. */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.page-fade {
+  animation: pageFadeIn 240ms var(--ease-out-quint) both;
+}
+
+/* View Transitions API (progressive enhancement). If a <Link viewTransition>
+   or startViewTransition is used, route changes cross-fade cleanly instead of
+   swapping instantly. No-ops in unsupported browsers. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out-quint);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
 
 /* Scrollbar styling */

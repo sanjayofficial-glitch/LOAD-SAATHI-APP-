@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
@@ -17,7 +18,7 @@ const stats = [
 ] as const;
 
 const TrustedAcrossEastIndia = React.memo(() => (
-  <section className="fade-section py-24 relative">
+  <Reveal as="section" className="py-24 relative">
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
       <div className="text-center mb-16">
         <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Trusted Across East India</h2>
@@ -25,27 +26,29 @@ const TrustedAcrossEastIndia = React.memo(() => (
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {cities.map((city, i) => (
-          <Link key={i} to={`/location/${city.city.toLowerCase()}`} className="glass-card p-6 rounded-xl border border-border hover:border-orange-500/30 transition-all duration-300 group">
-            <div className="flex items-center gap-2 mb-3">
-              <MapPin className="h-4 w-4 text-orange-500" />
-              <h3 className="font-bold text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{city.city}</h3>
-              <span className="text-xs text-muted-foreground">{city.state}</span>
-            </div>
-            <p className="text-sm text-muted-foreground mb-3">{city.desc}</p>
-            <span className="text-xs font-semibold text-orange-500">{city.routes} →</span>
-          </Link>
+          <Reveal key={i} as="div" index={i} className="h-full">
+            <Link to={`/location/${city.city.toLowerCase()}`} className="glass-card p-6 rounded-xl h-full block border border-border hover:border-orange-500/30 elevate group">
+              <div className="flex items-center gap-2 mb-3">
+                <MapPin className="h-4 w-4 text-orange-500" />
+                <h3 className="font-bold text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{city.city}</h3>
+                <span className="text-xs text-muted-foreground">{city.state}</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">{city.desc}</p>
+              <span className="text-xs font-semibold text-orange-500">{city.routes} →</span>
+            </Link>
+          </Reveal>
         ))}
       </div>
       <div className="flex flex-wrap justify-center gap-8 text-center">
         {stats.map((stat, i) => (
-          <div key={i}>
+          <Reveal key={i} as="div" index={i + cities.length}>
             <div className="text-3xl font-black text-orange-600 dark:text-orange-400">{stat.value}</div>
             <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mt-1">{stat.label}</div>
-          </div>
+          </Reveal>
         ))}
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 TrustedAcrossEastIndia.displayName = "TrustedAcrossEastIndia";
 

@@ -1,5 +1,6 @@
 
-import { useEffect } from "react";
+import { Reveal } from "@/components/motion";
+
 import { Link } from "react-router-dom";
 import { Target, Eye, Heart, Shield, Zap, Users, Globe, ArrowRight, MapPin, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,21 +22,7 @@ const stats = [
 ];
 
 const About = () => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll(".fade-section").forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
+  
   return (
     <>
       <noscript>
@@ -161,10 +148,10 @@ const About = () => {
       </section>
 
       {/* MISSION & VISION */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="glass-card p-10 rounded-xl border border-orange-500/10 hover:border-orange-500/30 transition-all duration-300">
+            <div className="glass-card p-10 rounded-xl border border-orange-500/10 hover:border-orange-500/30 elevate">
               <div className="w-14 h-14 rounded-xl bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center mb-6">
                 <Target className="h-7 w-7 text-orange-600 dark:text-orange-400 icon-hover" />
               </div>
@@ -173,7 +160,7 @@ const About = () => {
                 To eliminate empty kilometers from Indian logistics by building an AI-powered network that connects every load to its perfect truck — instantly, transparently, and efficiently.
               </p>
             </div>
-            <div className="glass-card p-10 rounded-xl border border-blue-500/10 hover:border-blue-500/30 transition-all duration-300">
+            <div className="glass-card p-10 rounded-xl border border-blue-500/10 hover:border-blue-500/30 elevate">
               <div className="w-14 h-14 rounded-xl bg-blue-600/10 dark:bg-blue-500/10 flex items-center justify-center mb-6">
                 <Eye className="h-7 w-7 text-blue-600 dark:text-blue-400 icon-hover" />
               </div>
@@ -184,10 +171,10 @@ const About = () => {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* THE PROBLEM & SOLUTION */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
@@ -226,10 +213,10 @@ const About = () => {
             </div>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* STATS */}
-      <section className="fade-section border-y border-border dark:border-white/5 bg-muted/50 dark:bg-[#010f1f]/80 backdrop-blur-sm">
+      <Reveal as="section" className="border-y border-border dark:border-white/5 bg-muted/50 dark:bg-[#010f1f]/80 backdrop-blur-sm">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 py-12 flex flex-col md:flex-row justify-around items-center gap-8">
           {stats.map((stat, i) => (
             <div key={i} className="text-center">
@@ -239,10 +226,10 @@ const About = () => {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* VALUES */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-16 max-w-3xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">What We Stand For</h2>
@@ -250,7 +237,7 @@ const About = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {values.map((value, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 transition-all duration-300 group border-border dark:border-white/[0.08]">
+              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 elevate group border-border dark:border-white/[0.08]">
                 <value.icon className="h-8 w-8 text-orange-600 dark:text-orange-400 mb-5 group-hover:scale-110 transition-transform duration-300 active:scale-95" />
                 <h3 className="text-lg font-bold text-foreground mb-3">{value.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{value.desc}</p>
@@ -258,10 +245,10 @@ const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* STORY */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 relative z-10 text-center">
           <Globe className="h-12 w-12 text-orange-500 mx-auto mb-6 icon-hover" />
           <h2 className="text-3xl sm:text-4xl font-black mb-6 text-foreground dark:text-white">The LoadSaathi Story</h2>
@@ -277,10 +264,10 @@ const About = () => {
             </p>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* LEADERSHIP TEAM */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-16 max-w-3xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">The Team Behind LoadSaathi</h2>
@@ -288,10 +275,10 @@ const About = () => {
           </div>
           <TeamShowcase />
         </div>
-      </section>
+      </Reveal>
 
       {/* CORRIDORS WE SERVE */}
-      <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
+      <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Corridors We Serve</h2>
@@ -306,7 +293,7 @@ const About = () => {
               { from: "Rourkela", to: "Bhubaneswar", distance: "330 km", time: "7 hrs" },
               { from: "Ranchi", to: "Bhubaneswar", distance: "380 km", time: "9 hrs" },
             ].map((route, i) => (
-              <Link key={i} to={`/routes/${route.from.toLowerCase()}-to-${route.to.toLowerCase()}`} className="glass-card p-5 rounded-xl border border-border hover:border-orange-500/30 transition-all duration-300 group flex items-center justify-between">
+              <Link key={i} to={`/routes/${route.from.toLowerCase()}-to-${route.to.toLowerCase()}`} className="glass-card p-5 rounded-xl border border-border hover:border-orange-500/30 elevate group flex items-center justify-between">
                 <div className="flex items-center gap-3">
                    <MapPin className="h-4 w-4 text-orange-500 shrink-0 icon-hover" />
                   <div>
@@ -326,10 +313,10 @@ const About = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* GUIDES */}
-      <section className="fade-section py-24 relative">
+      <Reveal as="section" className="py-24 relative">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Learn About Freight</h2>
@@ -341,7 +328,7 @@ const About = () => {
               { title: "Freight Rates in East India 2026", slug: "freight-rates-east-india", desc: "Comprehensive guide to current freight rates across major East India corridors — Rourkela, Ranchi, Kolkata, and more." },
               { title: "How to Ship Steel Safely", slug: "shipping-steel", desc: "Complete guide to transporting steel coils, plates, and finished steel products across Indian highways." },
             ].map((guide, i) => (
-              <Link key={i} to={`/guide/${guide.slug}`} className="glass-card p-6 rounded-xl border border-border hover:border-orange-500/30 transition-all duration-300 group">
+              <Link key={i} to={`/guide/${guide.slug}`} className="glass-card p-6 rounded-xl border border-border hover:border-orange-500/30 elevate group">
                 <Truck className="h-6 w-6 text-orange-500 mb-4" />
                 <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">{guide.title}</h3>
                 <p className="text-sm text-muted-foreground mb-4">{guide.desc}</p>
@@ -350,10 +337,10 @@ const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* CTA */}
-      <section className="fade-section py-24 relative overflow-hidden">
+      <Reveal as="section" className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
           <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">
@@ -366,7 +353,7 @@ const About = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
     </>
   );

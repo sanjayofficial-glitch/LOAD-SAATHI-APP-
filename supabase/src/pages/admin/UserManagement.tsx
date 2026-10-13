@@ -229,10 +229,19 @@ const UserManagement = () => {
   const filteredUsers = users.filter(user => {
     const matchesSearch =
       user.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-      user.phone?.includes(search);
+      user.phone?.replace(/\D/g, '').includes(search.replace(/\D/g, ''));
     const matchesRole = roleFilter === 'all' || user.user_type === roleFilter;
     return matchesSearch && matchesRole;
   });
+
+  const getPhoneDisplay = (phone?: string) => {
+    if (!phone) return null;
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 10) return `+91 ${digits.slice(0, 5)} ${digits.slice(5)}`;
+    if (digits.length === 12 && digits.startsWith('91')) return `+91 ${digits.slice(2, 7)} ${digits.slice(7)}`;
+    if (digits.length === 11 && digits.startsWith('0')) return `+91 ${digits.slice(1, 6)} ${digits.slice(6)}`;
+    return phone;
+  };
 
   const getRoleBadge = (role: string) => {
     switch (role) {
@@ -343,6 +352,7 @@ const UserManagement = () => {
               <TableHead>Role</TableHead>
               <TableHead className="text-center">Rating</TableHead>
               <TableHead className="text-center">Trips</TableHead>
+              <TableHead className="text-center">Phone</TableHead>
               <TableHead className="text-center">Verified</TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead className="text-center">Joined</TableHead>
@@ -386,6 +396,19 @@ const UserManagement = () => {
                   </TableCell>
                   <TableCell className="text-center text-sm text-gray-600 dark:text-gray-300">
                     {user.total_trips || 0}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {getPhoneDisplay(user.phone) ? (
+                      <a
+                        href={`tel:${user.phone?.replace(/\D/g, '')}`}
+                        className="text-xs text-orange-600 dark:text-orange-400 hover:underline"
+                        title={user.phone}
+                      >
+                        {getPhoneDisplay(user.phone)}
+                      </a>
+                    ) : (
+                      <span className="text-xs text-gray-400">—</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-center">
                     {user.is_verified ? (

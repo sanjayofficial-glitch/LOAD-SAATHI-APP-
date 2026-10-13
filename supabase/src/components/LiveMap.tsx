@@ -7,7 +7,6 @@ import TileLayerSwitcher, { type TileLayerId, getTileLayer } from "@/components/
 import { useMapUserInteraction } from "@/components/maps/useMapUserInteraction";
 import MapSizeHandler from "@/components/maps/MapSizeHandler";
 import MapErrorBoundary from "@/components/MapErrorBoundary";
-import { useTheme } from "@/theme/theme";
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -69,14 +68,9 @@ function formatTime(iso: string): string {
 }
 
 export default React.memo(function LiveMap({ trucks, className = "", height = "min(500px, 55dvh)" }: LiveMapProps) {
-  const { isDark } = useTheme();
-
-  const defaultTileId: TileLayerId = isDark ? 'dark' : 'standard';
-  const [tileLayerId, setTileLayerId] = useState<TileLayerId>(defaultTileId);
-
-  useEffect(() => {
-    setTileLayerId(isDark ? 'dark' : 'standard');
-  }, [isDark]);
+  // Always open on the keyless OpenStreetMap "Standard" layer (never forced to
+  // the keyed CARTO dark basemap by the theme).
+  const [tileLayerId, setTileLayerId] = useState<TileLayerId>('standard');
 
   const tile = getTileLayer(tileLayerId);
 
@@ -106,6 +100,7 @@ export default React.memo(function LiveMap({ trucks, className = "", height = "m
           attribution={tile.attribution}
           url={tile.url}
         />
+        {tile.labelsUrl && <TileLayer url={tile.labelsUrl} />}
         <FitBounds trucks={trucks} boundsKey={boundsKey} />
         {trucks.map((truck) => (
           <Marker key={truck.id} position={[truck.lat, truck.lng]}>

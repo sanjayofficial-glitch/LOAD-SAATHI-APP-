@@ -31,6 +31,8 @@ import LogoMark from '@/components/LogoMark';
 import EmptyState from '@/components/EmptyState';
 import ErrorState from '@/components/ErrorState';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
+import ProfileProgressBar from '@/components/ProfileProgressBar';
+import { useProfileProgress } from '@/hooks/useProfileProgress';
 import type { TruckLocation } from '@/components/LiveMap';
 
 const LazyBarChart = React.lazy(() => import('./TruckerEarningsChart'));
@@ -60,6 +62,7 @@ const TruckerDashboard = () => {
   const [recentActivity, setRecentActivity] = useState<{ route: string; earnings: number; date: string }[]>([]);
   const [activeTrucks, setActiveTrucks] = useState<TruckLocation[]>([]);
   const [range, setRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const profileProgress = useProfileProgress();
 
   const { data: creditScore } = useCreditScore(userProfile?.id);
   const { data: insights } = useCreditInsights(creditScore);
@@ -274,15 +277,16 @@ const TruckerDashboard = () => {
         </div>
       )}
 
-      {/* Onboarding Checklist */}
-      {!loading && !(stats.activeTrips === 0 && stats.completedTrips === 0 && stats.pendingRequests === 0) && userProfile?.id && (
+      {/* Progress + Onboarding Checklist */}
+      {!loading && userProfile?.id && (
         <div className="mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+          <ProfileProgressBar progress={profileProgress} className="mb-4" />
           <OnboardingChecklist
             accent="orange"
             userId={userProfile.id}
+            userPhone={userProfile.phone}
             items={[
               { label: 'Post your first trip', done: stats.activeTrips > 0, to: '/trucker/post-trip' },
-              { label: 'Complete your profile', done: Boolean(userProfile.full_name?.trim() && userProfile.phone?.trim()), to: '/profile' },
               { label: 'Get a booking request', done: stats.pendingRequests > 0, to: '/trucker/my-trips?tab=incoming' },
             ]}
           />
@@ -336,18 +340,18 @@ const TruckerDashboard = () => {
             <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-6 px-4 sm:px-6">
-            <Link to="/trucker/post-trip" className="block">
+            <Link to="/trucker/post-trip" data-guide="post-trip-btn" className="block">
               <Button className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 h-12 sm:h-14 text-base sm:text-lg font-bold shadow-md hover:shadow-lg transition-all" disabled={!isOnline}>
                 <PlusCircle className="mr-2 h-5 w-5" /> Post New Trip
               </Button>
             </Link>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link to="/trucker/browse-shipments">
+              <Link to="/trucker/browse-shipments" data-guide="find-loads-btn">
                 <Button variant="outline" className="w-full border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 h-10 sm:h-12 font-bold text-sm sm:text-base">
                   <Search className="mr-2 h-4 w-4" /> Find Loads
                 </Button>
               </Link>
-              <Link to="/trucker/my-trips">
+              <Link to="/trucker/my-trips" data-guide="manage-trips-btn">
                 <Button variant="outline" className="w-full border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 h-10 sm:h-12 font-bold text-sm sm:text-base">
                   <Truck className="mr-2 h-4 w-4" /> Manage Trips
                 </Button>

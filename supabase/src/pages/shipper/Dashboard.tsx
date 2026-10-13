@@ -23,6 +23,8 @@ import {
 } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
+import ProfileProgressBar from '@/components/ProfileProgressBar';
+import { useProfileProgress } from '@/hooks/useProfileProgress';
 import ErrorState from '@/components/ErrorState';
 import LiveTruckMap from '@/features/shipper/components/LiveTruckMap';
 
@@ -74,6 +76,7 @@ const ShipperDashboard = () => {
   const [monthlyData, setMonthlyData] = useState<{month: string, spending: number}[]>([]);
   const [routeHistory, setRouteHistory] = useState<{route: string, cost: number, date: string}[]>([]);
   const [range, setRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const profileProgress = useProfileProgress();
 
   const loadStats = useCallback(async () => {
     if (!userProfile?.id) return;
@@ -265,15 +268,16 @@ const ShipperDashboard = () => {
         <LiveTruckMap />
       </div>
 
-      {/* Onboarding Checklist */}
-      {!loading && !(stats.activeShipments === 0 && stats.completedShipments === 0 && stats.pendingRequests === 0) && userProfile?.id && (
+      {/* Progress + Onboarding Checklist */}
+      {!loading && userProfile?.id && (
         <div className="mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+          <ProfileProgressBar progress={profileProgress} className="mb-4" />
           <OnboardingChecklist
             accent="blue"
             userId={userProfile.id}
+            userPhone={userProfile.phone}
             items={[
               { label: 'Post your first load', done: stats.activeShipments > 0, to: '/shipper/post-shipment' },
-              { label: 'Complete your profile', done: Boolean(userProfile.full_name?.trim() && userProfile.phone?.trim()), to: '/profile' },
               { label: 'Get a trucker offer', done: stats.pendingRequests > 0, to: '/shipper/my-shipments?tab=incoming' },
             ]}
           />
@@ -326,18 +330,18 @@ const ShipperDashboard = () => {
             <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-6 px-4 sm:px-6">
-            <Link to="/shipper/post-shipment" className="block">
+            <Link to="/shipper/post-shipment" data-guide="post-load-btn" className="block">
               <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 h-12 sm:h-14 text-base sm:text-lg font-bold shadow-md hover:shadow-lg transition-all" disabled={!isOnline}>
                 <PlusCircle className="mr-2 h-5 w-5" /> Post New Load
               </Button>
             </Link>
             <div className="grid grid-cols-2 gap-4">
-              <Link to="/browse-trucks">
+              <Link to="/browse-trucks" data-guide="find-trucks-btn">
                 <Button variant="outline" className="w-full border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 h-10 sm:h-12 font-bold text-sm sm:text-base">
                   <Search className="mr-2 h-4 w-4" /> Find Trucks
                 </Button>
               </Link>
-              <Link to="/shipper/my-shipments">
+              <Link to="/shipper/my-shipments" data-guide="my-shipments-btn">
                 <Button variant="outline" className="w-full border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 h-10 sm:h-12 font-bold text-sm sm:text-base">
                   <Package className="mr-2 h-4 w-4" /> My Loads
                 </Button>

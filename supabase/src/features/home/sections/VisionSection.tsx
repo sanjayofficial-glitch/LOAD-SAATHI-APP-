@@ -1,10 +1,11 @@
 ﻿import React from 'react';
+import { Reveal } from "@/components/motion";
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const VisionSection = React.memo(() => (
-  <section id="vision" className="fade-section min-h-[60vh] sm:min-h-[716px] flex items-center justify-center relative bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 py-16 sm:py-24 overflow-hidden isolate">
+  <Reveal as="section" id="vision" className="min-h-[60vh] sm:min-h-[716px] flex items-center justify-center relative bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 py-16 sm:py-24 overflow-hidden isolate">
     <div className="absolute inset-0 opacity-30 dark:opacity-30 bg-[radial-gradient(circle,rgba(0,0,0,0.05)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[length:4px_4px]" />
     <div
       aria-hidden="true"
@@ -25,7 +26,7 @@ const VisionSection = React.memo(() => (
         </Link>
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 VisionSection.displayName = "VisionSection";
 

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import SeoMeta from '@/components/SeoMeta';
 import HeroSection from '@/features/home/sections/HeroSection';
 import SectionNav from '@/features/home/sections/SectionNav';
@@ -16,21 +15,7 @@ import FaqSection from '@/features/home/sections/FaqSection';
 import CtaSection from '@/features/home/sections/CtaSection';
 
 const Index = () => {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    document.querySelectorAll('.fade-section').forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
+  
   return (
     <>
       <SeoMeta

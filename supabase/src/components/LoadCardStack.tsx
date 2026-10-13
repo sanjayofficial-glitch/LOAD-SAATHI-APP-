@@ -37,7 +37,7 @@ const LoadCardStack = ({ shipments, onAccept, onViewDetails }: LoadCardStackProp
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="w-full max-w-lg">
-        <Card className="border-orange-100 dark:border-orange-800 shadow-xl overflow-hidden">
+        <Card key={currentIndex} className="border-orange-100 dark:border-orange-800 shadow-xl overflow-hidden animate-materialize">
           <CardContent className="p-6 sm:p-8">
             <div className="flex items-center justify-between mb-4">
               <Badge variant="outline" className="text-xs font-bold">

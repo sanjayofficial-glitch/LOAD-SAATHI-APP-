@@ -24,6 +24,7 @@ import SaveAsTemplate from "@/components/SaveAsTemplate";
 import VehicleSelect from "@/components/VehicleSelect";
 import { posthog } from "@/utils/posthog";
 import { trackEvent } from "@/utils/analytics";
+import { useDishaGuideRegistration } from "@/hooks/useDishaGuide";
 
 type LocationData = Record<string, Record<string, string[]>>;
 
@@ -39,6 +40,28 @@ const PostTrip = () => {
   useEffect(() => {
     import('@/data/locations.json').then(mod => setLocationData(mod.default.data));
   }, []);
+
+  const {
+    registerElement,
+    notifyFieldFocus,
+    notifySuccess,
+  } = useDishaGuideRegistration({ flowId: 'post-trip' });
+
+  const originRef = useRef<HTMLDivElement>(null);
+  const destRef = useRef<HTMLDivElement>(null);
+  const vehicleTypeRef = useRef<HTMLDivElement>(null);
+  const capacityRef = useRef<HTMLDivElement>(null);
+  const priceRef = useRef<HTMLDivElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    registerElement('origin-city', originRef as React.RefObject<HTMLElement>);
+    registerElement('dest-city', destRef as React.RefObject<HTMLElement>);
+    registerElement('vehicle-type', vehicleTypeRef as React.RefObject<HTMLElement>);
+    registerElement('capacity', capacityRef as React.RefObject<HTMLElement>);
+    registerElement('price', priceRef as React.RefObject<HTMLElement>);
+    registerElement('submit', submitRef as React.RefObject<HTMLElement>);
+  }, [registerElement]);
 
 
 
@@ -153,6 +176,7 @@ const PostTrip = () => {
         vehicle_type: formData.vehicle_type,
       });
       showSuccess('Trip posted successfully!');
+      notifySuccess('submit');
       navigate('/trucker/my-trips');
     } catch (err) {
       console.error('[PostTrip] Error:', err);
@@ -206,7 +230,7 @@ const PostTrip = () => {
         </p>
       )}
 
-      <Card className="border-orange-100 dark:border-orange-800 shadow-lg">
+      <Card data-avoid-disha className="border-orange-100 dark:border-orange-800 shadow-lg">
         <CardHeader id="post-trip-header" className="bg-orange-50/50 dark:bg-orange-950/30 border-b border-orange-100 dark:border-orange-800 px-4 sm:px-6">
           <CardTitle className="flex items-center text-orange-900 dark:text-orange-100 text-lg sm:text-xl">
             <Truck className="mr-2 text-orange-600 dark:text-orange-400 h-5 w-5 sm:h-6 sm:w-6" /> Post a New Trip
@@ -231,7 +255,7 @@ const PostTrip = () => {
                 }}
               />
             )}
-            <div id="post-trip-origin" className="space-y-2">
+            <div id="post-trip-origin" ref={originRef} data-guide="origin-city" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
@@ -250,7 +274,7 @@ const PostTrip = () => {
               )}
             </div>
 
-            <div id="post-trip-destination" className="space-y-2">
+            <div id="post-trip-destination" ref={destRef} data-guide="dest-city" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
@@ -281,11 +305,13 @@ const PostTrip = () => {
                   <Input
                     id="date"
                     ref={dateInputRef}
+                    data-guide="departure-date"
                     type="date"
                     className="pl-10"
                     min={new Date().toISOString().split('T')[0]}
                     value={formData.departure_date}
                     onChange={(e) => form.setValue('departure_date', e.target.value)}
+                    onFocus={() => notifyFieldFocus('departure-date')}
                     aria-invalid={!!form.formState.errors.departure_date}
                     required
                   />
@@ -294,15 +320,17 @@ const PostTrip = () => {
                   <p className="text-sm text-destructive">{form.formState.errors.departure_date.message}</p>
                 )}
               </div>
-              <div className="space-y-2">
+               <div className="space-y-2" ref={capacityRef} data-guide="capacity">
                 <Label htmlFor="capacity">Available Capacity (Tonnes)</Label>
                 <Input
                   id="capacity"
+                  data-guide="capacity"
                   type="number"
                   step="0.1"
                   placeholder="e.g. 5.0"
                   value={formData.available_capacity_tonnes}
                   onChange={(e) => form.setValue('available_capacity_tonnes', e.target.value)}
+                  onFocus={() => notifyFieldFocus('capacity')}
                   aria-invalid={!!form.formState.errors.available_capacity_tonnes}
                   required
                 />
@@ -312,17 +340,19 @@ const PostTrip = () => {
               </div>
             </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2" ref={priceRef} data-guide="price">
                 <Label htmlFor="price">Price per Tonne (₹)</Label>
                 <div className="relative">
                   <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     id="price"
+                    data-guide="price"
                     type="number"
                     placeholder="e.g. 1500"
                     className="pl-10"
                     value={formData.price_per_tonne}
                     onChange={(e) => form.setValue('price_per_tonne', e.target.value)}
+                    onFocus={() => notifyFieldFocus('price')}
                     aria-invalid={!!form.formState.errors.price_per_tonne}
                     required
                   />
@@ -349,7 +379,7 @@ const PostTrip = () => {
               </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <div className="space-y-2">
+<div className="space-y-2" ref={vehicleTypeRef} data-guide="vehicle-type">
                 <Label htmlFor="vehicleType">
                   Vehicle Type <span className="text-red-500">*</span>
                 </Label>
@@ -358,6 +388,7 @@ const PostTrip = () => {
                   value={formData.vehicle_type}
                   onChange={(vehicle_type) => form.setValue('vehicle_type', vehicle_type)}
                   placeholder="Select Vehicle"
+                  onFocus={() => notifyFieldFocus('vehicle-type')}
                 />
                 {form.formState.errors.vehicle_type && (
                   <p className="text-sm text-destructive">{form.formState.errors.vehicle_type.message}</p>
@@ -398,6 +429,8 @@ const PostTrip = () => {
               )}
               <Button
                 id="post-trip-submit"
+                ref={submitRef}
+                data-guide="submit"
                 type="submit"
                 className="flex-1 bg-orange-600 hover:bg-orange-700 h-12 text-base sm:text-lg font-bold"
                 disabled={loading || !isOnline || form.formState.isSubmitting}

@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React from 'react';
 import { Route, Handshake, EyeOff, CircuitBoard } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -20,7 +21,7 @@ const cards: BentoCard[] = [
 ];
 
 const BentoGrid = React.memo(() => (
-  <section className="fade-section py-24 relative">
+  <Reveal as="section" className="py-24 relative">
     <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
       style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)', filter: 'blur(60px)' }} />
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -30,20 +31,27 @@ const BentoGrid = React.memo(() => (
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {cards.map((card, i) => (
-          <div key={i} className={`glass-card p-6 sm:p-8 rounded-xl min-h-[180px] sm:min-h-[220px] md:min-h-[260px] flex flex-col ${card.colSpan || ''} hover:border-orange-500/30 transition-all duration-300 group`}>
-            <card.icon className={`${card.iconColor} text-3xl mb-4 group-hover:scale-110 transition-transform duration-300 shrink-0`} />
-            <h3 className="text-lg font-bold text-foreground mb-2">{card.title}</h3>
-            <p className="text-sm text-muted-foreground flex-grow">{card.desc}</p>
-            {card.badge && (
-              <div className="mt-auto pt-6 border-t border-border">
-                <span className={`text-xs font-semibold ${card.badgeClass} px-2 py-1 rounded border`}>{card.badge}</span>
-              </div>
-            )}
-          </div>
+          <Reveal
+            key={i}
+            as="div"
+            index={i}
+            className={`h-full ${card.colSpan || ''}`}
+          >
+            <div className="glass-card p-6 sm:p-8 rounded-xl min-h-[180px] sm:min-h-[220px] md:min-h-[260px] h-full flex flex-col hover:border-orange-500/30 elevate group">
+              <card.icon className={`${card.iconColor} text-3xl mb-4 group-hover:scale-110 transition-transform duration-300 shrink-0`} />
+              <h3 className="text-lg font-bold text-foreground mb-2">{card.title}</h3>
+              <p className="text-sm text-muted-foreground flex-grow">{card.desc}</p>
+              {card.badge && (
+                <div className="mt-auto pt-6 border-t border-border">
+                  <span className={`text-xs font-semibold ${card.badgeClass} px-2 py-1 rounded border`}>{card.badge}</span>
+                </div>
+              )}
+            </div>
+          </Reveal>
         ))}
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 BentoGrid.displayName = "BentoGrid";
 

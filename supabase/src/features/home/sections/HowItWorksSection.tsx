@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Truck, Package, ChevronRight, ArrowRight } from 'lucide-react';
@@ -18,7 +19,7 @@ const truckerSteps = [
 ] as const;
 
 const HowItWorksSection = React.memo(() => (
-  <section className="fade-section py-24 relative">
+  <Reveal as="section" className="py-24 relative">
     <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full opacity-[0.06] dark:opacity-[0.10] pointer-events-none"
       style={{ background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)", filter: "blur(60px)" }} />
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -27,44 +28,48 @@ const HowItWorksSection = React.memo(() => (
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Two sides, one platform. Whether you&apos;re shipping goods or hauling loads, the process is simple.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        <div className="glass-card p-8 rounded-xl border border-blue-500/20">
-          <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
-            <Package className="h-5 w-5 text-blue-400" /> For Shippers
-          </h3>
-          <div className="space-y-6">
-            {shipperSteps.map((item, i) => (
-              <div key={i} className="flex gap-4">
-                <span className="text-2xl font-black text-blue-400 dark:text-blue-500 shrink-0">{item.step}</span>
-                <div>
-                  <h4 className="font-bold text-foreground">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+        <Reveal as="div" index={0} className="h-full">
+          <div className="glass-card p-8 rounded-xl h-full border border-blue-500/20 elevate">
+            <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+              <Package className="h-5 w-5 text-blue-400" /> For Shippers
+            </h3>
+            <div className="space-y-6">
+              {shipperSteps.map((item, i) => (
+                <div key={i} className="flex gap-4">
+                  <span className="text-2xl font-black text-blue-400 dark:text-blue-500 shrink-0">{item.step}</span>
+                  <div>
+                    <h4 className="font-bold text-foreground">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <Link to="/solutions/shippers" className="inline-flex items-center gap-1 text-sm font-semibold text-orange-500 hover:text-orange-400 mt-6">
+              Learn More <ChevronRight className="h-4 w-4" />
+            </Link>
           </div>
-          <Link to="/solutions/shippers" className="inline-flex items-center gap-1 text-sm font-semibold text-orange-500 hover:text-orange-400 mt-6">
-            Learn More <ChevronRight className="h-4 w-4" />
-          </Link>
-        </div>
-        <div className="glass-card p-8 rounded-xl border border-orange-500/20">
-          <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
-            <Truck className="h-5 w-5 text-orange-400" /> For Truckers
-          </h3>
-          <div className="space-y-6">
-            {truckerSteps.map((item, i) => (
-              <div key={i} className="flex gap-4">
-                <span className="text-2xl font-black text-orange-400 dark:text-orange-500 shrink-0">{item.step}</span>
-                <div>
-                  <h4 className="font-bold text-foreground">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+        </Reveal>
+        <Reveal as="div" index={1} className="h-full">
+          <div className="glass-card p-8 rounded-xl h-full border border-orange-500/20 elevate">
+            <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-3">
+              <Truck className="h-5 w-5 text-orange-400" /> For Truckers
+            </h3>
+            <div className="space-y-6">
+              {truckerSteps.map((item, i) => (
+                <div key={i} className="flex gap-4">
+                  <span className="text-2xl font-black text-orange-400 dark:text-orange-500 shrink-0">{item.step}</span>
+                  <div>
+                    <h4 className="font-bold text-foreground">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <Link to="/solutions/truckers" className="inline-flex items-center gap-1 text-sm font-semibold text-orange-500 hover:text-orange-400 mt-6">
+              Learn More <ChevronRight className="h-4 w-4" />
+            </Link>
           </div>
-          <Link to="/solutions/truckers" className="inline-flex items-center gap-1 text-sm font-semibold text-orange-500 hover:text-orange-400 mt-6">
-            Learn More <ChevronRight className="h-4 w-4" />
-          </Link>
-        </div>
+        </Reveal>
       </div>
       <div className="text-center">
         <Link to="/how-it-works">
@@ -74,7 +79,7 @@ const HowItWorksSection = React.memo(() => (
         </Link>
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 HowItWorksSection.displayName = "HowItWorksSection";
 

@@ -126,7 +126,10 @@ const NotificationBell = React.memo(() => {
         <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
           <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
           {unreadCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-pulse">
+            <span
+              key={unreadCount}
+              className="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-badge-pop"
+            >
               {unreadCount}
             </span>
           )}

@@ -24,6 +24,7 @@ import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
 import { posthog } from "@/utils/posthog";
 import { trackEvent } from "@/utils/analytics";
+import { useDishaGuideRegistration } from "@/hooks/useDishaGuide";
 
 type LocationData = Record<string, Record<string, string[]>>;
 
@@ -39,6 +40,28 @@ const PostShipments = () => {
   useEffect(() => {
     import('@/data/locations.json').then(mod => setLocationData(mod.default.data));
   }, []);
+
+  const {
+    registerElement,
+    notifyFieldFocus,
+    notifySuccess,
+  } = useDishaGuideRegistration({ flowId: 'post-load' });
+
+  const originRef = useRef<HTMLDivElement>(null);
+  const destRef = useRef<HTMLDivElement>(null);
+  const weightRef = useRef<HTMLInputElement>(null);
+  const budgetRef = useRef<HTMLInputElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    registerElement('origin-city', originRef as React.RefObject<HTMLElement>);
+    registerElement('dest-city', destRef as React.RefObject<HTMLElement>);
+    registerElement('weight', weightRef as React.RefObject<HTMLElement>);
+    registerElement('budget', budgetRef as React.RefObject<HTMLElement>);
+    registerElement('date', dateRef as React.RefObject<HTMLElement>);
+    registerElement('submit', submitRef as React.RefObject<HTMLElement>);
+  }, [registerElement]);
 
 
 
@@ -149,6 +172,7 @@ const PostShipments = () => {
         budget_per_tonne: budget,
       });
       showSuccess('Shipment posted successfully!');
+      notifySuccess('submit');
       navigate('/shipper/dashboard');
     } catch (err: unknown) {
       posthog.captureException(err, { flow: 'post_shipment' });
@@ -201,7 +225,7 @@ const PostShipments = () => {
         </p>
       )}
 
-      <Card className="border-blue-100 dark:border-blue-800 shadow-lg">
+      <Card data-avoid-disha className="border-blue-100 dark:border-blue-800 shadow-lg">
 <CardHeader id="post-shipment-header" className="bg-blue-50/50 dark:bg-blue-950/50 border-b border-blue-100 dark:border-blue-800 px-4 sm:px-6">
           <CardTitle className="flex items-center text-blue-900 dark:text-blue-100 text-lg sm:text-xl">
             <Package className="mr-2 text-blue-600 dark:text-blue-400 h-5 w-5 sm:h-6 sm:w-6" />
@@ -228,7 +252,7 @@ const PostShipments = () => {
                 }}
               />
             )}
-  <div id="post-shipment-origin" className="space-y-2">
+  <div id="post-shipment-origin" ref={originRef} data-guide="origin-city" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
@@ -248,7 +272,7 @@ const PostShipments = () => {
               {form.formState.errors.origin_city?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.origin_city.message}</p>}
             </div>
 
-            <div id="post-shipment-destination" className="space-y-2">
+            <div id="post-shipment-destination" ref={destRef} data-guide="dest-city" className="space-y-2">
               <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
@@ -277,32 +301,37 @@ const PostShipments = () => {
                 <Label htmlFor="date">Ready Date</Label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
-                  <Input
-                    id="date"
-                    ref={dateInputRef}
-                    type="date"
-                    className="pl-10"
-                    min={new Date().toISOString().split('T')[0]}
-                    value={formData.departure_date}
-                    onChange={(e) => form.setValue('departure_date', e.target.value)}
-                    aria-invalid={!!form.formState.errors.departure_date}
-                    required
-                  />
+                   <Input
+                     id="date"
+                     ref={dateRef}
+                     data-guide="date"
+                     type="date"
+                     className="pl-10"
+                     min={new Date().toISOString().split('T')[0]}
+                     value={formData.departure_date}
+                     onChange={(e) => form.setValue('departure_date', e.target.value)}
+                     onFocus={() => notifyFieldFocus('date')}
+                     aria-invalid={!!form.formState.errors.departure_date}
+                     required
+                   />
                 </div>
                 {form.formState.errors.departure_date?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.departure_date.message}</p>}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="weight">Weight (Tonnes)</Label>
-                <Input
-                  id="weight"
-                  type="number"
-                  step="0.1"
-                  placeholder="e.g. 5.0"
-                  value={formData.weight_tonnes}
-                  onChange={(e) => form.setValue('weight_tonnes', e.target.value)}
-                  aria-invalid={!!form.formState.errors.weight_tonnes}
-                  required
-                />
+ <Input
+   id="weight"
+   ref={weightRef}
+   data-guide="weight"
+   type="number"
+                   step="0.1"
+                   placeholder="e.g. 5.0"
+                   value={formData.weight_tonnes}
+                   onChange={(e) => form.setValue('weight_tonnes', e.target.value)}
+                   onFocus={() => notifyFieldFocus('weight')}
+                   aria-invalid={!!form.formState.errors.weight_tonnes}
+                   required
+                 />
                 {form.formState.errors.weight_tonnes?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.weight_tonnes.message}</p>}
               </div>
             </div>
@@ -324,16 +353,19 @@ const PostShipments = () => {
                 <Label htmlFor="budget">Budget per Tonne (₹)</Label>
                 <div className="relative">
                   <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
-                  <Input
-                    id="budget"
-                    type="number"
-                    placeholder="e.g. 1500"
-                    className="pl-10"
-                    value={formData.budget_per_tonne}
-                    onChange={(e) => form.setValue('budget_per_tonne', e.target.value)}
-                    aria-invalid={!!form.formState.errors.budget_per_tonne}
-                    required
-                  />
+<Input
+   id="budget"
+   ref={budgetRef}
+   data-guide="budget"
+   type="number"
+                     placeholder="e.g. 1500"
+                     className="pl-10"
+                     value={formData.budget_per_tonne}
+                     onChange={(e) => form.setValue('budget_per_tonne', e.target.value)}
+                     onFocus={() => notifyFieldFocus('budget')}
+                     aria-invalid={!!form.formState.errors.budget_per_tonne}
+                     required
+                   />
                 </div>
                 {form.formState.errors.budget_per_tonne?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.budget_per_tonne.message}</p>}
                 <PricePredictor
@@ -399,8 +431,10 @@ const PostShipments = () => {
                 />
               )}
 <Button
-                id="post-shipment-submit"
-                type="submit"
+  id="post-shipment-submit"
+  ref={submitRef}
+  data-guide="submit"
+  type="submit"
                 className="flex-1 bg-blue-600 hover:bg-blue-700 h-12 text-base sm:text-lg font-bold shadow-md transition-all hover:shadow-lg"
                 disabled={loading || !isOnline || form.formState.isSubmitting}
               >

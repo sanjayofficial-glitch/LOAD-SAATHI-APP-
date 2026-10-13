@@ -14,7 +14,6 @@ import MapSizeHandler from './MapSizeHandler';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
 import { myLocationIcon } from './icons';
 import { cn } from '@/lib/utils';
-import { useTheme } from '@/theme/theme';
 
 // ── Map click events (react-leaflet has no eventHandlers on MapContainer) ────
 function MapClickHandler({ onClick }: { onClick?: (e: L.LeafletMouseEvent) => void }) {
@@ -96,15 +95,10 @@ export default React.memo(function LoadSaathiMap({
   zoom = DEFAULT_ZOOM,
   onMapClick,
 }: LoadSaathiMapProps) {
-  const { isDark } = useTheme();
-
-  const defaultTileId: TileLayerId = isDark ? 'dark' : 'standard';
-  const [tileLayerId, setTileLayerId] = useState<TileLayerId>(defaultTileId);
-
-  // Sync tile layer with theme changes (only if user hasn't manually overridden)
-  useEffect(() => {
-    setTileLayerId(isDark ? 'dark' : 'standard');
-  }, [isDark]);
+  // Always open on the keyless OpenStreetMap "Standard" layer. The theme no
+  // longer forces the dark basemap (it previously required a now-removed CARTO
+  // key); users can still pick Dark/Night/Satellite from the switcher.
+  const [tileLayerId, setTileLayerId] = useState<TileLayerId>('standard');
 
   const tile = getTileLayer(tileLayerId);
 
@@ -206,6 +200,7 @@ export default React.memo(function LoadSaathiMap({
           attribution={tile.attribution}
           url={tile.url}
         />
+        {tile.labelsUrl && <TileLayer url={tile.labelsUrl} />}
         {allPositions.length > 0 && <FitBounds positions={allPositions} boundsKey={boundsKey} />}
         {showClusters ? (
           <MarkerClusterGroup

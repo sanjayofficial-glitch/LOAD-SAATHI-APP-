@@ -30,6 +30,10 @@ export const EVENTS = {
   WHATSAPP_CLICKED: "whatsapp_clicked",
   REGISTER_STARTED: "register_started",
   ARTICLE_VIEW: "article_view",
+  WHATSAPP_LEAD_STARTED: "whatsapp_lead_started",
+  PHONE_ADDED: "phone_added",
+  PHONE_SKIPPED: "phone_skipped",
+  PHONE_NUDGE_CLICKED: "phone_nudge_clicked",
 } as const;
 
 // Shared properties for public-funnel events

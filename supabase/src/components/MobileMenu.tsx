@@ -41,17 +41,18 @@ const MobileMenu = React.memo(({ open, onClose }: MobileMenuProps) => {
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-[calc(1.5rem+env(safe-area-inset-top))] right-6 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-all min-h-11 min-w-11 flex items-center justify-center"
+        className="absolute top-[calc(1.5rem+env(safe-area-inset-top))] right-6 press p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent min-h-11 min-w-11 flex items-center justify-center"
         aria-label="Close menu"
       >
         <X className="h-6 w-6" />
       </button>
-      {menuItems.map((item) => (
+      {menuItems.map((item, i) => (
         <Link
           key={item.path}
           to={item.path}
           onClick={onClose}
-          className="flex items-center gap-3 text-xl font-bold text-foreground hover:text-orange-600 dark:hover:text-orange-400 transition-all"
+          style={{ animationDelay: `${i * 35}ms` }}
+          className="animate-materialize flex items-center gap-3 text-xl font-bold text-foreground hover:text-orange-600 dark:hover:text-orange-400 transition-[color] duration-fast ease-ios"
         >
           <span className="text-orange-500">{item.icon}</span>
           {item.label}

@@ -188,3 +188,14 @@ export interface AuditLogEntry {
     email?: string;
   };
 }
+
+export interface Lead {
+  id: string;
+  phone: string;
+  name: string | null;
+  source: string;
+  page_path: string | null;
+  user_id: string | null;
+  message: string | null;
+  created_at: string;
+}

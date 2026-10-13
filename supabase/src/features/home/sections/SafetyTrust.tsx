@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Star, UserCheck, ArrowRight } from 'lucide-react';
@@ -10,7 +11,7 @@ const items = [
 ] as const;
 
 const SafetyTrust = React.memo(() => (
-  <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative overflow-hidden">
+  <Reveal as="section" className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative overflow-hidden">
     <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full opacity-[0.06] dark:opacity-[0.10] pointer-events-none"
       style={{ background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)", filter: "blur(60px)" }} />
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -22,11 +23,13 @@ const SafetyTrust = React.memo(() => (
         {items.map((item, i) => {
           const Icon = item.icon;
           return (
-            <div key={i} className="glass-card p-8 rounded-xl border border-border hover:border-blue-500/30 transition-all duration-300">
-              <Icon className="text-blue-500 text-3xl mb-4" />
-              <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
-              <p className="text-sm text-muted-foreground">{item.desc}</p>
-            </div>
+            <Reveal key={i} as="div" index={i} className="h-full">
+              <div className="glass-card p-8 rounded-xl h-full border border-border hover:border-blue-500/30 elevate group">
+                <Icon className="text-blue-500 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.desc}</p>
+              </div>
+            </Reveal>
           );
         })}
       </div>
@@ -38,7 +41,7 @@ const SafetyTrust = React.memo(() => (
         </Link>
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 SafetyTrust.displayName = "SafetyTrust";
 

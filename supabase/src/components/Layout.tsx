@@ -1,5 +1,10 @@
 
 import React, { Suspense, useState, useMemo, useCallback, useEffect } from "react";
+import { DishaProvider, Disha } from "./Disha";
+import { DishaGuideProvider } from "./DishaGuideProvider";
+import { FreddyAvatar } from "./avatar";
+import { MascotInteractionTracker } from "@/hooks/useMascotInteractionTracker";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useProductTour } from "@/contexts/ProductTourContext";
@@ -54,6 +59,8 @@ import AutoGpsTracker from "./AutoGpsTracker";
 import DockNav, { type NavAccent } from "./DockNav";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
 import ScrollToTopFab from "./ScrollToTopFab";
+import { usePageFade } from "@/hooks/usePageFade";
+import PhoneNudgeBanner from "./PhoneNudgeBanner";
 import { DockItem, DockIcon, DockLabel } from "@/components/ui/dock";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
@@ -88,7 +95,7 @@ const NavLinks = React.memo(({ navItems, currentPath, onClick, mobile }: { navIt
           to={item.path}
           onClick={onClick}
           className={cn(
-            "px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2",
+            "press px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2",
             active
               ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 shadow-sm"
               : "text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-gray-800",
@@ -169,6 +176,17 @@ const FooterSocialLinks = React.memo(() => (
 FooterSocialLinks.displayName = "FooterSocialLinks";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <DishaProvider>
+      <DishaGuideProvider>
+        <LayoutInner>{children}</LayoutInner>
+      </DishaGuideProvider>
+    </DishaProvider>
+  );
+}
+
+function LayoutInner({ children }: { children: React.ReactNode }) {
+  const pageFadeRef = usePageFade<HTMLElement>();
   const { userProfile, signOut, getSupabaseToken } = useAuth();
   const { getAuthenticatedClient } = useSupabase();
   const { role: tourRole } = useProductTour();
@@ -443,9 +461,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <DropdownMenuTrigger asChild>
                   <div id="app-profile-menu">
                     <Button id="layout-account-menu" variant="ghost" size="icon" className="text-gray-600 dark:text-gray-400 h-11 w-11 rounded-full" aria-label="Account menu">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
-                        {(userProfile?.full_name || 'U').charAt(0).toUpperCase()}
-                      </div>
+                      {userProfile ? (
+                        <FreddyAvatar user={userProfile} size={32} />
+                      ) : (
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
+                          U
+                        </div>
+                      )}
                     </Button>
                   </div>
                 </DropdownMenuTrigger>
@@ -508,8 +530,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       </nav>
 
-      <main id="main-content" className="flex-grow pb-[calc(8rem+env(safe-area-inset-bottom))] md:pb-24">
+      <main id="main-content" ref={pageFadeRef} className="flex-grow pb-[calc(8rem+env(safe-area-inset-bottom))] md:pb-24">
         <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh]"><Skeleton className="h-8 w-48" /></div>}>
+          <PhoneNudgeBanner />
           {children}
         </Suspense>
       </main>
@@ -538,8 +561,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Button>
         }
       />
-      <ScrollToTopFab />
-
+      <ScrollToTopFab bottomClass="bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))]" />
+      <Disha accent={isTrucker ? 'orange' : 'blue'} />
+      <MascotInteractionTracker />
       <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-lg" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -550,9 +574,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             Connecting India's truckers with shippers directly.
           </p>
           <div className="flex justify-center space-x-6 text-xs sm:text-sm text-gray-400 dark:text-gray-500 mb-4">
-            <Link to="/" className="hover:text-gray-600 dark:hover:text-gray-300">Home</Link>
-            <Link to="/profile" className="hover:text-gray-600 dark:hover:text-gray-300">Profile</Link>
-            <Link to="/messages" className="hover:text-gray-600 dark:hover:text-gray-300">Messages</Link>
+            <Link to="/" className="hover:text-gray-600 dark:hover:text-gray-300 transition-[color,transform] duration-fast ease-ios hover:-translate-y-0.5">Home</Link>
+            <Link to="/profile" className="hover:text-gray-600 dark:hover:text-gray-300 transition-[color,transform] duration-fast ease-ios hover:-translate-y-0.5">Profile</Link>
+            <Link to="/messages" className="hover:text-gray-600 dark:hover:text-gray-300 transition-[color,transform] duration-fast ease-ios hover:-translate-y-0.5">Messages</Link>
           </div>
           <FooterSocialLinks />
         </div>

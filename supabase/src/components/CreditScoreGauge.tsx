@@ -1,9 +1,21 @@
+import { useEffect, useState } from 'react'
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion'
+
 interface CreditScoreGaugeProps {
   score: number
   size?: 'sm' | 'md' | 'lg'
 }
 
 export default function CreditScoreGauge({ score, size = 'md' }: CreditScoreGaugeProps) {
+  const reduced = usePrefersReducedMotion()
+  const [animated, setAnimated] = useState(false)
+
+  useEffect(() => {
+    if (reduced) return
+    const raf = requestAnimationFrame(() => setAnimated(true))
+    return () => cancelAnimationFrame(raf)
+  }, [reduced])
+
   const clamped = Math.max(300, Math.min(900, score))
   const pct = ((clamped - 300) / 600) * 100
 
@@ -18,6 +30,7 @@ export default function CreditScoreGauge({ score, size = 'md' }: CreditScoreGaug
   const r = (d - sw) / 2
   const circ = 2 * Math.PI * r
   const offset = circ - (pct / 100) * circ
+  const showOffset = animated || reduced ? offset : circ
 
   return (
     <div className="relative inline-flex items-center justify-center" style={{ width: d, height: d }}>
@@ -32,8 +45,8 @@ export default function CreditScoreGauge({ score, size = 'md' }: CreditScoreGaug
           strokeWidth={sw}
           strokeLinecap="round"
           strokeDasharray={circ}
-          strokeDashoffset={offset}
-          style={{ transition: 'stroke-dashoffset 0.6s ease' }}
+          strokeDashoffset={showOffset}
+          style={{ transition: 'stroke-dashoffset var(--dur-base) var(--ease-ios)' }}
         />
       </svg>
       <span className={`absolute font-bold ${fontSize[size]}`} style={{ color }}>

@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 
@@ -12,7 +13,7 @@ const faqs = [
 ] as const;
 
 const FaqSection = React.memo(() => (
-  <section className="fade-section py-24 relative">
+  <Reveal as="section" className="py-24 relative">
     <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
       <div className="text-center mb-16">
         <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white">Frequently Asked Questions</h2>
@@ -20,17 +21,19 @@ const FaqSection = React.memo(() => (
       </div>
       <div className="max-w-3xl mx-auto space-y-4">
         {faqs.map((item, i) => (
-          <details key={i} className="glass-card rounded-xl border border-border group" open={i === 0}>
-            <summary className="p-6 cursor-pointer font-bold text-foreground hover:text-orange-600 dark:hover:text-orange-400 transition-colors list-none flex items-center justify-between touch-manipulation min-h-11">
-              {item.q}
-              <ChevronRight className="h-4 w-4 text-muted-foreground group-open:rotate-90 transition-transform shrink-0 ml-4" />
-            </summary>
-            <div className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed">{item.a}</div>
-          </details>
+          <Reveal key={i} as="div" index={i}>
+            <details className="glass-card rounded-xl border border-border group elevate" open={i === 0}>
+              <summary className="p-6 cursor-pointer font-bold text-foreground hover:text-orange-600 dark:hover:text-orange-400 transition-colors list-none flex items-center justify-between touch-manipulation min-h-11 press">
+                {item.q}
+                <ChevronRight className="h-4 w-4 text-muted-foreground group-open:rotate-90 transition-transform shrink-0 ml-4" />
+              </summary>
+              <div className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed">{item.a}</div>
+            </details>
+          </Reveal>
         ))}
       </div>
     </div>
-  </section>
+  </Reveal>
 ));
 FaqSection.displayName = "FaqSection";
 

@@ -52,7 +52,7 @@ const EmptyState = ({
         className
       )}
     >
-      <div className={cn('bg-gradient-to-br w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6', styles.iconBg)}>
+      <div className={cn('animate-float bg-gradient-to-br w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6', styles.iconBg)}>
         <span className={cn('h-8 w-8 sm:h-10 sm:w-10', styles.iconColor)}>{icon}</span>
       </div>
       <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{title}</h3>

@@ -22,7 +22,6 @@ import ZoomControls from '@/components/maps/ZoomControls';
 import TileLayerSwitcher, { type TileLayerId, getTileLayer } from '@/components/maps/TileLayerSwitcher';
 import MapSizeHandler from '@/components/maps/MapSizeHandler';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
-import { useTheme } from '@/theme/theme';
 
 // Fix Leaflet's default marker icon (broken in Vite builds)
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -76,14 +75,10 @@ const RouteMap = React.memo(({
   const [route, setRoute] = useState<RouteResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { isDark } = useTheme();
 
-  const defaultTileId: TileLayerId = isDark ? 'dark' : 'standard';
-  const [tileLayerId, setTileLayerId] = useState<TileLayerId>(defaultTileId);
-
-  useEffect(() => {
-    setTileLayerId(isDark ? 'dark' : 'standard');
-  }, [isDark]);
+  // Always open on the keyless OpenStreetMap "Standard" layer (never forced to
+  // the keyed CARTO dark basemap by the theme).
+  const [tileLayerId, setTileLayerId] = useState<TileLayerId>('standard');
 
   const tile = getTileLayer(tileLayerId);
 
@@ -189,6 +184,7 @@ const RouteMap = React.memo(({
             attribution={tile.attribution}
             url={tile.url}
           />
+          {tile.labelsUrl && <TileLayer url={tile.labelsUrl} />}
           <Marker position={[origin.lat, origin.lon]} icon={originIcon}>
             <Popup>🟢 From: {originCity}</Popup>
           </Marker>

@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion";
 import React, { useState } from 'react';
 import { Truck, Package, Brain, Map, Search, MapPin, Shield, BarChart3, MessageSquare, Route, TrendingUp, DollarSign, Star, Activity } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -43,17 +44,19 @@ const commandFeatures: Feature[] = [
   { icon: Map, title: 'Corridor Intelligence', desc: 'Real-time insights on East India\'s primary freight corridors. Traffic patterns, weather conditions, and route disruptions.', accent: '3 Corridors Live', accentClass: 'text-orange-400 bg-orange-900/20 border-orange-700/30' },
 ] as const;
 
-const FeatureCard = React.memo(({ feat }: { feat: Feature }) => {
+const FeatureCard = React.memo(({ feat, index }: { feat: Feature; index?: number }) => {
   const Icon = feat.icon;
   return (
-    <div className="glass-card p-4 rounded-lg border border-border hover:border-orange-500/30 transition-all duration-300 group min-h-[180px] flex flex-col">
-      <div className="bg-orange-900/10 dark:bg-orange-900/10 w-9 h-9 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shrink-0">
-        <Icon className="h-4 w-4 text-orange-400" />
+    <Reveal as="div" index={index ?? 0} className="h-full">
+      <div className="glass-card p-4 rounded-lg h-full border border-border hover:border-orange-500/30 elevate group min-h-[180px] flex flex-col">
+        <div className="bg-orange-900/10 dark:bg-orange-900/10 w-9 h-9 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shrink-0">
+          <Icon className="h-4 w-4 text-orange-400" />
+        </div>
+        <h3 className="text-sm font-bold text-foreground mb-1.5">{feat.title}</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed flex-grow">{feat.desc}</p>
+        <span className={`mt-auto inline-block text-[10px] font-semibold ${feat.accentClass} px-2 py-0.5 rounded border w-fit`}>{feat.accent}</span>
       </div>
-      <h3 className="text-sm font-bold text-foreground mb-1.5">{feat.title}</h3>
-      <p className="text-xs text-muted-foreground leading-relaxed flex-grow">{feat.desc}</p>
-      <span className={`mt-auto inline-block text-[10px] font-semibold ${feat.accentClass} px-2 py-0.5 rounded border w-fit`}>{feat.accent}</span>
-    </div>
+    </Reveal>
   );
 });
 FeatureCard.displayName = "FeatureCard";
@@ -62,7 +65,7 @@ const PlatformTabs = React.memo(() => {
   const [activeTab, setActiveTab] = useState<'shipper' | 'transporter' | 'command'>('shipper');
 
   return (
-    <section className="fade-section py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative overflow-hidden">
+    <Reveal as="section" data-avoid-disha className="py-24 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5 relative overflow-hidden">
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
         style={{ background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)', filter: 'blur(60px)' }} />
       <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
@@ -76,7 +79,7 @@ const PlatformTabs = React.memo(() => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all ${
+                className={`px-6 py-2 rounded text-xs font-bold uppercase tracking-wider press ${
                   activeTab === tab.id
                     ? 'bg-card/80 dark:bg-white/10 text-foreground'
                     : 'text-muted-foreground hover:text-foreground hover:bg-card/50 dark:hover:bg-white/5'
@@ -102,7 +105,7 @@ const PlatformTabs = React.memo(() => {
             <div className="flex-grow p-5 lg:p-6 bg-background/50 dark:bg-[#050816]/50 overflow-y-auto">
               <p className="text-sm text-muted-foreground mb-5 max-w-2xl">Empower your supply chain with AI-driven tools to post, track, and optimize every shipment across East India&apos;s industrial corridors.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {shipperFeatures.map((feat, i) => <FeatureCard key={i} feat={feat} />)}
+                {shipperFeatures.map((feat, i) => <FeatureCard key={i} feat={feat} index={i} />)}
               </div>
             </div>
           </div>
@@ -121,7 +124,7 @@ const PlatformTabs = React.memo(() => {
             <div className="flex-grow p-5 lg:p-6 bg-background/50 dark:bg-[#050816]/50 overflow-y-auto">
               <p className="text-sm text-muted-foreground mb-5 max-w-2xl">Maximize your fleet&apos;s earning potential. Discover high-value loads, optimize routes, and build a digital reputation that commands premium rates.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {transporterFeatures.map((feat, i) => <FeatureCard key={i} feat={feat} />)}
+                {transporterFeatures.map((feat, i) => <FeatureCard key={i} feat={feat} index={i} />)}
               </div>
             </div>
           </div>
@@ -141,13 +144,13 @@ const PlatformTabs = React.memo(() => {
             <div className="flex-grow p-5 lg:p-6 bg-background/50 dark:bg-[#050816]/50 overflow-y-auto">
               <p className="text-sm text-muted-foreground mb-5 max-w-2xl">The intelligence layer powering the entire LoadSaathi network. Real-time algorithms optimize every match, predict every price, and secure every transaction.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {commandFeatures.map((feat, i) => <FeatureCard key={i} feat={feat} />)}
+                {commandFeatures.map((feat, i) => <FeatureCard key={i} feat={feat} index={i} />)}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </Reveal>
   );
 });
 PlatformTabs.displayName = "PlatformTabs";

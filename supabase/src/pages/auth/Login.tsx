@@ -7,17 +7,43 @@ import LogoMark from "@/components/LogoMark";
 import SeoMeta from "@/components/SeoMeta";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDisha } from "@/components/DishaContext";
+import { useDishaGuide } from "@/components/DishaGuideProvider";
+import { useMascotFormWatcher } from "@/hooks/useMascotFormWatcher";
 
 const Login = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useUser();
   const { userProfile } = useAuth();
+  const { triggerErrorReaction, triggerSuccessReaction } = useDisha();
+  const { handleClick: guideHandleClick } = useDishaGuide();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useMascotFormWatcher({
+    autoStartFlow: 'login',
+    fields: [
+      {
+        key: 'email',
+        selector: '[data-guide="email"]',
+        tip: 'Enter the email address you used when registering.',
+      },
+      {
+        key: 'password',
+        selector: '[data-guide="password"]',
+        tip: 'Enter your password. If you forgot it, use the link below.',
+      },
+      {
+        key: 'submit',
+        selector: '[data-guide="login-submit"]',
+        tip: 'Sign in to access your dashboard.',
+      },
+    ],
+  });
 
   useEffect(() => {
     if (!isLoaded || !isSignedIn) return;
@@ -58,14 +84,19 @@ const Login = () => {
       const result = await signIn.create({ identifier: email, password });
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
+        triggerSuccessReaction("Welcome back! Let's get you set up.");
         navigate("/choose-role", { replace: true });
       } else {
-        setError("Additional verification required.");
+        const msg = "Additional verification required.";
+        setError(msg);
+        triggerErrorReaction(msg);
       }
     } catch (err) {
       console.error("Email sign-in error:", err);
       const emailErr = err as { errors?: { message?: string }[] } | undefined;
-      setError(emailErr?.errors?.[0]?.message || "Invalid email or password.");
+      const msg = emailErr?.errors?.[0]?.message || "Invalid email or password.";
+      setError(msg);
+      triggerErrorReaction(msg);
     } finally {
       setLoading(false);
     }
@@ -81,8 +112,8 @@ const Login = () => {
         </Link>
         <ThemeToggle />
       </div>
-      <div className="flex-1 flex items-center justify-center">
-        <div className="w-full max-w-sm animate-scale-in">
+      <div className="flex-1 flex items-start justify-center">
+        <div className="w-full max-w-sm animate-scale-in overflow-y-auto">
           <div className="text-center mb-8">
             <LogoMark size="h-14 w-14" className="mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
@@ -130,6 +161,8 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                name="email"
+                data-guide="email"
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
               />
             </div>
@@ -140,6 +173,8 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                name="password"
+                data-guide="password"
                 className="w-full px-4 py-3 pr-12 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
               />
               <button
@@ -151,8 +186,10 @@ const Login = () => {
               </button>
             </div>
             <button
-              type="submit"
-              disabled={loading || !isLoaded || !email || !password}
+                type="submit"
+                data-guide="login-submit"
+                onClick={() => guideHandleClick('[data-guide="login-submit"]')}
+               disabled={loading || !isLoaded || !email || !password}
               className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Sign In"}

@@ -1,4 +1,8 @@
 import { Suspense, useState, useEffect, lazy } from "react";
+import { DishaProvider, Disha } from "./Disha";
+import { DishaGuideProvider } from "./DishaGuideProvider";
+import { MascotInteractionTracker } from "@/hooks/useMascotInteractionTracker";
+
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -27,6 +31,7 @@ import MobileMenu from "./MobileMenu";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
 import ScrollToTopFab from "./ScrollToTopFab";
 import FloatingCTA from "./FloatingCTA";
+import { usePageFade } from "@/hooks/usePageFade";
 import type { BottomNavItem } from "./DockNav";
 
 // Desktop-only animated dock. Lazy so framer-motion (~130KB) is never
@@ -113,6 +118,17 @@ const footerLinks = {
 };
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <DishaProvider>
+      <DishaGuideProvider>
+        <PublicLayoutInner>{children}</PublicLayoutInner>
+      </DishaGuideProvider>
+    </DishaProvider>
+  );
+}
+
+function PublicLayoutInner({ children }: { children: React.ReactNode }) {
+  const pageFadeRef = usePageFade<HTMLElement>();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { userProfile } = useAuth();
@@ -166,13 +182,13 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <div className="flex items-center gap-3 sm:gap-4">
             <ThemeToggle />
             {dashboardPath ? (
-              <Link to={dashboardPath} className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-colors">
+              <Link to={dashboardPath} className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-colors duration-fast ease-ios hover:-translate-y-0.5">
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </Link>
             ) : (
               <>
-                <Link to="/login" className="hidden sm:inline-block text-sm font-semibold text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-colors">
+                <Link to="/login" className="hidden sm:inline-block text-sm font-semibold text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-colors duration-fast ease-ios hover:-translate-y-0.5">
                   Sign In
                 </Link>
                 <Link to="/register" className="hidden sm:inline-block">
@@ -185,7 +201,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2.5 rounded-lg text-foreground hover:bg-accent transition-all min-h-11 min-w-11 flex items-center justify-center"
+              className="md:hidden press p-2.5 rounded-lg text-foreground hover:bg-accent min-h-11 min-w-11 flex items-center justify-center"
               aria-label="Open menu"
             >
               <Menu className="h-6 w-6" />
@@ -193,7 +209,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
         </div>
       </nav>
-      <main id="main-content" className="pt-[calc(4rem+env(safe-area-inset-top))] min-h-screen pb-[calc(8rem+env(safe-area-inset-bottom))] md:pb-24">
+      <main id="main-content" ref={pageFadeRef} className="pt-[calc(4rem+env(safe-area-inset-top))] min-h-screen pb-[calc(8rem+env(safe-area-inset-bottom))] md:pb-24">
         <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh]"><Skeleton className="h-8 w-48" /></div>}>
           {children}
         </Suspense>
@@ -227,7 +243,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             <div key={group} className="flex flex-col gap-3">
               <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{group}</span>
               {links.map((link, i) => (
-                <Link key={`${group}-${i}`} to={link.path} className="text-sm text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-all">
+                <Link key={`${group}-${i}`} to={link.path} className="text-sm text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-[color,transform] duration-fast ease-ios hover:-translate-y-0.5">
                   {link.label}
                 </Link>
               ))}
@@ -245,7 +261,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className={`w-9 h-9 rounded-full bg-muted dark:bg-white/5 flex items-center justify-center ${social.color} hover:bg-muted-foreground/10 dark:hover:bg-white/10 transition-all`}
+                    className={`elevate w-9 h-9 rounded-full bg-muted dark:bg-white/5 flex items-center justify-center ${social.color} hover:bg-muted-foreground/10 dark:hover:bg-white/10`}
                   >
                     {social.icon}
                   </a>
@@ -322,8 +338,10 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
         }
       />
-      <ScrollToTopFab />
+      <ScrollToTopFab bottomClass="bottom-[calc(9rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))]" />
       <FloatingCTA />
+      <Disha accent="orange" />
+      <MascotInteractionTracker />
     </div>
   );
 }

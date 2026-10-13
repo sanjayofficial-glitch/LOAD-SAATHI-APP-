@@ -26,6 +26,7 @@ import {
   Clock,
   Zap,
   Radio,
+  Phone,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -62,7 +63,7 @@ export default function CommandCenterLive() {
       todayStart.setHours(0, 0, 0, 0);
       const todayIso = todayStart.toISOString();
 
-      const [tripsRes, shipmentsRes, requestsRes, usersRes, completedTodayRes, unmatchedRes, topCorridorsRes] = await Promise.all([
+      const [tripsRes, shipmentsRes, requestsRes, usersRes, completedTodayRes, unmatchedRes, topCorridorsRes, leadsRes] = await Promise.all([
         supabase.from('trips').select('id, status').eq('status', 'active'),
         supabase.from('shipments').select('id, status').eq('status', 'active'),
         supabase.from('requests').select('id, status').eq('status', 'pending'),
@@ -70,6 +71,7 @@ export default function CommandCenterLive() {
         supabase.from('trips').select('id, created_at').eq('status', 'completed').gte('created_at', todayIso),
         supabase.from('shipments').select('id').eq('status', 'open'),
         supabase.from('trips').select('origin_city, destination_city').eq('status', 'active'),
+        supabase.from('leads').select('id').gte('created_at', todayIso),
       ]);
 
       // Compute hot corridors (top origin→dest pairs)
@@ -94,6 +96,7 @@ export default function CommandCenterLive() {
         shippers: usersRes.data?.filter((u) => u.user_type === 'shipper').length ?? 0,
         completedToday: completedTodayRes.data?.length ?? 0,
         unmatchedShipments: unmatchedRes.data?.length ?? 0,
+        todayLeads: leadsRes.data?.length ?? 0,
         hotCorridors,
       };
     },
@@ -216,13 +219,21 @@ export default function CommandCenterLive() {
               <p className="text-lg font-bold">{activeTruckers.length}</p>
             </div>
           </CardContent>
-        </Card>
-        <Card className="py-2">
+        </Card>          <Card className="py-2">
           <CardContent className="flex items-center gap-2 px-3">
             <Package className="h-4 w-4 text-blue-500" />
             <div>
               <p className="text-[10px] text-muted-foreground">Loads</p>
               <p className="text-lg font-bold">{loads.length}</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="py-2">
+          <CardContent className="flex items-center gap-2 px-3">
+            <Phone className="h-4 w-4 text-orange-500" />
+            <div>
+              <p className="text-[10px] text-muted-foreground">Today Leads</p>
+              <p className="text-lg font-bold">{stats?.todayLeads ?? 0}</p>
             </div>
           </CardContent>
         </Card>

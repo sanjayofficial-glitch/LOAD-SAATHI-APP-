@@ -61,9 +61,11 @@ flowchart TB
 
 ```
 LOAD-SAATHI-APP-1-OSRM/
-├── src/
+├── supabase/src/                # Main app source (React + TypeScript)
 │   ├── App.tsx                    # Root component + provider composition
 │   ├── main.tsx                   # Entry point (React root)
+│   ├── routes.tsx                 # Route definitions (lazy-loaded via React.lazy)
+│   ├── vite-env.d.ts              # Vite client types
 │   ├── globals.css                # Tailwind directives + CSS custom properties
 │   │
 │   ├── pages/                     # Route components (lazy-loaded via React.lazy)
@@ -102,20 +104,51 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │   │   ├── Terms.tsx          # Terms of service
 │   │   │   ├── RoutesIndex.tsx    # All freight routes listing (30+)
 │   │   │   ├── RouteDetail.tsx    # Individual route detail page
+│   │   │   ├── AiLogistics.tsx    # AI logistics landing page
+│   │   │   ├── Comparison.tsx     # Comparison content
+│   │   │   ├── Data.tsx           # Data-driven content page
+│   │   │   ├── ForMsmes.tsx       # MSME-focused page
+│   │   │   ├── Pricing.tsx        # Pricing tiers (Shipper/Trucker)
+│   │   │   ├── ShipperSolution.tsx  # Shipper-focused landing
+│   │   │   ├── TruckerSolution.tsx  # Trucker-focused landing
+│   │   │   ├── Tools.tsx          # Tools index page
+│   │   │   ├── TruckNearMe.tsx    # Truck-near-me page
+│   │   │   ├── SitemapPage.tsx    # HTML sitemap page
+│   │   │   ├── GuidePage.tsx      # Dynamic /guide/:slug
+│   │   │   ├── FareCalculator.tsx # Price estimation tool
 │   │   │   │
 │   │   │   ├── commercial/        # Commercial/marketing pages
-│   │   │   │   ├── Pricing.tsx    # Pricing tiers (Shipper/Trucker)
-│   │   │   │   ├── ShipperSolution.tsx  # Shipper-focused landing
-│   │   │   │   └── TruckerSolution.tsx  # Trucker-focused landing
+│   │   │   │   ├── FreightMarketplace.tsx
+│   │   │   │   ├── LtlTransport.tsx
+│   │   │   │   ├── PtlTransport.tsx
+│   │   │   │   ├── ReturnLoad.tsx
+│   │   │   │   └── TruckLoadBooking.tsx
 │   │   │   │
-│   │   │   ├── tools/             # Interactive tools
-│   │   │   │   └── FareCalculator.tsx  # Price estimation tool
+│   │   │   ├── tools/             # Interactive calculators/tools
+│   │   │   │   ├── TransportCostCalculator.tsx
+│   │   │   │   ├── TruckLoadCalculator.tsx
+│   │   │   │   ├── PtlVsFtlCalculator.tsx
+│   │   │   │   ├── FreightRateCalculator.tsx
+│   │   │   │   ├── ReturnLoadCalculator.tsx
+│   │   │   │   └── ... (13 more calculators)
 │   │   │   │
 │   │   │   ├── guides/            # Dynamic guide pages
-│   │   │   │   └── GuidePage.tsx  # Dynamic /guide/:slug
+│   │   │   │   ├── GuidePage.tsx  # Dynamic /guide/:slug
+│   │   │   │   └── index.ts
 │   │   │   │
-│   │   │   └── locations/         # Dynamic location pages
-│   │   │       └── LocationPage.tsx  # Dynamic /location/:city
+│   │   │   ├── locations/         # Dynamic location pages
+│   │   │   │   ├── LocationPage.tsx  # Dynamic /location/:city
+│   │   │   │   └── index.ts
+│   │   │   │
+│   │   │   ├── hi/                # Hi assistant pages
+│   │   │   │   ├── HiHome.tsx
+│   │   │   │   ├── HiBhadaGuide.tsx
+│   │   │   │   ├── HiPtlTransport.tsx
+│   │   │   │   ├── HiReturnLoad.tsx
+│   │   │   │   └── HiRouteRourkelaRanchi.tsx
+│   │   │   │
+│   │   │   └── transport/         # Transport service pages
+│   │   │       └── TransportServicePage.tsx
 │   │   │
 │   │   ├── trucker/               # Trucker role pages
 │   │   │   ├── Dashboard.tsx      # Trucker dashboard
@@ -133,15 +166,28 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │   │   ├── ShipmentDetail.tsx # Shipment detail
 │   │   │   ├── EditShipment.tsx   # Edit shipment
 │   │   │   ├── BrowseTrips.tsx    # Find available trucks
-│   │   │   └── ShipperHistory.tsx # Shipment history
+│   │   │   ├── ShipperHistory.tsx # Shipment history
+│   │   │   └── ShipperSpendingChart.tsx # Spending analytics
 │   │   │
 │   │   ├── admin/                 # Admin-only pages (role-protected)
 │   │   │   ├── Dashboard.tsx      # Admin dashboard
 │   │   │   ├── MonitoringDashboard.tsx  # System monitoring
+│   │   │   ├── CommandCenterLive.tsx    # Live command center
+│   │   │   ├── CommandCenterMap.tsx     # Command center map
+│   │   │   ├── CommandCenterSidebar.tsx # Command center sidebar
 │   │   │   ├── UserManagement.tsx      # User admin
+│   │   │   ├── UserDetailDrawer.tsx    # User detail drawer
 │   │   │   ├── Moderation.tsx          # Content moderation
 │   │   │   ├── GalleryManager.tsx      # Screenshot manager
-│   │   │   └── TeamManager.tsx         # Team management
+│   │   │   ├── TeamManager.tsx         # Team management
+│   │   │   ├── AnalyticsDashboard.tsx  # Analytics dashboard
+│   │   │   ├── ApiKeys.tsx             # API key management
+│   │   │   ├── AuditLog.tsx            # Audit log
+│   │   │   ├── BusinessMetricsPanel.tsx # Business metrics
+│   │   │   ├── LiveEventFeed.tsx       # Live event feed
+│   │   │   ├── SystemMetricsPanel.tsx  # System metrics
+│   │   │   ├── TripMapComponent.tsx    # Trip map component
+│   │   │   └── UserActivityTable.tsx   # User activity table
 │   │   │
 │   │   └── blog/                  # Blog system
 │   │       ├── BlogList.tsx       # Blog listing page
@@ -201,6 +247,9 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │   ├── IndexSkeleton.tsx      # Homepage loading skeleton
 │   │   ├── PostHogProvider.tsx    # PostHog analytics provider
 │   │   ├── GoogleAnalytics.tsx    # GA tracker
+│   │   ├── Disha*.tsx|.ts         # Disha mascot/guide components
+│   │   ├── avatar/                # Avatar components
+│   │   ├── maps/                  # Leaflet map widgets
 │   │   └── ui/                    # shadcn/ui components (40+ files)
 │   │       ├── button.tsx
 │   │       ├── card.tsx
@@ -238,7 +287,11 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │   ├── usePricePrediction.ts  # AI price prediction
 │   │   ├── useSmartMatch.ts       # Smart matching logic
 │   │   ├── useNetworkStatus.ts    # Online/offline detection
-│   │   └── use-mobile.tsx         # Mobile viewport detection
+│   │   ├── useLiveDriverLocations.ts # Live truck GPS
+│   │   ├── useLiveLoadLocations.ts # Live load GPS
+│   │   ├── useDishaGuide.tsx      # Disha guide state
+│   │   ├── useProfileProgress.ts  # Profile completion progress
+│   │   └── use-mobile.tsx         # Mobile viewport detection (+ more)
 │   │
 │   ├── contexts/
 │   │   └── AuthContext.tsx         # Auth state (Clerk user + Supabase profile)
@@ -254,8 +307,13 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │
 │   ├── data/                      # Static data (imported at build time)
 │   │   ├── routes.ts              # 30+ freight route definitions
+│   │   ├── vehicles.ts            # Vehicle catalog + dimensions
+│   │   ├── locations.ts/.json     # City data for location pages
 │   │   ├── blog.ts                # Blog post metadata + content
-│   │   └── locations.json         # City data for location pages
+│   │   ├── guides.ts              # Guide content
+│   │   ├── howItWorks.ts          # How-it-works content
+│   │   ├── tollData.ts            # Toll data
+│   │   └── ... (distances, driverWages, loadingPoints, etc.)
 │   │
 │   ├── lib/
 │   │   ├── utils.ts               # cn() helper (clsx + tailwind-merge)
@@ -284,7 +342,18 @@ LOAD-SAATHI-APP-1-OSRM/
 │   │   ├── index.ts               # Core data models
 │   │   └── chat.ts                # Chat-specific types
 │   │
+│   ├── styles/
+│   │   └── product-tour.css       # Product tour styles
+│   │
 │   └── test/                      # Test files
+│       ├── utils.test.ts
+│       ├── chat.test.ts
+│       ├── agentic-readiness.test.ts
+│       ├── csp-report.test.ts
+│       ├── newTools.test.tsx
+│       ├── phone.test.ts
+│       ├── security-headers.test.ts
+│       └── setup.ts
 │
 ├── public/                        # Static assets (served as-is)
 │   ├── robots.txt                 # AI-crawler-friendly robots.txt
@@ -298,8 +367,11 @@ LOAD-SAATHI-APP-1-OSRM/
 │   └── blog/                      # Blog post images
 │
 ├── android/                       # Capacitor Android project
-├── supabase/                      # Supabase CLI config
+├── api/                           # API agent + cron jobs (agent.js, site.js, cron/)
+├── supabase/                      # Supabase project: functions/, migrations/, config.toml (app source is supabase/src/ above)
 ├── scripts/                       # Build/utility scripts
+├── Blogs/                         # Blog drafts & marketing content
+├── screenshots/                   # Screenshots
 ├── docs/                          # Documentation
 │   ├── README.md                  # Docs index
 │   ├── architecture.md            # System architecture deep-dive
@@ -930,7 +1002,7 @@ VITE_GA_MEASUREMENT_ID=G-...
 
 ```bash
 pnpm install          # Install dependencies
-pnpm run dev          # Start dev server (http://localhost:5173)
+pnpm run dev          # Start dev server (http://localhost:8080)
 pnpm run build        # Production build
 pnpm run preview      # Preview production build
 npx cap sync          # Sync web build to Capacitor Android
@@ -1007,6 +1079,6 @@ const channel = supabase
 
 ---
 
-**Last Updated:** 2026-08-05
+**Last Updated:** 2026-10-10
 **Maintained By:** LoadSaathi Engineering Team
 **For Questions:** Refer to AI_RULES.md or this file

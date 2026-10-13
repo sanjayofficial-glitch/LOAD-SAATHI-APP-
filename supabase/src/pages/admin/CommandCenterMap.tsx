@@ -264,6 +264,7 @@ const CommandCenterMap: React.FC<CommandCenterMapProps> = ({
     showRoutes: true,
   });
   const [tileLayerId, setTileLayerId] = useState<TileLayerId>('dark');
+  const tile = getTileLayer(tileLayerId);
 
   const [resolvedTrips, setResolvedTrips] = useState<Array<{ id: string; origin: [number, number]; destination: [number, number]; status: string; origin_city: string; destination_city: string; trucker?: { full_name: string } }>>([]);
   const [resolvedShipments, setResolvedShipments] = useState<Array<{ id: string; origin: [number, number]; destination: [number, number]; status: string; origin_city: string; destination_city: string; shipper?: { full_name: string } }>>([]);
@@ -382,9 +383,10 @@ const CommandCenterMap: React.FC<CommandCenterMapProps> = ({
         <InvalidateSize />
         <ZoomControls positions={allPositions} />
         <TileLayer
-          attribution={getTileLayer(tileLayerId).attribution}
-          url={getTileLayer(tileLayerId).url}
+          attribution={tile.attribution}
+          url={tile.url}
         />
+        {tile.labelsUrl && <TileLayer url={tile.labelsUrl} />}
 
         {/* Heatmap layer */}
         {filters.showHeatmap && <HeatmapLayer points={heatPoints} />}

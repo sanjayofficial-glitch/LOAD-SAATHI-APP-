@@ -1,0 +1,1 @@
+export { FreddyAvatar } from './FreddyAvatar';

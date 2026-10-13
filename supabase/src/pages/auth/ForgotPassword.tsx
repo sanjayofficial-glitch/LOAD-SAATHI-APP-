@@ -42,8 +42,8 @@ const ForgotPassword = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
-        <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 animate-scale-in">
+      <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
+        <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 animate-scale-in overflow-y-auto">
           <div className="text-center">
             <div className="bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
@@ -79,9 +79,9 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
+    <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4">
       <SeoMeta title="Reset Password" description="Reset your LoadSaathi account password." canonical="/forgot-password" robots="noindex, nofollow" />
-      <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 animate-scale-in">
+      <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 animate-scale-in overflow-y-auto">
         <div className="text-center">
           <div className="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <Lock className="h-8 w-8 text-orange-600 dark:text-orange-400" />
@@ -106,6 +106,7 @@ const ForgotPassword = () => {
                 className="pl-10 border-orange-100 dark:border-orange-800"
                 required
                 disabled={loading}
+                data-guide="email"
               />
             </div>
             <p className="text-xs text-gray-500 dark:text-gray-400">
