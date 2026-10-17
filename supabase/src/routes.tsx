@@ -65,8 +65,7 @@ const TripDetail = lazy(() => import("./pages/trips/TripDetail"));
 const Chat = lazy(() => import("./pages/messaging/Chat"));
 const ChatList = lazy(() => import("./pages/messaging/ChatList"));
 const Profile = lazy(() => import("./pages/account/Profile"));
-const MonitoringDashboard = lazy(() => import("./pages/admin/MonitoringDashboard"));
-const CommandCenterLive = lazy(() => import("./pages/admin/CommandCenterLive"));
+const CommandCenterPage = lazy(() => import("./pages/admin/command-center/CommandCenterPage"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashboard"));
 const AuditLog = lazy(() => import("./pages/admin/AuditLog"));
@@ -241,12 +240,12 @@ export const AppRoutes = () => (
       {/* Admin routes */}
       <Route path="/admin/monitoring" element={
         <RoleProtectedRoute allowedRole="admin">
-          <MonitoringDashboard />
+          <CommandCenterPage />
         </RoleProtectedRoute>
       } />
       <Route path="/admin/command-center" element={
         <RoleProtectedRoute allowedRole="admin">
-          <CommandCenterLive />
+          <CommandCenterPage />
         </RoleProtectedRoute>
       } />
       <Route path="/admin/dashboard" element={

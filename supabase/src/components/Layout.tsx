@@ -278,7 +278,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
   const navItems = useMemo(() => {
     if (userProfile?.user_type === 'admin') {
       return [
-        { label: "Command Center", path: "/admin/monitoring", icon: <ShieldCheck className="h-4 w-4" /> },
+        { label: "Command Center", path: "/admin/command-center", icon: <ShieldCheck className="h-4 w-4" /> },
         { label: "Dashboard", path: "/admin/analytics", icon: <LayoutDashboard className="h-4 w-4" /> },
         { label: "Users", path: "/admin/users", icon: <Users className="h-4 w-4" /> },
         { label: "Moderation", path: "/admin/moderation", icon: <Shield className="h-4 w-4" /> },

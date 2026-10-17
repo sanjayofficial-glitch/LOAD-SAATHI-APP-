@@ -1,205 +1,97 @@
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useSupabase } from '@/hooks/useSupabase';
-import type { SupabaseClient } from '@supabase/supabase-js';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { FileText, Search, Clock, User, Activity } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Loader2, RefreshCw, Filter } from 'lucide-react';
-import { toast } from 'sonner';
-import type { AuditLogEntry } from '@/types';
-import AdminShell from '@/components/admin/AdminShell';
 
-const ACTION_LABELS: Record<string, string> = {
-  'user.verify': 'User Verified',
-  'user.unverify': 'User Unverified',
-  'user.suspend': 'User Suspended',
-  'user.unsuspend': 'User Unsuspended',
-  'user.role_change': 'Role Changed',
-  'trip.cancel': 'Trip Cancelled',
-  'trip.reactivate': 'Trip Reactivated',
-  'shipment.cancel': 'Shipment Cancelled',
-  'shipment.reactivate': 'Shipment Reactivated',
-  'bulk.verify': 'Bulk Verify',
-  'bulk.cancel_trips': 'Bulk Cancel Trips',
-  'bulk.cancel_shipments': 'Bulk Cancel Shipments',
-  'export.csv': 'CSV Export',
-};
-
-const ACTION_COLORS: Record<string, string> = {
-  'user.verify': 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
-  'user.unverify': 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800',
-  'user.suspend': 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
-  'user.unsuspend': 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
-  'user.role_change': 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800',
-  'trip.cancel': 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
-  'trip.reactivate': 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
-  'shipment.cancel': 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
-  'shipment.reactivate': 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
-  'bulk.verify': 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800',
-  'bulk.cancel_trips': 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
-  'bulk.cancel_shipments': 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
-  'export.csv': 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
-};
+interface AuditEntry {
+  id: string;
+  admin_id: string;
+  action: string;
+  target_type?: string;
+  target_id?: string;
+  created_at: string;
+  admin?: { full_name?: string };
+}
 
 const AuditLog = () => {
   const { getAuthenticatedClient } = useSupabase();
-  const [entries, setEntries] = useState<AuditLogEntry[]>([]);
+  const [entries, setEntries] = useState<AuditEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [actionFilter, setActionFilter] = useState<string>('all');
-  const [adminFilter, setAdminFilter] = useState('');
-  const supabaseRef = useRef<SupabaseClient | null>(null);
-  const channelRef = useRef<ReturnType<SupabaseClient['channel']> | null>(null);
-
-  const fetchEntries = useCallback(async () => {
-    setLoading(true);
-    try {
-      const supabase = await getAuthenticatedClient();
-      supabaseRef.current = supabase;
-
-      let query = supabase
-        .from('admin_audit_log')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(200);
-
-      if (actionFilter !== 'all') {
-        query = query.eq('action', actionFilter);
-      }
-      if (adminFilter.trim()) {
-        query = query.ilike('admin_id', `%${adminFilter.trim()}%`);
-      }
-
-      const { data, error } = await query;
-      if (error) throw error;
-      setEntries(data || []);
-    } catch (err) {
-      console.error('Error fetching audit log:', err);
-      const message = err instanceof Error ? err.message : (err as { message?: string })?.message || 'Unknown error';
-      toast.error(`Failed to load audit log: ${message}`);
-    } finally {
-      setLoading(false);
-    }
-  }, [getAuthenticatedClient, actionFilter, adminFilter]);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetchEntries().then(() => {
-      const client = supabaseRef.current;
-      if (!client || channelRef.current) return;
-
-      channelRef.current = client
-        .channel('admin-audit-log')
-        .on('postgres_changes', {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'admin_audit_log',
-        }, (payload) => {
-          setEntries(prev => [payload.new as AuditLogEntry, ...prev]);
-        })
-        .subscribe();
-    });
-
-    return () => {
-      if (channelRef.current) {
-        const client = supabaseRef.current;
-        if (client) {
-          void (async () => {
-            try {
-              const channel = channelRef.current;
-              if (channel) {
-                await client.removeChannel(channel);
-              }
-            } catch (err) {
-              if (import.meta.env.DEV) console.warn('[channel cleanup]', err);
-            }
-          })();
-        }
-        channelRef.current = null;
-      }
+    const fetchLogs = async () => {
+      try {
+        const supabase = await getAuthenticatedClient();
+        const { data } = await supabase.from('audit_log').select('*, admin:users!audit_log_admin_id_fkey(full_name)').order('created_at', { ascending: false }).limit(50);
+        setEntries((data || []) as unknown as AuditEntry[]);
+      } catch (err) { console.error('[AuditLog]', err); } finally { setLoading(false); }
     };
-  }, [fetchEntries]);
+    fetchLogs();
+  }, [getAuthenticatedClient]);
 
-  const filteredEntries = useMemo(() => {
-    if (actionFilter === 'all' && !adminFilter.trim()) return entries;
-    return entries.filter(e => {
-      const matchesAction = actionFilter === 'all' || e.action === actionFilter;
-      const matchesAdmin = !adminFilter.trim() || e.admin_id.includes(adminFilter.trim());
-      return matchesAction && matchesAdmin;
-    });
-  }, [entries, actionFilter, adminFilter]);
+  const filtered = entries.filter((e) => !search || e.action?.toLowerCase().includes(search.toLowerCase()) || e.admin?.full_name?.toLowerCase().includes(search.toLowerCase()));
+
+  const actionColors: Record<string, string> = { create: 'bg-green-100 text-green-700', update: 'bg-blue-100 text-blue-700', delete: 'bg-red-100 text-red-700', approve: 'bg-emerald-100 text-emerald-700', reject: 'bg-amber-100 text-amber-700' };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="h-8 w-48 bg-gray-200 rounded-lg animate-pulse mb-8" />
+          <div className="grid gap-2">{Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-16 bg-gray-200 rounded-xl animate-pulse" />)}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <AdminShell title="Audit Log" description="Track all admin actions across the platform">
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex items-center gap-2 flex-1">
-            <Filter className="h-4 w-4 text-slate-400" />
-            <Select value={actionFilter} onValueChange={setActionFilter}>
-              <SelectTrigger className="w-full sm:w-48 bg-slate-800 border-slate-700 text-slate-200">
-                <SelectValue placeholder="All actions" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Actions</SelectItem>
-                {Object.entries(ACTION_LABELS).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>{label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+              <FileText className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Audit Log</h1>
+              <p className="text-sm text-gray-500">{entries.length} entries</p>
+            </div>
           </div>
-          <Input
-            placeholder="Filter by admin ID..."
-            value={adminFilter}
-            onChange={e => setAdminFilter(e.target.value)}
-            className="bg-slate-800 border-slate-700 text-slate-200 placeholder:text-slate-500"
-          />
-          <Button variant="outline" size="sm" onClick={fetchEntries} disabled={loading} className="border-slate-700 text-slate-300 hover:text-white">
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-          </Button>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input placeholder="Search logs..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9 w-64 border-gray-200 bg-white" />
+          </div>
         </div>
 
-        <Card className="bg-slate-900 border-slate-700/60">
-          <CardContent className="p-0">
-            {loading && entries.length === 0 ? (
-              <div className="p-6 space-y-3">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton key={i} className="h-12 w-full" />
-                ))}
-              </div>
-            ) : filteredEntries.length === 0 ? (
-              <div className="p-12 text-center text-slate-400 text-sm">No audit entries found</div>
-            ) : (
-              <div className="divide-y divide-slate-700/60">
-                {filteredEntries.map(entry => (
-                  <div key={entry.id} className="p-3 sm:p-4 flex items-start gap-3 hover:bg-slate-800/50 transition-colors">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="outline" className={`text-[10px] px-1.5 py-0.5 ${ACTION_COLORS[entry.action] || 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700'}`}>
-                          {ACTION_LABELS[entry.action] || entry.action}
-                        </Badge>
-                        <span className="text-[10px] text-slate-500 font-mono">
-                          {new Date(entry.created_at).toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="text-xs text-slate-400">
-                        Admin: <span className="font-mono text-slate-300">{entry.admin_id}</span>
-                        {entry.target_type && (
-                          <> &middot; Target: <span className="font-mono text-slate-300">{entry.target_type}:{entry.target_id?.slice(0, 8)}</span></>
-                        )}
-                        {entry.metadata && Object.keys(entry.metadata).length > 0 && (
-                          <span className="text-slate-500"> &middot; {JSON.stringify(entry.metadata)}</span>
-                        )}
-                      </div>
+        <div className="grid gap-2">
+          {filtered.length === 0 && <div className="text-center py-16 text-gray-500">No log entries found</div>}
+          {filtered.map((entry) => {
+            const color = actionColors[entry.action?.split('_')[0] ?? ''] || 'bg-gray-100 text-gray-700';
+            return (
+              <Card key={entry.id} className="border-gray-200 shadow-sm rounded-2xl">
+                <CardContent className="p-3.5 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center shrink-0">
+                    <Activity className="h-4 w-4 text-gray-500" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-gray-900 truncate">{entry.action}</p>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${color}`}>{entry.action}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
+                      {entry.admin && <span className="flex items-center gap-1"><User className="h-3 w-3" />{entry.admin.full_name}</span>}
+                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{new Date(entry.created_at).toLocaleString()}</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
-    </AdminShell>
+    </div>
   );
 };
 
