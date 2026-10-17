@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { cn } from '@/lib/utils';
 import { formatDuration } from '@/utils/format';
-import { calculateMatchScore, getMatchLabel, getAIMatchBadge } from '@/utils/matching';
+import { calculateMatchScore, getMatchLabel, getAIMatchBadge, buildLocalAiMatch } from '@/utils/matching';
 
 describe('cn', () => {
   it('merges conditional classes', () => {
@@ -108,6 +108,40 @@ describe('getMatchLabel', () => {
 describe('getAIMatchBadge', () => {
   it('returns AI label with score', () => {
     expect(getAIMatchBadge({ aiScore: 75, confidence: 'high', reasoning: 'test' }).label).toBe('Suggestion: 75%');
+  });
+
+  it('marks provider fallback scores as local suggestions', () => {
+    expect(
+      getAIMatchBadge({ aiScore: 75, confidence: 'high', reasoning: 'test', provider: 'local-fallback' }).label,
+    ).toBe('Suggestion (local): 75%');
+  });
+});
+
+describe('buildLocalAiMatch', () => {
+  const params = {
+    shipmentOriginCity: 'Delhi',
+    shipmentDestCity: 'Mumbai',
+    tripOriginCity: 'Delhi',
+    tripDestCity: 'Mumbai',
+    shipmentWeightTonnes: 5,
+    tripCapacityTonnes: 10,
+    shipmentBudgetPerTonne: 100,
+    tripPricePerTonne: 90,
+  };
+
+  it('returns a deterministic local fallback score', () => {
+    const first = buildLocalAiMatch(params);
+    const second = buildLocalAiMatch(params);
+
+    expect(first).not.toBeNull();
+    expect(second).toEqual(first);
+    expect(first?.provider).toBe('local-fallback');
+    expect(first?.aiScore).toBeGreaterThanOrEqual(0);
+    expect(first?.aiScore).toBeLessThanOrEqual(100);
+  });
+
+  it('returns null when required routing data is missing', () => {
+    expect(buildLocalAiMatch({ ...params, tripDestCity: '' })).toBeNull();
   });
 });
 

@@ -33,18 +33,25 @@ export default function ReturnLoadProbability({ origin, destination }: ReturnLoa
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ originCity: origin, destinationCity: destination, allowPublic: true }),
+      signal: AbortSignal.timeout(8000),
     })
-      .then(res => res.ok ? res.json() : Promise.reject("Failed"))
-      .then((apiData: any) => {
-        const reverseCount = apiData.forecasts?.length || 0;
-        const probability = Math.min(95, Math.max(15, Math.round(40 + reverseCount * 3 + Math.random() * 20)));
+      .then(async (res) => {
+        if (!res.ok) throw new Error('unavailable');
+        return res.json() as Promise<{ forecasts?: unknown[] }>;
+      })
+      .then((apiData) => {
+        const reverseCount = Array.isArray(apiData?.forecasts) ? apiData.forecasts.length : 0;
+        const probability = Math.min(95, Math.max(15, Math.round(45 + reverseCount * 3)));
         setData({
           probability,
           confidence: reverseCount > 8 ? "high" : reverseCount > 4 ? "medium" : "low",
           window: probability > 70 ? "24h" : probability > 40 ? "48h" : "72h",
         });
       })
-      .catch(() => setError("Could not load return load probability"))
+      .catch(() => {
+        setError("Live forecast unavailable. Return-load suggestions are paused.");
+        setData(null);
+      })
       .finally(() => setLoading(false));
   }, [origin, destination]);
 

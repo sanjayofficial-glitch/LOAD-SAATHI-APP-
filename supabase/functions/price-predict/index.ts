@@ -348,7 +348,7 @@ async function geminiProvider(body: PricePredictRequest, prompt: string): Promis
   if (!apiKey) return { success: false, rateLimited: false };
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
@@ -376,7 +376,7 @@ async function groqProvider(body: PricePredictRequest, prompt: string): Promise<
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-120b",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.3,
         response_format: { type: "json_object" },
@@ -400,8 +400,8 @@ async function openRouterProvider(body: PricePredictRequest, prompt: string): Pr
   const apiKey = getEnv("OPENROUTER_API_KEY");
   if (!apiKey) return { success: false, rateLimited: false };
   const models = [
-    "cognitivecomputations/dolphin3.0-mistral-24b:free",
-    "microsoft/phi-3-mini-4k-instruct:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "nvidia/nemotron-3.5-lightning:free",
   ];
   for (const model of models) {
     try {

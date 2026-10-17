@@ -2,6 +2,7 @@
 import { useAuth as useClerkAuth } from '@clerk/clerk-react'
 
 import type { AIMatchResult } from '@/types'
+import { buildLocalAiMatch } from '@/utils/matching'
 
 const DEBOUNCE_MS = 300
 
@@ -26,8 +27,16 @@ export function useSmartMatch<T extends { id: string }>(
     lastFetchRef.current = now
 
     try {
-      const token = await getToken()
-      if (!token) return null
+      const token = await getToken({ template: 'supabase' })
+      if (!token) {
+        const fallback = buildLocalAiMatch(params)
+        if (fallback) {
+          setScores(prev => ({ ...prev, [item.id]: fallback }))
+          fetchedRef.current.add(item.id)
+        }
+        return fallback
+      }
+
       const res = await fetch(`${supabaseUrl}/functions/v1/match-ml`, {
         method: 'POST',
         headers: {
@@ -36,13 +45,33 @@ export function useSmartMatch<T extends { id: string }>(
         },
         body: JSON.stringify(params),
       })
-      if (!res.ok) return null
+      if (!res.ok) {
+        const fallback = buildLocalAiMatch(params)
+        if (fallback) {
+          setScores(prev => ({ ...prev, [item.id]: fallback }))
+          fetchedRef.current.add(item.id)
+        }
+        return fallback
+      }
       const data = (await res.json()) as AIMatchResult & { provider?: string }
+      if (!data || !Number.isFinite(data.aiScore)) {
+        const fallback = buildLocalAiMatch(params)
+        if (fallback) {
+          setScores(prev => ({ ...prev, [item.id]: fallback }))
+          fetchedRef.current.add(item.id)
+        }
+        return fallback
+      }
       setScores(prev => ({ ...prev, [item.id]: data }))
       fetchedRef.current.add(item.id)
       return data
     } catch {
-      return null
+      const fallback = buildLocalAiMatch(params)
+      if (fallback) {
+        setScores(prev => ({ ...prev, [item.id]: fallback }))
+        fetchedRef.current.add(item.id)
+      }
+      return fallback
     }
   }, [getParams, supabaseUrl, getToken])
 

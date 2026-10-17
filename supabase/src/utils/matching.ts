@@ -1,3 +1,5 @@
+import type { AIMatchResult } from '@/types';
+
 function haversineKm(
   lat1: number, lng1: number,
   lat2: number, lng2: number
@@ -184,6 +186,7 @@ export interface AIMatchInfo {
   aiScore: number
   confidence: 'high' | 'medium' | 'low'
   reasoning: string
+  provider?: string
 }
 
 export function getAIMatchBadge(info: AIMatchInfo): {
@@ -195,7 +198,94 @@ export function getAIMatchBadge(info: AIMatchInfo): {
     : score >= 60 ? 'bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300'
     : score >= 40 ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300'
     : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-  return { label: `Suggestion: ${score}%`, color: base }
+  const isLocal = info.provider?.startsWith('local') || info.provider?.startsWith('fallback')
+  return { label: isLocal ? `Suggestion (local): ${score}%` : `Suggestion: ${score}%`, color: base }
 }
 
 
+export function buildLocalAiMatch(rawParams: Record<string, unknown>): AIMatchResult | null {
+  const shipmentOriginCity =
+    typeof rawParams.shipmentOriginCity === "string" ? rawParams.shipmentOriginCity.trim() : ""
+  const tripOriginCity =
+    typeof rawParams.tripOriginCity === "string" ? rawParams.tripOriginCity.trim() : ""
+  const shipmentDestCity =
+    typeof rawParams.shipmentDestCity === "string" ? rawParams.shipmentDestCity.trim() : ""
+  const tripDestCity =
+    typeof rawParams.tripDestCity === "string" ? rawParams.tripDestCity.trim() : ""
+  const shipmentWeightTonnes =
+    Number.isFinite(Number(rawParams.shipmentWeightTonnes))
+      ? Number(rawParams.shipmentWeightTonnes)
+      : 0
+  const tripCapacityTonnes =
+    Number.isFinite(Number(rawParams.tripCapacityTonnes))
+      ? Number(rawParams.tripCapacityTonnes)
+      : 0
+
+  if (!shipmentOriginCity || !tripOriginCity || !shipmentDestCity || !tripDestCity) {
+    return null
+  }
+  if (shipmentWeightTonnes <= 0 || tripCapacityTonnes <= 0) {
+    return null
+  }
+
+  const aiScore = calculateMatchScore({
+    shipmentOriginCity,
+    tripOriginCity,
+    shipmentDestCity,
+    tripDestCity,
+    shipmentWeightTonnes,
+    tripCapacityTonnes,
+    shipmentOriginState:
+      typeof rawParams.shipmentOriginState === "string" ? rawParams.shipmentOriginState : undefined,
+    shipmentDestState:
+      typeof rawParams.shipmentDestState === "string" ? rawParams.shipmentDestState : undefined,
+    tripOriginState: typeof rawParams.tripOriginState === "string" ? rawParams.tripOriginState : undefined,
+    tripDestState: typeof rawParams.tripDestState === "string" ? rawParams.tripDestState : undefined,
+    shipmentOriginLat:
+      Number.isFinite(Number(rawParams.shipmentOriginLat))
+        ? Number(rawParams.shipmentOriginLat)
+        : undefined,
+    shipmentOriginLng:
+      Number.isFinite(Number(rawParams.shipmentOriginLng))
+        ? Number(rawParams.shipmentOriginLng)
+        : undefined,
+    tripOriginLat:
+      Number.isFinite(Number(rawParams.tripOriginLat)) ? Number(rawParams.tripOriginLat) : undefined,
+    tripOriginLng:
+      Number.isFinite(Number(rawParams.tripOriginLng)) ? Number(rawParams.tripOriginLng) : undefined,
+    shipmentDestLat:
+      Number.isFinite(Number(rawParams.shipmentDestLat)) ? Number(rawParams.shipmentDestLat) : undefined,
+    shipmentDestLng:
+      Number.isFinite(Number(rawParams.shipmentDestLng)) ? Number(rawParams.shipmentDestLng) : undefined,
+    tripDestLat:
+      Number.isFinite(Number(rawParams.tripDestLat)) ? Number(rawParams.tripDestLat) : undefined,
+    tripDestLng:
+      Number.isFinite(Number(rawParams.tripDestLng)) ? Number(rawParams.tripDestLng) : undefined,
+    shipmentBudgetPerTonne:
+      Number.isFinite(Number(rawParams.shipmentBudgetPerTonne))
+        ? Number(rawParams.shipmentBudgetPerTonne)
+        : undefined,
+    tripPricePerTonne:
+      Number.isFinite(Number(rawParams.tripPricePerTonne))
+        ? Number(rawParams.tripPricePerTonne)
+        : undefined,
+    shipmentDate: typeof rawParams.shipmentDate === "string" ? rawParams.shipmentDate : undefined,
+    tripDate: typeof rawParams.tripDate === "string" ? rawParams.tripDate : undefined,
+    truckerRating:
+      Number.isFinite(Number(rawParams.truckerRating)) ? Number(rawParams.truckerRating) : undefined,
+  })
+
+  const confidence: "high" | "medium" | "low" =
+    aiScore >= 80 ? "high" : aiScore >= 60 ? "medium" : "low"
+  return {
+    aiScore,
+    confidence,
+    reasoning:
+      aiScore >= 80
+        ? "Local fallback: substantial route, capacity, price, and timing agreement."
+        : aiScore >= 60
+          ? "Local fallback: suitable fit, especially route alignment and timing."
+          : "Local fallback: weaker route, capacity, or price fit; review manually.",
+    provider: "local-fallback",
+  }
+}

@@ -65,9 +65,9 @@ const { data, error } = await supabase.functions.invoke('price-predict', {
 Both functions use the same **provider fallback chain**:
 
 **Provider chain:**
-1. **Gemini** (gemini-2.0-flash-lite) — primary
-2. **Groq** (llama-3.3-70b-versaatile) — fallback
-3. **OpenRouter** (dolphin3.0-mistral-24b → phi-3-mini-4k) — secondary fallback
+1. **Gemini** (gemini-flash-lite-latest) — primary
+2. **Groq** (openai/gpt-oss-120b) — fallback
+3. **OpenRouter** (nvidia/nemotron-3-super-120b-a12b:free → nvidia/nemotron-3.5-lightning:free) — secondary fallback
 4. **Local heuristic** — deterministic fallback when all AI providers are unavailable
 
 If any provider returns 429 (rate limited), the function automatically tries the next provider. If all AI providers fail, a deterministic local heuristic produces a score so the UI never breaks.

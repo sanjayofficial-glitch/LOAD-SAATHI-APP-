@@ -75,7 +75,7 @@ async function geminiProvider(profile: CreditProfile): Promise<ProviderResult> {
 
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -115,7 +115,7 @@ async function groqProvider(profile: CreditProfile): Promise<ProviderResult> {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-120b",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.3,
         response_format: { type: "json_object" },
@@ -145,8 +145,8 @@ async function openRouterProvider(profile: CreditProfile): Promise<ProviderResul
 
   const prompt = buildPrompt(profile)
   const models = [
-    "cognitivecomputations/dolphin3.0-mistral-24b:free",
-    "microsoft/phi-3-mini-4k-instruct:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "nvidia/nemotron-3.5-lightning:free",
   ]
 
   for (const model of models) {
