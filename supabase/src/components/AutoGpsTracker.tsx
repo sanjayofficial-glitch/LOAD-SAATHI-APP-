@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLocation } from '@/contexts/LocationContext';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { logger } from '@/lib/logger';
-import { showError } from '@/utils/toast';
+// showError no longer used
 
 /**
  * AutoGpsTracker - Invisible component that auto-tracks GPS for logged-in truckers.
@@ -94,14 +94,23 @@ export default function AutoGpsTracker() {
         async (position) => {
           if (!mounted) return;
 
+          const tripCtx = activeTripRef.current;
+
+          // Do not publish GPS unless an active/accepted trip exists. This
+          // guarantees we never leak parked trucks into the public map (privacy
+          // + cost control).
+          if (!tripCtx) {
+            setGpsTrackingState('idle');
+            return;
+          }
+
           const now = Date.now();
           setGpsTrackingState('active');
-          // Throttle writes to every 30s so the live map stays fresh
+          // Throttle writes to every 30s so the live map stays fresh.
           if (now - lastUpdateRef.current < LOCATION_UPDATE_INTERVAL_MS) return;
           lastUpdateRef.current = now;
 
           const { latitude: lat, longitude: lng } = position.coords;
-          const tripCtx = activeTripRef.current;
 
           // Refresh token if needed (Clerk tokens expire ~60s)
           const freshToken = await getSupabaseToken();
@@ -116,16 +125,17 @@ export default function AutoGpsTracker() {
                 lng,
                 heading: position.coords.heading ?? null,
                 speed: position.coords.speed ?? null,
+                accuracy: position.coords.accuracy ?? null,
+                last_seen_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
-                // Trip context for live map
-                ...(tripCtx && {
-                  trip_id: tripCtx.trip_id,
-                  origin_city: tripCtx.origin_city,
-                  destination_city: tripCtx.destination_city,
-                  vehicle_type: tripCtx.vehicle_type,
-                  available_capacity_tonnes: tripCtx.available_capacity_tonnes,
-                  trip_status: tripCtx.trip_status,
-                }),
+                is_sharing: true,
+                // Trip context for live map (never overwrites planned trip coords)
+                trip_id: tripCtx.trip_id,
+                origin_city: tripCtx.origin_city,
+                destination_city: tripCtx.destination_city,
+                vehicle_type: tripCtx.vehicle_type,
+                available_capacity_tonnes: tripCtx.available_capacity_tonnes,
+                trip_status: tripCtx.trip_status,
               },
               { onConflict: 'driver_id' }
             );
@@ -135,8 +145,7 @@ export default function AutoGpsTracker() {
             }
           } catch (err) {
             const errMsg = err instanceof Error ? err.message : String(err);
-            showError('GPS update failed');
-            logger.error('AutoGpsTracker upsert failed', { error: errMsg }, 'AutoGpsTracker');
+            logger.warn('AutoGpsTracker upsert failed (silently throttled retry)', { error: errMsg }, 'AutoGpsTracker');
           }
         },
         (err) => {
@@ -174,6 +183,24 @@ export default function AutoGpsTracker() {
       if (tripRefreshRef.current !== null) {
         window.clearInterval(tripRefreshRef.current);
         tripRefreshRef.current = null;
+      }
+
+      // Best-effort: stop sharing when unmounted (do not block unmount).
+      const uid = userProfile?.id;
+      if (uid) {
+        void (async () => {
+          try {
+            const token = await getSupabaseToken();
+            if (!token) return;
+            const client = createClerkSupabaseClient(token);
+            await client
+              .from('driver_locations')
+              .update({ is_sharing: false, trip_id: null })
+              .eq('driver_id', uid);
+          } catch {
+            // ignore — state will be corrected on next mount or via trip completion
+          }
+        })();
       }
     };
   }, [userProfile, getSupabaseToken, locationPermission, setGpsTrackingState]);

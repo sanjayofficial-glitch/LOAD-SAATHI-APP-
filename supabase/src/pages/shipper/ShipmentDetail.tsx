@@ -56,6 +56,14 @@ const ShipmentDetail = () => {
   const [reviewTruckerId, setReviewTruckerId] = useState<string | null>(null);
   const [reviewTruckerName, setReviewTruckerName] = useState<string>('');
   const [truckerLocation, setTruckerLocation] = useState<TruckLocation | null>(null);
+  const [nowTs, setNowTs] = useState<number>(() => Date.now());
+
+  // Auto-update "stale" display even if no new GPS events arrive.
+  useEffect(() => {
+    if (!truckerLocation?.lastUpdated) return;
+    const id = setInterval(() => setNowTs(Date.now()), 15000);
+    return () => clearInterval(id);
+  }, [truckerLocation?.lastUpdated]);
 
   const fetchData = async () => {
     if (!id || !userProfile) return;
@@ -557,8 +565,13 @@ const ShipmentDetail = () => {
                     {truckerLocation && (
                       <div className="mt-3 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                         <LiveMap trucks={[truckerLocation]} className="!h-[200px] rounded-none border-0" />
-                        <div className="p-2 bg-blue-50 dark:bg-blue-900/20 text-xs text-blue-700 dark:text-blue-300 text-center">
+                        <div className={
+                          nowTs - new Date(truckerLocation.lastUpdated).getTime() > 120000
+                            ? 'p-2 bg-red-50 dark:bg-red-900/20 text-xs text-red-700 dark:text-red-300 text-center'
+                            : 'p-2 bg-blue-50 dark:bg-blue-900/20 text-xs text-blue-700 dark:text-blue-300 text-center'
+                        }>
                           Live tracking updated {new Date(truckerLocation.lastUpdated).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                          {nowTs - new Date(truckerLocation.lastUpdated).getTime() > 120000 && ' \u2022 signal may be stale.'}
                         </div>
                       </div>
                     )}

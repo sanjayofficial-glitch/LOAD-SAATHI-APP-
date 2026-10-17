@@ -26,7 +26,7 @@ export function useLiveLoadLocations() {
 
       const { data } = await client
         .from('load_locations')
-        .select('*')
+        .select('id, shipper_id, shipment_id, origin_city, dest_city, origin_lat, origin_lng, dest_lat, dest_lng, weight_tonnes, budget_per_tonne, goods_description, status, created_at, updated_at')
         .eq('status', 'active')
         .order('created_at', { ascending: false })
         .limit(100);

@@ -271,7 +271,7 @@ const TripDetail = () => {
                 <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
                 Live Trucker Location
               </p>
-              <span className="text-[10px] text-blue-500 dark:text-blue-400 font-mono">
+              <span className={`text-[10px] font-mono ${Date.now() - new Date(truckerLocation.lastUpdated).getTime() > 120000 ? "text-red-500 dark:text-red-400" : "text-blue-500 dark:text-blue-400"}`}>
                 Updated {new Date(truckerLocation.lastUpdated).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
