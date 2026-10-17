@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-llms-routes.mjs",
+    "prebuild": "node scripts/validate-env.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-llms-routes.mjs",
     "build": "vite build && node scripts/prerender.mjs && node scripts/smoke.mjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
