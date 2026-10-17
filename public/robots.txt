@@ -24,6 +24,11 @@ Disallow: /trips/
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /csp-report
+
+# Block noindex duplicate/utility pages (crawl budget waste)
+Disallow: /share/
+Disallow: /screens/
+Disallow: /transport/
     
 # AI crawlers — explicit allow for GEO visibility
 User-agent: GPTBot

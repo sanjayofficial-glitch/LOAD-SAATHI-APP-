@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Truck, Package, Route, Shield, DollarSign, MapPin, ArrowRight, CheckCircle, Zap, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SeoMeta from "@/components/SeoMeta";
+import DirectAnswer from "@/components/DirectAnswer";
+import KeyTakeaways from "@/components/KeyTakeaways";
 
 const features = [
   {
@@ -171,9 +173,32 @@ export default function FreightMarketplace() {
               Move More.<br />
               <span className="bg-gradient-to-r from-orange-500 to-blue-400 bg-clip-text text-transparent">Waste Less.</span>
             </h1>
+            <DirectAnswer
+              answer="A digital freight marketplace is an online platform connecting shippers (businesses needing to move goods) with truckers (those with available capacity). Instead of calling brokers, both sides transact directly through the platform with transparent pricing, verified identities, and secure payments."
+              qualifier="LoadSaathi charges 1.5–3% per completed shipment — no subscriptions or hidden fees."
+            />
+            <KeyTakeaways
+              items={[
+                "Direct shipper-trucker connection — no brokers",
+                "AI-powered 7-factor matching in seconds",
+                "Transparent pricing with AI price prediction",
+                "Credit scores (300–900) for all users",
+                "GPS tracking and escrow-backed payments"
+              ]}
+            />
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
               LoadSaathi connects businesses that need to ship goods with truckers who have available capacity. PTL, LTL, and FTL loads across East India — with AI matching, transparent pricing, and GPS tracking.
             </p>
+            {/* Internal links to related services */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              <Link to="/ptl-transport" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">PTL Transport</Link>
+              <span className="text-muted-foreground">·</span>
+              <Link to="/ltl-transport" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">LTL Transport</Link>
+              <span className="text-muted-foreground">·</span>
+              <Link to="/truck-load-booking" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">Book a Truck</Link>
+              <span className="text-muted-foreground">·</span>
+              <Link to="/return-load" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">Find Return Loads</Link>
+            </div>
             <div className="flex items-center justify-center gap-4">
               <Link to="/register?type=shipper">
                 <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.4)] group">

@@ -37,6 +37,32 @@ function extractSlugs(filePath, pattern) {
   return [...new Set(slugs)];
 }
 
+/**
+ * Extract lastmod dates from data files.
+ * Blog: uses lastUpdated field (e.g., "July 5, 2026" → "2026-07-05")
+ * Routes: uses RATES_UPDATED_AT from routes.ts
+ */
+function extractLastMod(filePath, slugList, dateFieldPattern) {
+  if (!fs.existsSync(filePath)) return {};
+  const content = fs.readFileSync(filePath, "utf-8");
+  const dates = {};
+  for (const slug of slugList) {
+    // Look for the slug and then find the date field after it
+    const slugIdx = content.indexOf(`"${slug}"`);
+    if (slugIdx === -1) continue;
+    const afterSlug = content.slice(slugIdx, slugIdx + 2000);
+    const dateMatch = afterSlug.match(dateFieldPattern);
+    if (dateMatch) {
+      // Parse "July 5, 2026" → "2026-07-05"
+      const parsed = new Date(dateMatch[1]);
+      if (!isNaN(parsed.getTime())) {
+        dates[slug] = parsed.toISOString().slice(0, 10);
+      }
+    }
+  }
+  return dates;
+}
+
 // ── Static canonical pages: [path, changefreq, priority] ────────────────────
 const STATIC = [
   ["/", "weekly", "1.0"],
@@ -117,13 +143,27 @@ const TRANSPORT_SERVICE_SLUGS = extractSlugs(
   /^  ([a-z-]+): \{$/gm
 ).filter((s) => !["serviceBlurbs", "about", "contactPoint"].includes(s));
 
+// Extract real lastmod dates from data files
+const BLOG_DATES = extractLastMod(
+  path.join(ROOT, "supabase/src/data/blog.ts"),
+  BLOG_SLUGS,
+  /lastUpdated:\s*"([^"]+)"/
+);
+const ROUTE_DATES = extractLastMod(
+  path.join(ROOT, "supabase/src/data/routes.ts"),
+  ROUTE_SLUGS,
+  /dataStatus:\s*"([^"]+)"/
+);
+// Routes use RATES_UPDATED_AT as a fallback for lastmod
+const RATES_UPDATED = "2026-10-01"; // Matches RATES_UPDATED_AT in routes.ts
+
 const urls = [
-  ...STATIC.map(([p, changefreq, priority]) => ({ loc: `${BASE}${p}`, changefreq, priority })),
-  ...ROUTE_SLUGS.map((s) => ({ loc: `${BASE}/routes/${s}`, changefreq: "monthly", priority: "0.7" })),
-  ...LOCATION_SLUGS.map((s) => ({ loc: `${BASE}/location/${s}`, changefreq: "monthly", priority: "0.8" })),
-  ...TRANSPORT_SERVICE_SLUGS.map((s) => ({ loc: `${BASE}/transport-service/${s}`, changefreq: "monthly", priority: "0.8" })),
-  ...GUIDE_SLUGS.map((s) => ({ loc: `${BASE}/guide/${s}`, changefreq: "monthly", priority: "0.7" })),
-  ...BLOG_SLUGS.map((s) => ({ loc: `${BASE}/blog/${s}`, changefreq: "monthly", priority: "0.6" })),
+  ...STATIC.map(([p, changefreq, priority]) => ({ loc: `${BASE}${p}`, changefreq, priority, lastmod: TODAY })),
+  ...ROUTE_SLUGS.map((s) => ({ loc: `${BASE}/routes/${s}`, changefreq: "monthly", priority: "0.7", lastmod: ROUTE_DATES[s] || RATES_UPDATED })),
+  ...LOCATION_SLUGS.map((s) => ({ loc: `${BASE}/location/${s}`, changefreq: "monthly", priority: "0.8", lastmod: TODAY })),
+  ...TRANSPORT_SERVICE_SLUGS.map((s) => ({ loc: `${BASE}/transport-service/${s}`, changefreq: "monthly", priority: "0.8", lastmod: TODAY })),
+  ...GUIDE_SLUGS.map((s) => ({ loc: `${BASE}/guide/${s}`, changefreq: "monthly", priority: "0.7", lastmod: BLOG_DATES[s] || TODAY })),
+  ...BLOG_SLUGS.map((s) => ({ loc: `${BASE}/blog/${s}`, changefreq: "monthly", priority: "0.6", lastmod: BLOG_DATES[s] || TODAY })),
 ];
 
 const xml =
@@ -132,7 +172,7 @@ const xml =
   urls
     .map(
       (u) =>
-        `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
+        `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${u.lastmod || TODAY}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
     )
     .join("\n") +
   `\n</urlset>\n`;

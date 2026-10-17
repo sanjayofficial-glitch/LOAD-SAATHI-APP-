@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { MapPin, ArrowRight, Truck, Clock } from "lucide-react";
 import SeoMeta from "@/components/SeoMeta";
+import DirectAnswer from "@/components/DirectAnswer";
 import { routes } from "@/data/routes";
 import { clampMetaDescription } from "@/config/site";
 import { cityData } from "@/data/locations";
@@ -108,10 +109,13 @@ export default function LocationPage() {
             <p className="text-lg sm:text-xl text-white/90 max-w-[700px] mb-8">
               {data.description}
             </p>
-            {/* Snippet bait: self-contained answer for featured snippets / AI answers */}
-            <p className="city-snippet-answer text-base sm:text-lg text-white max-w-[700px] mb-8 font-medium">
-              Need a truck in {data.name}, {data.state}? LoadSaathi connects shippers with verified local truckers for PTL and full-load freight across {data.hubDistances.map((h) => h.city).join(", ")} corridors, with live GPS tracking and transparent per-kg pricing. Post your load free and get matched in minutes.
-            </p>
+            {/* Direct Answer for AEO — visible HTML, concise, non-promotional */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6 max-w-[700px]">
+              <DirectAnswer
+                answer={`LoadSaathi connects shippers and truckers for PTL and LTL freight in ${data.name}, ${data.state}. The city handles ${data.industries.slice(0, 2).join(" and ")} freight, with corridors to ${data.hubDistances.map((h) => h.city).join(", ")}. Book part load from ₹${data.rateRanges.find(r => r.type === "PTL")?.range ?? "—"}/kg or full truck from ₹${data.rateRanges.find(r => r.type.startsWith("FTL"))?.range ?? "—"}/kg (indicative). Live GPS tracking and digital credit scores included.`}
+                qualifier="Indicative rates only — actual quotes depend on cargo, route, and availability."
+              />
+            </div>
             <Link
               to="/register"
               className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors"
@@ -164,10 +168,11 @@ export default function LocationPage() {
           </div>
         </section>
 
-        {/* Rate Ranges */}
+        {/* Rate Ranges — indicative only, not live quotes */}
         <section className="py-16 px-6 bg-muted/50 dark:bg-white/[0.02]">
           <div className="max-w-[1200px] mx-auto">
-            <h2 className="text-2xl font-bold text-foreground mb-8">Typical Freight Rates from {data.name}</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Typical Freight Rates from {data.name}</h2>
+            <p className="text-sm text-muted-foreground mb-8 italic">Indicative rates only — actual quotes depend on cargo, route, and availability. Use the <a href="/tools/freight-rate-calculator" className="text-orange-600 dark:text-orange-400 underline">freight rate calculator</a> for a precise estimate.</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {data.rateRanges.map((rr) => (
                 <div key={rr.type} className="glass-card p-5 rounded-xl border border-border text-center">

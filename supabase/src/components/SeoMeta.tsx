@@ -13,7 +13,7 @@ interface SeoMetaProps {
   image?: string;
   type?: string;
   publishedTime?: string;
-  dateModified?: string;
+  dateModified?: string; // Only pass when a real update timestamp exists
   author?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   breadcrumbs?: BreadcrumbItem[];
@@ -93,7 +93,7 @@ export default function SeoMeta({
   image = DEFAULT_IMAGE,
   type = "website",
   publishedTime,
-  dateModified = "2026-09-18",
+  dateModified,
   author,
   jsonLd,
   breadcrumbs,
@@ -180,7 +180,7 @@ export default function SeoMeta({
     appendManaged("meta", { name: "twitter:image:alt", content: `${title} — LoadSaathi` });
 
     if (publishedTime) appendManaged("meta", { property: "article:published_time", content: publishedTime });
-    if (type === "article") appendManaged("meta", { property: "article:modified_time", content: dateModified });
+    if (type === "article" && dateModified) appendManaged("meta", { property: "article:modified_time", content: dateModified });
     if (author) appendManaged("meta", { name: "author", content: author });
 
     if (jsonLd) appendManaged("script", { type: "application/ld+json" }, JSON.stringify(jsonLd));

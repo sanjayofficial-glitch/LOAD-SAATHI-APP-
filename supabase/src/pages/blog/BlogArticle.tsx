@@ -3,6 +3,8 @@ import { Calendar, Clock, User, ArrowLeft, ArrowRight, Share2, BookOpen, FileTex
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import SeoMeta from "@/components/SeoMeta";
+import DirectAnswer from "@/components/DirectAnswer";
+import KeyTakeaways from "@/components/KeyTakeaways";
 import { articles, parseDate } from "@/data/blog";
 import { routes } from "@/data/routes";
 import { clampMetaDescription } from "@/config/site";
@@ -323,6 +325,16 @@ export default function BlogArticle() {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight mb-6 text-foreground dark:text-white">
             {article.title}
           </h1>
+          <DirectAnswer
+            answer={article.summary}
+            qualifier={`By ${article.author} · ${article.date}${article.lastUpdated ? ` · Last updated ${article.lastUpdated}` : ""}`}
+          />
+          <KeyTakeaways
+            items={article.content.slice(0, 3).map(p => {
+              const text = p.replace(/^##\s*/, "").split(/[.!?]/)[0]?.trim();
+              return text && text.length > 20 ? text.slice(0, 100) + (text.length > 100 ? "..." : "") : null;
+            }).filter((t): t is string => Boolean(t)).slice(0, 4)}
+          />
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-8 pb-8 border-b border-border">
             <span className="flex items-center gap-1.5"><User className="h-4 w-4" /> {article.author}</span>
             <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /> {article.date}</span>
@@ -342,7 +354,9 @@ export default function BlogArticle() {
             src={article.coverImage}
             alt={article.title}
             className="w-full h-64 sm:h-80 object-cover rounded-xl border border-border"
-            loading="eager"
+            loading="lazy"
+            width={800}
+            height={320}
           />
         </div>
       )}

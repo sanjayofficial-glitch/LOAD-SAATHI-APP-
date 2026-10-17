@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Truck, CreditCard, Shield, Route, ArrowRight, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SeoMeta from "@/components/SeoMeta";
+import DirectAnswer from "@/components/DirectAnswer";
+import KeyTakeaways from "@/components/KeyTakeaways";
 
 const benefits = [
   {
@@ -141,9 +143,32 @@ export default function TruckLoadBooking() {
                 Book a Truck.<br />
                 <span className="bg-gradient-to-r from-orange-500 to-green-400 bg-clip-text text-transparent">Ship Anywhere.</span>
               </h1>
+              <DirectAnswer
+                answer="Booking a truck online means posting your load with origin, destination, weight, and cargo type, then receiving AI-matched truck options with transparent pricing. LoadSaathi matches you with verified truckers in seconds — from 50 kg to 25 tonnes — with GPS tracking and escrow-backed payments."
+                qualifier="Free to join — 1.5–3% transaction fee per completed shipment."
+              />
+              <KeyTakeaways
+                items={[
+                  "Book trucks from 50 kg to 25 tonnes online",
+                  "AI matches you with verified truckers in seconds",
+                  "Transparent pricing — no hidden fees or broker markups",
+                  "GPS tracking from pickup to delivery",
+                  "Escrow-backed payments released on delivery confirmation"
+                ]}
+              />
               <p className="text-lg sm:text-xl text-muted-foreground max-w-xl leading-relaxed">
                 From 50 kg to 25 tonnes. Post your load, get AI-matched trucks in seconds, book with transparent pricing, and track every kilometre live.
               </p>
+              {/* Internal links to related services */}
+              <div className="flex flex-wrap gap-3 mt-6">
+                <Link to="/ptl-transport" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">PTL Transport</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/ltl-transport" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">LTL Transport</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/return-load" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">Find Return Loads</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/freight-marketplace" className="text-sm text-orange-600 dark:text-orange-400 hover:underline">Freight Marketplace</Link>
+              </div>
               <div className="flex items-center gap-4 pt-4">
                 <Link to="/register?type=shipper">
                   <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.4)] group">

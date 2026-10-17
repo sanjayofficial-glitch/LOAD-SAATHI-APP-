@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { ArrowRight, MapPin, Clock, Route, Truck, Package, Search, Shield, TrendingUp, CheckCircle, BookOpen, Map, Boxes, Warehouse, Repeat, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SeoMeta from "@/components/SeoMeta";
+import DirectAnswer from "@/components/DirectAnswer";
 import {
   routes,
   rateBand,
@@ -364,14 +365,11 @@ export default function RouteDetail() {
                 {route.description}
               </p>
 
-              {/* Snippet bait: self-contained cost answer for featured snippets / AI answers,
-                  generated from the same rate bands as the meta description above. */}
-              <p className="route-snippet-answer text-base sm:text-lg text-foreground max-w-2xl leading-relaxed mb-3">
-                Part load (PTL) freight from {route.from} to {route.to} ({route.distanceKm} km) costs approximately ₹{bands.perKgMin}–₹{bands.perKgMax} per kg — ₹{formatINR(bands.perTonneMin)}–₹{formatINR(bands.perTonneMax)} per tonne — while a full truck costs ₹{formatINR(bands.perTruckMin)}–₹{formatINR(bands.perTruckMax)} per trip. Transit takes about {route.transitTime} hours with live GPS tracking on LoadSaathi.
-              </p>
-              <p className="text-xs text-muted-foreground max-w-2xl mb-8">
-                Rates updated {RATES_UPDATED_LABEL} · Rates move with diesel prices and return-truck availability.
-              </p>
+              {/* Direct Answer for AEO — visible HTML, concise, non-promotional */}
+              <DirectAnswer
+                answer={`Part load (PTL) freight from ${route.from} to ${route.to} (${route.distanceKm} km) costs approximately ₹${bands.perKgMin}–₹${bands.perKgMax} per kg (₹${formatINR(bands.perTonneMin)}–₹${formatINR(bands.perTonneMax)} per tonne), while a full truck costs ₹${formatINR(bands.perTruckMin)}–₹${formatINR(bands.perTruckMax)} per trip. Transit takes about ${route.transitTime} hours with live GPS tracking on LoadSaathi.`}
+                qualifier={`Indicative rates, updated ${RATES_UPDATED_LABEL}. Actual quotes depend on cargo, route, and availability.`}
+              />
 
               {/* Route stats */}
               <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-6 mb-4">

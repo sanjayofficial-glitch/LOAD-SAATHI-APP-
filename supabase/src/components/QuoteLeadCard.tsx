@@ -36,8 +36,6 @@ export default function QuoteLeadCard({ origin, destination, weight, avgPrice, r
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     trackQuoteRequested({
-      name,
-      phone,
       role: "shipper",
       route: routeLabel,
       origin,

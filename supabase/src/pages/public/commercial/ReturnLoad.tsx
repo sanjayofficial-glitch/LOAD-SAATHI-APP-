@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Route, Truck, DollarSign, TrendingUp, Clock, MapPin, ArrowRight, CheckCircle, Search, Shield, Fuel } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SeoMeta from "@/components/SeoMeta";
+import DirectAnswer from "@/components/DirectAnswer";
+import KeyTakeaways from "@/components/KeyTakeaways";
 
 const problems = [
   {
@@ -190,9 +192,32 @@ export default function ReturnLoad() {
                 Don't Drive Back Empty.<br />
                 <span className="bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">Find a Load.</span>
               </h1>
+              <DirectAnswer
+                answer="A return load (or backhaul) is a shipment that fills a truck's empty return journey after it has delivered its initial cargo. Instead of driving back empty, truckers find loads on the same route to earn extra revenue and reduce wasted fuel — typically ₹15,000–40,000 extra per return trip on East India corridors."
+                qualifier="Indicative earnings only — actual earnings depend on route, cargo, and availability."
+              />
+              <KeyTakeaways
+                items={[
+                  "Return loads fill empty return trips with paid cargo",
+                  "Earn ₹15,000–40,000 extra per return trip (indicative)",
+                  "AI matching finds loads on your exact return route",
+                  "Escrow-backed payments released within 24–48 hours",
+                  "Available on all major East India corridors"
+                ]}
+              />
               <p className="text-lg sm:text-xl text-muted-foreground max-w-xl leading-relaxed">
                 Every empty return trip costs you ₹15,000–40,000 in wasted fuel and lost earnings. LoadSaathi finds return loads on your route — so every kilometre earns.
               </p>
+              {/* Internal links to related services */}
+              <div className="flex flex-wrap gap-3 mt-6">
+                <Link to="/ptl-transport" className="text-sm text-green-600 dark:text-green-400 hover:underline">PTL Transport</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/ltl-transport" className="text-sm text-green-600 dark:text-green-400 hover:underline">LTL Transport</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/truck-load-booking" className="text-sm text-green-600 dark:text-green-400 hover:underline">Book a Truck</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/freight-marketplace" className="text-sm text-green-600 dark:text-green-400 hover:underline">Freight Marketplace</Link>
+              </div>
               <div className="flex items-center gap-4 pt-4">
                 <Link to="/register?type=trucker">
                   <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.4)] group">

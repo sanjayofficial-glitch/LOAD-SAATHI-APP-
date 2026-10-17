@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { Package, DollarSign, Shield, ArrowRight, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SeoMeta from "@/components/SeoMeta";
+import DirectAnswer from "@/components/DirectAnswer";
+import KeyTakeaways from "@/components/KeyTakeaways";
 
 const benefits = [
   {
@@ -140,9 +142,32 @@ export default function LtlTransport() {
                 Small Loads.<br />
                 <span className="bg-gradient-to-r from-violet-500 to-orange-400 bg-clip-text text-transparent">Big Savings.</span>
               </h1>
+              <DirectAnswer
+                answer="LTL (Less Than Truckload) transport is a freight method where multiple shippers share space on the same truck. You pay only for the weight and volume your cargo uses — ideal for shipments from 50 kg to 3 tonnes that don't need an entire truck."
+                qualifier="Indicative rates only — actual quotes depend on cargo, route, and availability."
+              />
+              <KeyTakeaways
+                items={[
+                  "LTL is ideal for shipments from 50 kg to 3 tonnes",
+                  "Pay only for the weight and volume your cargo uses",
+                  "Costs 30–40% less than booking a full truck",
+                  "Cargo is consolidated with other verified shipments",
+                  "GPS tracking and escrow payments included"
+                ]}
+              />
               <p className="text-lg sm:text-xl text-muted-foreground max-w-xl leading-relaxed">
                 Moving 50 kg to 3 tonnes? Don't pay for an entire truck. LTL shipping consolidates your cargo with other shipments — you pay only for the space you use.
               </p>
+              {/* Internal links to related services */}
+              <div className="flex flex-wrap gap-3 mt-6">
+                <Link to="/ptl-transport" className="text-sm text-violet-600 dark:text-violet-400 hover:underline">PTL Transport</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/truck-load-booking" className="text-sm text-violet-600 dark:text-violet-400 hover:underline">Book a Full Truck</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/return-load" className="text-sm text-violet-600 dark:text-violet-400 hover:underline">Find Return Loads</Link>
+                <span className="text-muted-foreground">·</span>
+                <Link to="/freight-marketplace" className="text-sm text-violet-600 dark:text-violet-400 hover:underline">Freight Marketplace</Link>
+              </div>
               <div className="flex items-center gap-4 pt-4">
                 <Link to="/register?type=shipper">
                   <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.4)] group">
