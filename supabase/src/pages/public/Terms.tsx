@@ -88,7 +88,7 @@ const sections = [
   },
   {
     title: "Contact Information",
-    content: "For questions about these Terms, please contact us at legal@loadsaathi.com or write to us at LoadSaathi Technologies Pvt. Ltd., Bengaluru, Karnataka, India.",
+    content: "For questions about these Terms, please contact us at legal@loadsaathi.in or write to us at LoadSaathi Technologies Pvt. Ltd., Bengaluru, Karnataka, India.",
   },
 ];
 

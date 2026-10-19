@@ -105,7 +105,7 @@ const sections = [
     content: [
       {
         heading: "Data Protection Questions",
-        text: "If you have any questions about this Privacy Policy or our data practices, please contact our Data Protection Officer at privacy@loadsaathi.com.",
+        text: "If you have any questions about this Privacy Policy or our data practices, please contact our Data Protection Officer at privacy@loadsaathi.in.",
       },
       {
         heading: "Address",
@@ -142,7 +142,7 @@ const Privacy = () => {
           </div>
         ))}
         <p>
-          Questions about privacy? Contact our Data Protection Officer at privacy@loadsaathi.com.
+          Questions about privacy? Contact our Data Protection Officer at privacy@loadsaathi.in.
           LoadSaathi Technologies Pvt. Ltd., Bengaluru, Karnataka, India.
         </p>
       </div>
@@ -185,7 +185,7 @@ const Privacy = () => {
               name: "How can I delete my data from LoadSaathi?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "You can request deletion of your account and associated data by contacting our Data Protection Officer at privacy@loadsaathi.com. We will process legitimate requests within 30 days."
+                text: "You can request deletion of your account and associated data by contacting our Data Protection Officer at privacy@loadsaathi.in. We will process legitimate requests within 30 days."
               }
             }
           ]

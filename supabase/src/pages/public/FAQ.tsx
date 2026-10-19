@@ -138,7 +138,7 @@ const faqData = [
       },
       {
         q: "What happens if I experience a technical issue?",
-        a: "Our support team is available 24/7 to assist with any technical issues. You can reach us through in-app chat, email at support@loadsaathi.com, or through the contact form on our website. Most issues are resolved within 2-4 hours.",
+        a: "Our support team is available 24/7 to assist with any technical issues. You can reach us through in-app chat, email at support@loadsaathi.in, or through the contact form on our website. Most issues are resolved within 2-4 hours.",
       },
     ],
   },

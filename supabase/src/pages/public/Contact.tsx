@@ -11,7 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { trackEvent } from '@/utils/analytics';
 
 const supportInfo = [
-  { icon: Mail, label: "Email Us", value: "support@loadsaathi.com", detail: "We respond within 2-4 hours" },
+  { icon: Mail, label: "Email Us", value: "support@loadsaathi.in", detail: "We respond within 2-4 hours" },
   { icon: MessageSquare, label: "Live Chat", value: "Available 24/7", detail: "Instant responses from our support team" },
   { icon: Clock, label: "Response Time", value: "Under 4 hours", detail: "Average first response time" },
   { icon: MapPin, label: "Office", value: "Foundation for Technology and Business Incubation (FTBI)", detail: "First Floor, T1-109, NIT Rourkela, Sector 1, Rourkela, Odisha 769008" },
@@ -99,7 +99,7 @@ const Contact = () => {
             "@type": "Organization",
             "name": "LoadSaathi",
             "url": "https://loadsaathi.in",
-            "email": "support@loadsaathi.com",
+            "email": "support@loadsaathi.in",
             "telephone": "+91-8328998031",
             "address": {
               "@type": "PostalAddress",
@@ -113,7 +113,7 @@ const Contact = () => {
               {
                 "@type": "ContactPoint",
                 "contactType": "customer support",
-                "email": "support@loadsaathi.com",
+                "email": "support@loadsaathi.in",
                 "telephone": "+91-8328998031",
                 "availableLanguage": ["English", "Hindi"]
               },
@@ -273,8 +273,8 @@ const Contact = () => {
               <div className="glass-card p-6 rounded-xl border border-orange-500/10 bg-orange-500/5 mt-6">
                 <h3 className="text-sm font-bold text-foreground mb-2">Enterprise Inquiries</h3>
                 <p className="text-xs text-muted-foreground mb-3">Looking to integrate LoadSaathi with your existing systems or need a custom solution?</p>
-                <a href="mailto:enterprise@loadsaathi.com" className="text-sm text-orange-500 hover:text-orange-400 font-semibold underline underline-offset-2">
-                  enterprise@loadsaathi.com
+                <a href="mailto:enterprise@loadsaathi.in" className="text-sm text-orange-500 hover:text-orange-400 font-semibold underline underline-offset-2">
+                  enterprise@loadsaathi.in
                 </a>
               </div>
             </div>
