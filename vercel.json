@@ -94,6 +94,10 @@
     {
       "path": "/api/cron/diesel",
       "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/daily",
+      "schedule": "30 4 * * *"
     }
   ],
   "rewrites": [

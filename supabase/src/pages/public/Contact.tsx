@@ -33,6 +33,9 @@ const Contact = () => {
         page_path: '/contact',
         user_id: '',
         message: [formData.subject, formData.message].filter(Boolean).join(' | '),
+        // The contact form already collects an email — pass it through so the
+        // owner gets a searchable contact and the trigger can reply by mail.
+        email: formData.email || undefined,
       });
     } catch {
       // Never block the form submit on lead capture failure.

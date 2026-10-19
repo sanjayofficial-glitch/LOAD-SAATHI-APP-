@@ -7,6 +7,12 @@ interface LeadInsertInput {
   page_path: string;
   user_id: string;
   message: string;
+  /**
+   * Optional email. When present, the leads on-insert trigger (migration
+   * 20261019140001) fires the instant quote email through /api/lead-quote.
+   * Omit for WhatsApp-first captures with no email field.
+   */
+  email?: string;
 }
 
 /**
@@ -26,6 +32,9 @@ export async function insertLead(input: LeadInsertInput): Promise<void> {
       page_path: input.page_path,
       user_id: input.user_id,
       message: input.message,
+      // Only sent when captured — quoting an absent field would still insert
+      // an empty email and skip the trigger, but staying explicit reads better.
+      ...(input.email && input.email.trim() ? { email: input.email.trim() } : {}),
     });
 
     if (error) {
