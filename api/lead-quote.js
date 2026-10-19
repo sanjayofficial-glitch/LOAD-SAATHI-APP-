@@ -256,10 +256,14 @@ export default async function handler(req, res) {
     });
     let ownerId = null;
     try {
+      // Owner/notifications destination. Overridable per environment because
+      // loadsaathi.in's root has no MX — point OWNER_EMAIL at a real inbox
+      // (e.g. the founder's personal one) via Vercel env vars at any time;
+      // the brand inbox stays the reply-to on the lead ack.
       ownerId = await sendResend({
         from: FROM,
-        to: [SUPPORT_EMAIL],
-        subject: `New lead (${sourcesafe(safeLead.source)})${subjectTail}`,
+        to: [process.env.OWNER_EMAIL || SUPPORT_EMAIL],
+        subject: `New lead (${sourceLabel(safeLead.source)})${subjectTail}`,
         html: buildOwnerHtml(safeLead),
       });
     } catch (ownerErr) {
@@ -272,8 +276,4 @@ export default async function handler(req, res) {
   } catch (err) {
     return json(res, 502, { error: 'Quote email send failed', message: String((err && err.message) || err) });
   }
-}
-
-function sourcesafe(source) {
-  return SOURCE_LABELS[source] || (source ? String(source) : 'website');
 }
