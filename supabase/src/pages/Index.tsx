@@ -23,6 +23,7 @@ const Index = () => {
         description="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs on the Rourkela–Ranchi–Burdwan corridor. Book part loads online."
         canonical="/"
         keywords="PTL freight Rourkela, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela"
+        alternates={[{ hreflang: "hi", href: "/hi" }]}
         jsonLd={{
           '@context': 'https://schema.org',
           '@graph': [

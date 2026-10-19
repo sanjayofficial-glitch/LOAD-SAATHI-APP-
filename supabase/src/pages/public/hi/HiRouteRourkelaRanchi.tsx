@@ -52,6 +52,7 @@ export default function HiRouteRourkelaRanchi() {
         keywords="rourkela ranchi bhada, rourkela se ranchi truck, ranchi freight rate hindi"
         canonical="/hi/route/rourkela-to-ranchi"
         hreflang="hi"
+        alternates={[{ hreflang: "en-in", href: "/routes/rourkela-to-ranchi" }]}
         jsonLd={jsonLd}
         breadcrumbs={[
           { name: "हिंदी", url: "/hi" },

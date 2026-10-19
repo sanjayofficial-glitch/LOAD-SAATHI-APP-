@@ -59,6 +59,7 @@ export default function HiHome() {
         keywords="online truck booking hindi, truck book kaise kare, part load booking india, return load bharat"
         canonical="/hi"
         hreflang="hi"
+        alternates={[{ hreflang: "en-in", href: "/" }]}
         jsonLd={jsonLd}
         breadcrumbs={[{ name: "हिंदी", url: "/hi" }]}
       />

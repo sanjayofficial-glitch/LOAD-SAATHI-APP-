@@ -16,6 +16,23 @@ import {
 
 export const config = { runtime: 'edge' };
 
+/**
+ * Reciprocal EN↔HI hreflang pairs for pages that exist in both languages.
+ * Hreflang is only honored when both directions exist, so a pair missing here
+ * means the reciprocal annotation is silently ignored. Client side, SeoMeta's
+ * `alternates` prop emits the identical set on the rendered page.
+ */
+const LANG_ALTERNATES = {
+  '/': ['/hi'],
+  '/hi': ['/'],
+  '/ptl-transport': ['/hi/ptl-transport'],
+  '/hi/ptl-transport': ['/ptl-transport'],
+  '/return-load': ['/hi/return-load'],
+  '/hi/return-load': ['/return-load'],
+  '/routes/rourkela-to-ranchi': ['/hi/route/rourkela-to-ranchi'],
+  '/hi/route/rourkela-to-ranchi': ['/routes/rourkela-to-ranchi'],
+};
+
 // Exact static routes that map to SPA
 const EXACT_ROUTES = new Set([
   '/',
@@ -1102,7 +1119,9 @@ const STATIC_PAGE_DATA = {
   }
 };
 
-// ── Blog SEO metadata (71 articles) ──────────────────────────────────────────
+// ── Blog SEO metadata (86 articles) ──────────────────────────────────────────
+// Mirrors supabase/src/data/blog.ts. Keep in sync — scripts/smoke.mjs compares
+// slug sets and titles against blog.ts on every build and fails on drift.
 const BLOG_DATA = {
   "reduce-empty-kilometers": {
     "title": "5 Ways to Reduce Empty Truck Kilometers | LoadSaathi",
@@ -3471,9 +3490,13 @@ function inr(n) {
   return parts.join(',') + ',' + last3;
 }
 
+/** Lane rates label — mirrors RATES_UPDATED_LABEL in supabase/src/data/routes.ts. */
+const RATES_UPDATED_LABEL = 'October 2026';
+
 /**
  * Canonical rate band — must stay in sync with rateBand() in
  * supabase/src/data/routes.ts (single source of truth for published rates).
+ * scripts/smoke.mjs fails the build if this file and routes.ts disagree.
  */
 function laneRates(km) {
   return {
@@ -3498,7 +3521,7 @@ function laneSeoMeta(r) {
       : `Verified ${r.distanceKm} km, ~${r.transitTime} hrs`;
   return {
     seoTitle: `Part Load Transport ${r.from} to ${r.to} | PTL & LTL Truck Booking | LoadSaathi`,
-    metaDescription: `${statusPart}. Book part load, PTL & LTL trucks ${r.from} to ${r.to}. Rates from ₹${inr(bands.perTonneMin)}/tonne. Updated October 2026.`,
+    metaDescription: `${statusPart}. Book part load, PTL & LTL trucks ${r.from} to ${r.to}. Rates from ₹${inr(bands.perTonneMin)}/tonne. Updated ${RATES_UPDATED_LABEL}.`,
   };
 }
 
@@ -5144,7 +5167,7 @@ function contentFor(path, seoMeta) {
       });
     }
     blocks.push({
-      p: `A full truck on this lane runs about ₹${inr(rateTotalLow)} to ₹${inr(rateTotalHigh)} for ${distanceKm} km, or roughly ₹85–₹120 per kilometre before tolls. Part loads are quoted per tonne — ₹${inr(bands.perTonneMin)}–₹${inr(bands.perTonneMax)} per tonne on this lane — and normally land 30–40% below a dedicated vehicle for anything under three tonnes. Rates updated October 2026.`,
+      p: `A full truck on this lane runs about ₹${inr(rateTotalLow)} to ₹${inr(rateTotalHigh)} for ${distanceKm} km, or roughly ₹85–₹120 per kilometre before tolls. Part loads are quoted per tonne — ₹${inr(bands.perTonneMin)}–₹${inr(bands.perTonneMax)} per tonne on this lane — and normally land 30–40% below a dedicated vehicle for anything under three tonnes (estimates; final quotes confirmed at booking). Rates updated ${RATES_UPDATED_LABEL}.`,
     });
     blocks.push({
       h2: `How LoadSaathi handles the ${from}–${to} lane`,
@@ -5409,7 +5432,7 @@ function buildJsonLd(path, seoMeta) {
     breadcrumbs.push({ "@type": "ListItem", "position": 2, "name": "Blog", "item": `${baseUrl}/blog` });
     breadcrumbs.push({ "@type": "ListItem", "position": 3, "name": seoMeta.seoTitle, "item": canonicalUrl });
   } else if (seoMeta.type === 'guide') {
-    breadcrumbs.push({ "@type": "ListItem", "position": 2, "name": "Guides", "item": `${baseUrl}/blog` });
+    breadcrumbs.push({ "@type": "ListItem", "position": 2, "name": "Guides", "item": `${baseUrl}/guide` });
     breadcrumbs.push({ "@type": "ListItem", "position": 3, "name": seoMeta.seoTitle, "item": canonicalUrl });
   } else if (seoMeta.type === 'location') {
     breadcrumbs.push({ "@type": "ListItem", "position": 2, "name": "Locations", "item": `${baseUrl}` });
@@ -5426,12 +5449,19 @@ function buildJsonLd(path, seoMeta) {
 
   // 2. Page-type-specific schema
   if (seoMeta.type === 'route' && seoMeta.distanceKm) {
-    // Route page: Service + Offer + QAPage
-    const price = Math.round(seoMeta.distanceKm * 100);
-    const p1 = Math.round(seoMeta.distanceKm * 85);
-    const p2 = Math.round(seoMeta.distanceKm * 120);
-    const pkgLow = Math.round(seoMeta.distanceKm * 0.08);
-    const pkgHigh = Math.round(seoMeta.distanceKm * 0.12);
+    // Route page: Service + Offer + FAQPage.
+    // laneRates() is the same canonical band as rateBand() in
+    // supabase/src/data/routes.ts, and the answer copy mirrors the visible
+    // FAQ section in RouteDetail.tsx, so the server-injected schema can never
+    // contradict the client-rendered page (the old template quoted ₹0.08–0.12
+    // per kg ≈ 4.7× the published per-kg band).
+    const bands = laneRates(Number(seoMeta.distanceKm));
+    const perTruckMin = Math.round(bands.perTruckMin);
+    const perTruckMax = Math.round(bands.perTruckMax);
+    const perTonneMin = Math.round(bands.perTonneMin);
+    const perTonneMax = Math.round(bands.perTonneMax);
+    const perKgMin = Math.round(bands.perTonneMin / 10) / 100;
+    const perKgMax = Math.round(bands.perTonneMax / 10) / 100;
     const transNum = Number(seoMeta.transitTime) || 0;
     const p1h = Math.round(transNum * 1.3);
     const p2h = Math.round(transNum * 1.5);
@@ -5449,24 +5479,28 @@ function buildJsonLd(path, seoMeta) {
       "offers": {
         "@type": "Offer",
         "priceCurrency": "INR",
-        "price": price,
+        "price": perTruckMin,
         "priceSpecification": {
           "@type": "PriceSpecification",
-          "price": price,
+          "minPrice": perTruckMin,
+          "maxPrice": perTruckMax,
           "priceCurrency": "INR",
-          "description": `Estimated freight cost for ${seoMeta.distanceKm}km route`
+          "description": `Estimated full-truck (FTL) rate band for the ${seoMeta.distanceKm} km ${seoMeta.from}–${seoMeta.to} lane; part load from ₹${inr(perTonneMin)}/tonne. Final quote confirmed at booking. Rates updated ${RATES_UPDATED_LABEL}.`
         },
         "availability": "https://schema.org/InStock"
       }
     });
     graph.push({
-      "@type": "QAPage",
+      "@type": "FAQPage",
       "name": `Frequently Asked Questions — ${seoMeta.from} to ${seoMeta.to} Freight`,
       "mainEntity": [
-        { "@type": "Question", "name": `What is the freight cost from ${seoMeta.from} to ${seoMeta.to}?`, "acceptedAnswer": { "@type": "Answer", "text": `FTL truck rates from ${seoMeta.from} to ${seoMeta.to} (${seoMeta.distanceKm} km) range from ₹${p1.toLocaleString()} to ₹${p2.toLocaleString()} depending on truck type. PTL rates are ₹${pkgLow}–${pkgHigh} per kg. Use LoadSaathi's freight rate calculator for a precise quote.` } },
-        { "@type": "Question", "name": `How long does delivery take from ${seoMeta.from} to ${seoMeta.to}?`, "acceptedAnswer": { "@type": "Answer", "text": `Delivery takes approximately ${seoMeta.transitTime} hours for direct FTL. PTL shipments may take ${p1h}–${p2h} hours due to consolidation stops. GPS tracking provides real-time ETAs.` } },
-        { "@type": "Question", "name": `What truck types operate on the ${seoMeta.from}–${seoMeta.to} route?`, "acceptedAnswer": { "@type": "Answer", "text": `Available trucks: Open (9MT, 16MT), Container (20ft, 32ft), Flatbed trailer (20MT, 25MT), Tankers. LoadSaathi's AI matcher recommends the optimal truck for your shipment.` } },
-        { "@type": "Question", "name": `Is PTL shipping available on the ${seoMeta.from}–${seoMeta.to} route?`, "acceptedAnswer": { "@type": "Answer", "text": `Yes. LoadSaathi specializes in PTL/LTL freight on this corridor. PTL lets you share truck space, saving up to 40% vs full truck. Ideal for shipments under 3 tonnes.` } }
+        { "@type": "Question", "name": `What is the freight cost from ${seoMeta.from} to ${seoMeta.to}?`, "acceptedAnswer": { "@type": "Answer", "text": `FTL truck rates from ${seoMeta.from} to ${seoMeta.to} (${seoMeta.distanceKm} km) range from ₹${inr(perTruckMin)} to ₹${inr(perTruckMax)} per trip (₹85–₹120 per km) depending on truck type. Part load (PTL) rates are ₹${inr(perTonneMin)}–${inr(perTonneMax)} per tonne (₹${perKgMin}–${perKgMax} per kg). Rates updated ${RATES_UPDATED_LABEL} — they move with diesel prices and return-truck availability. Use LoadSaathi's freight rate calculator for a precise quote based on your cargo weight and truck preference.` } },
+        { "@type": "Question", "name": `How long does delivery take from ${seoMeta.from} to ${seoMeta.to}?`, "acceptedAnswer": { "@type": "Answer", "text": `Delivery from ${seoMeta.from} to ${seoMeta.to} takes approximately ${seoMeta.transitTime} hours for direct FTL shipments over ${seoMeta.distanceKm} km. PTL shipments may take ${p1h}–${p2h} hours due to consolidation stops. LoadSaathi's GPS tracking provides real-time ETAs and milestone notifications.` } },
+        { "@type": "Question", "name": `What truck types operate on the ${seoMeta.from}–${seoMeta.to} route?`, "acceptedAnswer": { "@type": "Answer", "text": `Available truck types on the ${seoMeta.from}–${seoMeta.to} corridor include 14 ft trucks (2.5 t), 19 ft trucks (5.5 t), 22 ft trucks (7.5–10 t), 32 ft MXL containers (16 t) and multi-axle trailers (25 t). The best truck type depends on your cargo weight, dimensions, and special requirements. LoadSaathi's AI matcher recommends the optimal truck for your shipment.` } },
+        { "@type": "Question", "name": `Is PTL shipping available on the ${seoMeta.from}–${seoMeta.to} route?`, "acceptedAnswer": { "@type": "Answer", "text": `Yes. LoadSaathi specializes in PTL (Part Truck Load) and LTL (Less Than Truck Load) freight on the ${seoMeta.from}–${seoMeta.to} corridor. PTL lets you share truck space with other shippers and costs less than booking a full truck for loads under 5 tonnes — part-load rates on this lane are ₹${inr(perTonneMin)}–${inr(perTonneMax)} per tonne. Ideal for shipments under 3 tonnes.` } },
+        { "@type": "Question", "name": `Can I track my ${seoMeta.from} to ${seoMeta.to} shipment in real time?`, "acceptedAnswer": { "@type": "Answer", "text": `Yes. Every LoadSaathi shipment comes with live GPS tracking. You can see your truck's location on a map, receive estimated time of arrival updates, and get notified at pickup confirmation, in-transit milestones, and delivery completion. Share the tracking link with your supply chain partners automatically.` } },
+        { "@type": "Question", "name": `Is there a minimum weight for PTL shipping from ${seoMeta.from} to ${seoMeta.to}?`, "acceptedAnswer": { "@type": "Answer", "text": `No fixed minimum. PTL freight on this corridor is priced per tonne (₹${inr(perTonneMin)}–${inr(perTonneMax)} per tonne, i.e. ₹${perKgMin}–${perKgMax} per kg), so you only pay for the truck space you use. Even a few hundred kilos can ship cost-effectively by sharing truck space. Enter your exact weight in LoadSaathi's freight rate calculator for a precise quote.` } },
+        { "@type": "Question", "name": `What documents are needed for ${seoMeta.from} to ${seoMeta.to} freight?`, "acceptedAnswer": { "@type": "Answer", "text": `Standard documentation for part load and full truck shipments on this lane: a consignment note (LR), GST invoice or bill of supply, e-way bill for consignments above ₹50,000, packing list, and route permits where applicable. Delivery is confirmed with proof of delivery (POD) in the LoadSaathi app.` } }
       ]
     });
   } else if (seoMeta.type === 'blog' || seoMeta.type === 'guide') {
@@ -5861,25 +5895,31 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
           .replace(/<meta\s+property="article:[^"]*"[^>]*>/g, "")
           .replace(/<meta\s+name="author"[^>]*>/g, "")
           .replace(/<script type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/g, "");
-        const keywords = Array.isArray(seoMeta.keywords)
-          ? seoMeta.keywords.join(", ")
-          : seoMeta.keywords;
-        const image = OG_IMAGE;
-        // Every interpolated value is escaped: these land inside HTML attribute
-        // values, and a stray quote or angle bracket in the data would break the
-        // tag it sits in.
         const title = escapeHtml(seoMeta.seoTitle);
         const description = escapeHtml(seoMeta.metaDescription);
-        const hreflang = path === '/hi' || path.startsWith('/hi/') ? 'hi-in' : 'en-in';
+        const image = OG_IMAGE;
+        // "hi" matches SeoMeta's Hindi pages (hreflang="hi"), so prerendered
+        // and edge-injected HTML can never disagree on the language label.
+        const hreflang = path === '/hi' || path.startsWith('/hi/') ? 'hi' : 'en-in';
         const locale = hreflang === 'hi-in' ? 'hi_IN' : 'en_IN';
+        // Reciprocal language alternates — hreflang only works when BOTH
+        // directions exist. The client-side SeoMeta emits the same set, so
+        // prerendered pages and edge-injected pages stay identical.
+        const altLinks = (LANG_ALTERNATES[path] ?? [])
+          .map((altHref) =>
+            // "hi" (not "hi-in") matches what SeoMeta's clients emit for Hindi
+            // pages, keeping the reciprocal pair byte-identical tableside.
+            `  <link rel="alternate" hreflang="${altHref.startsWith('/hi') ? 'hi' : 'en-in'}" href="https://loadsaathi.in${altHref}" />\n`
+          )
+          .join("");
         const head =
           `<title>${title}</title>\n` +
           `  <meta name="description" content="${description}" />\n` +
-          (keywords ? `  <meta name="keywords" content="${escapeHtml(keywords)}" />\n` : "") +
           `  <meta name="robots" content="${seoMeta.noindex ? "noindex, follow" : "index, follow"}" />\n` +
           `  <link rel="canonical" href="${canonical}" />\n` +
           `  <link rel="alternate" hreflang="${hreflang}" href="${canonical}" />\n` +
           `  <link rel="alternate" hreflang="x-default" href="${canonical}" />\n` +
+          altLinks +
           `  <meta property="og:type" content="website" />\n` +
           `  <meta property="og:url" content="${canonical}" />\n` +
           `  <meta property="og:title" content="${title}" />\n` +

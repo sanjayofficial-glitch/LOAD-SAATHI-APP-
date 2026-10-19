@@ -28,6 +28,13 @@ interface SeoMetaProps {
    * Hindi pages pass hreflang="hi".
    */
   hreflang?: string;
+  /**
+   * Additional language alternates for this page, e.g. the reciprocal pair:
+   * an English page lists its Hindi twin via { hreflang: "hi", href: "/hi/…" }
+   * and vice versa. Drop-in hreflang reciprocity is required by Google's
+   * guidelines — alternates must be bidirectional or the annotation is ignored.
+   */
+  alternates?: { hreflang: string; href: string }[];
 }
 
 const BASE_URL = "https://loadsaathi.in";
@@ -99,6 +106,7 @@ export default function SeoMeta({
   breadcrumbs,
   robots,
   hreflang = "en-in",
+  alternates,
 }: SeoMetaProps) {
   // Avoid "X — LoadSaathi | LoadSaathi" double branding: some pages already
   // include the brand in their title. Only append when it isn't there.
@@ -161,6 +169,12 @@ export default function SeoMeta({
     appendManaged("link", { rel: "canonical", href: url });
     appendManaged("link", { rel: "alternate", hreflang, href: url });
     appendManaged("link", { rel: "alternate", hreflang: "x-default", href: url });
+    // Reciprocal language alternates (EN↔HI pairs). Absolute URLs only —
+    // hreflang hrefs must be fully-qualified per Google's guidelines.
+    for (const alt of alternates ?? []) {
+      const altHref = alt.href.startsWith("http") ? alt.href : `${BASE_URL}${alt.href}`;
+      appendManaged("link", { rel: "alternate", hreflang: alt.hreflang, href: altHref });
+    }
 
     appendManaged("meta", { property: "og:type", content: type });
     appendManaged("meta", { property: "og:url", content: url });
@@ -187,7 +201,7 @@ export default function SeoMeta({
     if (breadcrumbSchema) appendManaged("script", { type: "application/ld+json" }, JSON.stringify(breadcrumbSchema));
 
     return () => clearManagedTags();
-  }, [fullTitle, url, description, keywords, robots, hreflang, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage]);
+  }, [fullTitle, url, description, keywords, robots, hreflang, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage, alternates]);
 
   return null;
 }

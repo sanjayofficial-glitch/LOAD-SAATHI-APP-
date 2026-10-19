@@ -52,6 +52,7 @@ export default function HiReturnLoad() {
         keywords="return load hindi, khali truck load, wapsi ka maal, return load kaise milega"
         canonical="/hi/return-load"
         hreflang="hi"
+        alternates={[{ hreflang: "en-in", href: "/return-load" }]}
         jsonLd={jsonLd}
         breadcrumbs={[
           { name: "हिंदी", url: "/hi" },

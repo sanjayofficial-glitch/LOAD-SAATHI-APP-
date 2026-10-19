@@ -2,7 +2,8 @@
 import { Link } from "react-router-dom";
 import { Calendar, Clock, ArrowRight, Tag, User } from "lucide-react";
 import SeoMeta from "@/components/SeoMeta";
-import { getBlogListItems } from "@/data/blog";
+// Metadata-only import — keeps the ~400 KB article-body bundle out of this chunk.
+import { getBlogListItems } from "@/data/blogMeta";
 import { clampMetaDescription } from "@/config/site";
 
 const articles = getBlogListItems();

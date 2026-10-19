@@ -52,6 +52,7 @@ export default function HiPtlTransport() {
         keywords="ptl transport hindi, part load booking, chhota maal bhejna, ptl vs ftl hindi"
         canonical="/hi/ptl-transport"
         hreflang="hi"
+        alternates={[{ hreflang: "en-in", href: "/ptl-transport" }]}
         jsonLd={jsonLd}
         breadcrumbs={[
           { name: "हिंदी", url: "/hi" },

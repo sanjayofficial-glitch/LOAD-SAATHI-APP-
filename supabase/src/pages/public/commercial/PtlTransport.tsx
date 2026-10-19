@@ -92,6 +92,7 @@ export default function PtlTransport() {
         description="PTL (Partial Truckload) transport for MSMEs in India. Move 0.5–3 tonne shipments at 30–40% lower cost than FTL. AI-matched trucks on Rourkela, Ranchi, Bhubaneswar, Kolkata routes."
         keywords="PTL transport India, partial truckload India, PTL freight, part truck load, PTL shipping, partial load transport, PTL logistics"
         canonical="/ptl-transport"
+        alternates={[{ hreflang: "hi", href: "/hi/ptl-transport" }]}
         breadcrumbs={[{ name: "PTL Transport", url: "/ptl-transport" }]}
         jsonLd={[
           {

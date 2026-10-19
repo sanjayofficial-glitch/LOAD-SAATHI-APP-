@@ -787,8 +787,13 @@ Deno.serve(async (req: Request) => {
       range = aiResult.range;
       provider = aiResult.provider;
     } else {
-      // Local fallback with corridor fallback
-      fb = localFallback(body, history, distanceKm, vehicleConfig, corridorMult, seasonalMult, surchargeConfig, returnFactorMap, currentDiesel, flags);
+      // Local fallback with corridor fallback. localFallback() always returns a
+      // full result; `fb` is only nulled when the corridor-average path
+      // discards its extended fields (keep the provider label before nulling —
+      // the old code dereferenced fb AFTER nulling and crashed).
+      const local = localFallback(body, history, distanceKm, vehicleConfig, corridorMult, seasonalMult, surchargeConfig, returnFactorMap, currentDiesel, flags);
+      const fbProvider = local.provider;
+      fb = local;
 
       // If no route history but corridor average exists, use it
       if (history.loads === 0 && corridorAvg) {
@@ -807,10 +812,10 @@ Deno.serve(async (req: Request) => {
         // Don't use fb extended fields in corridor path
         fb = null;
       } else {
-        recommendedPrice = fb.recommendedPrice;
-        range = fb.range;
+        recommendedPrice = local.recommendedPrice;
+        range = local.range;
       }
-      provider = fb.provider;
+      provider = fbProvider;
     }
 
     // Confidence from data quality (overrides AI confidence)

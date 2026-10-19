@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowRight, MapPin, Clock, Route, Truck, Package, Search, Shield, TrendingUp, CheckCircle, BookOpen, Map, Boxes, Warehouse, Repeat, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,10 +15,15 @@ import {
   type RouteInfo,
 } from "@/data/routes";
 import { cityLoadingPoints } from "@/data/loadingPoints";
-import { articles } from "@/data/blog";
+// Metadata only — the ~400 KB article-body bundle in data/blog stays out of
+// this route chunk. findRelatedArticles is generated from blog.ts by
+// scripts/generate-blog-meta.mjs so it can never drift.
+import { findRelatedArticles } from "@/data/blogMeta";
 import QuoteLeadCard from "@/components/QuoteLeadCard";
 import { trackRouteView } from "@/utils/analytics";
-import PriceTrendChart from "@/components/PriceTrendChart";
+
+// Recharts (~400 KB) is below the fold — load it on demand.
+const PriceTrendChart = lazy(() => import("@/components/PriceTrendChart"));
 
 /** When the lane figures were last checked against road routing. */
 const LANE_REVIEWED_LABEL = "October 2026";
@@ -331,6 +336,13 @@ export default function RouteDetail() {
         description={metaDescription}
         canonical={`/routes/${route.slug}`}
         keywords={route.keywords}
+        // Only the lanes with a real Hindi twin carry the reciprocal
+        // alternate — unpaired hreflang annotations are ignored by Google.
+        alternates={
+          route.slug === "rourkela-to-ranchi"
+            ? [{ hreflang: "hi", href: `/hi/route/${route.slug}` }]
+            : undefined
+        }
         jsonLd={routeSchema}
         breadcrumbs={[
           { name: "Home", url: "/" },
@@ -644,7 +656,15 @@ export default function RouteDetail() {
         {/* Price Trend */}
         <section className="py-20">
           <div className="max-w-[1440px] mx-auto px-6 sm:px-12">
-            <PriceTrendChart origin={route.from} destination={route.to} />
+            {/* Chart is below the fold and pulls the ~400 KB recharts bundle —
+                fallback keeps layout height stable so lazy loading causes no CLS. */}
+            <Suspense
+              fallback={
+                <div className="h-72 rounded-xl border border-border bg-muted/30 dark:bg-white/5 animate-pulse" aria-hidden="true" />
+              }
+            >
+              <PriceTrendChart origin={route.from} destination={route.to} />
+            </Suspense>
           </div>
         </section>
 
@@ -711,9 +731,7 @@ export default function RouteDetail() {
 
         {/* Related Blog Articles */}
         {(function() {
-          const relevantArticles = Object.entries(articles).filter(
-            ([, a]) => a.relatedRoutes?.includes(route.slug)
-          ).slice(0, 3);
+          const relevantArticles = findRelatedArticles(route.slug);
           if (relevantArticles.length === 0) return null;
           return (
             <section className="py-20 bg-muted/30 dark:bg-[#010f1f] border-y border-border dark:border-white/5">
@@ -725,8 +743,8 @@ export default function RouteDetail() {
                   <p className="text-lg text-muted-foreground">Guides and insights for shipping on this route.</p>
                 </div>
                 <div className="grid sm:grid-cols-3 gap-5">
-                  {relevantArticles.map(([s, a]) => (
-                    <Link key={s} to={`/blog/${s}`} className="glass-card p-5 rounded-xl border border-border hover:border-orange-500/30 transition-all group">
+                  {relevantArticles.map((a) => (
+                    <Link key={a.slug} to={`/blog/${a.slug}`} className="glass-card p-5 rounded-xl border border-border hover:border-orange-500/30 transition-all group">
                       <div className="flex items-center gap-2 mb-3">
                         <BookOpen className="h-4 w-4 text-orange-400" />
                         <span className="text-xs font-medium text-muted-foreground">{a.category}</span>

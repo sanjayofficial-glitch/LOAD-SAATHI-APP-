@@ -147,7 +147,7 @@ const PUBLIC_ROUTES = [
 ];
 
 const TIMEOUT_MS = 90_000;
-const READY_TIMEOUT_MS = 40_000; // per-page wall-clock budget waiting for React
+const READY_TIMEOUT_MS = 60_000; // per-page wall-clock budget waiting for React
 const READY_POLL_MS = 500;
 const PORT = 0; // random available port
 
@@ -427,27 +427,55 @@ async function main() {
     return;
   }
 
-  const results = { success: 0, failed: 0, skipped: 0 };
+  const results = { success: 0, failed: 0, skipped: 0, retried: 0 };
 
-  for (const route of routes) {
-    const url = `http://127.0.0.1:${port}${route}`;
-    const outFile = routeToFile(route);
-
+  const attempt = async (route, url, outFile) => {
     try {
       const rendered = await renderRoute(debugPort, url);
       // Corruption guard: never write suspicious output over a good file.
       if (!rendered || rendered.length < 5000 || !rendered.includes("<h1")) {
-        results.skipped++;
-        console.warn(`  ! ${route}: not ready (${rendered ? `${rendered.length} bytes` : "timeout"}) — kept previous file`);
-        continue;
+        console.warn(
+          `  ! ${route}: not ready (${rendered ? `${rendered.length} bytes` : "timeout"}) — kept previous file`
+        );
+        return false;
       }
       fs.mkdirSync(path.dirname(outFile), { recursive: true });
       fs.writeFileSync(outFile, rendered, "utf-8");
-      results.success++;
       console.log(`  ✓ ${route} (${rendered.length} bytes)`);
+      return true;
     } catch (err) {
-      results.failed++;
       console.warn(`  ✗ ${route}: ${err.message?.slice(0, 120)}`);
+      return false;
+    }
+  };
+
+  // First pass.
+  const missed = [];
+  for (const route of routes) {
+    const url = `http://127.0.0.1:${port}${route}`;
+    const outFile = routeToFile(route);
+    const ok = await attempt(route, url, outFile);
+    if (ok) results.success++;
+    else {
+      results.skipped++;
+      missed.push(route);
+    }
+  }
+
+  // Second chance: transient hydration stalls (heavy Cookie/Consent or
+  // analytics chunks occasionally miss the readiness window) are the #1 flake
+  // source — one retry recovers them without masking real breakage.
+  if (missed.length) {
+    console.log(`[prerender] retry pass for ${missed.length} route(s)`);
+    for (const route of missed) {
+      const url = `http://127.0.0.1:${port}${route}`;
+      const outFile = routeToFile(route);
+      const ok = await attempt(route, url, outFile);
+      if (ok) {
+        results.success++;
+        results.retried++;
+        results.skipped--;
+      }
     }
   }
 
@@ -459,7 +487,8 @@ async function main() {
     // best effort
   }
   console.log(
-    `[prerender] Done. ${results.success} succeeded, ${results.failed} failed, ${results.skipped} skipped.`
+    `[prerender] Done. ${results.success} succeeded (${results.retried} on retry), ` +
+      `${results.skipped} skipped, ${results.failed} failed.`
   );
   writeStatus({ prerendered: true, ...results });
 }

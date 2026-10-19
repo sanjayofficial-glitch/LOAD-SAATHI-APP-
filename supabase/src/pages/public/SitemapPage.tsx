@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight, MapPin, Route as RouteIcon, BookOpen, Wrench, Globe } from "lucide-react";
 import SeoMeta from "@/components/SeoMeta";
 import { routes } from "@/data/routes";
-import { getBlogListItems } from "@/data/blog";
+// Metadata-only import — keeps the ~400 KB article-body bundle out of this chunk.
+import { getBlogListItems } from "@/data/blogMeta";
 import { guideData } from "@/data/guides";
 import { cityData } from "@/data/locations";
 import { TRANSPORT_SERVICES } from "@/data/transportServices";

@@ -183,3 +183,44 @@ console.log(
     `(${STATIC.length} static, ${ROUTE_SLUGS.length} routes, ${LOCATION_SLUGS.length} locations, ` +
     `${TRANSPORT_SERVICE_SLUGS.length} transport-service, ${GUIDE_SLUGS.length} guides, ${BLOG_SLUGS.length} blog)`
 );
+
+// ── COVERAGE auto-sync ────────────────────────────────────────────────────────
+// The "verifiable counts" in api/site.js and site.ts are asserted against the
+// sitemap by scripts/smoke.mjs. Instead of hand-editing them whenever content
+// is added (they had already drifted: 212 vs the real count), patch them here —
+// so a new blog post or lane updates the source of truth in the same build.
+const coverage = {
+  sitemapUrls: urls.length,
+  freightRoutes: ROUTE_SLUGS.length,
+  cityPages: LOCATION_SLUGS.length,
+};
+
+function patchCoverage(file) {
+  if (!fs.existsSync(file)) {
+    console.error(`[sitemap] COVERAGE sync failed — missing file: ${path.relative(ROOT, file)}`);
+    process.exitCode = 1;
+    return;
+  }
+  let src = fs.readFileSync(file, "utf-8");
+  let changed = false;
+  for (const [key, value] of Object.entries(coverage)) {
+    const re = new RegExp(`(${key}:\\s*)(\\d+)`);
+    const m = src.match(re);
+    if (!m) {
+      console.error(`[sitemap] COVERAGE sync failed — "${key}" not found in ${path.relative(ROOT, file)}`);
+      process.exitCode = 1;
+      return;
+    }
+    if (m[2] !== String(value)) {
+      src = src.replace(re, `$1${value}`);
+      changed = true;
+    }
+  }
+  if (changed) {
+    fs.writeFileSync(file, src, "utf-8");
+    console.log(`[sitemap] synced COVERAGE in ${path.relative(ROOT, file)}:`, coverage);
+  }
+}
+
+patchCoverage(path.join(ROOT, "api", "site.js"));
+patchCoverage(path.join(ROOT, "supabase", "src", "config", "site.ts"));

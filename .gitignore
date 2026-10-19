@@ -39,6 +39,9 @@ dist-ssr
 skills-lock.json
 ruvector.db
 ruvector.db-*
+kilo.json
+knowledge-graph.json
+.freebuff/
 .mcp.json
 
 # Android build cache

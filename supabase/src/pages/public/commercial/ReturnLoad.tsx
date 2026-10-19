@@ -114,6 +114,7 @@ export default function ReturnLoad() {
         description="Don't drive back empty. Find return loads for your truck on LoadSaathi's AI-powered freight marketplace. Cut empty kilometres by 40%, earn ₹15,000–40,000 extra per trip across East India."
         keywords="return load for truck, backhaul India, find load for truck, empty truck load, truck return load, return freight, truck load booking"
         canonical="/return-load"
+        alternates={[{ hreflang: "hi", href: "/hi/return-load" }]}
         breadcrumbs={[{ name: "Return Loads", url: "/return-load" }]}
         jsonLd={[
           {
