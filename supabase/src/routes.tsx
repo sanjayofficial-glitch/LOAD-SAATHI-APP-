@@ -4,6 +4,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 
 const Layout = lazy(() => import("./components/Layout"));
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
 const AuthLayout = lazy(() => import("./components/AuthLayout"));
 const Index = lazy(() => import("./pages/Index"));
 const Login = lazy(() => import("./pages/auth/Login"));
@@ -105,6 +106,8 @@ const AiLogistics = lazy(() => import("./pages/public/AiLogistics"));
 const Data = lazy(() => import("./pages/public/Data"));
 const GalleryManager = lazy(() => import("./pages/admin/GalleryManager"));
 const TeamManager = lazy(() => import("./pages/admin/TeamManager"));
+const VerificationQueue = lazy(() => import("./pages/admin/VerificationQueue"));
+const TruckerVerification = lazy(() => import("./pages/trucker/Verification"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 export const AppRoutes = () => (
@@ -227,6 +230,27 @@ export const AppRoutes = () => (
       <Route path="/transport/:city" element={<LocationPage />} />
     </Route>
 
+    {/* Admin routes — dedicated full-height shell: one nav, no public chrome */}
+    <Route
+      element={
+        <RoleProtectedRoute allowedRole="admin">
+          <AdminLayout />
+        </RoleProtectedRoute>
+      }
+    >
+      <Route path="/admin/monitoring" element={<CommandCenterPage />} />
+      <Route path="/admin/command-center" element={<CommandCenterPage />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/analytics" element={<AnalyticsDashboard />} />
+      <Route path="/admin/audit" element={<AuditLog />} />
+      <Route path="/admin/users" element={<UserManagement />} />
+      <Route path="/admin/moderation" element={<Moderation />} />
+      <Route path="/admin/verifications" element={<VerificationQueue />} />
+      <Route path="/admin/gallery" element={<GalleryManager />} />
+      <Route path="/admin/team" element={<TeamManager />} />
+      <Route path="/admin/api-keys" element={<ApiKeys />} />
+    </Route>
+
     {/* Authenticated routes wrapped with Layout */}
     <Route
       element={
@@ -237,59 +261,6 @@ export const AppRoutes = () => (
         </Layout>
       }
     >
-      {/* Admin routes */}
-      <Route path="/admin/monitoring" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <CommandCenterPage />
-        </RoleProtectedRoute>
-      } />
-      <Route path="/admin/command-center" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <CommandCenterPage />
-        </RoleProtectedRoute>
-      } />
-      <Route path="/admin/dashboard" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <AdminDashboard />
-        </RoleProtectedRoute>
-      } />
-      <Route path="/admin/analytics" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <AnalyticsDashboard />
-        </RoleProtectedRoute>
-      } />
-      <Route path="/admin/audit" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <AuditLog />
-        </RoleProtectedRoute>
-      } />
-      <Route path="/admin/users" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <UserManagement />
-        </RoleProtectedRoute>
-      } />
-      <Route path="/admin/moderation" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <Moderation />
-        </RoleProtectedRoute>
-      } />
-      {/* Admin gallery + team routes */}
-      <Route path="/admin/gallery" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <GalleryManager />
-        </RoleProtectedRoute>
-      } />
-      <Route path="/admin/team" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <TeamManager />
-        </RoleProtectedRoute>
-      } />
-      {/* Trucker routes */}
-      <Route path="/admin/api-keys" element={
-        <RoleProtectedRoute allowedRole="admin">
-          <ApiKeys />
-        </RoleProtectedRoute>
-      } />
       <Route path="/trucker/dashboard" element={
         <RoleProtectedRoute allowedRole="trucker">
           <TruckerDashboard />
@@ -318,6 +289,11 @@ export const AppRoutes = () => (
       <Route path="/trucker/history" element={
         <RoleProtectedRoute allowedRole="trucker">
           <TruckerHistory />
+        </RoleProtectedRoute>
+      } />
+      <Route path="/trucker/verification" element={
+        <RoleProtectedRoute allowedRole="trucker">
+          <TruckerVerification />
         </RoleProtectedRoute>
       } />
       <Route path="/trucker/browse-shipments" element={

@@ -30,6 +30,7 @@ import NearbyLoadsMap from '@/components/NearbyLoadsMap';
 import LogoMark from '@/components/LogoMark';
 import EmptyState from '@/components/EmptyState';
 import ErrorState from '@/components/ErrorState';
+import KycStatusCard from '@/components/KycStatusCard';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
 import ProfileProgressBar from '@/components/ProfileProgressBar';
 import { useProfileProgress } from '@/hooks/useProfileProgress';
@@ -262,6 +263,9 @@ const TruckerDashboard = () => {
           <span>You are offline. Data shown may be out of date.</span>
         </div>
       )}
+
+      {/* Verification nudge — hides itself once the trucker is verified */}
+      <KycStatusCard className="mb-4 sm:mb-6 animate-fade-in" />
 
       {/* First-Time Welcome */}
       {!loading && stats.activeTrips === 0 && stats.completedTrips === 0 && stats.pendingRequests === 0 && (

@@ -18,7 +18,7 @@ const STORAGE_KEY = 'loadsaathi-theme';
 
 const ThemeContext = createContext<ThemeContextType>({
   isDark: false,
-  mode: 'system',
+  mode: 'light',
   setMode: () => {},
   toggle: () => {},
   setDark: () => {},
@@ -30,9 +30,10 @@ const readStoredMode = (): ThemeMode => {
     // Backward compatible: the old provider only ever wrote 'dark'/'light'.
     if (stored === 'light' || stored === 'dark' || stored === 'system') return stored;
   } catch {
-    // storage may be blocked (private mode / iframe) — fall through to system
+    // storage may be blocked (private mode / iframe) — fall through to default
   }
-  return 'system';
+  // Light is the app default; 'system' stays opt-in (only when explicitly stored).
+  return 'light';
 };
 
 const systemPrefersDark = () =>

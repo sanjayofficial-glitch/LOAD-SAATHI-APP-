@@ -2,7 +2,9 @@
 
 **Stack:** React + TypeScript + Vite | Clerk Auth | Supabase | React Leaflet | Tailwind CSS + shadcn/ui
 
-**Path:** `C:\Users\sanja\dyad-apps\LOAD-SAATHI-APP-1 copy`
+**Path:** `D:\Users\sanja\dyad-apps\LOAD-SAATHI-APP-1-OSRM`
+
+**Source root:** all app code lives under `supabase/src/` — paths below like `src/utils/…` mean `supabase/src/utils/…`
 
 **Two user roles:** Trucker (drivers who post trips) and Shipper (customers who post shipments)
 
@@ -59,3 +61,18 @@
 - 3 files still import from `@/lib/supabaseClient` for Realtime (intentional)
 - Clerk `afterSignUpUrl` prop deprecated (cosmetic warning)
 - `src/lib/gemini.ts` is in use (BrowseShipments.tsx AI search) — not dead code
+
+---
+
+## Code Memory (graphify + .memory)
+
+| Artifact | Purpose |
+|----------|---------|
+| `graphify-out/graph.json` | Full code knowledge graph (AST-only, 0 tokens) |
+| `graphify-out/graph.html` | Interactive visualization — open in browser |
+| `graphify-out/GRAPH_REPORT.md` | God nodes, communities, cross-file connections |
+| `graphify-out/memory/` | Q&A feedback-loop memory (`graphify save-result`) |
+| `.memory/` | Human-curated PARA facts (this file + MEMORY.md + daily logs) |
+
+- Regenerate the graph free: `graphify update .` (AST-only). Deep semantic pass: `graphify . --deep` (costs tokens).
+- Query the graph: `graphify query "<question>"`, `graphify path A B`, `graphify explain <node>`.

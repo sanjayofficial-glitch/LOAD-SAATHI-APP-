@@ -5,8 +5,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useSupabase } from '@/hooks/useSupabase';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import { useOnlineUsers } from '@/hooks/useOnlineUsers';
 import { Message } from '@/types/chat';
-import { fetchMessages, sendMessage, subscribeToMessages, markMessagesAsRead, ChatKind } from '@/utils/chat';
+import { fetchMessages, sendMessage, subscribeToMessages, markMessagesAsRead, sanitizeContent, ChatKind } from '@/utils/chat';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,6 +35,9 @@ const Chat = () => {
   const { getAuthenticatedClient } = useSupabase();
   const navigate = useNavigate();
   const { isOnline } = useNetworkStatus();
+  // App-wide presence (Supabase Presence) — tells us whether the chat partner
+  // is online. `isOnline` above is only this device's own connectivity.
+  const onlineUserIds = useOnlineUsers();
 
   const [messages, setMessages] = useState<OptimisticMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -85,32 +89,35 @@ const Chat = () => {
         setMessages(initialMessages.map(m => ({ ...m, status: 'sent' as MessageStatus })));
         markMessagesAsRead(requestId, userProfile.id, getTokenRef.current, chatKindRef.current);
 
-        const channelName = `chat:${requestId}`;
-        const existingChannels = supabase.getChannels();
-        for (const ch of existingChannels) {
-          if (ch.topic === channelName) {
-            await supabase.removeChannel(ch);
-          }
-        }
-
+        // Stale-channel cleanup happens inside subscribeToMessages().
         if (cancelled) return;
 
-        channel = await subscribeToMessages(requestId, (msg) => {
-          setMessages(prev => {
-            if (prev.some(m => m.id === msg.id)) return prev;
-            const tempIdx = prev.findIndex(m => m.status === 'sending' && m.content === msg.content && m.sender_id === msg.sender_id);
-            if (tempIdx >= 0) {
-              const next = prev.slice();
-              const existing = next[tempIdx];
-              if (existing?.tempId) {
-                next[tempIdx] = { ...msg, status: 'sent', tempId: existing.tempId };
+        channel = await subscribeToMessages(
+          requestId,
+          (msg) => {
+            setMessages(prev => {
+              if (prev.some(m => m.id === msg.id)) return prev;
+              const tempIdx = prev.findIndex(m => m.status === 'sending' && m.content === msg.content && m.sender_id === msg.sender_id);
+              if (tempIdx >= 0) {
+                const next = prev.slice();
+                const existing = next[tempIdx];
+                if (existing?.tempId) {
+                  next[tempIdx] = { ...msg, status: 'sent', tempId: existing.tempId };
+                }
+                return next;
               }
-              return next;
-            }
-            return [...prev, { ...msg, status: 'sent' as MessageStatus }];
-          });
-          if (msg.recipient_id === userProfile.id) markMessagesAsRead(requestId, userProfile.id, getTokenRef.current, chatKindRef.current);
-        }, chatKindRef.current, getTokenRef.current);
+              return [...prev, { ...msg, status: 'sent' as MessageStatus }];
+            });
+            if (msg.recipient_id === userProfile.id) markMessagesAsRead(requestId, userProfile.id, getTokenRef.current, chatKindRef.current);
+          },
+          chatKindRef.current,
+          getTokenRef.current,
+          // Read receipts: when the recipient marks the thread as read, the
+          // UPDATE event flips is_read on our sent bubbles (blue ticks).
+          (updated) => {
+            setMessages(prev => prev.map(m => (m.id === updated.id ? { ...m, is_read: updated.is_read } : m)));
+          },
+        );
 
         if (cancelled) {
           if (channel) supabase.removeChannel(channel);
@@ -167,13 +174,21 @@ const Chat = () => {
       return;
     }
 
+    // Apply the same sanitization the DB write uses, so the optimistic bubble
+    // is byte-identical to the realtime/insert payload (dedupe relies on it).
+    const sanitized = sanitizeContent(newMessage);
+    if (!sanitized) {
+      showError('Message is empty');
+      return;
+    }
+
     const tempId = generateTempId();
     const optimistic: OptimisticMessage = {
       id: tempId,
       tempId,
       sender_id: userProfile!.id,
       recipient_id: recipient.id,
-      content: newMessage,
+      content: sanitized,
       created_at: new Date().toISOString(),
       is_read: false,
       request_id: chatKindRef.current === 'request' ? requestId : undefined,
@@ -185,7 +200,7 @@ const Chat = () => {
     setNewMessage('');
     setSending(true);
     try {
-      await sendOptimistic(newMessage, tempId);
+      await sendOptimistic(sanitized, tempId);
     } finally {
       setSending(false);
     }
@@ -197,6 +212,9 @@ const Chat = () => {
     setSending(true);
     void sendOptimistic(msg.content, msg.tempId!).finally(() => setSending(false));
   }, [recipient, requestId, sendOptimistic]);
+
+  // Real presence for the partner — not this device's connectivity.
+  const partnerOnline = recipient ? onlineUserIds.has(recipient.id) : false;
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[60dvh]">
@@ -221,7 +239,7 @@ const Chat = () => {
           <div className="min-w-0 flex-1">
             <CardTitle className="text-base sm:text-lg font-bold truncate">{recipient?.full_name}</CardTitle>
             <div className="flex items-center gap-1.5">
-              {isOnline ? (
+              {partnerOnline ? (
                 <>
                   <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                   <p className="text-xs text-gray-500 dark:text-gray-400">Online</p>
@@ -264,7 +282,7 @@ const Chat = () => {
                         <p className="text-[10px] text-gray-400 dark:text-gray-500">
                           {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
-                        {isMe && <MessageStatus status={msg.status} />}
+                        {isMe && <MessageStatus status={msg.status} isRead={msg.is_read} />}
                         {isMe && msg.status === 'failed' && (
                           <button
                             type="button"
@@ -286,7 +304,7 @@ const Chat = () => {
           {/* Offline Banner */}
           {!isOnline && (
             <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-100 dark:border-yellow-800 text-xs text-yellow-700 dark:text-yellow-300 text-center">
-              <WifiOff className="h-3 w-3 inline mr-1.5" /> You are offline. Messages will not send until reconnected.
+              <WifiOff className="h-3 w-3 inline mr-1.5" /> You are offline. Reconnect to send and receive messages.
             </div>
           )}
 

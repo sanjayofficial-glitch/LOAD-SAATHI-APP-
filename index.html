@@ -2,15 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Apply saved/OS theme BEFORE first paint to prevent dark-mode flash of white.
-         Supports the 3-mode preference: 'light' | 'dark' | 'system' (default). -->
+    <!-- Apply saved/OS theme BEFORE first paint to prevent theme flash of wrong color.
+         3-mode preference: 'light' (default for new visitors) | 'dark' | 'system'. -->
     <script>
       (function () {
         try {
           var stored = null;
           try { stored = localStorage.getItem('loadsaathi-theme'); } catch (e) { /* storage may be blocked */ }
           var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var dark = stored === 'dark' || ((stored === null || stored === 'system') && systemDark);
+          // Default is LIGHT: only opt-in dark (stored) or explicit 'system' can resolve dark.
+          var dark = stored === 'dark' || (stored === 'system' && systemDark);
           var root = document.documentElement;
           root.setAttribute('data-theme', dark ? 'dark' : 'light');
           if (dark) root.classList.add('dark');

@@ -1,7 +1,7 @@
 # Plan & To-Do: Lead Conversion Fix (LoadSaathi)
 
-> Status: **Phase A1 done** · Phases A2–C pending · Plan approved, build mode.
-> Last updated: 2026-10-09
+> Status: **Phase A–C done** · 2026-10-19: fixed the silent lead leak in QuoteLeadCard (submit/WhatsApp never wrote to `leads` — table had 0 rows since 2026-10-09) + mounted on Freight Rate & Transport Cost calculators + TrustStrip added. Manual outbound is now the critical path.
+> Last updated: 2026-10-19
 
 ---
 

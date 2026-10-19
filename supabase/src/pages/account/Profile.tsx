@@ -1,5 +1,5 @@
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuth as useClerkAuth, useUser } from '@clerk/clerk-react'; // Clerk's useAuth for getToken
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from '@/components/ui/skeleton';
 import { showSuccess, showError } from '@/utils/toast';
 import { isValidIndianMobile, normalizeIndianPhone } from '@/utils/phone';
+import { VERIFICATION_LABELS, friendlyKycError, uploadAvatar } from '@/utils/kyc';
 import { trackEvent } from '@/utils/analytics';
 import { cn } from '@/lib/utils';
 import { useNavigate, Link } from 'react-router-dom';
@@ -34,7 +35,6 @@ import {
   ShieldCheck,
   RefreshCw,
   Camera,
-  FileText,
 } from 'lucide-react';
 import Star from '@/components/Star';
 import type { Review } from '@/types';
@@ -50,13 +50,13 @@ const Profile = () => {
   const [phone, setPhone] = useState(userProfile?.phone || '');
   const [companyName, setCompanyName] = useState(userProfile?.company_name || '');
   const [loading, setLoading] = useState(false);
-  const [verifying, setVerifying] = useState(false);
   const [switching, setSwitching] = useState(false);
   const [stats, setStats] = useState({ count: 0, rating: 0 });
   const [statsLoading, setStatsLoading] = useState(true);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
-  const [uploadingDoc, setUploadingDoc] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const { data: creditData } = useCreditScore();
 
   const fetchStats = useCallback(async () => {
@@ -179,31 +179,51 @@ const Profile = () => {
     }
   };
 
-  const handleVerify = async () => {
-    setVerifying(true);
+  /**
+   * Profile photo upload.
+   *
+   * This replaces an earlier "Verify Account" button that wrote
+   * `is_verified: true` onto the user's own row. That was a hole: any user could
+   * mark themselves verified. Verification is now granted only by the owner
+   * through review_kyc(), and the database rejects self-verification outright.
+   */
+  const handleAvatarUpload = async (file: File | undefined) => {
+    if (!file || !userProfile?.id) return;
+    setUploadingAvatar(true);
     try {
       const supabaseToken = await getToken({ template: 'supabase' });
       if (!supabaseToken) throw new Error('Authentication error');
-      
+
       const supabase = createClerkSupabaseClient(supabaseToken);
-      
-      const { error } = await supabase
-        .from('users')
-        .update({ is_verified: true })
-        .eq('id', userProfile?.id);
+      await uploadAvatar(supabase, userProfile.id, file);
 
-      if (error) throw error;
-
-      showSuccess('Account verified successfully!');
+      showSuccess('Profile photo updated!');
       await refreshProfile();
     } catch (err: unknown) {
-      showError(err instanceof Error ? err.message : 'Failed to verify account');
+      showError(friendlyKycError(err));
     } finally {
-      setVerifying(false);
+      setUploadingAvatar(false);
     }
   };
 
-  const handleSwitchRole = async (newRole: 'shipper' | 'trucker' | 'admin') => {
+  const verificationStatus = userProfile?.verification_status || 'none';
+  const verificationCopy: Record<string, string> = {
+    none: 'Add your licence and truck documents to earn the verified badge.',
+    pending: 'Your documents are with the reviewer. You keep full access meanwhile.',
+    verified: 'You are verified. Shippers can see your badge on trips and requests.',
+    rejected: userProfile?.verification_note
+      ? `Reviewer said: "${userProfile.verification_note}"`
+      : 'Please replace the documents the reviewer flagged, then resubmit.',
+  };
+
+  // Self-serve switching is limited to the two non-privileged roles. Admin is
+  // NOT switchable from this UI: a database trigger
+  // (supabase/migrations/20261018090000_role_guard_onboarding_safe.sql) rejects
+  // any ordinary user whose UPDATE moves user_type into or out of 'admin', so
+  // sending admin here would only produce a scary error toast. Admin access is
+  // granted via DB/admin tooling, and the ALLOWED_ADMIN_ID-gated button below
+  // navigates to the admin dashboard directly instead of flipping user_type.
+  const handleSwitchRole = async (newRole: 'shipper' | 'trucker') => {
     setSwitching(true);
     try {
       const supabaseToken = await getToken({ template: 'supabase' });
@@ -222,8 +242,7 @@ const Profile = () => {
       await refreshProfile();
       
       // Redirect to appropriate dashboard
-      if (newRole === 'admin') navigate('/admin/monitoring');
-      else if (newRole === 'trucker') navigate('/trucker/dashboard');
+      if (newRole === 'trucker') navigate('/trucker/dashboard');
       else navigate('/shipper/dashboard');
       
     } catch (err: unknown) {
@@ -233,46 +252,14 @@ const Profile = () => {
     }
   };
 
-  const handleDocumentUpload = async (file: File, docType: 'rc' | 'insurance') => {
-    if (!userProfile?.id) return;
-    setUploadingDoc(docType);
-    try {
-      const supabaseToken = await getToken({ template: 'supabase' });
-      if (!supabaseToken) throw new Error('Authentication error');
-      
-      const supabase = createClerkSupabaseClient(supabaseToken);
-      
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${userProfile.id}/${docType}_${Date.now()}.${fileExt}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('documents')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: true,
-        });
-
-      if (uploadError) throw uploadError;
-
-      const { data: urlData } = supabase.storage
-        .from('documents')
-        .getPublicUrl(fileName);
-
-      const field = docType === 'rc' ? 'rc_document_url' : 'insurance_document_url';
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({ [field]: urlData.publicUrl })
-        .eq('id', userProfile.id);
-
-      if (updateError) throw updateError;
-
-      showSuccess(`${docType === 'rc' ? 'RC' : 'Insurance'} document uploaded successfully!`);
-      await refreshProfile();
-    } catch (err: unknown) {
-      showError(err instanceof Error ? err.message : 'Failed to upload document');
-    } finally {
-      setUploadingDoc(null);
+  // Admin console entry for the allow-listed admin user. Deliberately a
+  // navigation, not a user_type update — privilege state lives in the DB only.
+  const openAdminConsole = () => {
+    if (userProfile?.user_type !== 'admin') {
+      showError('Admin access is granted via the admin tooling, not self-service.');
+      return;
     }
+    navigate('/admin/monitoring');
   };
 
   if (authLoading) {
@@ -302,17 +289,48 @@ const Profile = () => {
     <div className="container mx-auto px-4 py-8 max-w-4xl animate-fade-in">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
         <div className="flex items-center gap-4">
-          <div className={cn(
-            'w-16 h-16 rounded-full flex items-center justify-center shadow-lg shrink-0',
-            userProfile?.user_type === 'shipper'
-              ? 'bg-gradient-to-br from-blue-400 to-blue-600 shadow-blue-200/50 dark:shadow-blue-900/30'
-              : userProfile?.user_type === 'admin'
-                ? 'bg-gradient-to-br from-purple-400 to-purple-600 shadow-purple-200/50 dark:shadow-purple-900/30'
-                : 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-200/50 dark:shadow-orange-900/30'
-          )}>
-            <span className="text-2xl font-bold text-white">
-              {(userProfile?.full_name || 'U').charAt(0).toUpperCase()}
-            </span>
+          <div className="relative shrink-0">
+            <div className={cn(
+              'w-16 h-16 rounded-full flex items-center justify-center shadow-lg overflow-hidden',
+              userProfile?.user_type === 'shipper'
+                ? 'bg-gradient-to-br from-blue-400 to-blue-600 shadow-blue-200/50 dark:shadow-blue-900/30'
+                : userProfile?.user_type === 'admin'
+                  ? 'bg-gradient-to-br from-purple-400 to-purple-600 shadow-purple-200/50 dark:shadow-purple-900/30'
+                  : 'bg-gradient-to-br from-orange-400 to-orange-600 shadow-orange-200/50 dark:shadow-orange-900/30'
+            )}>
+              {userProfile?.avatar_url ? (
+                <img
+                  src={userProfile.avatar_url}
+                  alt={userProfile.full_name || 'Profile photo'}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-white">
+                  {(userProfile?.full_name || 'U').charAt(0).toUpperCase()}
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => avatarInputRef.current?.click()}
+              disabled={uploadingAvatar}
+              aria-label="Change profile photo"
+              title="Change profile photo"
+              className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-orange-600 text-white shadow-sm transition-colors hover:bg-orange-700 disabled:opacity-60 dark:border-gray-900"
+            >
+              {uploadingAvatar ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Camera className="h-3.5 w-3.5" />
+              )}
+            </button>
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => void handleAvatarUpload(e.target.files?.[0])}
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -338,15 +356,24 @@ const Profile = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          {!userProfile?.is_verified && (
-            <Button 
-              variant="outline" 
-              onClick={handleVerify}
-              disabled={verifying}
+          {userProfile?.user_type === 'trucker' && verificationStatus !== 'verified' && (
+            <Button
+              asChild
+              variant="outline"
               className="border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950"
             >
-              {verifying ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShieldCheck className="h-4 w-4 mr-2" />}
-              Verify Account
+              <Link to="/trucker/verification">
+                {verificationStatus === 'pending' ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <ShieldCheck className="h-4 w-4 mr-2" />
+                )}
+                {verificationStatus === 'pending'
+                  ? 'Verification in review'
+                  : verificationStatus === 'rejected'
+                    ? 'Fix verification'
+                    : 'Get verified'}
+              </Link>
             </Button>
           )}
         </div>
@@ -357,7 +384,7 @@ const Profile = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="personal">Personal Info</TabsTrigger>
-          {userProfile?.user_type === 'trucker' && (<TabsTrigger value="documents">Documents</TabsTrigger>)}
+          {userProfile?.user_type === 'trucker' && (<TabsTrigger value="documents">Verification</TabsTrigger>)}
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
@@ -636,85 +663,30 @@ const Profile = () => {
             <Card className="border-orange-100 dark:border-orange-800 shadow-sm overflow-hidden">
               <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
               <CardHeader>
-                <CardTitle className="text-gray-900 dark:text-white">Documents</CardTitle>
-                <CardDescription className="dark:text-gray-400">Upload your vehicle RC and insurance documents</CardDescription>
+                <CardTitle className="text-gray-900 dark:text-white">Documents &amp; Verification</CardTitle>
+                <CardDescription className="dark:text-gray-400">
+                  Your licence, RC, insurance and truck photos are collected on the verification page, where they are
+                  compressed before upload and reviewed by the LoadSaathi owner.
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label className="dark:text-gray-300">RC Document</Label>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Take a clear photo of your vehicle RC</p>
-                    <div className="flex items-center gap-3">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          const input = document.createElement('input');
-                          input.type = 'file';
-                          input.accept = 'image/*';
-                          input.capture = 'environment';
-                          input.onchange = (e) => {
-                            const file = (e.target as HTMLInputElement).files?.[0];
-                            if (file) handleDocumentUpload(file, 'rc');
-                          };
-                          input.click();
-                        }}
-                        disabled={!!uploadingDoc}
-                        className="border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950"
-                      >
-                        {uploadingDoc === 'rc' ? (
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        ) : (
-                          <Camera className="h-4 w-4 mr-2" />
-                        )}
-                        {userProfile?.rc_document_url ? 'Update RC Photo' : 'Take RC Photo'}
-                      </Button>
-                      {userProfile?.rc_document_url && (
-                        <a href={userProfile.rc_document_url} target="_blank" rel="noopener noreferrer">
-                          <Button variant="ghost" size="sm">
-                            <FileText className="h-4 w-4 mr-2" /> View
-                          </Button>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="dark:text-gray-300">Insurance Document</Label>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Take a clear photo of your insurance paper</p>
-                    <div className="flex items-center gap-3">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          const input = document.createElement('input');
-                          input.type = 'file';
-                          input.accept = 'image/*';
-                          input.capture = 'environment';
-                          input.onchange = (e) => {
-                            const file = (e.target as HTMLInputElement).files?.[0];
-                            if (file) handleDocumentUpload(file, 'insurance');
-                          };
-                          input.click();
-                        }}
-                        disabled={!!uploadingDoc}
-                        className="border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950"
-                      >
-                        {uploadingDoc === 'insurance' ? (
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        ) : (
-                          <Camera className="h-4 w-4 mr-2" />
-                        )}
-                        {userProfile?.insurance_document_url ? 'Update Insurance Photo' : 'Take Insurance Photo'}
-                      </Button>
-                      {userProfile?.insurance_document_url && (
-                        <a href={userProfile.insurance_document_url} target="_blank" rel="noopener noreferrer">
-                          <Button variant="ghost" size="sm">
-                            <FileText className="h-4 w-4 mr-2" /> View
-                          </Button>
-                        </a>
-                      )}
-                    </div>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3 rounded-lg border border-gray-200 p-4 dark:border-gray-800">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-orange-600 dark:text-orange-400" />
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {VERIFICATION_LABELS[verificationStatus]}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      {verificationCopy[verificationStatus]}
+                    </p>
                   </div>
                 </div>
+                <Button asChild className="w-full bg-orange-600 hover:bg-orange-700 sm:w-auto">
+                  <Link to="/trucker/verification">
+                    <Camera className="mr-2 h-4 w-4" />
+                    {verificationStatus === 'none' ? 'Start verification' : 'Manage documents'}
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -786,8 +758,8 @@ const Profile = () => {
                   {userProfile?.id === ALLOWED_ADMIN_ID && (
                     <Button 
                       variant={userProfile?.user_type === 'admin' ? 'default' : 'outline'}
-                      onClick={() => handleSwitchRole('admin')}
-                      disabled={switching || userProfile?.user_type === 'admin'}
+                      onClick={openAdminConsole}
+                      disabled={switching || userProfile?.user_type !== 'admin'}
                       className="w-full border-purple-200 dark:border-purple-700 text-purple-700 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950 sm:col-span-2"
                     >
                       {switching ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShieldCheck className="h-4 w-4 mr-2" />}

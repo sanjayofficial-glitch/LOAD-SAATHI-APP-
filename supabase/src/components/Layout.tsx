@@ -11,6 +11,7 @@ import { useProductTour } from "@/contexts/ProductTourContext";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase as supabaseAnon } from "@/integrations/supabase/client";
 import { authorizeRealtime } from "@/utils/realtime";
+import { startPresence, stopPresence } from "@/utils/presence";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -272,6 +273,16 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
           }
         })();
       }
+    };
+  }, [userProfile?.id, getSupabaseToken]);
+
+  // App-wide presence: other users see a real "Online" dot in chat while this
+  // tab is open. Stops when the user signs out (Layout unmounts).
+  useEffect(() => {
+    if (!userProfile?.id) return;
+    void startPresence(userProfile.id, getSupabaseToken);
+    return () => {
+      void stopPresence();
     };
   }, [userProfile?.id, getSupabaseToken]);
 

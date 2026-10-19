@@ -1,7 +1,6 @@
-import { Phone, AlertTriangle, X, Navigation, Clock, Package, User, Truck } from 'lucide-react';
+import { X, Navigation, Clock, Package, User, Truck, ExternalLink, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import type { TruckLocation } from '@/components/maps/TruckMarker';
 import type { LoadLocation } from '@/components/maps/LoadMarker';
 import PredictiveETA from './PredictiveETA';
@@ -10,39 +9,42 @@ interface TripDetailPanelProps {
   selectedTruck: TruckLocation | null;
   selectedLoad: LoadLocation | null;
   onClose: () => void;
-  onContact?: (id: string) => void;
-  onFlag?: (id: string) => void;
 }
 
-function ProgressBar({ value, max, color }: { value: number; max: number; color: string }) {
-  const pct = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
-  return (
-    <div className="h-2 rounded-full bg-muted overflow-hidden">
-      <div
-        className={cn('h-full rounded-full transition-all', color)}
-        style={{ width: `${pct}%` }}
-      />
-    </div>
-  );
+function googleMapsUrl(lat: number, lng: number): string {
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+}
+
+function googleMapsDirectionsUrl(
+  fromLat: number,
+  fromLng: number,
+  toLat: number,
+  toLng: number,
+): string {
+  return `https://www.google.com/maps/dir/?api=1&origin=${fromLat},${fromLng}&destination=${toLat},${toLng}`;
 }
 
 export default function TripDetailPanel({
   selectedTruck,
   selectedLoad,
   onClose,
-  onContact,
-  onFlag,
 }: TripDetailPanelProps) {
   if (!selectedTruck && !selectedLoad) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-[10000] w-full sm:w-96 bg-slate-950 border-l border-slate-800 shadow-2xl flex flex-col">
+    <div className="fixed inset-y-0 right-0 z-[10000] w-full sm:w-96 bg-white border-l border-gray-200 shadow-2xl flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-800 shrink-0">
-        <h2 className="font-semibold text-sm text-slate-100">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 shrink-0">
+        <h2 className="font-semibold text-sm text-gray-900">
           {selectedTruck ? 'Truck Details' : 'Load Details'}
         </h2>
-        <Button variant="ghost" size="sm" onClick={onClose} className="h-7 w-7 p-0 text-slate-400 hover:text-white">
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label="Close details"
+          onClick={onClose}
+          className="h-7 w-7 p-0 text-gray-400 hover:text-gray-900"
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>
@@ -53,12 +55,14 @@ export default function TripDetailPanel({
           <>
             {/* Driver Info */}
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-orange-500/10 flex items-center justify-center">
-                <User className="h-6 w-6 text-orange-400" />
+              <div className="h-12 w-12 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center">
+                <User className="h-6 w-6 text-orange-500" />
               </div>
-              <div>
-                <p className="font-semibold text-slate-100">{selectedTruck.driver_name || 'Unknown Driver'}</p>
-                <p className="text-xs text-slate-400 flex items-center gap-1">
+              <div className="min-w-0">
+                <p className="font-semibold text-gray-900 truncate">
+                  {selectedTruck.driver_name || 'Unknown Driver'}
+                </p>
+                <p className="text-xs text-gray-500 flex items-center gap-1">
                   <Truck className="h-3 w-3" />
                   {selectedTruck.vehicle_type || 'Unknown vehicle'}
                   {selectedTruck.available_capacity_tonnes != null &&
@@ -67,20 +71,18 @@ export default function TripDetailPanel({
               </div>
             </div>
 
-            {/* Trip Progress */}
+            {/* Route + live status */}
             {selectedTruck.origin_city && selectedTruck.destination_city && (
-              <div className="rounded-lg border border-slate-700/50 bg-slate-900/50 p-3 space-y-2">
-                <p className="text-xs font-medium uppercase tracking-wider text-slate-400 flex items-center gap-1">
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 space-y-2">
+                <p className="text-xs font-medium uppercase tracking-wider text-gray-500 flex items-center gap-1">
                   <Navigation className="h-3 w-3" /> Route
                 </p>
                 <div className="flex items-center gap-2 text-sm">
-                  <span className="font-medium text-slate-200">{selectedTruck.origin_city}</span>
-                  <div className="flex-1">
-                    <ProgressBar value={35} max={100} color="bg-orange-500" />
-                  </div>
-                  <span className="font-medium text-slate-200">{selectedTruck.destination_city}</span>
+                  <span className="font-medium text-gray-800">{selectedTruck.origin_city}</span>
+                  <span className="flex-1 border-t border-dashed border-gray-300" />
+                  <span className="font-medium text-gray-800">{selectedTruck.destination_city}</span>
                 </div>
-                <div className="flex items-center justify-between text-xs text-slate-500">
+                <div className="flex items-center justify-between text-xs text-gray-500">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     Updated {formatTimeAgo(selectedTruck.last_seen_at)}
@@ -112,22 +114,16 @@ export default function TripDetailPanel({
               )}
             </div>
 
-            {/* Actions */}
+            {/* Actions — real navigation only */}
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                className="flex-1"
-                onClick={() => onContact?.(selectedTruck.driver_id)}
-              >
-                <Phone className="h-3.5 w-3.5 mr-1" /> Contact
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex-1"
-                onClick={() => onFlag?.(selectedTruck.driver_id)}
-              >
-                <AlertTriangle className="h-3.5 w-3.5 mr-1" /> Flag
+              <Button size="sm" variant="outline" className="flex-1" asChild>
+                <a
+                  href={googleMapsUrl(selectedTruck.lat, selectedTruck.lng)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <MapPin className="h-3.5 w-3.5 mr-1" /> Live location
+                </a>
               </Button>
             </div>
           </>
@@ -137,14 +133,14 @@ export default function TripDetailPanel({
           <>
             {/* Load Info */}
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center">
-                <Package className="h-6 w-6 text-blue-400" />
+              <div className="h-12 w-12 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center">
+                <Package className="h-6 w-6 text-blue-500" />
               </div>
-              <div>
-                <p className="font-semibold text-slate-100">
+              <div className="min-w-0">
+                <p className="font-semibold text-gray-900 truncate">
                   {selectedLoad.origin_city} → {selectedLoad.dest_city}
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-gray-500">
                   {selectedLoad.weight_tonnes != null && `${selectedLoad.weight_tonnes}T`}
                   {selectedLoad.budget_per_tonne != null &&
                     ` • ₹${selectedLoad.budget_per_tonne.toLocaleString('en-IN')}/T`}
@@ -154,29 +150,59 @@ export default function TripDetailPanel({
 
             {/* Goods Description */}
             {selectedLoad.goods_description && (
-              <div className="rounded-lg border border-slate-700/50 bg-slate-900/50 p-3">
-                <p className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-1">
+              <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
+                <p className="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">
                   Goods
                 </p>
-                <p className="text-sm text-slate-200">{selectedLoad.goods_description}</p>
+                <p className="text-sm text-gray-800">{selectedLoad.goods_description}</p>
               </div>
             )}
 
-            {/* Actions */}
+            {/* Waiting time */}
+            <div className="flex items-center justify-between text-xs text-gray-500 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3" /> Posted {formatTimeAgo(selectedLoad.created_at)}
+              </span>
+              {estimatedValue(selectedLoad) > 0 && (
+                <span className="font-semibold text-gray-700">
+                  Est. ₹{estimatedValue(selectedLoad).toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
+
+            {/* Actions — real navigation only */}
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                className="flex-1"
-                onClick={() => onFlag?.(selectedLoad.id)}
-              >
-                <AlertTriangle className="h-3.5 w-3.5 mr-1" /> Flag Issue
-              </Button>
+              {selectedLoad.origin_lat != null && selectedLoad.origin_lng != null && (
+                <Button size="sm" variant="outline" className="flex-1" asChild>
+                  <a
+                    href={
+                      selectedLoad.dest_lat != null && selectedLoad.dest_lng != null
+                        ? googleMapsDirectionsUrl(
+                            selectedLoad.origin_lat,
+                            selectedLoad.origin_lng,
+                            selectedLoad.dest_lat,
+                            selectedLoad.dest_lng,
+                          )
+                        : googleMapsUrl(selectedLoad.origin_lat, selectedLoad.origin_lng)
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 mr-1" /> Open route
+                  </a>
+                </Button>
+              )}
             </div>
           </>
         )}
       </div>
     </div>
   );
+}
+
+function estimatedValue(load: LoadLocation): number {
+  if (load.weight_tonnes == null || load.budget_per_tonne == null) return 0;
+  return load.weight_tonnes * load.budget_per_tonne;
 }
 
 function formatTimeAgo(iso: string): string {

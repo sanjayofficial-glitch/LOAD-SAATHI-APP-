@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import SeoMeta from "@/components/SeoMeta";
+import QuoteLeadCard from "@/components/QuoteLeadCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { geocodeCity } from "@/utils/geocode";
 import { getRoute } from "@/utils/osrm";
@@ -373,6 +374,14 @@ export default function FreightRateCalculator() {
               </CardContent>
             </Card>
           )}
+
+          <QuoteLeadCard
+            origin={origin.trim()}
+            destination={destination.trim()}
+            weight={Number(weight) || undefined}
+            avgPrice={result?.freightRange.recommended}
+            priceUnit="tonne"
+          />
 
           <div className="mt-10 text-center space-y-3">
             <p className="text-sm text-muted-foreground">Explore more freight tools</p>

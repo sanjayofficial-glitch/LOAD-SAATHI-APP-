@@ -603,8 +603,9 @@ export default function FareCalculator() {
               <QuoteLeadCard
                 origin={origin.trim()}
                 destination={destination.trim()}
-                weight={Number(weight)}
+                weight={Number(weight) || undefined}
                 avgPrice={result.avgPrice}
+                priceUnit="tonne"
                 route={`${origin.trim()} → ${destination.trim()}`}
               />
 

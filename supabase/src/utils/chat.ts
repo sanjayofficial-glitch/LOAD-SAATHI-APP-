@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { authorizeRealtime } from '@/utils/realtime';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
-const MAX_MESSAGE_LENGTH = 2000;
+export const MAX_MESSAGE_LENGTH = 2000;
 
 /**
  * A conversation is either backed by a `requests` row (shipper → trip) or a
@@ -23,8 +23,11 @@ const chatColumn = (kind: ChatKind): 'request_id' | 'shipment_request_id' =>
 /**
  * Sanitize message content — strip HTML tags and trim whitespace.
  * Prevents XSS if messages are ever rendered as HTML.
+ *
+ * Exported so callers (e.g. optimistic message rendering and tests) apply the
+ * exact same transformation the database sees.
  */
-function sanitizeContent(raw: string): string {
+export function sanitizeContent(raw: string): string {
   return raw
     .replace(/<[^>]*>/g, '')           // strip HTML tags
     .replace(/&amp;/g, '&')
@@ -150,27 +153,36 @@ export const markMessagesAsRead = async (
  * Authorizes the shared realtime socket with the Clerk JWT first — RLS on
  * `messages` is `TO authenticated`, and the anon role is denied, so events
  * would never arrive otherwise.
+ *
+ * `onMessageUpdate` receives row updates (e.g. `is_read` flips when the
+ * recipient reads the thread) so the sender can render live read receipts.
  */
 export const subscribeToMessages = async (
   requestId: string,
   onNewMessage: (message: Message) => void,
   kind: ChatKind = 'request',
   getToken?: (options?: { template?: string }) => Promise<string | null>,
+  onMessageUpdate?: (message: Message) => void,
 ): Promise<RealtimeChannel> => {
   const channelName = `chat:${requestId}`;
 
-  // Remove any existing channel with this name to prevent the
-  // "cannot add postgres_changes callbacks after subscribe" error
-  const existingChannels = supabase.getChannels();
-  for (const ch of existingChannels) {
-    if (ch.topic === channelName) {
+  // The SDK stores every channel topic with a `realtime:` prefix. Compare
+  // against the full topic when removing stale channels — otherwise an old,
+  // already-subscribed channel with the same name is reused and adding
+  // listeners throws "cannot add `postgres_changes` callbacks after
+  // `subscribe()`".
+  const channelTopic = `realtime:${channelName}`;
+  for (const ch of supabase.getChannels()) {
+    if (ch.topic === channelTopic) {
       await supabase.removeChannel(ch);
     }
   }
 
   if (getToken) await authorizeRealtime(getToken);
 
-  const channel = supabase
+  const filter = `${chatColumn(kind)}=eq.${requestId}`;
+
+  let channel = supabase
     .channel(channelName)
     .on(
       'postgres_changes',
@@ -178,13 +190,27 @@ export const subscribeToMessages = async (
         event: 'INSERT',
         schema: 'public',
         table: 'messages',
-        filter: `${chatColumn(kind)}=eq.${requestId}`,
+        filter,
       },
       (payload) => {
         onNewMessage(payload.new as Message);
       }
-    )
-    .subscribe();
+    );
 
-  return channel;
+  if (onMessageUpdate) {
+    channel = channel.on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'messages',
+        filter,
+      },
+      (payload) => {
+        onMessageUpdate(payload.new as Message);
+      }
+    );
+  }
+
+  return channel.subscribe();
 };

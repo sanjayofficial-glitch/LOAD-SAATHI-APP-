@@ -1,10 +1,11 @@
 # User Operating Patterns — sanja
 
 ## Preferences
-- **Project path:** `C:\Users\sanja\dyad-apps\LOAD-SAATHI-APP-1 copy`
+- **Project path:** `D:\Users\sanja\dyad-apps\LOAD-SAATHI-APP-1-OSRM` (moved from the old `C:\Users\sanja\dyad-apps\LOAD-SAATHI-APP-1 copy`)
+- **Source root:** app code lives under `supabase/src/` (components, pages, utils… all inside the `supabase/` folder)
 - **Package manager:** pnpm (has pnpm-lock.yaml, use pnpm not npm)
-- **Shell:** bash on Windows (via Git Bash or similar)
-- **CLI tool usage:** Prefers npx for global tools (e.g., `npx supabase` rather than installing globally)
+- **Shell:** PowerShell on Windows primary; Git Bash available via package.json scripts
+- **CLI tool usage:** Prefers npx for global tools (e.g., `npx supabase` rather than installing globally); OK with installed Python CLIs (graphify is installed at `C:\Users\sanja\AppData\Local\Programs\Python\Python311\Scripts\graphify.exe`)
 - **Quality standard:** Expects `vite build` to pass with zero errors before considering work done
 
 ## Communication Patterns
@@ -27,3 +28,5 @@
 - Supabase Realtime subscriptions need the anonymous client, not the authenticated one
 - Always verify build passes after env changes
 - Use `start /B` or background processes for dev servers on Windows
+- `graphify-out/` can get wiped to a single empty `.graphify_detect.json` — regenerate free with `graphify update .` (AST-only, no LLM tokens)
+- `.opencode/plugins/graphify.js` must target the actual OpenCode plugin API (plain function + hooks object, `tool.execute.before`). The `Plugin.define()` API it used to use does not exist in `@opencode-ai/plugin` 1.18.32

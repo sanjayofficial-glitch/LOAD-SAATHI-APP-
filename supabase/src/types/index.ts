@@ -1,4 +1,6 @@
-﻿export interface User {
+﻿export type VerificationStatus = 'none' | 'pending' | 'verified' | 'rejected';
+
+export interface User {
   id: string;
   user_type: 'trucker' | 'shipper' | 'admin';
   full_name: string;
@@ -17,6 +19,43 @@
   mentor_requested?: boolean;
   mentor_id?: string;
   sms_opt_in?: boolean;
+  /** Public profile picture URL (avatars bucket). */
+  avatar_url?: string | null;
+  /** KYC review state. Only an admin can move this beyond 'pending'. */
+  verification_status?: VerificationStatus;
+  /** Reviewer message, shown to the user when a submission is rejected. */
+  verification_note?: string | null;
+  kyc_submitted_at?: string | null;
+  verified_at?: string | null;
+  verified_by?: string | null;
+}
+
+export type KycDocumentType =
+  | 'driving_licence'
+  | 'driving_licence_back'
+  | 'vehicle_rc'
+  | 'vehicle_insurance'
+  | 'truck_photo'
+  | 'permit'
+  | 'fitness'
+  | 'puc';
+
+export type KycDocumentStatus = 'pending' | 'approved' | 'rejected';
+
+export interface UserDocument {
+  id: string;
+  user_id: string;
+  doc_type: KycDocumentType;
+  storage_path: string;
+  mime_type?: string | null;
+  file_size?: number | null;
+  original_size?: number | null;
+  valid_until?: string | null;
+  status: KycDocumentStatus;
+  reviewer_note?: string | null;
+  reviewed_by?: string | null;
+  reviewed_at?: string | null;
+  created_at: string;
 }
 
 export interface Trip {

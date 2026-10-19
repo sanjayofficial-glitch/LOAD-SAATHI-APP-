@@ -1,19 +1,5 @@
 import { describe, it, expect } from 'vitest';
-
-// Re-implement sanitizeContent for testing (it's not exported from chat.ts)
-const MAX_MESSAGE_LENGTH = 2000;
-
-function sanitizeContent(raw: string): string {
-  return raw
-    .replace(/<[^>]*>/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .trim()
-    .slice(0, MAX_MESSAGE_LENGTH);
-}
+import { sanitizeContent, MAX_MESSAGE_LENGTH } from '@/utils/chat';
 
 describe('sanitizeContent', () => {
   it('strips HTML tags', () => {

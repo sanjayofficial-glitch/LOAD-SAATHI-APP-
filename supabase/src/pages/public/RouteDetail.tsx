@@ -447,8 +447,8 @@ export default function RouteDetail() {
                 <QuoteLeadCard
                   origin={route.from}
                   destination={route.to}
-                  weight={10}
                   avgPrice={Math.round((bands.perTruckMin + bands.perTruckMax) / 2)}
+                  priceUnit="trip"
                   route={`${route.from} → ${route.to}`}
                 />
               </div>

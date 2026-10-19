@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SeoMeta from "@/components/SeoMeta";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import QuoteLeadCard from "@/components/QuoteLeadCard";
 interface FareResult {
   avgPrice: number;
   minPrice: number;
@@ -190,6 +190,14 @@ export default function TransportCostCalculator() {
               )}
             </CardContent>
           </Card>
+
+          <QuoteLeadCard
+            origin={origin.trim()}
+            destination={destination.trim()}
+            weight={Number(weight) || undefined}
+            avgPrice={result?.avgPrice}
+            priceUnit="tonne"
+          />
 
           <div className="mt-8 text-center space-y-3">
             <p className="text-sm text-muted-foreground">Need a full freight booking?</p>

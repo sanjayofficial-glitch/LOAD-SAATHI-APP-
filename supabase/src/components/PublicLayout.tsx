@@ -31,6 +31,7 @@ import MobileMenu from "./MobileMenu";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
 import ScrollToTopFab from "./ScrollToTopFab";
 import FloatingCTA from "./FloatingCTA";
+import TrustStrip from "./TrustStrip";
 import { usePageFade } from "@/hooks/usePageFade";
 import type { BottomNavItem } from "./DockNav";
 
@@ -214,6 +215,7 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
           {children}
         </Suspense>
       </main>
+      <TrustStrip />
       <footer className="bg-muted dark:bg-[#0B1220] border-t border-border dark:border-white/5 w-full pt-16 pb-20 sm:pb-24">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6 md:gap-8 px-6 sm:px-12 max-w-[1440px] mx-auto">
           <div className="col-span-2 md:col-span-1 mb-4 md:mb-0">

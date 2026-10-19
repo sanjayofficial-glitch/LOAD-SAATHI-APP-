@@ -154,12 +154,51 @@ function HeatmapLayer({ points }: { points: [number, number][] }) {
   return null;
 }
 
-function FitBounds({ positions }: { positions: [number, number][] }) {
-  const map = useMap(); const key = positions.map((p) => `${p[0].toFixed(3)},${p[1].toFixed(3)}`).join('|');
+/**
+ * Keeps Leaflet in sync with its flex container and re-fits the view whenever
+ * either the tracked positions or the container box changes.
+ *
+ * Leaflet only listens for `window` resize, so a `flex-1` container that gains
+ * or loses height after mount (metrics loading in, rail toggling, the mobile
+ * tab pane switching from `hidden`) leaves the map on a stale size: tiles are
+ * drawn for the old box and `fitBounds` can be computed against a 0x0 canvas,
+ * which parks the view on a garbage zoom/centre.
+ */
+function MapView({ positions }: { positions: [number, number][] }) {
+  const map = useMap();
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
   useEffect(() => {
-    if (positions.length === 0) return;
-    map.fitBounds(L.latLngBounds(positions.map((p) => L.latLng(p[0], p[1]))), { padding: [60, 60] });
-  }, [key, map]);
+    const el = map.getContainer();
+    const sync = () => {
+      map.invalidateSize({ pan: false });
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      setSize((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
+    };
+    sync();
+    const raf = requestAnimationFrame(sync);
+    const timer = window.setTimeout(sync, 300);
+    const observer = new ResizeObserver(sync);
+    observer.observe(el);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [map]);
+
+  const positionsKey = positions.map((p) => `${p[0].toFixed(3)},${p[1].toFixed(3)}`).join('|');
+
+  useEffect(() => {
+    // Wait for a real box — fitting against 0x0 produces a nonsense zoom.
+    if (positions.length === 0 || size.w === 0 || size.h === 0) return;
+    map.fitBounds(L.latLngBounds(positions.map((p) => L.latLng(p[0], p[1]))), {
+      padding: [60, 60],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionsKey, map, size.w, size.h]);
+
   return null;
 }
 
@@ -219,13 +258,13 @@ const CommandCenterMap: React.FC<CommandCenterMapProps> = ({
         style={{ background: '#f3f4f6' }}
         scrollWheelZoom
         touchZoom
-        zoomControl={false}
+        zoomControl
       >
         <TileLayer attribution='&copy; Esri' url={tileUrl} />
 
         {showHeatmap && <HeatmapLayer points={heatPoints} />}
         {showCorridors && <CorridorLayer corridors={hotCorridors} />}
-        {allPositions.length > 0 && <FitBounds positions={allPositions} />}
+        <MapView positions={allPositions} />
         {showRoutes && resolvedRoutes.map((route) => <AnimatedRoute key={route.id} route={route} />)}
 
         {/* Truck markers with truck icon */}
