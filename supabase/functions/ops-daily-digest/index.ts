@@ -33,7 +33,7 @@ const json = (data: unknown, status = 200): Response =>
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 
-export default async function handler(_req: Request): Promise<Response> {
+async function handler(_req: Request): Promise<Response> {
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
   if (!supabaseUrl || !supabaseKey) {
@@ -112,3 +112,9 @@ export default async function handler(_req: Request): Promise<Response> {
 
   return json(snapshot);
 }
+
+// The edge runtime serves only what Deno.serve registers — a bare exported
+// handler leaves it accepting connections without ever responding.
+Deno.serve(async (req: Request): Promise<Response> => {
+  return handler(req);
+});
