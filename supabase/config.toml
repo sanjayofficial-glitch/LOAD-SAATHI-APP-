@@ -427,3 +427,10 @@ verify_jwt = false
 # endpoint inert until the JWT path is staging-proven.
 [functions.agent-router]
 verify_jwt = false
+
+# admin-secrets performs its own JWT verification (edgeHelpers verifyJwt)
+# because the admin UI sends the Clerk 'supabase'-template token, whose
+# non-UUID sub the GoTrue gateway check would reject. Same pattern as the
+# other client-facing functions.
+[functions.admin-secrets]
+verify_jwt = false
