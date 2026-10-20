@@ -26,17 +26,17 @@ const MANAGEABLE_SECRETS: (keyof typeof SECRET_DESCRIPTIONS)[] = [
 const SECRET_DESCRIPTIONS = {
   GEMINI_API_KEY: {
     label: 'Google Gemini',
-    functions: ['match-ml', 'gemini-proxy'],
+    functions: ['match-ml', 'gemini-proxy', 'credit-insights', 'agent-router'],
     description: 'Primary AI provider for match scoring and natural language search.',
   },
   GROQ_API_KEY: {
     label: 'Groq',
-    functions: ['match-ml', 'gemini-proxy'],
+    functions: ['match-ml', 'gemini-proxy', 'credit-insights', 'agent-router'],
     description: 'Secondary AI provider (fallback). Fast LLaMA inference.',
   },
   OPENROUTER_API_KEY: {
     label: 'OpenRouter',
-    functions: ['match-ml', 'gemini-proxy'],
+    functions: ['match-ml', 'gemini-proxy', 'credit-insights', 'agent-router'],
     description: 'Tertiary AI provider (fallback). Routes to multiple open models.',
   },
 } as const;
@@ -44,6 +44,8 @@ const SECRET_DESCRIPTIONS = {
 const STATUS_LABELS: Record<string, string> = {
   'match-ml': 'Match scoring',
   'gemini-proxy': 'NL search',
+  'credit-insights': 'Credit insights',
+  'agent-router': 'Freddy copilot',
 };
 
 export default function ApiKeys() {
@@ -189,7 +191,7 @@ const handleRemove = useCallback(async (secretName: keyof typeof SECRET_DESCRIPT
   return (
     <AdminShell
       title="API Key Management"
-      description="Manage AI provider API keys for edge functions. Keys are used by match-ml and gemini-proxy."
+      description="Manage AI provider API keys for edge functions. Keys are used by match-ml, gemini-proxy, credit-insights and agent-router."
     >
       <div className="space-y-6">
         <div className="flex justify-between items-center">
@@ -197,7 +199,9 @@ const handleRemove = useCallback(async (secretName: keyof typeof SECRET_DESCRIPT
             <Info className="h-4 w-4 text-blue-400" />
             <AlertDescription>
               API keys are stored as Supabase Edge Function secrets. They are never exposed to the client.
-              The match-ml and gemini-proxy functions use these keys with a fallback chain: Gemini to Groq to OpenRouter to local heuristic.
+              The AI functions (match-ml, gemini-proxy, credit-insights, agent-router) use these keys with an
+              automatic fallback chain: Gemini → Groq → OpenRouter → local/data fallback, so a rate-limited
+              or dead key never breaks a user request.
             </AlertDescription>
           </Alert>
           <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing}>

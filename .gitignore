@@ -50,6 +50,7 @@ android/.gradle_home
 
 # Build / coverage artifacts
 coverage
+build_log.txt
 
 # Graphify knowledge graph outputs (backed up in git - survives local deletion)
 graphify-out/.graphify_detect.json

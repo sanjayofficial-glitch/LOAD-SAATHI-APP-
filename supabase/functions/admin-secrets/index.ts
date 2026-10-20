@@ -25,8 +25,17 @@ const MANAGEABLE_SECRETS = [
   "OPENROUTER_API_KEY",
 ];
 
-// Functions that share these secrets.
-const FUNCTION_SLUGS = ["match-ml", "gemini-proxy"];
+// Functions that share these secrets. credit-insights reads the same env
+// names, and agent-router will host the Freddy copilot LLM loop. A slug that
+// is not deployed yet is tolerated: the write succeeds when at least one
+// target accepts it, and the per-function result is returned in the response
+// body + logged so a partial failure is never silent.
+const FUNCTION_SLUGS = [
+  "match-ml",
+  "gemini-proxy",
+  "credit-insights",
+  "agent-router",
+];
 
 function extractProjectRef(): string | null {
   const url = getEnv("SUPABASE_URL");
@@ -155,7 +164,7 @@ Deno.serve(async (req: Request) => {
 
       console.log(`[${requestId}] admin-secrets: setting ${body.secret} for admin ${authUser.userId}`);
 
-      let lastError: string | null = null;
+      const results: Record<string, string> = {};
       let success = false;
 
       for (const fnSlug of FUNCTION_SLUGS) {
@@ -170,20 +179,28 @@ Deno.serve(async (req: Request) => {
           );
           if (res.ok) {
             success = true;
+            results[fnSlug] = "ok";
           } else {
-            lastError = `function ${fnSlug}: ${res.status}`;
+            results[fnSlug] = `failed: HTTP ${res.status}`;
           }
         } catch (err) {
-          lastError = `function ${fnSlug}: ${(err as Error).message}`;
+          results[fnSlug] = `failed: ${(err as Error).message}`;
         }
       }
 
       if (success) {
-        return new Response(JSON.stringify({ requestId, success: true, secret: body.secret }), { status: 200, headers });
-      } else {
-        console.error(`[${requestId}] admin-secrets: failed to set ${body.secret}: ${lastError}`);
-        return errorResponse(`Failed to update secret: ${lastError}`, 500, headers, requestId);
+        console.log(
+          `[${requestId}] admin-secrets: ${body.secret} per-function result: ${JSON.stringify(results)}`,
+        );
+        return new Response(
+          JSON.stringify({ requestId, success: true, secret: body.secret, results }),
+          { status: 200, headers },
+        );
       }
+      console.error(
+        `[${requestId}] admin-secrets: failed to set ${body.secret} on every target: ${JSON.stringify(results)}`,
+      );
+      return errorResponse(`Failed to update secret: ${JSON.stringify(results)}`, 500, headers, requestId);
     }
 
     if (req.method === "DELETE") {
@@ -199,8 +216,8 @@ Deno.serve(async (req: Request) => {
 
       console.log(`[${requestId}] admin-secrets: unsetting ${secretName} for admin ${authUser.userId}`);
 
+      const results: Record<string, string> = {};
       let success = false;
-      let lastError: string | null = null;
 
       for (const fnSlug of FUNCTION_SLUGS) {
         try {
@@ -213,17 +230,25 @@ Deno.serve(async (req: Request) => {
             },
           );
           if (res.ok) success = true;
-          else lastError = `function ${fnSlug}: ${res.status}`;
+          results[fnSlug] = res.ok ? "ok" : `failed: HTTP ${res.status}`;
         } catch (err) {
-          lastError = `function ${fnSlug}: ${(err as Error).message}`;
+          results[fnSlug] = `failed: ${(err as Error).message}`;
         }
       }
 
       if (success) {
-        return new Response(JSON.stringify({ requestId, success: true, secret: secretName }), { status: 200, headers });
-      } else {
-        return errorResponse(`Failed to unset secret: ${lastError}`, 500, headers, requestId);
+        console.log(
+          `[${requestId}] admin-secrets: ${secretName} per-function result: ${JSON.stringify(results)}`,
+        );
+        return new Response(
+          JSON.stringify({ requestId, success: true, secret: secretName, results }),
+          { status: 200, headers },
+        );
       }
+      console.error(
+        `[${requestId}] admin-secrets: failed to unset ${secretName} on every target: ${JSON.stringify(results)}`,
+      );
+      return errorResponse(`Failed to unset secret: ${JSON.stringify(results)}`, 500, headers, requestId);
     }
 
     return errorResponse("Method not handled", 405, headers, requestId);
