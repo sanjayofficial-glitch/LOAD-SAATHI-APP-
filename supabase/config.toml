@@ -418,3 +418,12 @@ enabled = true
 # verification to be disabled for this function only.
 [functions.lead-alert]
 verify_jwt = false
+
+# agent-router (Freddy copilot): the Supabase gateway would otherwise pass
+# the Clerk 'supabase'-template JWT to GoTrue, which rejects it
+# ("bad_jwt: sub claim must be a UUID") before the function's own verifier
+# runs. Auth is handled inside the function (kill switch -> verifyClerkJwt
+# with HS256, fail-closed). The FREDDY_ENABLED kill switch keeps the
+# endpoint inert until the JWT path is staging-proven.
+[functions.agent-router]
+verify_jwt = false

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freddy Freight Copilot — How It Actually Works Today</title>
+<style>
+  :root{
+    --bg:#0b0f1a; --panel:#121a2b; --panel2:#0f1626; --line:#1f2a44;
+    --text:#dbe4f5; --muted:#8fa3c8; --faint:#5b6d92;
+    --acc:#6d8cff; --acc2:#22d3ee;
+    --pass:#34d399; --warn:#fbbf24; --fail:#f87171; --neutral:#8fa3c8; --gold:#e2b93b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; line-height:1.55; padding-bottom:80px;}
+  .page{max-width:1180px; margin:0 auto; padding:28px 22px;}
+  header{margin-bottom:26px;}
+  h1{font-size:26px; letter-spacing:.3px;}
+  h1 .dim{color:var(--muted); font-weight:400;}
+  .sub{color:var(--muted); margin-top:6px; font-size:14px;}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+  .chip{font-size:11.5px; padding:4px 10px; border-radius:20px; border:1px solid var(--line); background:var(--panel2); color:var(--muted);}
+  .chip.ok{color:var(--pass); border-color:#1e5c46;}
+  .chip.off{color:var(--gold); border-color:#5c4a1e;}
+  .chip.no{color:var(--fail); border-color:#5c2626;}
+  section{margin-top:34px;}
+  h2{font-size:17px; color:var(--acc2); margin-bottom:4px; display:flex; align-items:center; gap:8px;}
+  h2 .n{display:inline-flex; width:22px; height:22px; border-radius:6px; background:var(--panel); border:1px solid var(--line); align-items:center; justify-content:center; font-size:12px; color:var(--muted);}
+  .lead{color:var(--muted); font-size:13.5px; max-width:900px; margin-bottom:14px;}
+  .lead b{color:var(--text);}
+  code{background:#0a1020; border:1px solid var(--line); border-radius:4px; padding:1px 6px; font-size:12px; color:#9fd0ff; font-family:Consolas,monospace;}
+
+  /* ---- tldr ---- */
+  .tldr{background:linear-gradient(135deg,#131c33,#101828); border:1px solid var(--line); border-left:3px solid var(--acc); border-radius:10px; padding:16px 18px; font-size:14.5px;}
+
+  /* ---- status board ---- */
+  .board{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px;}
+  .bitem{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 14px;}
+  .bitem .k{font-size:13px; font-weight:600;}
+  .bitem .v{font-size:12px; color:var(--muted); margin-top:3px;}
+  .badge{display:inline-block; font-size:10.5px; padding:2px 8px; border-radius:12px; margin-bottom:6px; font-weight:600;}
+  .badge.ok{background:#10281d; color:var(--pass);}
+  .badge.no{background:#2a1212; color:var(--fail);}
+
+  /* ---- simulator ---- */
+  .simwrap{display:grid; grid-template-columns:340px 1fr; gap:18px; align-items:start;}
+  @media(max-width:960px){.simwrap{grid-template-columns:1fr;}}
+  .simside{position:sticky; top:16px; display:flex; flex-direction:column; gap:14px;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px;}
+  .card h3{font-size:13.5px; margin-bottom:10px; color:var(--text);}
+  .card p,.card li{font-size:12.5px; color:var(--muted);}
+  .card .hint{font-size:11.5px; color:var(--faint); margin-top:8px; line-height:1.5;}
+
+  .switchrow{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-bottom:12px;}
+  .switchrow .lbl{font-size:12.5px;}
+  .switchrow .lbl small{display:block; color:var(--faint); font-size:10.5px;}
+  .switch{position:relative; width:44px; height:24px; flex:none;}
+  .switch input{opacity:0; width:0; height:0;}
+  .slider{position:absolute; cursor:pointer; inset:0; background:#37365b; border-radius:24px; transition:.2s;}
+  .slider:before{content:""; position:absolute; height:18px; width:18px; left:3px; top:3px; background:#cbd2e5; border-radius:50%; transition:.2s;}
+  .switch input:checked + .slider{background:#2e7d5b;}
+  .switch input:checked + .slider:before{transform:translateX(20px); background:#eafff5;}
+
+  .scens{display:flex; flex-direction:column; gap:7px;}
+  .scen{text-align:left; background:var(--panel2); border:1px solid var(--line); color:var(--text); border-radius:8px; padding:9px 12px; font-size:12.5px; cursor:pointer; transition:.15s; width:100%;}
+  .scen:hover{border-color:var(--acc); background:#16203a;}
+  .scen:disabled{opacity:.4; cursor:wait;}
+  .scen small{display:block; color:var(--faint); font-size:10.5px; margin-top:2px;}
+
+  /* pipeline */
+  .pipe{display:flex; flex-direction:column;}
+  .node{display:grid; grid-template-columns:34px 1fr 168px; gap:12px; align-items:flex-start; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:13px 15px; transition:border-color .25s, background .25s, box-shadow .25s; position:relative; opacity:.72;}
+  .node.active{opacity:1; border-color:var(--acc); box-shadow:0 0 0 1px var(--acc) inset, 0 0 24px -8px var(--acc);}
+  .node.pass{opacity:1; border-color:#1e5c46; box-shadow:0 0 0 1px #1e5c46 inset;}
+  .node.exit{opacity:1; border-color:#5c2626; box-shadow:0 0 0 1px #7a2c2c inset, 0 0 30px -10px var(--fail);}
+  .node .idx{width:34px; height:34px; border-radius:50%; background:var(--panel2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--muted); font-weight:700;}
+  .node.pass .idx{background:#10281d; border-color:#1e5c46; color:var(--pass);}
+  .node.exit .idx{background:#2a1212; border-color:#7a2c2c; color:var(--fail);}
+  .node .t{font-size:13.5px; font-weight:600;}
+  .node.exit .t{color:#ffb4b4;}
+  .node .d{font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.5;}
+  .node .code{font-size:11px; color:#9fd0ff; font-family:Consolas,monospace;}
+  .exitchip{justify-self:end; font-size:10.5px; padding:3px 9px; border-radius:12px; border:1px dashed var(--line); color:var(--faint); white-space:nowrap;}
+  .exitchip.r{border-color:#7a2c2c; color:#ffb0b0; border-style:solid; background:#2a1212;}
+  .exitchip.g{border-color:#1e5c46; color:#a7f3d0; border-style:solid; background:#10281d;}
+  .exitchip.bl{border-color:#2b4a7a; color:#bfd8ff; border-style:solid; background:#101a30;}
+  .conn{width:2px; height:18px; background:var(--line); margin-left:31px; position:relative;}
+  .conn:before{content:""; position:absolute; inset:-1px; background:linear-gradient(180deg,var(--acc),transparent); opacity:0; transition:opacity .25s;}
+  .conn.hot:before{opacity:1;}
+
+  /* terminal */
+  .console{background:#080d18; border:1px solid var(--line); border-radius:12px; overflow:hidden; min-height:210px;}
+  .console .chead{display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel2);}
+  .console .chead .light{width:9px; height:9px; border-radius:50%; background:#37365b;}
+  .statusbadge{font-size:11px; font-weight:700; padding:3px 10px; border-radius:6px; letter-spacing:.4px;}
+  .statusbadge.ok{background:#10281d; color:var(--pass);}
+  .statusbadge.err{background:#2a1212; color:var(--fail);}
+  .statusbadge.warn{background:#2a2010; color:var(--warn);}
+  .statusbadge.blue{background:#101a30; color:#9fc3ff;}
+  .console .chead .title{font-size:12px; color:var(--muted);}
+  .console pre{padding:14px 16px; font-family:Consolas,monospace; font-size:12px; line-height:1.7; color:#c6d5ef; white-space:pre-wrap; word-break:break-word; min-height:88px;}
+  .console .cnote{padding:0 16px 14px; font-size:11.5px; color:var(--faint);}
+  .log{background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:11.5px; color:var(--muted); display:flex; flex-direction:column; gap:6px; min-height:120px; max-height:260px; overflow-y:auto;}
+  .log div{border-left:2px solid var(--line); padding-left:10px;}
+  .log div.ok{border-color:#1e5c46;}
+  .log div.bad{border-color:#7a2c2c;}
+  .log div.star{border-color:var(--gold);}
+  .log code{font-size:10.5px;}
+
+  /* actors */
+  .actors{display:grid; grid-template-columns:repeat(5,1fr); gap:10px;}
+  @media(max-width:1020px){.actors{grid-template-columns:1fr;}}
+  .actor{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; position:relative;}
+  .actor .icon{font-size:22px;}
+  .actor .name{font-size:13px; font-weight:700; margin-top:6px;}
+  .actor .role{font-size:11.5px; color:var(--muted); margin-top:6px; line-height:1.6;}
+  .actor ul{margin:8px 0 0 16px; font-size:11px; color:var(--faint); line-height:1.7;}
+  .actor .stat{margin-top:10px; font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:6px; display:inline-block;}
+  .actor .stat.rdy{background:#10281d; color:var(--pass);}
+  .actor .stat.miss{background:#2a2010; color:var(--warn);}
+  .arrow{display:flex; align-items:center; justify-content:center; color:var(--acc); font-size:20px;}
+
+  /* checklist */
+  table.steps{width:100%; border-collapse:collapse; font-size:12.5px;}
+  table.steps th{text-align:left; color:var(--faint); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; padding:8px 10px; border-bottom:1px solid var(--line);}
+  table.steps td{padding:9px 10px; border-bottom:1px solid #151d33; color:var(--muted); vertical-align:top;}
+  table.steps td:first-child{color:var(--text); font-weight:600; width:30%;}
+  table.steps .yes{color:var(--pass); font-weight:700;}
+  table.steps .no{color:var(--fail); font-weight:700;}
+
+  /* ux ladder */
+  .ladder{display:flex; flex-direction:column; gap:12px;}
+  .rung{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 16px; display:grid; grid-template-columns:150px 1fr; gap:14px;}
+  @media(max-width:760px){.rung{grid-template-columns:1fr;}}
+  .rung .when{font-size:12px; font-weight:700; color:var(--acc2);}
+  .rung .when small{display:block; font-weight:400; color:var(--faint); margin-top:3px;}
+  .rung .body{font-size:12.5px; color:var(--muted); line-height:1.7;}
+  .rung .body b{color:var(--text);}
+  .rung.future{border-style:dashed; opacity:.85;}
+  .bubble{display:inline-block; background:#1b2540; border:1px solid #2b3a63; border-radius:12px 12px 12px 4px; padding:8px 12px; font-size:12px; color:#dbe4f5; margin:6px 0 2px; max-width:430px;}
+  .bubble.me{background:#22335c; border-radius:12px 12px 4px 12px; margin-left:auto; display:table;}
+  .loadcard{border:1px solid #2b3a63; background:#101a30; border-radius:10px; padding:10px 12px; margin-top:8px; font-size:11.5px; color:#c6d5ef; max-width:430px;}
+  .loadcard .lc-line{display:flex; justify-content:space-between; color:var(--acc2); font-weight:700; font-size:12.5px;}
+  .loadcard .lc-meta{color:var(--faint); margin-top:3px; display:flex; gap:12px; flex-wrap:wrap;}
+
+  .facts{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media(max-width:860px){.facts{grid-template-columns:1fr;}}
+  .fact{background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:12px; color:var(--muted);}
+  .fact b{color:var(--text);}
+  footer{margin-top:40px; color:var(--faint); font-size:11.5px; border-top:1px solid var(--line); padding-top:14px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <h1>Freddy Freight Copilot <span class="dim">— how it actually works right now</span></h1>
+  <div class="sub">Grounded 1:1 in the real code: <code>supabase/functions/agent-router/handler.ts</code> + <code>_shared/searchMarket.ts</code> + <code>_shared/verifyClerkJwt.ts</code>. Every node, status code and JSON body below is the real one.</div>
+  <div class="chips">
+    <span class="chip ok">Phase 2 code: done · 68/68 tests</span>
+    <span class="chip off">FREDDY_ENABLED = false (fail-closed)</span>
+    <span class="chip no">Not deployed · no secrets · no UI caller</span>
+    <span class="chip">No LLM yet — deterministic tool step only</span>
+  </div>
+</header>
+
+<section>
+  <div class="tldr">
+    <b>TL;DR.</b> Freddy today is a <b>fully tested but inert edge endpoint</b>. It is <b>never</b> triggered by timers, cron, or a model. It fires only when all four ingredients line up:
+    <span style="color:var(--acc2)"> ① a POST with <code>Authorization: Bearer &lt;Clerk template JWT&gt;</code> · ② body carries <code>filters</code> · ③ <code>FREDDY_ENABLED=true</code> in the server env · ④ auth + marketplace secrets configured.</span>
+    Missing any one → a sanitized exit at that exact gate. With the flag off (current reality), <b>every request stops at node 3</b> with a disabled banner — and by design, no auth code ever runs, which is why the verification must happen in staging (§ below).
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">1</span> Component status board — what exists vs what you must still do</h2>
+  <div class="board">
+    <div class="bitem"><span class="badge ok">BUILT ✅</span><div class="k">agent-router handler + pipeline</div><div class="v">Full gate chain, kill switch, rate limit, Clerk-JWT auth, strict contract. Tests: 18.</div></div>
+    <div class="bitem"><span class="badge ok">BUILT ✅</span><div class="k">search_market tool (read-only)</div><div class="v">Fixed query, 4-filter validator, wildcard escaping, ≤50 rows, 8 s timeout, sanitized errors. Tests: 23.</div></div>
+    <div class="bitem"><span class="badge ok">BUILT ✅</span><div class="k">Clerk JWT verifier (HS256)</div><div class="v">Signature → alg-pin → iss/aud/role/exp fail-closed. Never throws. Tests: 27.</div></div>
+    <div class="bitem"><span class="badge no">MISSING ✗</span><div class="k">Production Clerk template `aud`</div><div class="v">Templates are per Clerk instance — the dev confirmation does not transfer. Stage A.</div></div>
+    <div class="bitem"><span class="badge no">MISSING ✗</span><div class="k">config.toml block + secrets</div><div class="v"><code>[functions.agent-router] verify_jwt=false</code> + 5 env secrets (flag goes in as <b>false</b>).</div></div>
+    <div class="bitem"><span class="badge no">MISSING ✗</span><div class="k">JWT-path staging proof</div><div class="v">Flag-off deploy can never exercise auth (kill switch runs first) → verify in local stack / staging project (Stage B).</div></div>
+    <div class="bitem"><span class="badge no">MISSING ✗</span><div class="k">Deploy + enable</div><div class="v">`supabase functions deploy agent-router`. Flag stays false through Stage C; enabled by explicit decision (Stage D).</div></div>
+    <div class="bitem"><span class="badge no">MISSING ✗</span><div class="k">Frontend caller</div><div class="v">No page imports agent-router yet — users cannot reach it at all today. Chat wiring is a separate change.</div></div>
+    <div class="bitem"><span class="badge no">Future ✗ (0%)</span><div class="k">LLM tool-calling loop</div><div class="v">For Dubai Chambers: model reads the message, decides to call search_market, summarizes real rows. Deliberately NOT built yet.</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">2</span> The connected nodes — who talks to whom</h2>
+  <p class="lead">Freddy is a <b>5-hop relay</b>. The user's identity never travels as a claim the agent trusts blindly — it travels as a <b>signed token</b> that only the project's own secret can stamp, and the same token becomes the database credential so <b>RLS</b> stays the real security boundary.</p>
+  <div class="actors" id="actorMap">
+    <div class="actor">
+      <div class="icon">🧑‍💼</div>
+      <div class="name">Shipper</div>
+      <div class="role">Wants available loads between cities without scanning the marketplace list.</div>
+      <ul><li>types a request in the app</li><li>never sees tokens or SQL</li></ul>
+      <span class="stat miss">SEES NOTHING TODAY</span>
+    </div>
+    <div class="arrow">➜</div>
+    <div class="actor">
+      <div class="icon">🌐</div>
+      <div class="name">Browser app</div>
+      <div class="role">Will POST <code>{message, sessionId?, filters?}</code> to the edge function with the Clerk token attached.</div>
+      <ul><li>Chat.tsx — <b>not wired yet</b></li><li>exact contract fixed by handler.ts</li></ul>
+      <span class="stat miss">NOT BUILT</span>
+    </div>
+    <div class="arrow">➜</div>
+    <div class="actor">
+      <div class="icon">🎫</div>
+      <div class="name">Clerk</div>
+      <div class="role">Mints the JWT template <code>supabase</code>: <code>{sub, email, role:"authenticated", aud:"supabase"}</code>, signed with the project's legacy HS256 secret.</div>
+      <ul><li>per-instance — prod template must be confirmed (Stage A)</li></ul>
+      <span class="stat miss">PROD AUD ✗</span>
+    </div>
+    <div class="arrow">➜</div>
+    <div class="actor">
+      <div class="icon">🤖</div>
+      <div class="name">Freddy Edge<br><span style="font-weight:400;color:var(--faint)">agent-router</span></div>
+      <div class="role">18 gates: kill switch → rate limit → <b>verifyClerkJwt</b> → strict contract → <b>search_market</b>.</div>
+      <ul><li>code ready, 68 tests</li><li>needs 5 env secrets</li><li>flag currently false → inert</li></ul>
+      <span class="stat miss">NOT DEPLOYED</span>
+    </div>
+    <div class="arrow">➜</div>
+    <div class="actor">
+      <div class="icon">🗄️</div>
+      <div class="name">PostgreSQL trip marketplace</div>
+      <div class="role"><code>GET /rest/v1/trips</code> with the <b>caller's JWT as its credential</b>. RLS shows only what that identity may see.</div>
+      <ul><li>status ∈ {active, in_transit} · order departure_date ↑ · LIMIT 50</li><li>service-role key: <b>never used here</b></li></ul>
+      <span class="stat rdy">RLS READY</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">3</span> Live pipeline simulator — press a scenario and watch the token travel</h2>
+  <p class="lead">Each node is a real gate in <code>handler.ts</code>. The side chips are its real exit branches with real status codes. Pick a scenario; the right console shows the <b>exact JSON body the endpoint would return</b>.</p>
+  <div class="simwrap">
+    <div class="simside">
+      <div class="card">
+        <div class="switchrow">
+          <div class="lbl">FREDDY_ENABLED <small style="color:var(--gold)">false = today's deployed reality (if it were deployed)</small></div>
+          <label class="switch"><input type="checkbox" id="flagTgl"> <span class="slider"></span></label>
+        </div>
+        <h3>Run a scenario</h3>
+        <div class="scens" id="scens"></div>
+        <div class="hint">Toggle the switch off-and-on: scenarios that need the flag on will first <b>show you the real flag-off death</b> (nodes 1→3), then continue — exactly mirroring what staging must prove before the flag ever flips in production.</div>
+      </div>
+      <div class="log" id="simlog"><div>Simulation log ready. Pick a scenario above.</div></div>
+    </div>
+    <div class="pipe" id="pipe"></div>
+  </div>
+  <div style="margin-top:16px" class="console">
+    <div class="chead"><span class="light" id="clight"></span><span class="title" id="ctitle">Response console — shows the real body for the last path</span><span class="statusbadge" id="cbadge" style="display:none">—</span></div>
+    <pre id="cbody">Awaiting a scenario run…</pre>
+    <div class="cnote" id="cnote"></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">4</span> Requirements checklist — “when will it trigger, what do I actually need to do”</h2>
+  <p class="lead">The endpoint triggers only after every row below is green. Order matters — the review found that a flag-off deploy <b>cannot</b> verify auth (kill switch exits first), so the JWT path is proven in staging <i>before</i> the production flag ever flips.</p>
+  <table class="steps">
+    <tr><th>What</th><th>Status</th><th>Why / consequence if skipped</th></tr>
+    <tr><td>Phase 2 code — handler, tool, verifier</td><td class="yes">✅ DONE · 68/68 tests green</td><td>Network-free tests; no deployment risk carried in code.</td></tr>
+    <tr><td>Stage A: prod Clerk template contains <code>"aud":"supabase"</code></td><td class="no">✗ MISSING</td><td>Templates are per-instance. A wrong/missing aud ⇒ verifier returns null ⇒ every real user gets 401 (fail-closed, endpoint useless but safe).</td></tr>
+    <tr><td>Stage A: prod issuer from the <b>pk_live</b> key</td><td class="no">✗ MISSING</td><td>Dev issuer <code>…clerk.accounts.dev</code> must never be reused; mismatched iss ⇒ 401 for everyone.</td></tr>
+    <tr><td>Stage A: prod secret parity (legacy HS256 JWT secret)</td><td class="no">✗ MISSING</td><td>Verifier is HS256-pinned. If prod moved to new JWT signing keys, every token fails ⇒ 401s.</td></tr>
+    <tr><td>Stage B: JWT-path rehearsal (local stack / staging project)</td><td class="no">✗ MISSING</td><td>Deploying with flag false cannot do this — kill switch precedes auth by design. Rehearsal matrix: 401 × 5 cases, 429, 500×2 config, one 200 cross-checked vs RLS rows.</td></tr>
+    <tr><td>Stage C: <code>verify_jwt=false</code> block in config.toml</td><td class="no">✗ MISSING</td><td>The Supabase gateway otherwise calls GoTrue and rejects Clerk-template tokens (<code>bad_jwt: sub claim must be a UUID</code>) before your code runs.</td></tr>
+    <tr><td>Stage C: set 5 secrets — <code>FREDDY_ENABLED=false</code> first</td><td class="no">✗ MISSING</td><td>Missing auth trio ⇒ 500 on every request; missing marketplace pair ⇒ 500 once filters arrive. Fail-closed, but inert.</td></tr>
+    <tr><td>Stage C: deploy flag-off, smoke disabled banner only</td><td class="no">✗ NOT DEPLOYED</td><td>Flag-off smoke = reachability + CORS + <code>{enabled:false, phase:1}</code>. It must not and cannot test auth.</td></tr>
+    <tr><td>Frontend caller (Chat wiring)</td><td class="no">✗ NOT BUILT</td><td>Without it no user can even reach the endpoint. Contract: <code>{message, sessionId?, filters?}</code> + Bearer.</td></tr>
+    <tr><td>Stage D: flip <code>FREDDY_ENABLED=true</code></td><td class="no">🔒 DELIBERATE — OFF</td><td>Separate, explicit decision after Stage B evidence. Wrong secrets here surface as 500/401 noise, never data exposure.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">5</span> How the user will actually see the agent working</h2>
+  <div class="ladder">
+    <div class="rung">
+      <div class="when">TODAY<small>and until Stages A–C + wiring</small></div>
+      <div class="body"><b>Nobody sees anything.</b> The endpoint isn't deployed and no page calls it. Freddy exists only as tested code in the repo — inert by design.</div>
+    </div>
+    <div class="rung">
+      <div class="when">AFTER STAGES A–C<br>+ Chat wiring<small>Stage D flag ON · deterministic mode</small></div>
+      <div class="body">
+        The user sees a chat thread whose answers are <b>real load cards</b> — same data as the Browse Loads page, rendered as bubbles. Because there is no model yet, the UI must make the tool explicit (e.g. a small “Find loads” form or chips). A plain “any loads?” message honestly answers <code>tool:null</code>:
+        <div class="bubble me">Find loads Mumbai → Surat, at least 10 t</div>
+        <div class="bubble">Freddy: searching the live marketplace…</div>
+        <div class="loadcard">
+          <div class="lc-line"><span>Mumbai → Surat</span><span>₹1,450 / t</span></div>
+          <div class="lc-meta"><span>Departs 21 Oct</span><span>12.5 t free</span><span>Container</span><span>★ 4.5 · 120 trips · verified</span></div>
+        </div>
+        <div style="margin-top:6px;font-size:11px;color:var(--faint)">Every number on that card comes from one DB row — distance &amp; duration are DB values, never model estimates; count shown = rows returned (≤50), and the UI never says “and more”.</div>
+        <div class="bubble me">Hey, are there any loads going that way?? <span style="color:#8fa3c8">(natural language, no form)</span></div>
+        <div class="bubble">Freddy: <i>No tool arguments were supplied. Provide 'filters' to run search_market.</i> (internally) ⬅ the UI hides this and guides the user to the search chips</div>
+      </div>
+    </div>
+    <div class="rung future">
+      <div class="when">FUTURE — LLM LOOP<small>Deliberately not built · 0% implemented · separate change</small></div>
+      <div class="body">The Dubai Chambers milestone: the user <b>just talks</b>. A model reads the message → decides to call <code>search_market</code> with supported args → backend validates &amp; executes → model summarizes <b>only the returned records</b>. Rules already invariant: it can never see SQL, never control status/order/limit/columns, never book or mutate, never invent prices or availability. When built, this work must not touch the auth/kill-switch order and must not be bundled into a deploy.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">6</span> Behind-the-logic footnotes — the why behind each design line</h2>
+  <div class="facts">
+    <div class="fact"><b>Kill switch runs before auth.</b> One env var, <code>FREDDY_ENABLED=false</code>, makes the whole endpoint a no-op without touching a DB, a secret, or a model. Consequence (found in review): a flag-off deploy can't test authentication — that's why Stage B exists. Treating a wrong env value as "off" means misconfiguration is safe, never that the endpoint vanishes silently.</div>
+    <div class="fact"><b>The caller's JWT is the DB credential.</b> Freddy never holds a superuser key. It verified <i>you</i>, so it queries <i>as you</i>; row visibility stays exactly what you'd get on the normal Loads page. Postgres RLS is the boundary — the agent adds zero privilege.</div>
+    <div class="fact"><b>The tool never builds queries freely.</b> Only 4 filters map to fixed PostgREST fragments; status list, ordering, limit and columns are compiled constants. Text inputs are bounded (1–80 chars, NUL-rejected) and LIKE-wildcards escaped so even <code>%</code> or <code>_</code> can't widen a search.</div>
+    <div class="fact"><b>Everything is sanitized.</b> DB failures become <code>Marketplace search failed (HTTP 503)</code>. No bodies, tokens, secrets or SQLSTATE ever reach a client; config errors log only a variable <i>name</i>. A bad token and an expired token return the identical 401 — nothing to fingerprint.</div>
+    <div class="fact"><b>Timing &amp; volume caps.</b> One read/query, 50 rows max, 8 s timeout, 10 req/min/IP, 16 KiB body, 2000-char message. A misbehaving client is cheap to contain; in-memory limiter per instance is a known Phase-3 upgrade point.</div>
+    <div class="fact"><b>Why “no filters” returns tool:null instead of searching.</b> With no model there is no intent detection — running an unfiltered marketplace query on every “hello” would spend reads guessing. The stable <code>{tool:null}</code> keeps behavior honest &amp; cheap until the LLM phase replaces the guess.</div>
+  </div>
+</section>
+
+<footer>Generated 2026-10-20 from the actual Phase 2 implementation on branch <code>freddy-copilot</code> · all JSON bodies byte-match the handler's real response shapes · sample row values are illustrative placeholders, the runtime payload is always real DB rows.</footer>
+</div>
+
+<script>
+"use strict";
+const NODES = [
+  {id:1,  t:"Request arrives", d:`POST /functions/v1/agent-router · body {message, sessionId?, filters?} · <span class="code">Headers: Authorization: Bearer <token>, Content-Type: application/json</span>`, exit: null},
+  {id:2,  t:"CORS / OPTIONS pre-flight", d:"Browser pre-flight answered 204 with allowed origin + methods, before any logic.", exit:null},
+  {id:3,  t:"Kill switch · FREDDY_ENABLED", d:"Reads one env var. Only the value \u201Ctrue\u201D (any case, trimmed) proceeds. Current repo default: <b>false</b> → this is today's guaranteed outcome.", exit:{cls:"bl", label:"EXIT 200 · {enabled:false} · phase 1", code:200, key:"disabled"}},
+  {id:4,  t:"Method gate — POST only", d:"Anything else (GET/PUT/DELETE) rejected cheaply before rate/auth work.", exit:{cls:"r", label:"EXIT 405 · Method not allowed", code:405, key:"method"}},
+  {id:5,  t:"Rate limit — 10 req / min / IP", d:"Applies before auth so unauthenticated floods are shielded too. In-memory, per-instance (known Phase-3 upgrade point).", exit:{cls:"r", label:"EXIT 429 · Retry-After: 60", code:429, key:"rate"}},
+  {id:6,  t:"Bearer token present?", d:"<span class=\"code\">Authorization: Bearer …</span> must exist.", exit:{cls:"r", label:"EXIT 401 · Missing bearer token", code:401, key:"missing"}},
+  {id:7,  t:"Server auth config present?", d:"<span class=\"code\">SUPABASE_JWT_SECRET + FREDDY_EXPECTED_ISSUER + FREDDY_EXPECTED_AUDIENCE</span> — all three mandatory. Fail-closed: absent config ⇒ 500 before any crypto.", exit:{cls:"r", label:"EXIT 500 · Server configuration error", code:500, key:"authconfig"}},
+  {id:8,  t:"verifyClerkJwt — the crypto bound", d:"Strict base64 → alg pinned to HS256 (kills \u201Cnone\u201D & confusion attacks) → HMAC signature over header+payload → <i>only then</i> claims: exp/iat/nbf, role=authenticated, exact iss, aud (string or array). Never throws; every failure = null.", exit:{cls:"r", label:"EXIT 401 · Invalid or expired token", code:401, key:"badtoken"}},
+  {id:9,  t:"Content-Type application/json", d:"Guards parsing assumptions.", exit:{cls:"r", label:"EXIT 415", code:415, key:"ctype"}},
+  {id:10, t:"Body size ≤ 16 KiB", d:"Content-length or actual text length enforced.", exit:{cls:"r", label:"EXIT 413", code:413, key:"size"}},
+  {id:11, t:"Valid JSON parse", d:"", exit:{cls:"r", label:"EXIT 400 · Malformed JSON body", code:400, key:"json"}},
+  {id:12, t:"Strict contract check", d:"Exactly <span class=\"code\">{message, sessionId?, filters?}</span> · unknown keys rejected (status/limit/select/sql can't ride in) · message ∈ (0, ≤2000 chars] · sessionId must be a UUID when present.", exit:{cls:"r", label:"EXIT 400 · Unknown fields / message / sessionId", code:400, key:"contract"}},
+  {id:13, t:"Tool step — did the client supply filters?", d:"NO ⇒ the endpoint does not guess intent from the message (no model exists) and honestly returns tool:null. No DB read happens.", exit:{cls:"bl", label:"EXIT 200 · {tool:null} — nothing ran", code:200, key:"toolnull"}},
+  {id:14, t:"Marketplace config present?", d:"<span class=\"code\">SUPABASE_URL</span> (auto-injected) + <span class=\"code\">SUPABASE_ANON_KEY</span> (must be set as project secret).", exit:{cls:"r", label:"EXIT 500 · Server configuration error", code:500, key:"marketconfig"}},
+  {id:15, t:"validateSearchMarketParams — the tool's own validator", d:"Allowlist exactly 4: origin · destination · min_capacity_tonnes (0,500] · max_price_per_tonne (0,1M] · strings 1–80 chars, NUL-rejected · LIKE wildcards ( % _ \\ ) escaped. Client cannot set status/order/limit/columns here either. Runs BEFORE any database request.", exit:{cls:"r", label:"EXIT 400 · sanitized reason", code:400, key:"filters"}},
+  {id:16, t:"searchMarket → PostgREST · GET /rest/v1/trips", d:"Credentials: <span class=\"code\">Authorization: Bearer <caller JWT></span> + <span class=\"code\">apikey: <anon key></span> — service-role key unreachable. Query: status in.(\"active\",\"in_transit\") · order departure_date.asc · LIMIT 50 · 8 s timeout.", exit:{cls:"r", label:"EXIT 502 · sanitized (HTTP status only)", code:502, key:"dbfail"}},
+  {id:17, t:"Parse rows — fail-closed", d:"Structure drift (non-array, missing fields, unexpected status, bad numerics) ⇒ whole search fails, nothing fabricated.", exit:{cls:"r", label:"EXIT 502", code:502, key:"parse"}},
+  {id:18, t:"Grounded response", d:"count = rows actually returned · limit = the fixed 50 cap · loads = parsed DB rows. No totals, no “more results” implication, nothing invented.", exit:{cls:"g", label:"200 · {tool:\"search_market\"}", code:200, key:"success", success:true}}
+];
+
+const SCENARIOS = [
+  {key:"flagoff",  label:"🔌 Flag off — today's reality",     sub:"every request dies at the kill switch", on:false},
+  {key:"nofilters",label:"💬 Plain message, no filters",       sub:"authenticated, but nothing to execute", on:true},
+  {key:"happy",    label:"🚛 “Find loads Mumbai → Surat ≥ 10 t”", sub:"happy path → real marketplace read", on:true},
+  {key:"missing",  label:"🎫 Missing token",                   sub:"no Authorization header at all", on:true},
+  {key:"badtoken", label:"🚫 Bad-signature token",              sub:"tampered JWT dies in crypto", on:true},
+  {key:"tamper",   label:"🔧 Tamper — filters {status:\"active\"}", sub:"tool surface can't be smuggled", on:true},
+  {key:"dbdown",   label:"⏱ Marketplace unreachable (HTTP 503)", sub:"upstream failure → sanitized 502", on:true},
+  {key:"mktcfg",   label:"🧩 Marketplace secret not set",      sub:"config fail-closed before any call", on:true},
+  {key:"method",   label:"➡️ GET instead of POST",             sub:"method gate", on:true}
+];
+
+const RESP = {
+  flagoff:{status:200, badge:"ok", s:"200", note:"Kill-switch banner — auth, rate limit and DB are never reached with the flag off (by design: a disabled endpoint is a no-op, not an unauthenticated one).", body:
+`{
+  "ok": true,
+  "enabled": false,
+  "phase": 1,
+  "requestId": "1a2b3c4d"
+}`},
+  nofilters:{status:200, badge:"blue", s:"200", note:"handler.ts:258–270 — with no model, no intent inference: the message is never interpreted, no DB read is spent. This is why the future UI needs explicit search chips until the LLM loop exists.", body:
+`{
+  "ok": true,
+  "phase": 2,
+  "tool": null,
+  "detail": "No tool arguments were supplied. Provide 'filters' to run search_market.",
+  "requestId": "c2ee9151"
+}`},
+  happy:{status:200, badge:"ok", s:"200", note:"handler.ts:310–321 — count is the number of returned rows (never a market total) and limit states the fixed 50 cap. Rows are whitelisted DB columns incl. the trucker embed; sample values here are illustrative placeholders.", body:
+`{
+  "ok": true,
+  "phase": 2,
+  "tool": "search_market",
+  "count": 2,
+  "limit": 50,
+  "loads": [
+    {
+      "id": "8f1be044-9a2c-4d6e-b9a8-2b1e7c3fa901",
+      "trucker_id": "user_2abcDEF456ghi",
+      "origin_city": "Mumbai",
+      "origin_state": "Maharashtra",
+      "destination_city": "Surat",
+      "destination_state": "Gujarat",
+      "departure_date": "2026-10-21",
+      "available_capacity_tonnes": 12.5,
+      "price_per_tonne": 1450,
+      "vehicle_type": "container",
+      "status": "active",
+      "estimated_distance_km": 280,
+      "estimated_duration_min": 300,
+      "trucker": { "full_name": "Ramesh K", "rating": 4.5, "total_trips": 120, "is_verified": true }
+    },
+    {
+      "id": "3c7d21a8-55de-4f10-9c66-88a1b0d2e774",
+      "origin_city": "Mumbai", "destination_city": "Surat",
+      "departure_date": "2026-10-22",
+      "available_capacity_tonnes": 18,
+      "price_per_tonne": 1390,
+      "status": "in_transit",
+      "trucker": { "full_name": "Preeti S", "rating": 4.3, "total_trips": 87, "is_verified": true }
+    }
+  ],
+  "requestId": "9c3b7a2f"
+}`},
+  missing:{status:401, badge:"err", s:"401", note:"handler.ts:141–144 — cheapest auth exit; no crypto attempted.", body:
+`{
+  "error": "Missing bearer token.",
+  "requestId": "7d01fe99"
+}`},
+  badtoken:{status:401, badge:"err", s:"401", note:"verifyClerkJwt.ts — identical generic body for bad signature, expired, wrong iss, wrong/missing aud or wrong role: nothing for an attacker to fingerprint.", body:
+`{
+  "error": "Invalid or expired token.",
+  "requestId": "55ff10aa"
+}`},
+  tamper:{status:400, badge:"err", s:"400", note:"searchMarket.ts:151–155 — unknown filter fields are named back and rejected before any database request (fake fetch asserted never called in tests).", body:
+`{
+  "error": "Unknown filter field \\"status\\".",
+  "requestId": "aa41b2c3"
+}`},
+  dbdown:{status:502, badge:"err", s:"502", note:"searchMarket.ts:508–513 — upstream failures cite the HTTP status at most; response bodies never reach the client. Same shape for timeout (\u201cMarketplace search timed out.\u201d).", body:
+`{
+  "error": "Marketplace search failed (HTTP 503).",
+  "requestId": "d4a9e771"
+}`},
+  mktcfg:{status:500, badge:"err", s:"500", note:"handler.ts:276–283 — the server console logs only the variable NAMES (SUPABASE_URL / SUPABASE_ANON_KEY); the response is generic.", body:
+`{
+  "error": "Server configuration error.",
+  "requestId": "b8201c4e"
+}`},
+  method:{status:405, badge:"err", s:"405", note:"handler.ts:116–121 — Allow POST, OPTIONS exposed.", body:
+`{
+  "error": "Method not allowed. Use POST with a JSON body.",
+  "requestId": "6f2b9a01"
+}`}
+};
+
+const PATHS = {
+  flagoff:[1,2,"X3"], nofilters:[1,2,3,4,5,6,7,8,9,10,11,12,"X13"],
+  happy:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+  missing:[1,2,3,4,5,"X6"], badtoken:[1,2,3,4,5,6,7,"X8"],
+  tamper:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,"X15"],
+  dbdown:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,"X16"],
+  mktcfg:[1,2,3,4,5,6,7,8,9,10,11,12,13,"X14"],
+  method:[1,2,3,"X4"]
+};
+const XKEYS = {X3:"flagoff", X4:"method", X6:"missing", X8:"badtoken", X13:"nofilters", X14:"mktcfg", X15:"tamper", X16:"dbdown"};
+
+function nid(id){return id.search(/X/)===0 ? "n"+id.slice(1) : "n"+id;}
+function el(id){return document.getElementById(id);}
+
+/* build pipeline DOM */
+(function build(){
+  const host = el("pipe");
+  NODES.forEach((n, i)=>{
+    if (i>0){ const c=document.createElement("div"); c.className="conn"; host.appendChild(c); }
+    const d=document.createElement("div"); d.className="node"; d.id="n"+n.id;
+    const exitChip = n.exit ? `<div class="exitchip ${n.exit.cls}">${n.exit.label}</div>` : `<div class="exitchip">—</div>`;
+    d.innerHTML = `<div class="idx">${n.id}</div><div class="main"><div class="t">${n.t}</div><div class="d">${n.d}</div></div>${exitChip}`;
+    host.appendChild(d);
+  });
+})();
+
+/* scenario buttons */
+SCENARIOS.forEach(s=>{
+  const b=document.createElement("button"); b.className="scen"; b.id="scen_"+s.key;
+  b.innerHTML=`${s.label}<small>${s.sub}</small>`;
+  b.onclick=()=>runScenario(s.key);
+  el("scens").appendChild(b);
+});
+
+let runToken = 0;
+const sleep = ms => new Promise(r=>setTimeout(r, ms));
+const getFlag = () => el("flagTgl").checked;
+
+function resetPipe(){
+  document.querySelectorAll(".node").forEach(n=>{n.classList.remove("active","pass","exit");});
+  document.querySelectorAll(".conn").forEach(c=>c.classList.remove("hot"));
+}
+
+function setConsole(key){
+  const r = RESP[key]; if(!r) return;
+  el("cbadge").style.display="inline-block";
+  el("cbadge").className="statusbadge "+r.badge; el("cbadge").textContent=r.status;
+  el("cbody").textContent = r.body;
+  el("cnote").textContent = r.note;
+  el("ctitle").textContent = "Response console — real handler body shape";
+  el("clight").style.background = r.badge==="err" ? "#f87171" : r.badge==="ok" ? "#34d399" : "#8fa3c8";
+}
+
+async function animate(prefix, path, respKey, extraLog){
+  const tok = runToken; resetPipe();
+  const seen = new Set();
+  for (let i=0; i<path.length; i++){
+    if (tok !== runToken) return false;
+    const raw = String(path[i]);
+    const isExit = raw.startsWith("X");
+    const num = isExit ? raw.slice(1) : raw;
+    const node = el("n"+num);
+    // heat previous connector
+    if (i>0){
+      const prevConn = document.querySelectorAll(".conn")[ (parseInt(num,10) - 2 >= 0 ? parseInt(num,10) - 2 : 0) ];
+      if (prevConn) prevConn.classList.add("hot");
+    }
+    node.classList.add("active");
+    await sleep(360);
+    if (tok !== runToken) return false;
+    if (isExit){
+      const exitDef = NODES.find(n=>n.id===parseInt(num,10)).exit;
+      node.classList.remove("active"); node.classList.add("exit");
+      logLine("bad", prefix + `node ${num} · ${exitDef.label.replace("EXIT ","")} → response below`);
+      setConsole(respKey);
+      seen.add(num);
+      await sleep(600);
+      return true;
+    } else {
+      node.classList.remove("active"); node.classList.add("pass");
+      if (num === "3") logLine("ok", prefix + `node 3 · FREDDY_ENABLED=${getFlag()?"true":"false"} ${getFlag()?"→ continue":"→ dead-end"}`);
+      else if (num === "8") logLine("ok", prefix + "node 8 · signature OK · claims trusted (HS256 · exp · iss · aud · role)");
+      else if (num === "15") logLine("ok", prefix + "node 15 · filters validated · DB request not yet sent");
+      seen.add(num);
+    }
+    if (tok !== runToken) return false;
+    await sleep(120);
+  }
+  if (respKey){ setConsole(respKey); }
+  return true;
+}
+
+function logLine(kind, text){
+  const box = el("simlog");
+  const d=document.createElement("div"); d.className=kind||""; d.textContent=text;
+  box.appendChild(d); box.scrollTop = box.scrollHeight;
+}
+
+async function runScenario(key){
+  const s = SCENARIOS.find(x=>x.key===key); if(!s) return;
+  runToken++; const tok = runToken;
+  el("simlog").innerHTML = "";
+  logLine("star", `Scenario: ${s.label} — flag currently ${getFlag()?"ON":"OFF"} in the simulator`);
+  const path = PATHS[key];
+  const finalResp = XKEYS[path.filter(p=>String(p).startsWith("X"))[0]] ?? key;
+
+  if (key==="flagoff" && getFlag()){
+    el("flagTgl").checked = false;
+    logLine("star","Simulator switch flipped OFF to match this scenario.");
+  }
+
+  if (s.on && !getFlag()){
+    // honest first pass: show the real flag-off death, then continue
+    logLine("bad","flag=false in real deployment → this request would END here (this is what a flag-off deploy does to every request).");
+    const okCold = await animate("COLD RUN · ", [1,2,"X3"], "flagoff");
+    if (!okCold || tok!==runToken) return;
+    await sleep(1400);
+    if (tok!==runToken) return;
+    el("flagTgl").checked = true;
+    logLine("star","…demonstrating the rest of the pipeline with FREDDY_ENABLED temporarily ON (this is exactly the Stage-B/staging question the deployment plan answers).");
+    await sleep(600);
+    if (tok!==runToken) return;
+  }
+
+  await animate("HOT RUN · ", path, finalResp);
+}
+
+/* default console state */
+setConsole("flagoff");
+</script>
+</body>
+</html>
