@@ -229,7 +229,9 @@ export function escapeLikePattern(term: string): string {
 // blocks header injection through a malformed token/key, independent of the
 // signature checks done upstream in verifyClerkJwt.
 export function isHeaderValueSafe(value: string): boolean {
-  return value.length > 0 && !/[\s\u0000-\u001F\u007F]/.test(value);
+  // no-control-regex is a false positive here: rejecting control characters
+  // (header-injection guards) is the intentional purpose of this pattern.
+  return value.length > 0 && !/[\s\u0000-\u001F\u007F]/.test(value); // eslint-disable-line no-control-regex
 }
 
 export function buildSearchMarketRequest(

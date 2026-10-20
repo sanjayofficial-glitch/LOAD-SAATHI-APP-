@@ -430,7 +430,7 @@ Deno.test("parse returns an empty load list for an empty row array", () => {
 Deno.test("parse fails closed on structural drift", () => {
   const mutations: Array<(rows: Record<string, unknown>[]) => unknown> = [
     (rows) => ({ rows }),
-    (rows) => "not an array",
+    (_rows) => "not an array",
     (rows) => rows.map((r) => ({ ...r, id: undefined })),
     (rows) => rows.map((r) => ({ ...r, status: "delivered" })),
     (rows) => rows.map((r) => ({ ...r, price_per_tonne: "not-a-number" })),

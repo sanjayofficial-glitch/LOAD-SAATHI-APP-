@@ -9,8 +9,6 @@
 //   phase ordering, contract, status classification and sanitized errors.
 
 import { handleAgentRouter } from "./handler.ts";
-import type { AgentRouterDeps } from "./handler.ts";
-
 const TEST_SECRET = "test-only-secret-0123456789abcdef-discardable";
 const TEST_ISSUER = "https://test-instance.clerk.accounts.dev";
 const TEST_AUDIENCE = "supabase";
