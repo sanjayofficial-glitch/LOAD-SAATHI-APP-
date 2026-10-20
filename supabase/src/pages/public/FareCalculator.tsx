@@ -14,6 +14,7 @@ import { trackCalculatorStarted, trackEstimateGenerated, trackEvent } from "@/ut
 import PriceTrendChart from "@/components/PriceTrendChart";
 import { routes } from "@/data/routes";
 import distancesData from "@/data/distances.json";
+import { revealStyle } from "@/lib/motion";
 
 interface BreakdownItem {
   label: string;
@@ -95,6 +96,25 @@ function buildStaticFallback(
   };
 }
 
+function useCountUp(target: number, duration = 600, deps: unknown[] = []) {
+  const [value, setValue] = useState(target);
+  useEffect(() => {
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { setValue(target); return; }
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // cubic ease-out
+      setValue(Math.round(target * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration, ...deps]);
+  return value;
+}
+
 export default function FareCalculator() {
   const [searchParams] = useSearchParams();
   const [origin, setOrigin] = useState("");
@@ -105,6 +125,7 @@ export default function FareCalculator() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FareResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const headline = useCountUp(result?.totalEstimate ?? 0, 600);
 
   useEffect(() => {
     const from = searchParams.get("from");
@@ -486,7 +507,7 @@ export default function FareCalculator() {
 
           {result && (
             <>
-              <Card className="mt-6 shadow-xl border-green-100 dark:border-green-900/30 overflow-hidden animate-fade-in-up">
+              <Card key={`${result.totalEstimate}-${result.dataPoints}`} className="mt-6 shadow-xl border-green-100 dark:border-green-900/30 overflow-hidden animate-fade-in-up">
                 <div className="h-1.5 bg-gradient-to-r from-green-500 to-emerald-400" />
                 <CardContent className="p-6 sm:p-8">
                   <div className="flex items-center justify-between mb-6">
@@ -511,7 +532,7 @@ export default function FareCalculator() {
 
                   <div className="text-center mb-6">
                     <p className="text-5xl sm:text-6xl font-black text-orange-600 dark:text-orange-400">
-                      ₹{result.totalEstimate.toLocaleString("en-IN")}
+                      ₹{headline.toLocaleString("en-IN")}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                       for {weight} tonnes · ₹{result.avgPerTonne.toLocaleString("en-IN")}/tonne
@@ -519,12 +540,20 @@ export default function FareCalculator() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 text-center border border-green-100 dark:border-green-800">
+                    <div
+                      className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 text-center border border-green-100 dark:border-green-800 reveal"
+                      data-reveal="in"
+                      style={revealStyle(1)}
+                    >
                       <p className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-widest mb-1">Low End</p>
                       <p className="text-2xl font-black text-green-700 dark:text-green-300">₹{result.minPrice.toLocaleString("en-IN")}</p>
                       <p className="text-xs text-green-600/60 dark:text-green-400/60">per tonne</p>
                     </div>
-                    <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 text-center border border-red-100 dark:border-red-800">
+                    <div
+                      className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 text-center border border-red-100 dark:border-red-800 reveal"
+                      data-reveal="in"
+                      style={revealStyle(2)}
+                    >
                       <p className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-widest mb-1">High End</p>
                       <p className="text-2xl font-black text-red-700 dark:text-red-300">₹{result.maxProduct.toLocaleString("en-IN")}</p>
                       <p className="text-xs text-red-600/60 dark:text-red-400/60">per tonne</p>
@@ -555,8 +584,13 @@ export default function FareCalculator() {
                         Price Breakdown
                       </h4>
                       <div className="space-y-2 text-sm">
-                        {result.breakdown.map((item) => (
-                          <div key={item.label} className="flex justify-between">
+                        {result.breakdown.map((item, i) => (
+                          <div
+                            key={item.label}
+                            className="flex justify-between reveal"
+                            data-reveal="in"
+                            style={revealStyle(i)}
+                          >
                             <span className="text-gray-600 dark:text-gray-400">{item.label}</span>
                             <span className="font-medium text-gray-900 dark:text-white">₹{item.value.toLocaleString("en-IN")}</span>
                           </div>

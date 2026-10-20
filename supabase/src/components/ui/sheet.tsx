@@ -3,9 +3,29 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 import * as React from "react";
 
+import { useSwipeDismiss } from "@/hooks/useSwipeDismiss";
 import { cn } from "@/lib/utils";
 
-const Sheet = SheetPrimitive.Root;
+/**
+ * Channels a close callback from the `<Sheet>` root (which owns
+ * `open`/`onOpenChange`) down to `SheetContent`, so the opt-in swipe handle
+ * can dismiss the sheet through Radix's normal close path — `onOpenChange(false)`
+ * fires and the exit animation runs. Defaults to a no-op (`SheetClose` /
+ * escape-key closes use Radix's own path and never need this channel).
+ */
+const SheetCloseCtx = React.createContext<() => void>(() => {});
+
+const Sheet = ({
+  onOpenChange,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Root>) => {
+  const close = React.useCallback(() => onOpenChange?.(false), [onOpenChange]);
+  return (
+    <SheetCloseCtx.Provider value={close}>
+      <SheetPrimitive.Root onOpenChange={onOpenChange} {...props} />
+    </SheetCloseCtx.Provider>
+  );
+};
 
 const SheetTrigger = SheetPrimitive.Trigger;
 
@@ -53,27 +73,97 @@ const sheetVariants = cva(
 interface SheetContentProps
   extends
     React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
-    VariantProps<typeof sheetVariants> {}
+    VariantProps<typeof sheetVariants> {
+  /** Render a grab handle and enable drag-to-dismiss (bottom sheets). */
+  swipeToDismiss?: boolean;
+}
 
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
->(({ side = "right", className, children, ...props }, ref) => (
-  <SheetPortal>
-    <SheetOverlay />
-    <SheetPrimitive.Content
-      ref={ref}
-      className={cn(sheetVariants({ side }), className)}
-      {...props}
-    >
-      {children}
-      <SheetPrimitive.Close className="press absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-full opacity-70 ring-offset-background transition-opacity hover:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </SheetPrimitive.Close>
-    </SheetPrimitive.Content>
-  </SheetPortal>
-));
+>(({ side = "right", className, children, swipeToDismiss, ...props }, forwardedRef) => {
+  const close = React.useContext(SheetCloseCtx);
+  const dismiss = React.useCallback(() => close(), [close]);
+
+  const { ref: dragRef, handlers } = useSwipeDismiss({
+    direction: "down",
+    onDismiss: dismiss,
+    threshold: 0.3,
+  });
+  const { onPointerDown, onPointerMove, onPointerUp, onPointerCancel } = handlers;
+
+  // The grab handle is the only gesture-start area; drags/scrolls starting in
+  // the sheet body never activate the hook (its own active/started guards make
+  // move/up no-ops), so content scrolling is never hijacked.
+  const handleRef = React.useRef<HTMLDivElement | null>(null);
+  const hasHandle = swipeToDismiss && side === "bottom";
+
+  // The hook needs its ref on the element whose transform animates (the
+  // content); it also captures the pointer there on pointerdown, which is
+  // why the gesture handlers live on the content (capture retargets
+  // move/up/cancel to the capture element, not back down to the handle).
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      if (typeof forwardedRef === "function") {
+        forwardedRef(node);
+      } else if (forwardedRef) {
+        forwardedRef.current = node;
+      }
+      dragRef.current = node;
+    },
+    [dragRef, forwardedRef],
+  );
+
+  return (
+    <SheetPortal>
+      <SheetOverlay />
+      <SheetPrimitive.Content
+        ref={setRefs}
+        className={cn(sheetVariants({ side }), className)}
+        {...props}
+        onPointerDown={(event) => {
+          // Gate the gesture to the grab strip: nothing in the body starts a drag.
+          if (handleRef.current?.contains(event.target as Node)) onPointerDown(event);
+          props.onPointerDown?.(event);
+        }}
+        onPointerMove={(event) => {
+          onPointerMove(event);
+          props.onPointerMove?.(event);
+        }}
+        onPointerUp={(event) => {
+          onPointerUp(event);
+          props.onPointerUp?.(event);
+        }}
+        onPointerCancel={(event) => {
+          onPointerCancel();
+          props.onPointerCancel?.(event);
+        }}
+      >
+        {swipeToDismiss && side === "bottom" ? (
+          <div
+            ref={handleRef}
+            aria-hidden="true"
+            {...handlers}
+            className="press absolute left-0 right-0 top-0 z-10 flex h-8 cursor-grab touch-none items-center justify-center"
+          >
+            <div className="h-1.5 w-10 rounded-full bg-muted-foreground/30" />
+          </div>
+        ) : null}
+        {children}
+        <SheetPrimitive.Close
+          className={cn(
+            "press absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-full opacity-70 ring-offset-background transition-opacity hover:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
+            // Keep the close button above (clickable over) the grab strip.
+            hasHandle && "z-20",
+          )}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </SheetPrimitive.Close>
+      </SheetPrimitive.Content>
+    </SheetPortal>
+  );
+});
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({

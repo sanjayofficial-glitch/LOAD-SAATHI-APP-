@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import EmptyState from '@/components/EmptyState';
 import { IndianRupee, Package, ArrowRight, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import type { Shipment } from '@/types';
 
@@ -13,32 +14,60 @@ interface LoadCardStackProps {
 
 const LoadCardStack = ({ shipments, onAccept, onViewDetails }: LoadCardStackProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [acceptBeat, setAcceptBeat] = useState(false);
 
   const current = shipments[currentIndex];
 
+  const handleAccept = () => {
+    if (acceptBeat || !current) return; // guard double-tap
+    setAcceptBeat(true);
+    window.setTimeout(() => onAccept(current), 500);
+  };
+
   const goNext = () => {
+    setDirection(1);
     setCurrentIndex((i) => (i + 1) % shipments.length);
   };
 
   const goPrev = () => {
+    setDirection(-1);
     setCurrentIndex((i) => (i - 1 + shipments.length) % shipments.length);
   };
 
   if (shipments.length === 0 || !current) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <Package className="h-12 w-12 text-gray-300 dark:text-gray-600 mb-4" />
-        <p className="text-lg font-semibold text-gray-600 dark:text-gray-300">No loads available right now</p>
-        <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">Post a trip and shippers will send you loads.</p>
-      </div>
+      <EmptyState
+        icon={<Package className="h-8 w-8 sm:h-10 sm:w-10" />}
+        title="No loads available right now"
+        description="Post a trip and shippers will send you loads."
+        primaryAction={{ label: 'Post a Trip', to: '/trucker/post-trip' }}
+      />
     );
   }
 
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="w-full max-w-lg">
-        <Card key={currentIndex} className="border-orange-100 dark:border-orange-800 shadow-xl overflow-hidden animate-materialize">
+        <Card
+          key={currentIndex}
+          className={`relative border-orange-100 dark:border-orange-800 shadow-xl overflow-hidden ${
+            direction === 1 ? 'animate-card-swap-next' : 'animate-card-swap-prev'
+          } ${
+            acceptBeat ? 'ring-2 ring-green-500 border-transparent' : ''
+          }`}
+        >
           <CardContent className="p-6 sm:p-8">
+            {acceptBeat && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 z-10 grid place-items-center rounded-[inherit] bg-green-600/10 animate-materialize pointer-events-none"
+              >
+                <div className="grid h-16 w-16 place-items-center rounded-full bg-green-600 text-white shadow-xl animate-badge-pop">
+                  <Check className="h-8 w-8" />
+                </div>
+              </div>
+            )}
             <div className="flex items-center justify-between mb-4">
               <Badge variant="outline" className="text-xs font-bold">
                 {currentIndex + 1} / {shipments.length}
@@ -78,13 +107,15 @@ const LoadCardStack = ({ shipments, onAccept, onViewDetails }: LoadCardStackProp
                 variant="outline"
                 size="lg"
                 onClick={goPrev}
+                disabled={acceptBeat}
                 className="flex-1 h-12"
                 aria-label="Previous load"
               >
                 <ChevronLeft className="h-5 w-5 mr-1" /> Previous
               </Button>
               <Button
-                onClick={() => onAccept(current)}
+                onClick={handleAccept}
+                disabled={acceptBeat}
                 className="flex-1 h-12 bg-green-600 hover:bg-green-700 text-white font-bold"
               >
                 <Check className="h-5 w-5 mr-2" /> Accept
@@ -93,6 +124,7 @@ const LoadCardStack = ({ shipments, onAccept, onViewDetails }: LoadCardStackProp
                 variant="secondary"
                 size="lg"
                 onClick={goNext}
+                disabled={acceptBeat}
                 className="flex-1 h-12"
                 aria-label="Next load"
               >

@@ -128,13 +128,8 @@ export default async function handler(req, res) {
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!supabaseUrl || !anonKey) {
     return json(res, 500, { error: 'Supabase URL / anon key not configured' });
-  }
-  if (!botToken || !chatId) {
-    return json(res, 500, { error: 'Telegram bot token / chat id not configured' });
   }
 
   let snapshot;
@@ -163,6 +158,15 @@ export default async function handler(req, res) {
 
   const ping = await pingSitemap();
 
+  // Telegram is a notification layer, not the job itself. A missing bot
+  // token must never kill the sitemap ping (the SEO heartbeat) or the
+  // digest data run — report the state honestly and return OK.
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!botToken || !chatId) {
+    return json(res, 200, { ok: false, telegram: 'not_configured', sitemap: ping });
+  }
+
   try {
     const send = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
@@ -177,10 +181,10 @@ export default async function handler(req, res) {
     });
     const sent = await send.json();
     if (!sent.ok) {
-      return json(res, 502, { error: 'Telegram sendMessage failed', telegram: sent });
+      return json(res, 200, { ok: false, sitemap: ping, error: 'Telegram sendMessage failed', telegram: sent });
     }
     return json(res, 200, { ok: true, sitemap: ping, message_id: sent.result && sent.result.message_id });
   } catch (err) {
-    return json(res, 502, { error: 'Telegram request failed', message: String((err && err.message) || err) });
+    return json(res, 200, { ok: false, sitemap: ping, error: 'Telegram request failed', message: String((err && err.message) || err) });
   }
 }

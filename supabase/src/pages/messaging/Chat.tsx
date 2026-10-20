@@ -40,6 +40,10 @@ const Chat = () => {
   const onlineUserIds = useOnlineUsers();
 
   const [messages, setMessages] = useState<OptimisticMessage[]>([]);
+  // ids of every message that existed at initial-load completion.
+  // Bubbles whose stableId is not in this set (post-load arrivals) animate their entrance.
+  const historyIdsRef = useRef<Set<string> | null>(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -87,6 +91,8 @@ const Chat = () => {
         const initialMessages = await fetchMessages(requestId, getTokenRef.current, chatKindRef.current);
         if (cancelled) return;
         setMessages(initialMessages.map(m => ({ ...m, status: 'sent' as MessageStatus })));
+        historyIdsRef.current = new Set(initialMessages.map(m => m.id));
+        setHistoryLoaded(true);
         markMessagesAsRead(requestId, userProfile.id, getTokenRef.current, chatKindRef.current);
 
         // Stale-channel cleanup happens inside subscribeToMessages().
@@ -268,8 +274,13 @@ const Chat = () => {
             <div className="space-y-3">
               {messages.map((msg) => {
                 const isMe = msg.sender_id === userProfile?.id;
+                const stableId = msg.tempId ?? msg.id;
+                const arrive = historyLoaded && !(historyIdsRef.current?.has(stableId) ?? false);
                 return (
-                  <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+                  <div
+                    key={stableId}
+                    className={`flex ${isMe ? 'justify-end' : 'justify-start'}${arrive ? ' animate-msg-arrive' : ''}`}
+                  >
                     <div className={`max-w-[85%] sm:max-w-[75%]`}>
                       <div className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed break-words ${
                         isMe
@@ -303,7 +314,10 @@ const Chat = () => {
 
           {/* Offline Banner */}
           {!isOnline && (
-            <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-100 dark:border-yellow-800 text-xs text-yellow-700 dark:text-yellow-300 text-center">
+            <div
+              role="status"
+              className="offline-banner-enter px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-100 dark:border-yellow-800 text-xs text-yellow-700 dark:text-yellow-300 text-center"
+            >
               <WifiOff className="h-3 w-3 inline mr-1.5" /> You are offline. Reconnect to send and receive messages.
             </div>
           )}

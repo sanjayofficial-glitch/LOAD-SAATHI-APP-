@@ -548,6 +548,57 @@
   animation: badgePop 0.28s var(--ease-spring-soft) both;
 }
 
+/* Directional card-swap entrance (LoadCardStack deck). Small, fast,
+   directional — orientation at tens-per-day frequency. */
+@keyframes cardSwapNext {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes cardSwapPrev {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-card-swap-next {
+  animation: cardSwapNext 160ms var(--ease-out-quint) both;
+}
+.animate-card-swap-prev {
+  animation: cardSwapPrev 160ms var(--ease-out-quint) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-swap-next,
+  .animate-card-swap-prev {
+    animation-name: materializeIn;
+    animation-duration: 180ms;
+  }
+}
+
+/* Chat bubble arrival — event-driven entrance, marked per message, not per
+   mount. Rises from the composer like it was sent from where you typed. */
+@keyframes msgArrive {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-msg-arrive {
+  animation: msgArrive 180ms var(--ease-out-quint) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-msg-arrive { animation: none; }
+}
+
+/* Offline banner: slides in from the bottom edge of the message pane.
+   Height is driven by content; translate+fade only, no layout props. */
+.offline-banner-enter {
+  animation: offlineSlide 200ms var(--ease-ios) both;
+}
+@keyframes offlineSlide {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .offline-banner-enter { animation: none; }
+}
+
 /* Smooth page transitions — fast 200ms with GPU layers */
 .page-enter {
   opacity: 0;

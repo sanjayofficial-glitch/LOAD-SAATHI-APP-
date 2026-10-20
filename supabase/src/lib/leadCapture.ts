@@ -39,8 +39,40 @@ export async function insertLead(input: LeadInsertInput): Promise<void> {
 
     if (error) {
       console.warn('[leadCapture] insert failed:', error.message);
+      return;
     }
+
+    fireLeadAlert(input);
   } catch (err) {
     console.warn('[leadCapture] insert exception:', (err as Error).message);
+  }
+}
+
+/*
+ * Instant Telegram alert via the lead-alert edge function.
+ *
+ * Fired right after the DB insert succeeds so the founder gets a
+ * real-time ping (the 2-hour promise starts the moment the visitor
+ * submits). The function itself re-verifies that a matching fresh lead
+ * row exists, so this call is safe even if the payload is forged.
+ * Best effort: never awaited, never affects the page — the leads row and
+ * the 10:00 daily digest are the authoritative record.
+ */
+function fireLeadAlert(input: LeadInsertInput): void {
+  const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  if (!url) return;
+  try {
+    void fetch(`${url}/functions/v1/lead-alert`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+      keepalive: true, // survive the page even if the visitor closes it
+      signal: AbortSignal.timeout(8000),
+    }).catch(() => {
+      // Alert is optional — the insert already happened and is reported
+      // by the daily digest either way.
+    });
+  } catch {
+    // Silent — alerts must never participate in page failures.
   }
 }
