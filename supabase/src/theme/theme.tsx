@@ -1,16 +1,25 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from 'react';
 
-export type ThemeMode = 'light' | 'dark' | 'system';
+/**
+ * The app is locked to light mode (dark mode removed 2026-10-20).
+ * Previously a 'dark'/'system' preference persisted in localStorage
+ * (`loadsaathi-theme`) and — via the theme toggle or an OS-dark setting —
+ * re-applied the `dark` class plus `color-scheme: dark` on <html>, which
+ * caused light-on-light text visibility issues. The provider now only
+ * normalizes the document to light; no dark state can be produced.
+ */
+export type ThemeMode = 'light';
 
 interface ThemeContextType {
-  /** Resolved effective theme — 'system' is already resolved to light/dark. */
+  /** Effective theme — always false while light mode is locked. */
   isDark: boolean;
-  /** Stored preference; 'system' follows the OS (`prefers-color-scheme`). */
+  /** Always 'light'; kept for API compatibility. */
   mode: ThemeMode;
+  /** No-op — light mode is locked. */
   setMode: (mode: ThemeMode) => void;
-  /** Cycle light → dark → system → light. */
+  /** No-op — light mode is locked. */
   toggle: () => void;
-  /** Convenience setter that forces an explicit light/dark preference. */
+  /** No-op — light mode is locked. */
   setDark: (v: boolean) => void;
 }
 
@@ -24,72 +33,37 @@ const ThemeContext = createContext<ThemeContextType>({
   setDark: () => {},
 });
 
-const readStoredMode = (): ThemeMode => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    // Backward compatible: the old provider only ever wrote 'dark'/'light'.
-    if (stored === 'light' || stored === 'dark' || stored === 'system') return stored;
-  } catch {
-    // storage may be blocked (private mode / iframe) — fall through to default
-  }
-  // Light is the app default; 'system' stays opt-in (only when explicitly stored).
-  return 'light';
-};
-
-const systemPrefersDark = () =>
-  typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [mode, setMode] = useState<ThemeMode>(readStoredMode);
-  const [systemDark, setSystemDark] = useState<boolean>(systemPrefersDark);
-
-  const isDark = mode === 'system' ? systemDark : mode === 'dark';
-
+  // Normalize the document to light and purge the legacy theme preference
+  // so a stored 'dark'/'system' value can never resurrect dark mode.
   useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add('dark');
-      root.setAttribute('data-theme', 'dark');
-    } else {
-      root.classList.remove('dark');
-      root.setAttribute('data-theme', 'light');
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* storage may be blocked (private mode / iframe) */
     }
-    // Keep native controls (scrollbars, form inputs, select dropdowns) in sync
-    root.style.colorScheme = isDark ? 'dark' : 'light';
-    // Update the browser/mobile status-bar chrome color
+
+    const root = document.documentElement;
+    root.classList.remove('dark');
+    root.setAttribute('data-theme', 'light');
+    // Keep native controls (scrollbars, form inputs, select dropdowns) light
+    root.style.colorScheme = 'light';
+    // Update the browser/mobile status-bar chrome color for light mode
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) {
-      themeColor.setAttribute('content', isDark ? '#050816' : '#ea580c');
+      themeColor.setAttribute('content', '#ea580c');
     }
-    try {
-      localStorage.setItem(STORAGE_KEY, mode);
-    } catch {
-      /* storage may be unavailable (private mode) */
-    }
-  }, [isDark, mode]);
-
-  // Follow OS theme changes whenever the preference is 'system'.
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = (e: MediaQueryListEvent) => setSystemDark(e.matches);
-    // Modern API everywhere modern; legacy listener covers older iOS Safari.
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', handler);
-      return () => mediaQuery.removeEventListener('change', handler);
-    }
-    mediaQuery.addListener(handler as unknown as (e: MediaQueryListEvent) => void);
-    return () => mediaQuery.removeListener(handler as unknown as (e: MediaQueryListEvent) => void);
   }, []);
 
-  const toggle = useCallback(() => {
-    setMode(prev => (prev === 'light' ? 'dark' : prev === 'dark' ? 'system' : 'light'));
-  }, []);
-
-  const setDark = useCallback((v: boolean) => setMode(v ? 'dark' : 'light'), []);
+  // Setters are kept as stubs so the context contract stays stable for
+  // existing consumers (e.g. ThemedToaster) — light cannot be changed.
+  const setMode = useCallback(() => {}, []);
+  const toggle = useCallback(() => {}, []);
+  const setDark = useCallback(() => {}, []);
 
   const value = useMemo(
-    () => ({ isDark, mode, setMode, toggle, setDark }),
-    [isDark, mode, setMode, toggle, setDark]
+    () => ({ isDark: false, mode: 'light' as ThemeMode, setMode, toggle, setDark }),
+    [setMode, toggle, setDark]
   );
 
   return (

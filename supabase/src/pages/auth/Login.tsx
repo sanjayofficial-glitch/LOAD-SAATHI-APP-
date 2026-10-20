@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignIn, useUser } from "@clerk/clerk-react";
 import { Capacitor } from "@capacitor/core";
-import ThemeToggle from "@/components/ThemeToggle";
 import LogoMark from "@/components/LogoMark";
 import SeoMeta from "@/components/SeoMeta";
 import { Loader2, Eye, EyeOff } from "lucide-react";
@@ -110,7 +109,6 @@ const Login = () => {
           <LogoMark size="h-9 w-9" />
           <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">LoadSaathi</span>
         </Link>
-        <ThemeToggle />
       </div>
       <div className="flex-1 flex items-start justify-center">
         <div className="w-full max-w-sm animate-scale-in overflow-y-auto">

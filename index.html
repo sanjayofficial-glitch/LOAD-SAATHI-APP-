@@ -2,22 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Apply saved/OS theme BEFORE first paint to prevent theme flash of wrong color.
-         3-mode preference: 'light' (default for new visitors) | 'dark' | 'system'. -->
+    <!-- Lock LIGHT theme BEFORE first paint. Dark mode was removed:
+         old stored 'dark'/'system' themes used to re-apply html.dark and
+         color-scheme: dark, so we normalize the document and clear the
+         legacy preference key instead. -->
     <script>
       (function () {
         try {
-          var stored = null;
-          try { stored = localStorage.getItem('loadsaathi-theme'); } catch (e) { /* storage may be blocked */ }
-          var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          // Default is LIGHT: only opt-in dark (stored) or explicit 'system' can resolve dark.
-          var dark = stored === 'dark' || (stored === 'system' && systemDark);
           var root = document.documentElement;
-          root.setAttribute('data-theme', dark ? 'dark' : 'light');
-          if (dark) root.classList.add('dark');
-          root.style.colorScheme = dark ? 'dark' : 'light';
+          root.setAttribute('data-theme', 'light');
+          root.classList.remove('dark');
+          root.style.colorScheme = 'light';
           var themeColor = document.querySelector('meta[name="theme-color"]');
-          if (themeColor) themeColor.setAttribute('content', dark ? '#050816' : '#ea580c');
+          if (themeColor) themeColor.setAttribute('content', '#ea580c');
+          try { localStorage.removeItem('loadsaathi-theme'); } catch (e) { /* storage may be blocked */ }
         } catch (e) {}
       })();
     </script>
@@ -29,7 +27,7 @@
     <!-- No maximum-scale/user-scalable restrictions: pinch-zoom must stay
          enabled for accessibility (WCAG 1.4.4 / Lighthouse best practice). -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#ea580c" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -312,15 +310,6 @@
       <style>
         @keyframes ls-spin { to { transform: rotate(360deg); } }
         /* !important is required — #boot-loader has inline background styles */
-        /* Dark boot loader ONLY when the user/OS resolves to dark —
-           html:not([data-theme="light"]) prevents a dark flash when the
-           user explicitly chose light mode but the OS prefers dark. */
-        @media (prefers-color-scheme: dark) {
-          html:not([data-theme="light"]) #boot-loader { background: #0c0a09 !important; }
-          html:not([data-theme="light"]) #boot-loader div:last-child { color: #a8a29e !important; }
-        }
-        html.dark #boot-loader { background: #0c0a09 !important; }
-        html.dark #boot-loader div:last-child { color: #a8a29e !important; }
       </style>
     </div>
     <script type="module" src="/supabase/src/main.tsx"></script>

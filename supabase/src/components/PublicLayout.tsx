@@ -22,7 +22,6 @@ import {
   FileText,
   Rocket,
 } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
 import OfflineBanner from "./OfflineBanner";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
@@ -181,7 +180,6 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
             <span className="text-lg sm:text-xl font-bold text-orange-600 dark:text-orange-400">LoadSaathi</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
-            <ThemeToggle />
             {dashboardPath ? (
               <Link to={dashboardPath} className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-colors duration-fast ease-ios hover:-translate-y-0.5">
                 <LayoutDashboard className="h-4 w-4" />

@@ -558,9 +558,9 @@ NO Redux, NO Zustand, NO Jotai
    - Automatic caching, retry, refetch on focus
 
 3. Theme State:
-   - React Context (ThemeProvider) → useTheme() hook
-   - Persists to localStorage ('loadsaathi-theme')
-   - Respects system preference on first visit
+   - Locked to light mode (dark mode removed 2026-10-20)
+   - ThemeProvider normalizes <html> to light; legacy 'loadsaathi-theme' key is cleared
+   - index.html boot script + <meta name="color-scheme" content="light"> enforce it pre-paint
 
 4. Component State:
    - useState/useReducer for local UI state
@@ -802,13 +802,12 @@ interface Notification {
 
 **Dark mode flash on page load**
 
-- Cause: localStorage read happening after React mount
-- Fix: Check theme.tsx reads `localStorage` in `useState` initializer
+- Cause: (historical) a stored 'dark'/'system' theme re-applying `html.dark` after mount
+- Fix: app is locked to light — theme.tsx + index.html boot script normalize `<html>` and clear the legacy `loadsaathi-theme` localStorage key
 
 **Theme toggle not persisting**
 
-- Cause: localStorage write failing
-- Fix: Check `localStorage.setItem('loadsaathi-theme', ...)` in theme.tsx
+- No longer applicable: dark mode was removed; ThemeToggle deleted. If a toggle were reintroduced, it must persist to `loadsaathi-theme` in theme.tsx
 
 ### Data & Matching
 

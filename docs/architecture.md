@@ -250,9 +250,9 @@ NO Redux, NO Zustand, NO Jotai.
    - Automatic caching, retry, refetch on focus
 
 3. Theme State:
-   - React Context (ThemeProvider) → useTheme() hook
-   - Persists to localStorage ('loadsaathi-theme')
-   - Respects system preference on first visit
+   - Locked to light mode (dark mode removed 2026-10-20)
+   - ThemeProvider normalizes <html> to light; persisted theme preference cleared
+   - index.html boot script + <meta name="color-scheme" content="light"> enforce it pre-paint
 
 4. Component State:
    - useState/useReducer for local UI state

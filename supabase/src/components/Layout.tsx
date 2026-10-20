@@ -54,7 +54,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import NotificationBell from "./NotificationBell";
 import OfflineBanner from "./OfflineBanner";
 import LocationPermissionBanner from "./LocationPermissionBanner";
-import ThemeToggle from "./ThemeToggle";
 import VerificationBadge from "./VerificationBadge";
 import AutoGpsTracker from "./AutoGpsTracker";
 import DockNav, { type NavAccent } from "./DockNav";
@@ -442,7 +441,6 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-3">
-              <span id="layout-theme-toggle"><ThemeToggle /></span>
               <span id="app-notifications"><NotificationBell /></span>
 
               <Link id="layout-messages" to="/messages" aria-label="Messages">
