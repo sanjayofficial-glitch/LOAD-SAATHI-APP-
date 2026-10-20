@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigation, AlertTriangle, Clock } from 'lucide-react';
+import { AlertTriangle, Clock, Navigation } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { TruckLocation } from '@/components/maps/TruckMarker';
 import { getCityCoords } from './cityCoordCache';
@@ -10,24 +10,37 @@ interface PredictiveETAProps {
 }
 
 interface OSRMRoute {
-  distance: number;
-  duration: number;
+  distance: number; // km
+  duration: number; // hours
+}
+
+interface Eta {
+  hoursRemaining: number;
+  distanceRemaining: number;
+  status: 'on_time' | 'delayed' | 'critical';
+  predictedArrival: Date;
+  avgSpeed: number;
+  /**
+   * True when OSRM could not produce a road route and we fell back to a
+   * straight-line estimate. Surfaced in the UI so nobody mistakes the
+   * approximation for a routing result.
+   */
+  approximate: boolean;
 }
 
 /**
- * PredictiveETA — Computes real-time ETA using OSRM's public demo server.
- * Falls back to straight-line distance × average speed when OSRM is unavailable.
+ * PredictiveETA — real-time ETA from the truck's CURRENT position to its
+ * destination via a two-point OSRM route request.
+ *
+ * Honest failure modes: when the destination can't be resolved or routing is
+ * offline, the widget shows "unavailable" with a reason. It never fabricates
+ * an arrival time (an earlier version silently returned "4h / On Time"
+ * whenever OSRM failed — that was misleading in an ops console).
  */
 export default function PredictiveETA({ truck, className }: PredictiveETAProps) {
-  const [eta, setEta] = useState<{
-    hoursRemaining: number;
-    distanceRemaining: number;
-    status: 'on_time' | 'delayed' | 'critical';
-    predictedArrival: Date;
-    avgSpeed: number;
-  } | null>(null);
-
+  const [eta, setEta] = useState<Eta | null>(null);
   const [loading, setLoading] = useState(true);
+  const [unavailable, setUnavailable] = useState<string | null>(null);
 
   // Compute straight-line distance between two lat/lng points
   const haversine = (lat1: number, lng1: number, lat2: number, lng2: number) => {
@@ -40,7 +53,7 @@ export default function PredictiveETA({ truck, className }: PredictiveETAProps) 
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   };
 
-  // Try to get the truck's destination coordinates from the corridor cache
+  // Resolve the truck's destination coordinates from the corridor cache
   const [destCoords, setDestCoords] = useState<[number, number] | null>(null);
 
   useEffect(() => {
@@ -60,31 +73,28 @@ export default function PredictiveETA({ truck, className }: PredictiveETAProps) 
 
     const computeETA = async () => {
       setLoading(true);
+      setUnavailable(null);
 
       try {
-        const currentSpeed = truck.speed != null ? truck.speed * 3.6 : 40; // km/h, default 40
-
-        if (!destCoords || !truck.origin_city || !truck.destination_city) {
-          // Fallback: estimate based on average speed and typical route
-          const estimatedDistance = 300; // km fallback
-          const hoursRemaining = estimatedDistance / currentSpeed;
-          const predictedArrival = new Date(Date.now() + hoursRemaining * 3600000);
-
+        if (!destCoords || truck.lat == null || truck.lng == null) {
+          setEta(null);
           if (!cancelled) {
-            setEta({
-              hoursRemaining,
-              distanceRemaining: estimatedDistance,
-              status: hoursRemaining > 8 ? 'critical' : hoursRemaining > 5 ? 'delayed' : 'on_time',
-              predictedArrival,
-              avgSpeed: currentSpeed,
-            });
+            setUnavailable(
+              destCoords
+                ? 'Live truck position unavailable'
+                : 'Destination location unknown',
+            );
           }
           return;
         }
 
-        // Fetch OSRM route
-        const originCoords = await destCoords; // Already cached or fetched
-        const url = `https://router.project-osrm.org/route/v1/driving/${originCoords[1]},${originCoords[0]}?overview=false`;
+        const currentSpeed =
+          truck.speed != null && truck.speed > 0 ? truck.speed * 3.6 : 40; // km/h, default 40
+
+        // Real road route: truck's current position → destination.
+        // (An earlier version fed OSRM a single coordinate and treated the
+        // destination cache entry as the origin — the request was malformed.)
+        const url = `https://router.project-osrm.org/route/v1/driving/${truck.lng},${truck.lat};${destCoords[1]},${destCoords[0]}?overview=false`;
 
         const res = await fetch(url);
         const data = await res.json();
@@ -95,50 +105,36 @@ export default function PredictiveETA({ truck, className }: PredictiveETAProps) 
             duration: data.routes[0].duration / 3600, // hours
           };
 
-          const hoursRemaining = route.duration;
-          const predictedArrival = new Date(Date.now() + hoursRemaining * 3600000);
-          const avgSpeed = route.distance / route.duration;
-
-          if (!cancelled) {
-            setEta({
-              hoursRemaining,
-              distanceRemaining: route.distance,
-              status: hoursRemaining > 8 ? 'critical' : hoursRemaining > 5 ? 'delayed' : 'on_time',
-              predictedArrival,
-              avgSpeed,
-            });
-          }
-        } else {
-          // OSRM returned no routes, fallback
-          const straightDist = haversine(
-            truck.lat,
-            truck.lng,
-            originCoords[0],
-            originCoords[1],
-          );
-          const hoursRemaining = straightDist / currentSpeed;
-
-          if (!cancelled) {
-            setEta({
-              hoursRemaining,
-              distanceRemaining: straightDist,
-              status: hoursRemaining > 8 ? 'critical' : hoursRemaining > 5 ? 'delayed' : 'on_time',
-              predictedArrival: new Date(Date.now() + hoursRemaining * 3600000),
-              avgSpeed: currentSpeed,
-            });
-          }
-        }
-      } catch {
-        // Silent fallback
-        const hoursRemaining = 4;
-        if (!cancelled) {
+          if (cancelled) return;
           setEta({
-            hoursRemaining,
-            distanceRemaining: hoursRemaining * 40,
-            status: 'on_time',
-            predictedArrival: new Date(Date.now() + hoursRemaining * 3600000),
-            avgSpeed: 40,
+            hoursRemaining: route.duration,
+            distanceRemaining: route.distance,
+            status: route.duration > 8 ? 'critical' : route.duration > 5 ? 'delayed' : 'on_time',
+            predictedArrival: new Date(Date.now() + route.duration * 3600000),
+            avgSpeed: route.distance / Math.max(route.duration, 0.01),
+            approximate: false,
           });
+          return;
+        }
+
+        // OSRM reachable but no road route: straight-line approximation,
+        // computed from the truck's CURRENT position to the destination.
+        if (cancelled) return;
+        const straightKm = haversine(truck.lat, truck.lng, destCoords[0], destCoords[1]);
+        const hoursRemaining = straightKm / currentSpeed;
+        setEta({
+          hoursRemaining,
+          distanceRemaining: straightKm,
+          status: hoursRemaining > 8 ? 'critical' : hoursRemaining > 5 ? 'delayed' : 'on_time',
+          predictedArrival: new Date(Date.now() + hoursRemaining * 3600000),
+          avgSpeed: currentSpeed,
+          approximate: true,
+        });
+      } catch {
+        // OSRM offline / network error: say so. Never a hardcoded "4h / On Time".
+        if (!cancelled) {
+          setEta(null);
+          setUnavailable('Routing service unreachable');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -149,7 +145,7 @@ export default function PredictiveETA({ truck, className }: PredictiveETAProps) 
     return () => {
       cancelled = true;
     };
-  }, [truck.lat, truck.lng, truck.speed, truck.origin_city, truck.destination_city, destCoords]);
+  }, [truck.lat, truck.lng, truck.speed, truck.destination_city, destCoords]);
 
   if (loading) {
     return (
@@ -160,7 +156,19 @@ export default function PredictiveETA({ truck, className }: PredictiveETAProps) 
     );
   }
 
-  if (!eta) return null;
+  if (unavailable || !eta) {
+    return (
+      <div className={cn('rounded-lg border p-3 space-y-2', className)}>
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+          <Navigation className="h-3 w-3" /> ETA
+        </p>
+        <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+          <AlertTriangle className="h-3 w-3 shrink-0 text-amber-500" />
+          {unavailable ?? 'ETA unavailable'}
+        </p>
+      </div>
+    );
+  }
 
   const statusColors = {
     on_time: 'text-green-500',
@@ -195,7 +203,7 @@ export default function PredictiveETA({ truck, className }: PredictiveETAProps) 
       </div>
 
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>{Math.round(eta.distanceRemaining)} km left</span>
+        <span>{Math.round(eta.distanceRemaining)} km left{eta.approximate ? ' (approx.)' : ''}</span>
         <span className="flex items-center gap-1">
           <AlertTriangle className="h-3 w-3" />
           Arrives {eta.predictedArrival.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
