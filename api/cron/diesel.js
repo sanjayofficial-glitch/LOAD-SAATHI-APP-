@@ -1,6 +1,8 @@
 // Daily cron: trigger the fetch-diesel-price Supabase edge function, which
-// reads dieselprice.in (fallback: last-known price + 0.5%) and upserts rows
-// into `fuel_prices`. Scheduled from vercel.json ("crons").
+// reads the live diesel price source and upserts rows into `fuel_prices`.
+// When the live source is unavailable the function re-upserts last-known
+// rows — it does NOT apply any synthetic uplift (an earlier 0.5% step-up
+// compounded on every run and was removed). Scheduled from vercel.json ("crons").
 // Auth: when CRON_SECRET is set in project env, require the Bearer token
 // Vercel sends with cron requests; otherwise the route stays open for manual runs.
 

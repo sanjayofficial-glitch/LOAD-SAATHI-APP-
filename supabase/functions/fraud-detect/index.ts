@@ -13,12 +13,6 @@ function getEnv(name: string): string {
   return Deno.env.get(name) ?? "";
 }
 
-interface FraudCheckRequest {
-  userId: string;
-  tripId?: string;
-  shipmentId?: string;
-}
-
 interface FraudFlag {
   rule: string;
   severity: "low" | "medium" | "high";
@@ -102,15 +96,22 @@ Deno.serve(async (req: Request) => {
     }
 
     const serviceAuthHeader = `Bearer ${supabaseKey}`;
-    let body: FraudCheckRequest;
 
+    // Body content is no longer used for authorization purposes. Parse
+    // defensively so malformed JSON yields a clean 400 instead of a 500.
     try {
-      body = await req.json();
+      await req.json();
     } catch {
-      body = { userId: authUser.userId };
+      return errorResponse("Invalid JSON body", 400, headers, requestId);
     }
 
-    const userId = body.userId || authUser.userId;
+    // Ownership guard (closes an IDOR): every query below runs with the
+    // service-role key and bypasses RLS, so the caller may only ever inspect
+    // their OWN account. A client-supplied userId (body.userId) used to be
+    // trusted here — any signed-in user could pull another user's trips and
+    // pricing profile. If an admin console ever needs cross-user checks,
+    // gate them behind a verified admin role first.
+    const userId = authUser.userId;
     const flags: FraudFlag[] = [];
 
     // Rule 1: Check for rapid account creation + immediate high-value activity

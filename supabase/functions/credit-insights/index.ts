@@ -14,6 +14,7 @@ function getEnv(name: string): string {
 }
 
 interface CreditProfile {
+  userId?: string
   score: number
   factors: Record<string, unknown>
   userType: string
@@ -268,6 +269,14 @@ Deno.serve(async (req: Request) => {
 
     if (!profile.userId && !profile.userName) {
       return errorResponse("Missing required fields", 400, headers, requestId)
+    }
+
+    // Ownership guard: insights are generated for the authenticated caller
+    // only. A client-supplied userId belonging to someone else is rejected
+    // (the profile text is otherwise self-reported — their own data feeds
+    // the LLM prompt and the result goes back to them alone).
+    if (profile.userId && profile.userId !== authUser.userId) {
+      return errorResponse("Forbidden", 403, headers, requestId)
     }
 
     const providers: { name: string; fn: (p: CreditProfile) => Promise<ProviderResult> }[] = [
