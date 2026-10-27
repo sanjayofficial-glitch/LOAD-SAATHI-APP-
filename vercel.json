@@ -101,7 +101,7 @@
     },
     {
       "path": "/api/cron/load-match-alert",
-      "schedule": "*/15 3-15 * * *"
+      "schedule": "0 4 * * *"
     }
   ],
   "rewrites": [
