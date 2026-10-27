@@ -127,7 +127,7 @@ See [mobile-android.md](mobile-android.md) for details.
 | OSRM returns no route | Coordinates may be inverted — OSRM expects lng,lat |
 | GPS not updating | Browser requires HTTPS for geolocation |
 
-See [CONTEXT.md](../CONTEXT.md) section 6 for the full troubleshooting guide.
+See [CONTEXT.md](CONTEXT.md) section 6 for the full troubleshooting guide.
 
 ## Next Steps
 

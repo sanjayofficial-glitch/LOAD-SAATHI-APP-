@@ -39,6 +39,7 @@ Never read `import.meta.env` directly outside `env.ts`.
 | `VITE_POSTHOG_API_KEY` | PostHog project API key |
 | `VITE_POSTHOG_HOST` | PostHog host URL (e.g. `https://us.i.posthog.com`) |
 | `VITE_GA_MEASUREMENT_ID` | Google Analytics measurement ID (`G-...`) |
+| `VITE_VAPID_PUBLIC_KEY` | Web Push public VAPID key (see [notifications.md](notifications.md)) |
 
 ## File Convention
 

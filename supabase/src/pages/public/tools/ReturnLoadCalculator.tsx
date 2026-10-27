@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SeoMeta from "@/components/SeoMeta";
+import RateBenchmarks2026, { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { geocodeCity } from "@/utils/geocode";
 import { getRoute } from "@/utils/osrm";
@@ -109,8 +110,8 @@ export default function ReturnLoadCalculator() {
         </div>
       </noscript>
       <SeoMeta
-        title="Return Load Calculator India | Estimate Empty Miles & Revenue"
-        description="Calculate empty kilometres, fuel cost, and potential return-load revenue for your truck route. Reduce empty miles and increase truck utilisation with LoadSaathi."
+        title="Return Load Calculator: Stop Losing ₹ on Empty Return Trips"
+        description="Coming back empty? Calculate what your empty return trip costs & find return loads free on LoadSaathi. Truckers in Jharkhand & Odisha save ₹1000s/trip."
         keywords="return load calculator, empty miles calculator, backhaul calculator India, truck empty return trip, find return load revenue"
         canonical="/tools/return-load-calculator"
         breadcrumbs={[{ name: "Return Load Calculator", url: "/tools/return-load-calculator" }]}
@@ -135,6 +136,7 @@ export default function ReturnLoadCalculator() {
               },
             },
           },
+          rateBenchmarkFaqJsonLd(),
         ]}
       />
       <div className="min-h-screen bg-background dark:bg-[#050816] text-foreground antialiased">
@@ -315,6 +317,7 @@ export default function ReturnLoadCalculator() {
             </div>
           </div>
         </div>
+        <RateBenchmarks2026 />
       </div>
     </>
   );

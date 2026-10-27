@@ -631,8 +631,17 @@ const Profile = () => {
                           const supabaseToken = await getToken({ template: 'supabase' });
                           if (!supabaseToken) return;
                           const supabase = createClerkSupabaseClient(supabaseToken);
-                          await supabase.from('users').update({ sms_opt_in: checked }).eq('id', userProfile?.id);
-                          refreshProfile();
+                          const { error: smsError } = await supabase
+                            .from('users')
+                            .update({ sms_opt_in: checked })
+                            .eq('id', userProfile?.id);
+                          if (smsError) {
+                            showError('Failed to update SMS preference. Please try again.');
+                            // Revert the checkbox
+                            e.target.checked = !checked;
+                          } else {
+                            refreshProfile();
+                          }
                         }}
                         className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                       />

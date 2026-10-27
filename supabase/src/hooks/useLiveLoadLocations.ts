@@ -18,20 +18,30 @@ export function useLiveLoadLocations() {
   const { getSupabaseToken } = useAuth();
   const [loads, setLoads] = useState<LoadLocation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchInitial = useCallback(async () => {
     try {
       const token = await getSupabaseToken();
       const client = token ? createClerkSupabaseClient(token) : supabase;
 
-      const { data } = await client
+      const { data, error: queryError } = await client
         .from('load_locations')
         .select('id, shipper_id, shipment_id, origin_city, dest_city, origin_lat, origin_lng, dest_lat, dest_lng, weight_tonnes, budget_per_tonne, goods_description, status, created_at, updated_at')
         .eq('status', 'active')
         .order('created_at', { ascending: false })
         .limit(100);
 
+      // A failed read and an empty board look identical on the map — keep the
+      // message so callers can say which one it is.
+      if (queryError) {
+        setError(queryError.message);
+        console.error('[useLiveLoadLocations] Load query failed:', queryError.message);
+        return;
+      }
+
       if (!data) return;
+      setError(null);
 
       setLoads(
         data.map((row) => ({
@@ -52,6 +62,7 @@ export function useLiveLoadLocations() {
         })),
       );
     } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load load locations');
       console.error('[useLiveLoadLocations] Fetch error:', err);
     } finally {
       setIsLoading(false);
@@ -148,6 +159,7 @@ export function useLiveLoadLocations() {
   return {
     loads,
     isLoading,
+    error,
     refetch: fetchInitial,
   };
 }

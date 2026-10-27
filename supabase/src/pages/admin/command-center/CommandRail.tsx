@@ -9,6 +9,7 @@ import {
   ChevronUp,
   Bell,
   Radio,
+  Route as RouteIcon,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { TruckLocation } from '@/components/maps/TruckMarker';
@@ -17,16 +18,33 @@ import SmartMatchPanel from './SmartMatchPanel';
 import RevenueTracker from './RevenueTracker';
 import ActivityDigest from './ActivityDigest';
 import AlertPanel from './AlertPanel';
+import AlertRulesEngine from './AlertRulesEngine';
+import QuickActionsToolbar from './QuickActionsToolbar';
 import LiveFeedPanel from './LiveFeedPanel';
+import PostedListingsPanel from './PostedListingsPanel';
 import VirtualList from './VirtualList';
 import { SkeletonList } from './SkeletonCard';
 import { cn } from '@/lib/utils';
-import type { StatsData, TrendData } from './types';
-import type { AdminAlert } from './alerts';
+import type { PendingAgeing, StatsData, TrendData } from './types';
+import type { AdminAlert, AlertConfig } from './alerts';
 import type { FeedEvent } from './useAdminEventFeed';
+import type { Shipment, Trip } from '@/types';
 
 export interface CommandRailProps {
   alerts: AdminAlert[];
+  /** Alert ids acknowledged today — rendered dimmed with an "Acknowledged" badge. */
+  acknowledged?: ReadonlySet<string>;
+  onAcknowledge?: (alertId: string) => void;
+  onDrillDown?: (alert: AdminAlert) => void;
+  alertConfig: AlertConfig;
+  onAlertConfigChange: (config: AlertConfig) => void;
+  onBroadcast: (message: string) => void;
+  onAutoMatch: () => void;
+  onExport: () => void;
+  /** Online users the broadcast will reach. */
+  onlineCount: number;
+  /** Ageing buckets for unmatched value, when the financials query has run. */
+  pendingAgeing?: PendingAgeing | null;
   events: FeedEvent[];
   now: number;
   onTripTrucks: TruckLocation[];
@@ -43,10 +61,19 @@ export interface CommandRailProps {
   onTruckClick: (truck: TruckLocation) => void;
   onLoadClick: (load: LoadLocation) => void;
   onReviewLoad: (load: LoadLocation) => void;
+  /** Trips posted by truckers and loads posted by shippers. */
+  trips: Trip[];
+  shipments: Shipment[];
+  listingsLoading?: boolean;
+  selectedTripId?: string | null;
+  selectedShipmentId?: string | null;
+  onSelectTrip: (trip: Trip) => void;
+  onSelectShipment: (shipment: Shipment) => void;
 }
 
 type SectionKey =
   | 'alerts'
+  | 'trips'
   | 'feed'
   | 'matches'
   | 'onTrip'
@@ -101,6 +128,16 @@ function TruckRow({
 
 export default function CommandRail({
   alerts,
+  acknowledged,
+  onAcknowledge,
+  onDrillDown,
+  alertConfig,
+  onAlertConfigChange,
+  onBroadcast,
+  onAutoMatch,
+  onExport,
+  onlineCount,
+  pendingAgeing,
   events,
   now,
   onTripTrucks,
@@ -117,11 +154,28 @@ export default function CommandRail({
   onTruckClick,
   onLoadClick,
   onReviewLoad,
+  trips,
+  shipments,
+  listingsLoading,
+  selectedTripId,
+  selectedShipmentId,
+  onSelectTrip,
+  onSelectShipment,
 }: CommandRailProps) {
-  const criticalCount = alerts.filter((a) => a.severity !== 'info').length;
+  // Acknowledged alerts stay visible (dimmed, marked) but stop counting as open.
+  const openAlerts = alerts.filter(
+    (a) => a.id !== 'all-clear' && !(acknowledged?.has(a.id) ?? false),
+  );
+  const criticalCount = openAlerts.filter((a) => a.severity !== 'info').length;
 
   const sections: SectionDef[] = [
     { key: 'alerts', label: 'Alerts', icon: <Bell className="h-3.5 w-3.5 text-red-500" />, count: criticalCount, critical: criticalCount > 0 },
+    {
+      key: 'trips',
+      label: 'Trips & Loads',
+      icon: <RouteIcon className="h-3.5 w-3.5 text-orange-500" />,
+      count: trips.length + shipments.length,
+    },
     { key: 'feed', label: 'Live Activity', icon: <Radio className="h-3.5 w-3.5 text-emerald-500" /> },
     { key: 'matches', label: 'Smart Matches', icon: <Sparkles className="h-3.5 w-3.5 text-purple-500" /> },
     { key: 'onTrip', label: 'On Trip', icon: <Truck className="h-3.5 w-3.5 text-emerald-600" />, count: onTripTrucks.length },
@@ -172,9 +226,49 @@ export default function CommandRail({
 
             {isExpanded && (
               <div className="px-2.5 pb-2.5 pt-0.5">
-                {key === 'alerts' && <AlertPanel alerts={alerts} variant="list" />}
+                {key === 'alerts' && (
+                  <div className="space-y-2">
+                    <AlertPanel
+                      alerts={alerts}
+                      variant="list"
+                      acknowledged={acknowledged}
+                      onAcknowledge={onAcknowledge}
+                      onDrillDown={onDrillDown}
+                    />
+                    <div className="flex justify-end">
+                      <AlertRulesEngine
+                        config={alertConfig}
+                        onChange={onAlertConfigChange}
+                        activeCount={openAlerts.length}
+                      />
+                    </div>
+                  </div>
+                )}
 
-                {key === 'feed' && <LiveFeedPanel events={events} now={now} />}
+                {key === 'trips' && (
+                  <PostedListingsPanel
+                    trips={trips}
+                    shipments={shipments}
+                    loading={listingsLoading}
+                    density="rail"
+                    selectedTripId={selectedTripId}
+                    selectedShipmentId={selectedShipmentId}
+                    onSelectTrip={onSelectTrip}
+                    onSelectShipment={onSelectShipment}
+                  />
+                )}
+
+                {key === 'feed' && (
+                  <div className="space-y-2">
+                    <LiveFeedPanel events={events} now={now} />
+                    <QuickActionsToolbar
+                      onlineCount={onlineCount}
+                      onBroadcast={onBroadcast}
+                      onAutoMatch={onAutoMatch}
+                      onExport={onExport}
+                    />
+                  </div>
+                )}
 
                 {key === 'matches' && (
                   <SmartMatchPanel trucks={idleTrucks} loads={loads} onReview={onReviewLoad} />
@@ -249,6 +343,7 @@ export default function CommandRail({
                     pendingRevenue={stats?.pendingRevenue ?? 0}
                     yesterdayRevenue={stats?.yesterdayRevenue ?? 0}
                     weeklyTrend={trends.revenue}
+                    ageing={pendingAgeing ?? undefined}
                     loading={statsLoading}
                   />
                 )}

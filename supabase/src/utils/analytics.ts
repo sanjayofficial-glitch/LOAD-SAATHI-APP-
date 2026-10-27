@@ -1,5 +1,15 @@
 import { track } from "@vercel/analytics/react";
-import { posthog } from "@/utils/posthog";
+import { isPostHogEnabled } from "@/utils/posthogConfig";
+
+// posthog-js is loaded on demand instead of statically: a static import here
+// would put the SDK in the entry chunk (analytics is imported by App.tsx), and
+// every route that tracks an event would drag it in too. The dynamic import is
+// deduped, so the SDK still only ever loads once — off the critical path.
+let posthogModule: Promise<typeof import("@/utils/posthog")> | null = null;
+const loadPostHog = () => {
+  if (!posthogModule) posthogModule = import("@/utils/posthog");
+  return posthogModule;
+};
 
 declare global {
   interface Window {
@@ -72,10 +82,12 @@ function toVercelProps(props?: Record<string, unknown>): Record<string, string |
 }
 
 export function trackEvent(name: string, props?: Record<string, unknown> & BaseEventProps) {
-  try {
-    posthog.capture(name, props);
-  } catch {
-    // PostHog may not be loaded yet — silent no-op
+  if (isPostHogEnabled()) {
+    loadPostHog()
+      .then(({ posthog }) => posthog.capture(name, props))
+      .catch(() => {
+        // Analytics failure must never break the app
+      });
   }
   try {
     const vercelProps = toVercelProps(props);

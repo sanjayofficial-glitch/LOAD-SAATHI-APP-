@@ -802,6 +802,7 @@ Deno.serve(async (req: Request) => {
           : 1.0;
         let adjusted = corridorAvg * seasonalMult * returnFactor;
         let fuelSurcharge = 0;
+        const weight = body.weightTonnes;
         if (flags.enable_fuel_surcharge && body.includeFuelSurcharge !== false && currentDiesel) {
           fuelSurcharge = applyFuelSurcharge(adjusted * weight, currentDiesel, surchargeConfig);
           adjusted = adjusted + fuelSurcharge / (weight || 1);

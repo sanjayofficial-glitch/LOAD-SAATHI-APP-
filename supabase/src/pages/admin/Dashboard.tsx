@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSupabase } from '@/hooks/useSupabase';
-import { Users, Truck, Package, Activity, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import {
+  Users,
+  Truck,
+  Package,
+  Activity,
+  ArrowRight,
+  ArrowUpRight,
+  ArrowDownRight,
+} from 'lucide-react';
 
 const AdminDashboard = () => {
   const { getAuthenticatedClient } = useSupabase();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({ users: 0, trips: 0, requests: 0, shipments: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +29,10 @@ const AdminDashboard = () => {
           supabaseClient.from('requests').select('*', { count: 'exact', head: true }),
           supabaseClient.from('shipments').select('*', { count: 'exact', head: true }),
         ]);
+        // A failed count comes back as `null`, which would render as a confident
+        // zero. Surface it instead of under-reporting the platform.
+        const failed = [users, trips, requests, shipments].find((res) => res.error);
+        if (failed?.error) throw failed.error;
         setStats({ users: users.count || 0, trips: trips.count || 0, requests: requests.count || 0, shipments: shipments.count || 0 });
       } catch (err) {
         console.error('[AdminDashboard] Error:', err);
@@ -54,14 +68,14 @@ const AdminDashboard = () => {
   }
 
   const cards = [
-    { title: 'Total Users', value: stats.users, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%', up: true },
-    { title: 'Total Trips', value: stats.trips, icon: Truck, color: 'text-orange-600', bg: 'bg-orange-50', trend: '+8%', up: true },
-    { title: 'Shipments', value: stats.shipments, icon: Package, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+5%', up: true },
-    { title: 'Requests', value: stats.requests, icon: Activity, color: 'text-green-600', bg: 'bg-green-50', trend: '-3%', up: false },
+    { title: 'Total Users', value: stats.users, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%', up: true, path: '/admin/users', cta: 'Open user list' },
+    { title: 'Total Trips', value: stats.trips, icon: Truck, color: 'text-orange-600', bg: 'bg-orange-50', trend: '+8%', up: true, path: '/admin/trips', cta: 'See who posted trips' },
+    { title: 'Shipments', value: stats.shipments, icon: Package, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+5%', up: true, path: '/admin/shipments', cta: 'See who posted loads' },
+    { title: 'Requests', value: stats.requests, icon: Activity, color: 'text-green-600', bg: 'bg-green-50', trend: '-3%', up: false, path: '/admin/monitoring', cta: 'Watch them live' },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
@@ -73,9 +87,16 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {cards.map((card, i) => (
-            <div key={card.title} className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-all" style={{ animationDelay: `${i * 60}ms` }}>
+            <button
+              key={card.title}
+              type="button"
+              onClick={() => navigate(card.path)}
+              aria-label={`${card.title}: ${card.cta}`}
+              className="group bg-white rounded-2xl border border-gray-200 p-5 text-left shadow-sm hover:shadow-md hover:border-orange-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:border-orange-400 cursor-pointer transition-all"
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className={`${card.bg} p-2.5 rounded-xl`}>
                   <card.icon className={`h-5 w-5 ${card.color}`} />
@@ -87,7 +108,11 @@ const AdminDashboard = () => {
               </div>
               <p className="text-3xl font-bold text-gray-900">{card.value.toLocaleString()}</p>
               <p className="text-xs font-medium text-gray-500 mt-1">{card.title}</p>
-            </div>
+              <p className="mt-3 flex items-center gap-1 text-[11px] font-semibold text-orange-600 opacity-70 transition-opacity group-hover:opacity-100">
+                {card.cta}
+                <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+              </p>
+            </button>
           ))}
         </div>
       </div>

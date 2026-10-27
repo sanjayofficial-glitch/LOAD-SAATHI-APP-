@@ -160,6 +160,19 @@ Deno.serve(async (req: Request) => {
     });
   }
 
+  // Cron secret validation — only Vercel cron or a caller with CRON_SECRET may invoke.
+  const cronSecret = Deno.env.get("CRON_SECRET");
+  if (cronSecret) {
+    const auth = req.headers.get("authorization") ?? "";
+    const expected = `Bearer ${cronSecret}`;
+    if (auth !== expected) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: jsonHeaders,
+      });
+    }
+  }
+
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
   if (!supabaseUrl || !supabaseKey) {

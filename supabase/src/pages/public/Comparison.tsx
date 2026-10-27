@@ -321,6 +321,46 @@ export default function Comparison() {
           </div>
         </section>
 
+        {/* Head-to-head comparisons */}
+        <section className="py-16 sm:py-20">
+          <div className="max-w-[1000px] mx-auto px-6 sm:px-12">
+            <h2 className="text-3xl sm:text-4xl font-black mb-4 text-foreground dark:text-white text-center">
+              Head-to-Head Comparisons
+            </h2>
+            <p className="text-muted-foreground text-center mb-10 max-w-2xl mx-auto">
+              Detailed, side-by-side breakdowns of LoadSaathi against individual platforms — model, fees, load quality, payouts and coverage.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  to: '/compare/loadsaathi-vs-trucksuvidha',
+                  name: 'LoadSaathi vs TruckSuvidha',
+                  blurb: 'Free AI load board vs subscription directory: what each model costs and who it suits.',
+                },
+                {
+                  to: '/compare/loadsaathi-vs-blackbuck',
+                  name: 'LoadSaathi vs BlackBuck',
+                  blurb: 'Zero-commission direct matching vs managed freight with platform margin.',
+                },
+              ].map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="group block p-6 rounded-xl border border-border dark:border-white/10 bg-card dark:bg-white/[0.03] hover:border-orange-500/50 hover:bg-orange-500/5 transition-colors"
+                >
+                  <h3 className="text-lg font-bold mb-2 text-foreground group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                    {item.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">{item.blurb}</p>
+                  <span className="inline-flex items-center text-sm font-semibold text-orange-600 dark:text-orange-400">
+                    Read comparison <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-20 sm:py-28">
           <div className="max-w-[800px] mx-auto px-6 sm:px-12 text-center">

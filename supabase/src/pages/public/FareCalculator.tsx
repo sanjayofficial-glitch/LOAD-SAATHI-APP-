@@ -12,6 +12,7 @@ import QuoteLeadCard from "@/components/QuoteLeadCard";
 import VehicleRateCard, { VEHICLE_RATES } from "@/components/VehicleRateCard";
 import { trackCalculatorStarted, trackEstimateGenerated, trackEvent } from "@/utils/analytics";
 import PriceTrendChart from "@/components/PriceTrendChart";
+import RateBenchmarks2026, { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026";
 import { routes } from "@/data/routes";
 import distancesData from "@/data/distances.json";
 import { revealStyle } from "@/lib/motion";
@@ -324,8 +325,8 @@ export default function FareCalculator() {
         </div>
       </noscript>
       <SeoMeta
-        title="Freight Fare Calculator — Estimate PTL/LTL Rates"
-        description="Calculate estimated freight rates for PTL and LTL shipments across India. AI-powered fare estimates with vehicle-specific per-km rates, fuel surcharge, and live diesel prices."
+        title="Truck Fare Calculator – Free Bhada Calculator India"
+        description="Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps."
         keywords="freight fare calculator India, PTL LTL rate calculator, truck freight cost estimation, vehicle rate card"
         canonical="/tools/fare-calculator"
         breadcrumbs={[{ name: "Fare Calculator", url: "/tools/fare-calculator" }]}
@@ -368,7 +369,8 @@ export default function FareCalculator() {
                 "text": "Enter your origin city, destination city, cargo weight, and vehicle type in LoadSaathi's fare calculator. It uses AI to estimate PTL/LTL rates based on distance, weight, fuel surcharge, and live diesel prices. Typical PTL rates are ₹8–20 per kg depending on the route and cargo type."
               }
             }
-          }
+          },
+          rateBenchmarkFaqJsonLd()
         ]}
       />
     <div className="min-h-screen bg-gradient-to-b from-orange-50/50 to-background dark:from-orange-950/10 dark:to-background">
@@ -668,6 +670,8 @@ export default function FareCalculator() {
           </div>
         </div>
       </section>
+
+      <RateBenchmarks2026 />
     </div>
     </>
   );

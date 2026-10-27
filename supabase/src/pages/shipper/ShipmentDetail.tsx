@@ -21,14 +21,12 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
-import { notifyShipperOfTruckerOffer } from '@/utils/notifications';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
 import ReviewDialog from '@/components/ReviewDialog';
 import type { Shipment, User } from '@/types';
-import { posthog } from '@/utils/posthog';
 import { trackEvent } from '@/utils/analytics';
 
 const ShipmentDetail = () => {
@@ -261,7 +259,7 @@ const ShipmentDetail = () => {
       if (!token) throw new Error('No auth token');
       const supabase = createClerkSupabaseClient(token);
 
-      const { data: createdRequest, error } = await supabase.rpc('insert_shipment_request', {
+      const { error } = await supabase.rpc('insert_shipment_request', {
         p_shipment_id: shipment.id,
         p_trucker_id: userProfile.id,
         p_shipper_id: shipment.shipper_id,
@@ -269,17 +267,6 @@ const ShipmentDetail = () => {
         p_message: offerMessage.trim() || null,
       });
       if (error) throw error;
-
-      await notifyShipperOfTruckerOffer({
-        shipperId: shipment.shipper_id,
-        truckerName: userProfile.full_name || 'A trucker',
-        proposedPrice: price,
-        weightTonnes: shipment.weight_tonnes,
-        originCity: shipment.origin_city,
-        destinationCity: shipment.destination_city,
-        requestId: createdRequest?.id,
-        getToken: () => getToken({ template: 'supabase' }),
-      });
 
       trackEvent('shipment_offer_sent', {
         shipment_id: shipment.id,
@@ -292,7 +279,7 @@ const ShipmentDetail = () => {
       setProposedPrice('');
       setOfferMessage('');
     } catch (err: unknown) {
-      posthog.captureException(err, { flow: 'send_shipment_offer' });
+      import('@/utils/posthog').then(({ posthog }) => posthog.captureException(err, { flow: 'send_shipment_offer' })).catch(() => {});
       showError(err instanceof Error ? err.message : 'Failed to send offer');
     } finally {
       setSendingOffer(false);

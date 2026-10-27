@@ -38,4 +38,32 @@ if (!values.VITE_CLERK_PUBLISHABLE_KEY.startsWith('pk_')) {
   process.exit(1);
 }
 
+// PostHog is optional — the client disables itself without a usable key — so
+// this warns instead of failing the build. But a placeholder left in .env
+// ships a build that *looks* instrumented while recording nothing, which is
+// exactly the failure we want surfaced here.
+const posthogKey = (values.VITE_POSTHOG_API_KEY || '').trim();
+const posthogLooksReal = /^phc_[A-Za-z0-9_-]{16,}$/.test(posthogKey) && !/^x+$/i.test(posthogKey.slice(4));
+if (!posthogKey) {
+  console.warn('[validate-env] VITE_POSTHOG_API_KEY not set — PostHog analytics will be OFF.');
+} else if (!posthogLooksReal) {
+  console.warn(
+    '[validate-env] VITE_POSTHOG_API_KEY is a placeholder — PostHog analytics will be OFF.\n' +
+      '               Set the real project key (phc_...) in Vercel → Settings → Environment Variables.',
+  );
+}
+
+// Web Push is optional — without VITE_VAPID_PUBLIC_KEY the bell's
+// "Enable push notifications" button reports push as unconfigured and the
+// app falls back to in-app-only notifications. Warn so the gap is visible
+// at build time rather than discovered by a user.
+const vapidPublicKey = (values.VITE_VAPID_PUBLIC_KEY || '').trim();
+if (!vapidPublicKey) {
+  console.warn('[validate-env] VITE_VAPID_PUBLIC_KEY not set — Web Push notifications will be OFF.');
+} else if (!/^[A-Za-z0-9_-]{80,}$/.test(vapidPublicKey)) {
+  console.warn(
+    '[validate-env] VITE_VAPID_PUBLIC_KEY does not look like a base64url VAPID key — Web Push will fail.',
+  );
+}
+
 console.log('[validate-env] required keys detected — proceeding.');

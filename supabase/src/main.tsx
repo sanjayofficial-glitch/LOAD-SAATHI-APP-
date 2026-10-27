@@ -49,6 +49,15 @@ afterPaint(() => {
   import("@capacitor/core").then(({ Capacitor }) => {
     if (Capacitor.isNativePlatform()) {
       cleanupServiceWorker();
+      return;
+    }
+    // Web only: register the dedicated push worker (public/push-sw.js).
+    // The Capacitor branch above deliberately unregisters all workers, and
+    // public/sw.js (caching) is never registered at all.
+    if ("serviceWorker" in navigator && window.isSecureContext) {
+      navigator.serviceWorker.register("/push-sw.js").catch((err) => {
+        logger.warn("Push service worker registration failed", { error: String(err) }, "main");
+      });
     }
   });
   import("./utils/capacitorOAuth").then(({ initCapacitorOAuth }) => initCapacitorOAuth());

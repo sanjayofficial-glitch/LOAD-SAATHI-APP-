@@ -1,154 +1,126 @@
-import { useState, useEffect } from 'react';
-import { Bell, Plus, AlertTriangle, Clock, Package, Truck } from 'lucide-react';
+import { useState } from 'react';
+import { Bell, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-
-interface AlertRule {
-  id: string;
-  type: 'pending_loads' | 'idle_truck' | 'high_value' | 'no_movement';
-  threshold: number;
-  enabled: boolean;
-  label: string;
-}
-
-const DEFAULT_RULES: AlertRule[] = [
-  { id: '1', type: 'pending_loads', threshold: 5, enabled: true, label: '>5 loads pending for 30 min' },
-  { id: '2', type: 'idle_truck', threshold: 3, enabled: true, label: '>3 trucks idle for 1 hour' },
-  { id: '3', type: 'high_value', threshold: 50000, enabled: true, label: 'Load worth >₹50,000 posted' },
-  { id: '4', type: 'no_movement', threshold: 2, enabled: false, label: 'Trip no movement for 2 hours' },
-];
-
-const TYPE_ICONS: Record<AlertRule['type'], React.ReactNode> = {
-  pending_loads: <Package className="h-3.5 w-3.5 text-blue-500" />,
-  idle_truck: <Truck className="h-3.5 w-3.5 text-orange-500" />,
-  high_value: <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />,
-  no_movement: <Clock className="h-3.5 w-3.5 text-red-500" />,
-};
+import {
+  ALERT_RULE_DEFS,
+  DEFAULT_ALERT_CONFIG,
+  type AlertConfig,
+} from './alerts';
 
 interface AlertRulesEngineProps {
-  alerts: string[];
+  config: AlertConfig;
+  onChange: (config: AlertConfig) => void;
+  /** Number of currently firing alerts — shown as the button badge. */
+  activeCount?: number;
 }
 
-const STORAGE_KEY = 'loadsaathi-alert-rules';
+/**
+ * Editor for the thresholds that drive deriveAlerts(). Every control here
+ * changes what the alert strip reports on the board — nothing is decorative.
+ */
+export default function AlertRulesEngine({ config, onChange, activeCount = 0 }: AlertRulesEngineProps) {
+  const [open, setOpen] = useState(false);
 
-function loadRules(): AlertRule[] {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) return JSON.parse(stored);
-  } catch { /* ignore */ }
-  return DEFAULT_RULES;
-}
+  const isDisabled = (ruleId: string) => config.disabled.includes(ruleId);
 
-function saveRules(rules: AlertRule[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(rules));
-  } catch { /* ignore */ }
-}
+  const toggleRule = (ruleId: string) => {
+    const disabled = isDisabled(ruleId)
+      ? config.disabled.filter((id) => id !== ruleId)
+      : [...config.disabled, ruleId];
+    onChange({ ...config, disabled });
+  };
 
-export default function AlertRulesEngine({ alerts }: AlertRulesEngineProps) {
-  const [rules, setRules] = useState<AlertRule[]>(loadRules);
-  const [showConfig, setShowConfig] = useState(false);
-
-  // Persist rules to localStorage whenever they change
-  useEffect(() => {
-    saveRules(rules);
-  }, [rules]);
-
-  const activeAlerts = alerts.filter((a) => a !== '');
+  const setThreshold = (key: (typeof ALERT_RULE_DEFS)[number]['key'], value: number) => {
+    onChange({ ...config, thresholds: { ...config.thresholds, [key]: value } });
+  };
 
   return (
     <>
-      {/* Alert indicator button */}
       <Button
         variant="outline"
         size="sm"
-        className="h-8 gap-1.5 relative"
-        onClick={() => setShowConfig(true)}
+        className="h-8 gap-1.5 border-gray-200 relative"
+        onClick={() => setOpen(true)}
+        aria-label="Configure alert thresholds"
       >
         <Bell className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Alerts</span>
-        {activeAlerts.length > 0 && (
+        <span className="hidden sm:inline">Alert rules</span>
+        {activeCount > 0 && (
           <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">
-            {activeAlerts.length}
+            {activeCount}
           </span>
         )}
       </Button>
 
-      <Dialog open={showConfig} onOpenChange={setShowConfig}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Bell className="h-4 w-4 text-orange-500" />
-              Alert Rules
+              Alert rules
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-2 py-2">
-            {activeAlerts.length > 0 && (
-              <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3 space-y-1.5">
-                <p className="text-xs font-semibold text-red-500 uppercase tracking-wider">Active Alerts</p>
-                {activeAlerts.map((alert, i) => (
-                  <p key={i} className="text-sm flex items-center gap-2">
-                    <AlertTriangle className="h-3 w-3 text-red-500 shrink-0" />
-                    {alert}
-                  </p>
-                ))}
-              </div>
-            )}
+          <div className="space-y-2 py-2 max-h-[60vh] overflow-y-auto">
+            <p className="text-[11px] text-gray-500">
+              Thresholds apply immediately to the alert strip on the board and are saved in this
+              browser.
+            </p>
 
-            <div className="space-y-1.5">
-              {rules.map((rule) => (
+            {ALERT_RULE_DEFS.map((rule) => {
+              const disabled = isDisabled(rule.ruleId);
+              return (
                 <div
-                  key={rule.id}
-                  className="flex items-center gap-3 p-2.5 rounded-lg border hover:bg-accent/50 transition-colors"
+                  key={rule.key}
+                  className="flex items-center gap-3 p-2.5 rounded-lg border border-gray-200 bg-white"
                 >
-                  <div className="shrink-0">{TYPE_ICONS[rule.type]}</div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium">{rule.label}</p>
+                    <p className={disabled ? 'text-sm font-medium text-gray-400' : 'text-sm font-medium'}>
+                      {rule.label}
+                    </p>
+                    <p className="text-[11px] text-gray-400">
+                      Currently {config.thresholds[rule.key].toLocaleString('en-IN')} {rule.unit}
+                    </p>
                   </div>
-                  <button
-                    onClick={() =>
-                      setRules((prev) =>
-                        prev.map((r) => (r.id === rule.id ? { ...r, enabled: !r.enabled } : r)),
-                      )
-                    }
-                    className={`relative h-5 w-9 rounded-full transition-colors ${
-                      rule.enabled ? 'bg-green-500' : 'bg-muted'
-                    }`}
-                  >
-                    <span
-                      className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
-                        rule.enabled ? 'translate-x-4.5' : 'translate-x-0.5'
-                      }`}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <Input
+                      type="number"
+                      min={0}
+                      step={rule.step}
+                      disabled={disabled}
+                      value={config.thresholds[rule.key]}
+                      onChange={(e) => setThreshold(rule.key, Math.max(0, Number(e.target.value) || 0))}
+                      className="h-8 w-20 text-right text-xs"
+                      aria-label={`${rule.label} threshold`}
                     />
-                  </button>
+                    <span className="text-[11px] text-gray-400 w-8">{rule.unit}</span>
+                    <Switch
+                      checked={!disabled}
+                      onCheckedChange={() => toggleRule(rule.ruleId)}
+                      aria-label={`${disabled ? 'Enable' : 'Disable'} ${rule.label}`}
+                    />
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
-              onClick={() => {
-                const newRule: AlertRule = {
-                  id: Date.now().toString(),
-                  type: 'pending_loads',
-                  threshold: 5,
-                  enabled: true,
-                  label: 'Custom alert rule',
-                };
-                setRules((prev) => [...prev, newRule]);
-              }}
-            >
-              <Plus className="h-3.5 w-3.5 mr-1" /> Add Rule
-            </Button>
+              );
+            })}
           </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={() => onChange(DEFAULT_ALERT_CONFIG)}
+          >
+            <RotateCcw className="h-3.5 w-3.5 mr-1" /> Reset to defaults
+          </Button>
         </DialogContent>
       </Dialog>
     </>

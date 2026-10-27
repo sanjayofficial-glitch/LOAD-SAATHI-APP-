@@ -39,7 +39,7 @@ export default function QuickActionsToolbar({
 
   return (
     <>
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-1.5 bg-slate-950/95 border border-slate-700/60 rounded-full px-2 py-1.5 backdrop-blur-md shadow-2xl">
+      <div className="flex items-center gap-1.5 flex-wrap">
         {/* Spacer for timeline */}
         <Button
           size="sm"

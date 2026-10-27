@@ -75,6 +75,8 @@ const STATIC = [
   ["/contact", "monthly", "0.7"],
   ["/safety-trust", "monthly", "0.7"],
   ["/compare", "monthly", "0.8"],
+  ["/compare/loadsaathi-vs-trucksuvidha", "monthly", "0.8"],
+  ["/compare/loadsaathi-vs-blackbuck", "monthly", "0.8"],
   ["/privacy", "yearly", "0.3"],
   ["/terms", "yearly", "0.3"],
   ["/solutions/shippers", "monthly", "0.8"],

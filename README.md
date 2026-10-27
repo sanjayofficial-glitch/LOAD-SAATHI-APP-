@@ -10,6 +10,8 @@ Connecting shippers and truckers for PTL / LTL loads across East India — with 
 
 [loadsaathi.in](https://loadsaathi.in) · [support@loadsaathi.in](mailto:support@loadsaathi.in)
 
+📖 **[Visual Guide](docs/VISUAL_GUIDE.md) — the entire app explained in diagrams. No long reading required.**
+
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=vite&logoColor=white)
@@ -281,7 +283,14 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the complete contribution guide.
 
 ## Documentation
 
-Detailed documentation lives in [`docs/`](docs/README.md). For a guided, audience-specific reading order, start with the [Repository Handbook](REPO_HANDBOOK.md) or the [Handbook Index](docs/handbook/00-index.md).
+Detailed documentation lives in [`docs/`](docs/README.md). For a guided, audience-specific reading order, start with the [Repository Handbook](docs/REPO_HANDBOOK.md) or the [Handbook Index](docs/handbook/00-index.md).
+
+### Visual first
+
+| Document | What it gives you |
+| --- | --- |
+| [Visual Guide](docs/VISUAL_GUIDE.md) | The app, features, architecture, journeys, and history — all as diagrams |
+| [Diagram Directory](docs/DIAGRAMS.md) | Every diagram in the repo, indexed |
 
 ### Audience handbook
 
@@ -290,7 +299,7 @@ Detailed documentation lives in [`docs/`](docs/README.md). For a guided, audienc
 | Everyone | [Non-technical overview](docs/handbook/01-overview-non-technical.md) |
 | Developers | [Architecture and stack](docs/handbook/02-architecture-and-stack.md) · [Core Flows](docs/handbook/03-core-flows.md) |
 | Visual/product readers | [Screens and visual assets](docs/handbook/04-screens-and-visuals.md) |
-| AI agents | [AI restructure brief](docs/handbook/07-ai-restructure-brief.md) · [CONTEXT.md](CONTEXT.md) |
+| AI agents | [AI restructure brief](docs/handbook/07-ai-restructure-brief.md) · [CONTEXT.md](docs/CONTEXT.md) |
 | Handover and operations | [Handover checklist](docs/handbook/08-handover-checklist.md) |
 
 ### Technical reference

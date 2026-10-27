@@ -1,0 +1,884 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 25 100% 55%; /* Orange */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 50%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* ─── Motion tokens (Apple-aligned) ───
+       Fluid interfaces respond instantly, move continuously, carry momentum,
+       and can be reversed mid-flight. These tokens are the shared vocabulary. */
+    --ease-ios: cubic-bezier(0.32, 0.72, 0, 1); /* fluid, decelerating */
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1); /* snappy settle */
+    --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+    --ease-spring-soft: cubic-bezier(0.34, 1.36, 0.64, 1); /* gentle overshoot */
+
+    --dur-press: 80ms; /* fires on pointer-down */
+    --dur-fast: 120ms; /* micro state change */
+    --dur-base: 180ms; /* element enter/exit */
+    --dur-slow: 260ms; /* surface / large reposition */
+    --dur-reveal: 420ms; /* scroll reveal */
+
+    --reveal-distance: 16px;
+    --reveal-delay: 0ms;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 25 100% 55%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 15% 78%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    /* GPU-accelerate all animated properties by default — moving, scaling, and
+       opacity changes are promoted to their own compositor layer so they never
+       trigger main-thread layout or paint. */
+    will-change: auto;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Motion is neutralized, but reduced motion is not *no* feedback — it is a
+       gentler, non-vestibular equivalent. Force every reveal/translate back to
+       its resting state and allow a short opacity-only cross-fade. Higher
+       specificity than the blanket `*` rule, so it wins. */
+    .reveal,
+    .reveal.is-revealed {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .motion-fade {
+      transition-property: opacity !important;
+      transition-duration: 220ms !important;
+      transition-delay: 0ms !important;
+      transition-timing-function: ease !important;
+    }
+  }
+
+  /* Reduced transparency: make translucent materials frostier/solid so text
+     legibility does not depend on the backdrop. */
+  @media (prefers-reduced-transparency: reduce) {
+    .material,
+    .material-strong,
+    .glass-panel {
+      background: hsl(var(--card)) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+  }
+
+  /* Increased contrast: near-solid surfaces with a defined border. */
+  @media (prefers-contrast: more) {
+    .material,
+    .material-strong,
+    .glass-panel,
+    .glass-card {
+      background: hsl(var(--card)) !important;
+      border-color: hsl(var(--foreground) / 0.55) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    /* contain: style only — layout containment on body breaks position:fixed
+       for all descendants (body becomes the containing block instead of the
+       viewport). Removed layout to restore bottom-anchored fixed elements
+       like DockNav and MobileTabBar. */
+    contain: style;
+  }
+
+  /* Kill the legacy 300ms tap delay and double-tap zoom jank on interactive
+     elements — makes taps feel instant on mobile without disabling zoom. */
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea,
+  label {
+    touch-action: manipulation;
+  }
+
+  /* Prevent child elements inside buttons from intercepting pointer events.
+     Without this, SVG icons, spans, or divs inside a <button> can become
+     the event target and cause the click to not register on the button,
+     resulting in a "second tap needed" behavior on mobile. */
+  button > * {
+    pointer-events: none;
+  }
+}
+
+/* Custom styles for LoadSaathi */
+@layer components {
+  .btn-primary {
+    @apply bg-orange-600 hover:bg-orange-700 text-white font-medium;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+    will-change: transform;
+  }
+  .btn-primary:active {
+    transform: scale(0.97);
+  }
+  
+  .card-hover {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    will-change: transform;
+  }
+  .card-hover:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Icon micro-interactions — applies to lucide-react <svg> elements.
+     Smooth scale on hover, subtle spring on tap, GPU-promoted. */
+  .icon-hover {
+    transition: transform 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.15s ease;
+    will-change: transform;
+  }
+  .icon-hover:hover {
+    transform: scale(1.12);
+  }
+  .icon-hover:active {
+    transform: scale(0.95);
+  }
+
+  /* Gentle floating animation — use with animate-icon-float or as a group hover effect */
+  .icon-float {
+    transition: transform 0.2s ease;
+    will-change: transform;
+  }
+  .icon-float:hover {
+    transform: translateY(-2px);
+  }
+
+  /* ─── Press feedback ───
+     Feedback lives on the press (pointer-down), not the release — and it is
+     instant. Shared by buttons, tabs, cards, and any tappable surface. */
+  .press {
+    transition:
+      transform var(--dur-fast) var(--ease-out-quint),
+      box-shadow var(--dur-base) var(--ease-out-quint),
+      background-color var(--dur-base) ease,
+      border-color var(--dur-base) ease,
+      color var(--dur-base) ease;
+    will-change: transform;
+  }
+  .press:active {
+    transform: scale(0.97);
+    transition-duration: var(--dur-press);
+  }
+
+  /* ─── Card lift ───
+     Hover raises, tap settles — transform/opacity only (compositor-friendly). */
+  .elevate {
+    transition:
+      transform var(--dur-slow) var(--ease-ios),
+      box-shadow var(--dur-slow) var(--ease-ios),
+      border-color var(--dur-slow) ease;
+    will-change: transform;
+  }
+  .elevate:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 18px 32px -14px hsl(var(--foreground) / 0.18),
+      0 8px 14px -10px hsl(var(--foreground) / 0.12);
+  }
+  .elevate:active {
+    transform: translateY(-1px) scale(0.995);
+    transition-duration: var(--dur-press);
+  }
+
+  /* ─── Translucent materials ───
+     A floating functional layer that brings structure without stealing focus.
+     Weight encodes hierarchy: never stack a light material on another. */
+  .material {
+    background: hsl(var(--card) / 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+  .material-strong {
+    background: hsl(var(--card) / 0.86);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+  }
+
+  /* Scroll-edge fade — replaces a hard 1px divider where content meets
+     floating chrome. Only render where floating UI actually overlaps content. */
+  .scroll-edge-top {
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--background)) 0%,
+      hsl(var(--background) / 0.86) 45%,
+      transparent 100%
+    );
+  }
+  .scroll-edge-bottom {
+    background: linear-gradient(
+      to top,
+      hsl(var(--background)) 0%,
+      hsl(var(--background) / 0.86) 45%,
+      transparent 100%
+    );
+  }
+
+  /* ─── Reveal ───
+     Content is visible by default (no flash of hidden content, no "second
+     tap"); the shared observer flips `data-reveal` to `out` for below-the-fold
+     elements before paint, then to `in` when they scroll into view. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal[data-reveal="out"] {
+    opacity: 0;
+    transform: translateY(var(--reveal-distance, 16px));
+    will-change: opacity, transform;
+  }
+  .reveal[data-reveal="in"] {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity var(--dur-reveal) var(--ease-out-quint),
+      transform var(--dur-reveal) var(--ease-ios);
+    transition-delay: calc(var(--reveal-i, 0) * 60ms + var(--reveal-delay, 0ms));
+  }
+
+  /* Glass morphism panels — use lighter blur on mobile */
+  .glass-panel {
+    background: hsl(var(--card) / 0.6);
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
+    border: 1px solid hsl(var(--border));
+    contain: layout style paint;
+  }
+  .dark .glass-panel {
+    background: hsl(var(--card) / 0.6);
+  }
+
+  .glass-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    contain: layout style;
+  }
+  .dark .glass-card {
+    background: hsl(var(--card));
+  }
+
+  /* Animated floating — GPU accelerated */
+  .animate-float {
+    animation: floatAnim 6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  /* Route line animation for hero SVG */
+  .route-line {
+    stroke-dasharray: 10, 10;
+    animation: dashAnim 30s linear infinite;
+  }
+
+  /* Tab content transitions */
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: flex;
+    animation: tabFadeIn 0.25s ease-out;
+  }
+
+  /* Pulse ring effect */
+  .animate-pulse-ring {
+    animation: pulseRing 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    will-change: box-shadow;
+  }
+
+  /* Text gradient */
+  .text-gradient-orange-blue {
+    background: linear-gradient(135deg, #f97316 0%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Grid pattern background */
+  .bg-grid-pattern {
+    pointer-events: none;
+    background-image: 
+      linear-gradient(to right, hsl(var(--border) / 0.4) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.4) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Nav link underline animation */
+  .nav-link {
+    position: relative;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.15s ease;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #f97316;
+    transition: width 0.2s ease-out;
+    will-change: width;
+  }
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Globe pulse dot */
+  .globe-pulse {
+    animation: globePulse 3s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  /* Globe canvas */
+  #globe-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Optical sizing: large display text wants negative tracking (letters read
+     too far apart as they grow); body stays near zero. */
+  .type-display {
+    letter-spacing: -0.022em;
+    line-height: 1.05;
+    font-optical-sizing: auto;
+  }
+  .type-title {
+    letter-spacing: -0.014em;
+    line-height: 1.15;
+  }
+  /* iOS-standard minimum tap target (44×44) without changing visual size. */
+  .tap-target {
+    position: relative;
+  }
+  .tap-target::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+    width: 100%;
+    height: 100%;
+  }
+  /* Notch / Dynamic Island: extra top padding for fixed & sticky headers. */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  /* Home indicator / gesture bar: extra bottom padding for fixed footers. */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* Animations */
+@keyframes floatAnim {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes dashAnim {
+  to { stroke-dashoffset: -1000; }
+}
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.5); }
+  100% { box-shadow: 0 0 0 15px rgba(255, 107, 0, 0); }
+}
+@keyframes bounceGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Gentle bounce for Freddy when guiding */
+  .animate-bounce-gentle {
+    animation: bounceGentle 2s ease-in-out infinite;
+    will-change: transform;
+  }
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.45); }
+  70% { box-shadow: 0 0 0 12px rgba(249, 115, 22, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+}
+@keyframes globePulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+/* Materialize: a surface arriving as a real material (scale + opacity), not a
+   plain fade. Used by popovers/menus/toasts that did not opt into a spring. */
+@keyframes materializeIn {
+  from { opacity: 0; transform: scale(0.96) translateY(2px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+/* Badge pop — for unread counts and status dots. */
+@keyframes badgePop {
+  0% { transform: scale(0.5); }
+  55% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+.animate-materialize {
+  animation: materializeIn var(--dur-base) var(--ease-out-quint) both;
+}
+.animate-badge-pop {
+  animation: badgePop 0.28s var(--ease-spring-soft) both;
+}
+
+/* Directional card-swap entrance (LoadCardStack deck). Small, fast,
+   directional — orientation at tens-per-day frequency. */
+@keyframes cardSwapNext {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes cardSwapPrev {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-card-swap-next {
+  animation: cardSwapNext 160ms var(--ease-out-quint) both;
+}
+.animate-card-swap-prev {
+  animation: cardSwapPrev 160ms var(--ease-out-quint) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-swap-next,
+  .animate-card-swap-prev {
+    animation-name: materializeIn;
+    animation-duration: 180ms;
+  }
+}
+
+/* Chat bubble arrival — event-driven entrance, marked per message, not per
+   mount. Rises from the composer like it was sent from where you typed. */
+@keyframes msgArrive {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-msg-arrive {
+  animation: msgArrive 180ms var(--ease-out-quint) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-msg-arrive { animation: none; }
+}
+
+/* Offline banner: slides in from the bottom edge of the message pane.
+   Height is driven by content; translate+fade only, no layout props. */
+.offline-banner-enter {
+  animation: offlineSlide 200ms var(--ease-ios) both;
+}
+@keyframes offlineSlide {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .offline-banner-enter { animation: none; }
+}
+
+/* Smooth page transitions — fast 200ms with GPU layers */
+.page-enter {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+  will-change: opacity, transform;
+}
+
+/* Route enter — opacity-only so it never establishes a containing block for
+   fixed-position children (dock, FABs, tab bar). Applied to <main> on path
+   change; the hook restarts the animation each navigation. */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.page-fade {
+  animation: pageFadeIn 240ms var(--ease-out-quint) both;
+}
+
+/* View Transitions API (progressive enhancement). If a <Link viewTransition>
+   or startViewTransition is used, route changes cross-fade cleanly instead of
+   swapping instantly. No-ops in unsupported browsers. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out-quint);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Clerk component theming */
+.cl-card {
+  border-radius: var(--radius) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+.dark .cl-card {
+  background: hsl(222.2, 84%, 4.9%) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+}
+.dark .cl-cardContent {
+  background: transparent;
+}
+.dark .cl-formFieldInput {
+  background: hsl(217.2, 32.6%, 17.5%) !important;
+  color: hsl(210, 40%, 98%) !important;
+  border-color: hsl(217.2, 32.6%, 17.5%) !important;
+}
+.dark .cl-socialButtonsIconButton {
+  background: hsl(217.2, 32.6%, 17.5%) !important;
+  border-color: hsl(217.2, 32.6%, 17.5%) !important;
+}
+.dark .cl-footer {
+  background: transparent !important;
+}
+.dark .cl-headerTitle {
+  color: hsl(210, 40%, 98%) !important;
+}
+.dark .cl-headerSubtitle {
+  color: hsl(215, 15%, 78%) !important;
+}
+.dark .cl-formFieldLabel {
+  color: hsl(215, 15%, 78%) !important;
+}
+.dark .cl-dividerText {
+  color: hsl(215, 15%, 78%) !important;
+}
+.dark .cl-dividerLine {
+  background: hsl(217.2, 32.6%, 17.5%) !important;
+}
+.cl-formButtonPrimary {
+  background: hsl(25, 100%, 55%) !important;
+}
+.cl-formButtonPrimary:hover {
+  background: hsl(25, 100%, 45%) !important;
+}
+.cl-footerActionLink {
+  color: hsl(25, 100%, 55%) !important;
+}
+.cl-internal-1dauvpw {
+  display: none !important;
+}
+
+/* Page wrappers use overflow-x-hidden only to clip decorative overflow, but that
+   creates a scroll container (overflow-y computes to auto) and can show a stray
+   inner scrollbar. overflow-x: clip clips without becoming a scroll container.
+   Placed after @tailwind utilities so it wins at equal specificity. */
+.overflow-x-hidden {
+  overflow-x: clip;
+}
+
+/* Leaflet CSS fixes for Tailwind preflight */
+/* Contain Leaflet's internal z-index so maps never escape their container
+   and cover the nav bar, dock, or other page-level elements on scroll.
+   Added `contain` for layout/paint isolation and GPU hints for tile layers. */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  isolation: isolate;
+  z-index: 0;
+  contain: layout style;
+}
+.leaflet-container img {
+  max-width: none !important;
+  /* GPU-accelerate tile images — they move on pan/zoom. */
+  will-change: transform;
+}
+.leaflet-container .leaflet-pane {
+  will-change: transform;
+}
+.leaflet-container .leaflet-tile-pane {
+  will-change: transform;
+}
+.leaflet-container .leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15) !important;
+}
+.leaflet-container .leaflet-control-zoom a {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+.leaflet-container .leaflet-control-attribution {
+  background: hsl(var(--card) / 0.8) !important;
+  font-size: 9px !important;
+}
+.leaflet-container .leaflet-popup-content-wrapper {
+  border-radius: var(--radius) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  will-change: transform;
+}
+.dark .leaflet-container .leaflet-popup-content-wrapper,
+.dark .leaflet-container .leaflet-popup-tip {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+.dark .leaflet-container .leaflet-popup-content {
+  color: hsl(var(--foreground));
+}
+.dark .leaflet-container .leaflet-popup-close-button {
+  color: hsl(var(--muted-foreground)) !important;
+}
+.leaflet-container .leaflet-control-zoom a:hover {
+  background: hsl(var(--muted)) !important;
+}
+
+/* iOS Safari auto-zooms into any form control whose font-size is under 16px.
+   Fields at 16px on phones keeps the tap-focus from zooming while remaining
+   readable — desktop layouts keep their own sizing. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Hide the persistent CookieHub floating settings button */
+.ch2-icon.ch2-visible {
+  display: none !important;
+}
+
+/* Keep the CookieHub v2 consent widget as a floating, non-blocking card.
+   When blockUI is enabled in the dashboard, CookieHub turns .ch2-container
+   into a full-screen fixed overlay (position:fixed; inset:0;
+   z-index:2147483647). On mobile that overlay sits directly over the
+   footer, so taps on the Blog/About/Contact/Gallery links are swallowed
+   and never reach the router <Link>s. Make the whole overlay click-through
+   (including when ch2-block is not applied) while keeping the banner card
+   (.ch2-dialog) and the settings panel (.ch2-settings) — both children of
+   the container — fully interactive. !important guards against any
+   injection-order conflict with the widget's own stylesheet. */
+.ch2-container {
+  pointer-events: none !important;
+}
+.ch2-dialog,
+.ch2-settings {
+  pointer-events: auto !important;
+}
+
+/* ─── Dock nav performance ─── */
+/* The macOS-style dock uses Framer Motion springs that re-measure
+   getBoundingClientRect on every mouse-move frame. Promote the dock
+   and its children to compositor layers so width/transform changes
+   never trigger layout on the main thread. */
+.dock-nav {
+  contain: layout style;
+  will-change: height;
+}
+.dock-nav .dock-item {
+  will-change: width, transform;
+  contain: layout style;
+}
+
+/* ─── Bottom sheet performance ─── */
+/* Sheet overlays and content animate via CSS transitions. Promote them
+   so slides and fades don't trigger repaints on the whole page. */
+[data-state="open"][data-sheet-overlay],
+[data-state="closed"][data-sheet-overlay] {
+  will-change: opacity;
+}
+[data-sheet-content] {
+  will-change: transform;
+  contain: layout style;
+}
+
+/* ─── Switch / toggle performance ─── */
+.switch-thumb {
+  will-change: transform;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Backdrop blur performance ─── */
+/* On mobile GPUs, backdrop-filter: blur() is extremely expensive when the
+   blurred region overlaps large areas. Use a lighter blur value and contain
+   the element so the browser can cache the blurred backdrop. */
+@supports (backdrop-filter: blur(1px)) {
+  .backdrop-blur-heavy {
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    contain: layout style paint;
+  }
+}
+
+/* ─── Dropdown / popover performance ─── */
+[data-radix-popper-content-wrapper] {
+  will-change: transform, opacity;
+  contain: layout style;
+}
+
+/* ─── Toast / notification performance ─── */
+[data-sonner-toaster] {
+  contain: layout style;
+}
+[data-sonner-toast] {
+  will-change: transform, opacity;
+}
+
+/* ─── Radix portal / dialog click safety ───
+   Ensure Radix portals and dialog overlays always accept pointer events.
+   Some animations or z-index stacking contexts can cause overlays to
+   swallow clicks; these act as safety nets. */
+[data-radix-portal] {
+  pointer-events: auto !important;
+}
+[data-radix-dialog-overlay] {
+  pointer-events: auto !important;
+}
+
+/* ─── Leaflet popup buttons ───
+   Leaflet popups render into a separate pane; ensure buttons inside
+   popup content are fully interactive on the first tap. */
+.leaflet-popup-content button,
+.leaflet-popup-content [role="button"],
+.leaflet-popup-content a {
+  pointer-events: auto !important;
+}

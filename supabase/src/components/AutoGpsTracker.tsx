@@ -96,16 +96,8 @@ export default function AutoGpsTracker() {
 
           const tripCtx = activeTripRef.current;
 
-          // Do not publish GPS unless an active/accepted trip exists. This
-          // guarantees we never leak parked trucks into the public map (privacy
-          // + cost control).
-          if (!tripCtx) {
-            setGpsTrackingState('idle');
-            return;
-          }
-
           const now = Date.now();
-          setGpsTrackingState('active');
+          setGpsTrackingState(tripCtx ? 'active' : 'idle');
           // Throttle writes to every 30s so the live map stays fresh.
           if (now - lastUpdateRef.current < LOCATION_UPDATE_INTERVAL_MS) return;
           lastUpdateRef.current = now;
@@ -129,13 +121,13 @@ export default function AutoGpsTracker() {
                 last_seen_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
                 is_sharing: true,
-                // Trip context for live map (never overwrites planned trip coords)
-                trip_id: tripCtx.trip_id,
-                origin_city: tripCtx.origin_city,
-                destination_city: tripCtx.destination_city,
-                vehicle_type: tripCtx.vehicle_type,
-                available_capacity_tonnes: tripCtx.available_capacity_tonnes,
-                trip_status: tripCtx.trip_status,
+                // Trip context for live map if available
+                trip_id: tripCtx?.trip_id || null,
+                origin_city: tripCtx?.origin_city || null,
+                destination_city: tripCtx?.destination_city || null,
+                vehicle_type: tripCtx?.vehicle_type || null,
+                available_capacity_tonnes: tripCtx?.available_capacity_tonnes || null,
+                trip_status: tripCtx?.trip_status || null,
               },
               { onConflict: 'driver_id' }
             );

@@ -48,6 +48,8 @@ const RoutesIndex = lazy(() => import("./pages/public/RoutesIndex"));
 const RouteDetail = lazy(() => import("./pages/public/RouteDetail"));
 const SitemapPage = lazy(() => import("./pages/public/SitemapPage"));
 const Comparison = lazy(() => import("./pages/public/Comparison"));
+const CompareTruckSuvidha = lazy(() => import("./pages/public/compare/CompareTruckSuvidha"));
+const CompareBlackBuck = lazy(() => import("./pages/public/compare/CompareBlackBuck"));
 const TruckerDashboard = lazy(() => import("./pages/trucker/Dashboard"));
 const PostTrip = lazy(() => import("./pages/trucker/PostTrip"));
 const TruckerHub = lazy(() => import("./pages/trucker/TruckerHub"));
@@ -68,6 +70,7 @@ const ChatList = lazy(() => import("./pages/messaging/ChatList"));
 const Profile = lazy(() => import("./pages/account/Profile"));
 const CommandCenterPage = lazy(() => import("./pages/admin/command-center/CommandCenterPage"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminListings = lazy(() => import("./pages/admin/AdminListings"));
 const AnalyticsDashboard = lazy(() => import("./pages/admin/AnalyticsDashboard"));
 const AuditLog = lazy(() => import("./pages/admin/AuditLog"));
 const UserManagement = lazy(() => import("./pages/admin/UserManagement"));
@@ -136,6 +139,8 @@ export const AppRoutes = () => (
       <Route path="/contact" element={<Contact />} />
       <Route path="/safety-trust" element={<SafetyTrust />} />
       <Route path="/compare" element={<Comparison />} />
+      <Route path="/compare/loadsaathi-vs-trucksuvidha" element={<ErrorBoundary><CompareTruckSuvidha /></ErrorBoundary>} />
+      <Route path="/compare/loadsaathi-vs-blackbuck" element={<ErrorBoundary><CompareBlackBuck /></ErrorBoundary>} />
       <Route path="/privacy" element={<Privacy />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/solutions/shippers" element={<ShipperSolution />} />
@@ -241,6 +246,8 @@ export const AppRoutes = () => (
       <Route path="/admin/monitoring" element={<CommandCenterPage />} />
       <Route path="/admin/command-center" element={<CommandCenterPage />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/trips" element={<AdminListings kind="trips" />} />
+      <Route path="/admin/shipments" element={<AdminListings kind="shipments" />} />
       <Route path="/admin/analytics" element={<AnalyticsDashboard />} />
       <Route path="/admin/audit" element={<AuditLog />} />
       <Route path="/admin/users" element={<UserManagement />} />

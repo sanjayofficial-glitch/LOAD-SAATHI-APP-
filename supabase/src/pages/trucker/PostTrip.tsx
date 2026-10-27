@@ -22,7 +22,6 @@ import { PricePredictor } from "@/components/PricePredictor";
 import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
 import VehicleSelect from "@/components/VehicleSelect";
-import { posthog } from "@/utils/posthog";
 import { trackEvent } from "@/utils/analytics";
 import { useDishaGuideRegistration } from "@/hooks/useDishaGuide";
 
@@ -180,7 +179,7 @@ const PostTrip = () => {
       navigate('/trucker/my-trips');
     } catch (err) {
       console.error('[PostTrip] Error:', err);
-      posthog.captureException(err, { flow: 'post_trip' });
+      import("@/utils/posthog").then(({ posthog }) => posthog.captureException(err, { flow: 'post_trip' })).catch(() => {});
       showError(err instanceof Error ? err.message : 'An unexpected error occurred.');
     } finally {
       setLoading(false);

@@ -5,7 +5,6 @@ import { createClerkSupabaseClient } from "@/utils/supabaseClient";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { showError } from "@/utils/toast";
-import { posthog } from "@/utils/posthog";
 import { trackEvent } from "@/utils/analytics";
 
 interface FavoriteButtonProps {
@@ -72,7 +71,7 @@ export default function FavoriteButton({ entityType, entityId, userId, className
       onToggled?.();
     },
     onError: (error, currentlyFavorited) => {
-      posthog.captureException(error, { flow: "update_favorite", entity_type: entityType });
+      import("@/utils/posthog").then(({ posthog }) => posthog.captureException(error, { flow: "update_favorite", entity_type: entityType })).catch(() => {});
       queryClient.setQueryData(queryKey, currentlyFavorited);
       showError("Failed to update favorite");
     },

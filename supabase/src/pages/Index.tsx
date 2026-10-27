@@ -19,8 +19,8 @@ const Index = () => {
   return (
     <>
       <SeoMeta
-        title="Shared Freight Marketplace | PTL/LTL East India"
-        description="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs on the Rourkela–Ranchi–Burdwan corridor. Book part loads online."
+        title="LoadSaathi: Free Load Board & Return Loads India"
+        description="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes."
         canonical="/"
         keywords="PTL freight Rourkela, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela"
         alternates={[{ hreflang: "hi", href: "/hi" }]}

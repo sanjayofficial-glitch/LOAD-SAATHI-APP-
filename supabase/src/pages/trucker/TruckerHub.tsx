@@ -2,7 +2,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useSupabase } from '@/hooks/useSupabase';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { Card, CardContent } from '@/components/ui/card';
@@ -44,12 +43,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { showSuccess, showError } from '@/utils/toast';
-import {
-  notifyShipperOfRequestAccepted,
-  notifyShipperOfRequestDeclined,
-  notifyShipperOfTripCompletion,
-  notifyShipperOfTripDelivered,
-} from '@/utils/notifications';
 import type { Trip, ShipmentRequest, Request } from '@/types';
 
 const StatusBadge = ({ status }: { status: string }) => {
@@ -70,7 +63,6 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 const TruckerHub = () => {
   const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
   const { getAuthenticatedClient } = useSupabase();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -179,7 +171,7 @@ const TruckerHub = () => {
       const result = typeof data === 'string' ? JSON.parse(data) : data;
       if (result?.error) throw new Error(result.error);
 
-      // Fire-and-forget: update linked shipments and notify shippers.
+      // Fire-and-forget: update linked shipments.
       void (async () => {
         try {
           const supabase = await getAuthenticatedClient();
@@ -191,19 +183,7 @@ const TruckerHub = () => {
         }
       })();
 
-      const tripRequests = incomingRequests.filter(r => r.trip_id === tripId && r.status === 'accepted');
-      Promise.all(tripRequests.map(request =>
-        notifyShipperOfTripCompletion({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          originCity: request.trip?.origin_city || '',
-          destinationCity: request.trip?.destination_city || '',
-          tripId,
-          getToken: () => getToken({ template: 'supabase' }),
-        })
-      )).catch(() =>
-        console.warn('[handleCompleteTrip] Failed to notify some shippers')
-      );
+      // Shippers are notified by the trg_trip_status_notify trigger.
 
       showSuccess('Trip marked as completed!');
       fetchData();
@@ -224,7 +204,7 @@ const TruckerHub = () => {
       const result = typeof data === 'string' ? JSON.parse(data) : data;
       if (result?.error) throw new Error(result.error);
 
-      // Fire-and-forget: update linked shipments and notify shippers.
+      // Fire-and-forget: update linked shipments.
       void (async () => {
         try {
           const supabase = await getAuthenticatedClient();
@@ -236,19 +216,7 @@ const TruckerHub = () => {
         }
       })();
 
-      const tripRequests = incomingRequests.filter(r => r.trip_id === tripId && r.status === 'accepted');
-      Promise.all(tripRequests.map(request =>
-        notifyShipperOfTripDelivered({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          originCity: request.trip?.origin_city || '',
-          destinationCity: request.trip?.destination_city || '',
-          tripId,
-          getToken: () => getToken({ template: 'supabase' }),
-        })
-      )).catch(() =>
-        console.warn('[handleMarkDelivered] Failed to notify some shippers')
-      );
+      // Shippers are notified by the trg_trip_status_notify trigger.
 
       showSuccess('Trip marked as delivered!');
       fetchData();
@@ -276,25 +244,9 @@ const TruckerHub = () => {
       );
 
       if (status === 'accepted') {
-        await notifyShipperOfRequestAccepted({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          truckerPhone: userProfile?.phone || 'N/A',
-          originCity: request.trip?.origin_city || '',
-          destinationCity: request.trip?.destination_city || '',
-          requestId: request.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        });
+        // Shipper is notified by trg_request_decided_notify (same transaction).
         showSuccess('✅ Request accepted!');
       } else {
-        await notifyShipperOfRequestDeclined({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          originCity: request.trip?.origin_city || '',
-          destinationCity: request.trip?.destination_city || '',
-          requestId: request.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        });
         showSuccess('Request declined.');
       }
       

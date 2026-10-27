@@ -1,6 +1,7 @@
 import {
   ShieldCheck,
   LayoutDashboard,
+  BarChart3,
   Users,
   UserCheck,
   Shield,
@@ -8,6 +9,8 @@ import {
   Image as ImageIcon,
   Key,
   MessageSquare,
+  Truck,
+  Package,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -25,8 +28,11 @@ export interface AdminNavItem {
  */
 export const ADMIN_NAV: AdminNavItem[] = [
   { label: 'Command Center', path: '/admin/monitoring', icon: ShieldCheck, aliasPaths: ['/admin/command-center'] },
-  { label: 'Overview', path: '/admin/analytics', icon: LayoutDashboard },
+  { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'Overview', path: '/admin/analytics', icon: BarChart3 },
   { label: 'Users', path: '/admin/users', icon: Users },
+  { label: 'Trips', path: '/admin/trips', icon: Truck },
+  { label: 'Shipments', path: '/admin/shipments', icon: Package },
   { label: 'Verifications', path: '/admin/verifications', icon: UserCheck },
   { label: 'Moderation', path: '/admin/moderation', icon: Shield },
   { label: 'Audit Log', path: '/admin/audit', icon: FileText },

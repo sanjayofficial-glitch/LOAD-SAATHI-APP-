@@ -99,7 +99,7 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 - [e-Way Bill Rules 2026](https://loadsaathi.in/blog/indian-logistics-eway-bill-gst-2026)
 - [Digital Freight Matching India](https://loadsaathi.in/blog/digital-freight-matching-india)
 - [East India Freight Corridors](https://loadsaathi.in/blog/east-india-freight-corridors)
-- [PTL vs FTL When to Use Each](https://loadsaathi.in/blog/ptl-vs-ftl-when-to-use-each)
+- [Best Load Board Apps in India](https://loadsaathi.in/blog/best-load-board-apps-india)
 - [Steel Transport India Guide](https://loadsaathi.in/blog/steel-transport-india-guide)
 - [How to Find Return Loads India](https://loadsaathi.in/blog/how-to-find-return-loads-india)
 - [Monsoon Logistics Tips](https://loadsaathi.in/blog/monsoon-logistics-tips)
@@ -108,6 +108,12 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
 - [LoadSaathi vs Traditional Brokers](https://loadsaathi.in/blog/loadsaathi-vs-brokers)
 - [Bhubaneswar to Kolkata Freight Rates](https://loadsaathi.in/blog/bhubaneswar-to-kolkata-freight-rates)
 - [Cargo Insurance Guide India](https://loadsaathi.in/blog/cargo-insurance-guide-india)
+
+## Comparisons
+
+- [All Comparisons](https://loadsaathi.in/compare)
+- [LoadSaathi vs TruckSuvidha](https://loadsaathi.in/compare/loadsaathi-vs-trucksuvidha)
+- [LoadSaathi vs BlackBuck](https://loadsaathi.in/compare/loadsaathi-vs-blackbuck)
 
 ## Social Media
 

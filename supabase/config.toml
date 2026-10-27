@@ -419,6 +419,13 @@ enabled = true
 [functions.lead-alert]
 verify_jwt = false
 
+# push-notifier is invoked by a Supabase Database Webhook (a server-side
+# caller with no end-user JWT). It authenticates the call with the
+# PUSH_WEBHOOK_SECRET header and substantiates every payload against the
+# notifications table before sending.
+[functions.push-notifier]
+verify_jwt = false
+
 # agent-router (Freddy copilot): the Supabase gateway would otherwise pass
 # the Clerk 'supabase'-template JWT to GoTrue, which rejects it
 # ("bad_jwt: sub claim must be a UUID") before the function's own verifier

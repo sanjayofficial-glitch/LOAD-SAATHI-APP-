@@ -40,6 +40,7 @@ const DockNav = lazy(() => import("./DockNav"));
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./ui/tooltip";
 import { socialLinks } from "@/data/socialLinks";
 import { useAuth } from "@/contexts/AuthContext";
+import { ThemeToggle } from "./ThemeToggle";
 
 const publicBottomNavItems: BottomNavItem[] = [
   { label: "Home", path: "/", icon: <Home className="h-5 w-5" /> },
@@ -110,6 +111,12 @@ const footerLinks = {
     { label: "Guides", path: "/guide/ptl-vs-ftl" },
     { label: "Contact", path: "/contact" },
   ],
+  Compare: [
+    { label: "All Comparisons", path: "/compare" },
+    { label: "vs TruckSuvidha", path: "/compare/loadsaathi-vs-trucksuvidha" },
+    { label: "vs BlackBuck", path: "/compare/loadsaathi-vs-blackbuck" },
+    { label: "Best Load Board Apps", path: "/blog/best-load-board-apps-india" },
+  ],
   Legal: [
     { label: "Privacy", path: "/privacy" },
     { label: "Terms", path: "/terms" },
@@ -179,7 +186,10 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
             <LogoMark size="h-11 w-11" />
             <span className="text-lg sm:text-xl font-bold text-orange-600 dark:text-orange-400">LoadSaathi</span>
           </Link>
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden sm:block">
+              <ThemeToggle />
+            </div>
             {dashboardPath ? (
               <Link to={dashboardPath} className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground dark:hover:text-orange-400 transition-colors duration-fast ease-ios hover:-translate-y-0.5">
                 <LayoutDashboard className="h-4 w-4" />
@@ -307,7 +317,11 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
         centerAction={publicMobileCenterAction}
         visible={mobileMenuOpen}
         footer={
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between px-2 py-1.5">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</span>
+              <ThemeToggle />
+            </div>
             <div className="grid grid-cols-2 gap-2">
               {publicMobileFooterItems.map((item) => (
                 <Link

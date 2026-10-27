@@ -22,8 +22,8 @@ export default function AiLogistics() {
         </div>
       </noscript>
       <SeoMeta
-        title="AI in Truck Transportation | How AI Reduces Empty Miles in India"
-        description="LoadSaathi uses AI for freight matching, price prediction, smart routing, and credit scoring. Learn how artificial intelligence is changing truck transportation in India."
+        title="AI Load Matching India – Smarter Than Load Board Apps"
+        description="LoadSaathi's AI matches your truck to the right load automatically — no scrolling endless listings like other apps. See how AI freight matching works."
         keywords="AI logistics India, AI truck matching, AI freight matching, AI route optimization, AI freight pricing, logistics automation India, AI-powered freight marketplace"
         canonical="/ai-logistics"
         breadcrumbs={[

@@ -15,7 +15,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArrowLeft, Send, Loader2, User as UserIcon, WifiOff, Phone } from 'lucide-react';
 import { showError } from '@/utils/toast';
 import { supabase } from '@/integrations/supabase/client';
-import { posthog } from '@/utils/posthog';
 import { trackEvent } from '@/utils/analytics';
 import { MessageStatus } from '@/components/MessageStatus';
 
@@ -166,7 +165,7 @@ const Chat = () => {
         sender_role: userProfile?.user_type,
       });
     } catch (error) {
-      posthog.captureException(error, { flow: 'send_message' });
+      import('@/utils/posthog').then(({ posthog }) => posthog.captureException(error, { flow: 'send_message' })).catch(() => {});
       setMessages(prev => prev.map(m => (m.tempId === tempId ? { ...m, status: 'failed' as MessageStatus } : m)));
       showError('Failed to send message');
     }

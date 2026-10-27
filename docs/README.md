@@ -6,10 +6,11 @@ architecture, deployment, and future improvements.
 
 ## Choose your reading path
 
-The [Repository Handbook](../REPO_HANDBOOK.md) is the shortest orientation. The
+The [Repository Handbook](REPO_HANDBOOK.md) is the shortest orientation. The
 [Handbook Index](handbook/00-index.md) then routes each reader to the right depth.
 
-For a complete visual catalog, see the [Diagram Directory](DIAGRAMS.md).
+For a complete visual catalog, see the [Diagram Directory](DIAGRAMS.md). For the
+quickest possible understanding, see the [Visual Guide](VISUAL_GUIDE.md).
 
 | Reader | Start with | Best for |
 | --- | --- | --- |
@@ -71,6 +72,7 @@ For the quickest introduction, read the [README](../README.md).
 | [Matching Algorithm](matching.md)   | AI smart-matching scoring engine         |
 | [Realtime](realtime.md)             | Supabase Realtime subscriptions          |
 | [Edge Functions](edge-functions.md) | Supabase Edge Functions (Deno) reference |
+| [Notifications](notifications.md)   | Triggers → bell → Web Push pipeline      |
 
 ### Operations
 
@@ -91,7 +93,7 @@ For the quickest introduction, read the [README](../README.md).
 
 ## Repository Maps
 
-- [`CONTEXT.md`](../CONTEXT.md) — The definitive codebase context file (file
+- [`CONTEXT.md`](CONTEXT.md) — The definitive codebase context file (file
   tree, system flows, data models, coding standards, troubleshooting).
 - [`AI_RULES.md`](../AI_RULES.md) — Coding agent rules and tech-stack
   conventions.

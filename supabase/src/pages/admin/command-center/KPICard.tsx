@@ -20,6 +20,8 @@ interface KPICardProps {
   trendLabel?: string;
   /** Small helper line, e.g. "7 loads waiting 30m+". */
   hint?: string;
+  /** Week-over-week change in %, e.g. 12 → "+12%". */
+  delta?: number | null;
 }
 
 interface KPIColor {
@@ -27,25 +29,43 @@ interface KPIColor {
   text: string;
 }
 
-const FALLBACK_COLOR: KPIColor = { bg: 'bg-orange-50', text: 'text-orange-600' };
+const FALLBACK_COLOR: KPIColor = { bg: 'bg-orange-50 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400' };
+
+/** Week-over-week delta chip: green up, red down, nothing when unknown. */
+function DeltaBadge({ value }: { value: number | null | undefined }) {
+  if (value == null) return null;
+  const up = value >= 0;
+  return (
+    <span
+      className={cn(
+        'text-[10px] font-bold tabular-nums whitespace-nowrap',
+        up ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400',
+      )}
+      title="Change vs the previous 7 days"
+    >
+      {up ? '+' : ''}
+      {value}%
+    </span>
+  );
+}
 
 const colorMap: Record<string, KPIColor> = {
-  orange: { bg: 'bg-orange-50', text: 'text-orange-600' },
-  green: { bg: 'bg-green-50', text: 'text-green-600' },
-  blue: { bg: 'bg-blue-50', text: 'text-blue-600' },
-  purple: { bg: 'bg-purple-50', text: 'text-purple-600' },
-  amber: { bg: 'bg-amber-50', text: 'text-amber-600' },
-  emerald: { bg: 'bg-emerald-50', text: 'text-emerald-600' },
-  red: { bg: 'bg-red-50', text: 'text-red-600' },
-  slate: { bg: 'bg-gray-100', text: 'text-gray-600' },
+  orange: { bg: 'bg-orange-50 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400' },
+  green: { bg: 'bg-green-50 dark:bg-green-900/30', text: 'text-green-600 dark:text-green-400' },
+  blue: { bg: 'bg-blue-50 dark:bg-blue-900/30', text: 'text-blue-600 dark:text-blue-400' },
+  purple: { bg: 'bg-purple-50 dark:bg-purple-900/30', text: 'text-purple-600 dark:text-purple-400' },
+  amber: { bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400' },
+  emerald: { bg: 'bg-emerald-50 dark:bg-emerald-900/30', text: 'text-emerald-600 dark:text-emerald-400' },
+  red: { bg: 'bg-red-50 dark:bg-red-900/30', text: 'text-red-600 dark:text-red-400' },
+  slate: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400' },
 };
 
 const TONE_MAP: Record<KPITone, { card: string; value: string }> = {
-  default: { card: 'border-gray-200 bg-white', value: 'text-gray-900' },
-  info: { card: 'border-gray-200 bg-white', value: 'text-gray-900' },
-  good: { card: 'border-emerald-200 bg-emerald-50/40', value: 'text-emerald-700' },
-  warn: { card: 'border-amber-300 bg-amber-50/50', value: 'text-amber-700' },
-  bad: { card: 'border-red-300 bg-red-50/60', value: 'text-red-700' },
+  default: { card: 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900', value: 'text-gray-900 dark:text-gray-100' },
+  info: { card: 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900', value: 'text-gray-900 dark:text-gray-100' },
+  good: { card: 'border-emerald-200 dark:border-emerald-800 bg-emerald-50/40 dark:bg-emerald-900/20', value: 'text-emerald-700 dark:text-emerald-400' },
+  warn: { card: 'border-amber-300 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/20', value: 'text-amber-700 dark:text-amber-400' },
+  bad: { card: 'border-red-300 dark:border-red-800 bg-red-50/60 dark:bg-red-900/20', value: 'text-red-700 dark:text-red-400' },
 };
 
 export default function KPICard({
@@ -61,6 +81,7 @@ export default function KPICard({
   dense,
   trendLabel,
   hint,
+  delta,
 }: KPICardProps) {
   const c = colorMap[color] ?? FALLBACK_COLOR;
   const t = TONE_MAP[tone] ?? TONE_MAP.default;
@@ -81,15 +102,18 @@ export default function KPICard({
       >
         <div className="flex items-center gap-1.5 min-w-0">
           <span className={cn('p-1 rounded-md shrink-0', c.bg, c.text)}>{icon}</span>
-          <span className={cn('font-bold tabular-nums text-[13px] truncate', t.value)}>
+          <span className={cn('font-bold tabular-nums text-[13px] truncate flex items-center gap-1', t.value)}>
             {loading ? (
-              <span className="inline-block w-7 h-4 rounded bg-gray-200 animate-pulse align-middle" />
+              <span className="inline-block w-7 h-4 rounded bg-gray-200 dark:bg-gray-700 animate-pulse align-middle" />
             ) : (
-              value
+              <>
+                {value}
+                <DeltaBadge value={delta} />
+              </>
             )}
           </span>
         </div>
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mt-0.5 truncate">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mt-0.5 truncate">
           {label}
         </p>
       </button>
@@ -114,11 +138,16 @@ export default function KPICard({
         <div className={cn('p-1.5 rounded-lg shrink-0', c.bg, c.text)}>{icon}</div>
         {trend && trend.length >= 2 && <Sparkline data={trend} width={44} height={16} />}
       </div>
-      <p className={cn('font-bold tabular-nums truncate', t.value, compact ? 'text-lg' : 'text-2xl')}>
-        {loading ? <span className="inline-block w-8 h-5 rounded bg-gray-200 animate-pulse align-middle" /> : value}
+      <p className={cn('font-bold tabular-nums truncate flex items-baseline gap-1.5', t.value, compact ? 'text-lg' : 'text-2xl')}>
+        {loading ? <span className="inline-block w-8 h-5 rounded bg-gray-200 dark:bg-gray-700 animate-pulse align-middle" /> : (
+          <>
+            <span className="truncate">{value}</span>
+            <DeltaBadge value={delta} />
+          </>
+        )}
       </p>
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mt-0.5 truncate">{label}</p>
-      {hint && <p className="text-[10px] text-gray-500 mt-0.5 truncate">{hint}</p>}
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mt-0.5 truncate">{label}</p>
+      {hint && <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 truncate">{hint}</p>}
     </button>
   );
 }

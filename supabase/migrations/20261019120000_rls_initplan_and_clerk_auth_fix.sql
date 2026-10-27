@@ -188,4 +188,4 @@ DROP POLICY IF EXISTS "Users can insert own profile" ON public.users;
 CREATE POLICY "Users can insert own profile" ON public.users AS PERMISSIVE FOR INSERT TO authenticated WITH CHECK ((select current_clerk_user_id()) = id);
 
 DROP POLICY IF EXISTS "Users can update own profile" ON public.users;
-CREATE POLICY "Users can update own profile" ON public.users AS PERMISSIVE FOR UPDATE TO authenticated USING ((select current_clerk_user_id()) = id) WITH CHECK ((select current_clerk_user_id()) = id);
+CREATE POLICY "Users can update own profile" ON public.users AS PERMISSIVE FOR UPDATE TO authenticated USING ((select current_clerk_user_id()) = id) WITH CHECK ((select current_clerk_user_id()) = id AND (user_type IS NOT DISTINCT FROM OLD.user_type OR user_type = ANY (ARRAY['shipper'::text, 'trucker'::text])));

@@ -3,6 +3,7 @@ import { createContext, useContext, useLayoutEffect, useEffect, useState, useCal
 import { useUser, useSession, useClerk } from '@clerk/clerk-react';
 import { User } from '@/types';
 import { showError } from '@/utils/toast';
+import { isPostHogEnabled } from '@/utils/posthogConfig';
 
 interface AuthContextType {
   user: ReturnType<typeof useUser>['user'];
@@ -155,7 +156,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user?.id]);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || !isPostHogEnabled()) return;
 
     // posthog is lazy-loaded to keep it off the critical bundle
     let cancelled = false;
@@ -187,9 +188,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = useCallback(async () => {
     await clerk.signOut();
-    import('@/utils/posthog')
-      .then(({ posthog }) => posthog.reset())
-      .catch(() => {});
+    if (isPostHogEnabled()) {
+      import('@/utils/posthog')
+        .then(({ posthog }) => posthog.reset())
+        .catch(() => {});
+    }
     supabaseTokenRef.current = null;
     supabaseTokenExpiryRef.current = 0;
     setUserProfile(null);

@@ -2,7 +2,7 @@
 
 This document defines the standards every contributor must follow when working
 in this repository. It is the enforcement companion to the rules documented in
-[`CONTEXT.md`](../CONTEXT.md) and [`AI_RULES.md`](../AI_RULES.md).
+[`CONTEXT.md`](CONTEXT.md) and [`AI_RULES.md`](../AI_RULES.md).
 
 ---
 

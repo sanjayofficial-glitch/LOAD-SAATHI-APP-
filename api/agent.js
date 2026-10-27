@@ -45,6 +45,8 @@ const EXACT_ROUTES = new Set([
   '/pricing',
   '/faq',
   '/compare',
+  '/compare/loadsaathi-vs-trucksuvidha',
+  '/compare/loadsaathi-vs-blackbuck',
   '/safety-trust',
   '/solutions/shippers',
   '/solutions/truckers',
@@ -118,6 +120,8 @@ const REDIRECTS = {
   '/return-load-calculator': '/tools/return-load-calculator',
   '/truck-load-calculator': '/tools/truck-load-calculator',
   '/ptl-vs-ftl-calculator': '/tools/ptl-vs-ftl-calculator',
+  // Content consolidation: the old blog post now lives at /guide/ptl-vs-ftl.
+  '/blog/ptl-vs-ftl-when-to-use-each': '/guide/ptl-vs-ftl',
   '/location/vizag': '/location/visakhapatnam',
 };
 
@@ -703,14 +707,14 @@ const ROUTE_DATA = {
 // ── Static page SEO metadata ──────────────────────────────────────────────────
 const STATIC_PAGE_DATA = {
   "/": {
-    title: "Shared Freight Marketplace | PTL/LTL East India | LoadSaathi",
-    metaDescription: "LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on the Rourkela–Ranchi–Burdwan corridor.",
+    title: "LoadSaathi: Free Load Board & Return Loads India",
+    metaDescription: "Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes.",
     keywords: "PTL freight Rourkela, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela",
     summary: "LoadSaathi is India's AI-powered freight marketplace for booking trucks and loads across 500+ corridors."
   },
   "/about": {
     title: "About LoadSaathi - India's Trusted Freight Marketplace",
-    metaDescription: "Learn about LoadSaathi's mission to connect shippers with verified truckers across India. Founded at NIT Rourkela, serving 500+ corridors.",
+    metaDescription: "Learn about LoadSaathi's mission to connect shippers with verified truckers across India. Founded at NIT Rourkela, serving 500+ freight corridors.",
     keywords: ["about loadsaathi", "freight marketplace india", "nabh sagar sahu", "nit rourkela logistics"],
     summary: "LoadSaathi is India's AI-powered freight marketplace founded at NIT Rourkela, connecting shippers with verified truckers across 500+ corridors."
   },
@@ -835,6 +839,18 @@ const STATIC_PAGE_DATA = {
     keywords: ["loadsaathi vs vahak", "blackbuck vs loadsaathi", "freight app comparison india", "truck booking app comparison"],
     summary: "Side-by-side comparison of LoadSaathi and leading Indian freight platforms across features, fees, and coverage."
   },
+  "/compare/loadsaathi-vs-trucksuvidha": {
+    title: "LoadSaathi vs TruckSuvidha 2026: Cost, Loads & Features",
+    metaDescription: "Compare LoadSaathi vs TruckSuvidha: upfront subscription fees vs 100% free load board. See which truck load platform works best for Indian transporters.",
+    keywords: ["loadsaathi vs trucksuvidha", "trucksuvidha review", "freight app comparison india", "truck booking app comparison"],
+    summary: "Head-to-head comparison of LoadSaathi's free zero-commission load board against TruckSuvidha's subscription directory model."
+  },
+  "/compare/loadsaathi-vs-blackbuck": {
+    title: "LoadSaathi vs BlackBuck 2026: Broker Margin vs Free Board",
+    metaDescription: "LoadSaathi vs BlackBuck comparison: managed freight rates vs zero-commission direct load matching. See which platform is right for your trucking business.",
+    keywords: ["loadsaathi vs blackbuck", "blackbuck app review", "load board comparison india", "fleet owner app comparison"],
+    summary: "LoadSaathi's zero-commission board vs BlackBuck's managed-margin model: commission, settlement speed, tracking and coverage compared."
+  },
   "/safety-trust": {
     title: "Safety & Trust - Verified Truckers | LoadSaathi",
     metaDescription: "How LoadSaathi keeps freight safe: trucker KYC verification, GPS tracking, escrow-backed payments, and dispute resolution for shippers.",
@@ -860,8 +876,8 @@ const STATIC_PAGE_DATA = {
     summary: "LoadSaathi helps MSMEs reduce logistics costs with transparent pricing, part-loads, and verified carriers."
   },
   "/ai-logistics": {
-    title: "AI in Indian Logistics - Smarter Freight Matching | LoadSaathi",
-    metaDescription: "How LoadSaathi uses AI for load-truck matching, route optimization, and freight price prediction to reduce empty runs in Indian logistics.",
+    title: "AI Load Matching India – Smarter Than Load Board Apps",
+    metaDescription: "LoadSaathi's AI matches your truck to the right load automatically — no scrolling endless listings like other apps. See how AI freight matching works.",
     keywords: ["ai logistics india", "ai freight matching", "smart truck dispatch", "ai in trucking"],
     summary: "AI-driven matching, routing, and pricing that cut empty kilometers and freight costs for Indian shippers and truckers."
   },
@@ -914,8 +930,8 @@ const STATIC_PAGE_DATA = {
     summary: "Find trucks near your location: compare capacity, market rates and verified trucker credit scores, then book with live GPS tracking."
   },
   "/fare-calculator": {
-    title: "Truck Fare Calculator - Estimate Freight Cost India",
-    metaDescription: "Free truck fare calculator: estimate freight charges per km and per kg for any Indian route, including tolls and diesel estimates.",
+    title: "Truck Fare Calculator – Free Bhada Calculator India",
+    metaDescription: "Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps.",
     keywords: ["truck fare calculator", "freight cost calculator india", "truck rate per km", "transport charge calculator"],
     summary: "Free calculator that estimates truck freight charges by distance, weight, and route."
   },
@@ -926,8 +942,8 @@ const STATIC_PAGE_DATA = {
     summary: "Per-kilometre transport cost calculator covering fuel, tolls, and load type."
   },
   "/truck-load-calculator": {
-    title: "Truck Load Calculator - Weight, Volume & Truck Size",
-    metaDescription: "Find the right truck for your cargo: calculate weight, volume, and recommended truck type (Tata 407, 1109, 3118) for Indian shipments.",
+    title: "Truck Load Calculator India – Free, Instant Fare & Rate",
+    metaDescription: "Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators.",
     keywords: ["truck load calculator", "truck capacity calculator", "which truck for my load", "cargo volume calculator"],
     summary: "Calculates cargo weight and volume and suggests the right Indian truck type."
   },
@@ -939,25 +955,25 @@ const STATIC_PAGE_DATA = {
   },
   "/freight-rate-calculator": {
     title: "Freight Rate Calculator - Estimate Per KG/Per KM Rates",
-    metaDescription: "Estimate freight rates per kg and per km for any Indian corridor. Compare market rates before booking trucks with LoadSaathi.",
+    metaDescription: "Calculate estimated freight rates for PTL, LTL, and FTL shipments across India. Get distance, cost/km, truck recommendation, and freight range.",
     keywords: ["freight rate calculator", "per kg freight rate india", "truck rate estimate", "shipping rate calculator"],
     summary: "Estimates per-kg and per-km freight rates for Indian routes."
   },
   "/return-load-calculator": {
-    title: "Return Load Calculator - Save on Empty Truck Trips",
-    metaDescription: "Estimate how much empty return trips cost you and what you save by booking backhaul loads on LoadSaathi instead.",
+    title: "Return Load Calculator: Stop Losing ₹ on Empty Return Trips",
+    metaDescription: "Coming back empty? Calculate what your empty return trip costs & find return loads free on LoadSaathi. Truckers in Jharkhand & Odisha save ₹1000s/trip.",
     keywords: ["return load savings", "empty km calculator", "backhaul savings calculator", "truck fuel savings"],
     summary: "Shows the cost of empty return runs and savings from filling them with backhaul loads."
   },
   "/tools/fare-calculator": {
-    title: "Truck Fare Calculator - Estimate Freight Cost India",
-    metaDescription: "Free truck fare calculator: estimate freight charges per km and per kg for any Indian route, including tolls and diesel estimates.",
+    title: "Truck Fare Calculator – Free Bhada Calculator India",
+    metaDescription: "Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps.",
     keywords: ["truck fare calculator", "freight cost calculator india", "truck rate per km", "transport charge calculator"],
     summary: "Free calculator that estimates truck freight charges by distance, weight, and route."
   },
   "/tools/truck-load-calculator": {
-    title: "Truck Load Calculator - Weight, Volume & Truck Size",
-    metaDescription: "Find the right truck for your cargo: calculate weight, volume, and recommended truck type (Tata 407, 1109, 3118) for Indian shipments.",
+    title: "Truck Load Calculator India – Free, Instant Fare & Rate",
+    metaDescription: "Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators.",
     keywords: ["truck load calculator", "truck capacity calculator", "which truck for my load", "cargo volume calculator"],
     summary: "Calculates cargo weight and volume and suggests the right Indian truck type."
   },
@@ -969,13 +985,13 @@ const STATIC_PAGE_DATA = {
   },
   "/tools/freight-rate-calculator": {
     title: "Freight Rate Calculator - Estimate Per KG/Per KM Rates",
-    metaDescription: "Estimate freight rates per kg and per km for any Indian corridor. Compare market rates before booking trucks with LoadSaathi.",
+    metaDescription: "Calculate estimated freight rates for PTL, LTL, and FTL shipments across India. Get distance, cost/km, truck recommendation, and freight range.",
     keywords: ["freight rate calculator", "per kg freight rate india", "truck rate estimate", "shipping rate calculator"],
     summary: "Estimates per-kg and per-km freight rates for Indian routes."
   },
   "/tools/return-load-calculator": {
-    title: "Return Load Calculator - Save on Empty Truck Trips",
-    metaDescription: "Estimate how much empty return trips cost you and what you save by booking backhaul loads on LoadSaathi instead.",
+    title: "Return Load Calculator: Stop Losing ₹ on Empty Return Trips",
+    metaDescription: "Coming back empty? Calculate what your empty return trip costs & find return loads free on LoadSaathi. Truckers in Jharkhand & Odisha save ₹1000s/trip.",
     keywords: ["return load savings", "empty km calculator", "backhaul savings calculator", "truck fuel savings"],
     summary: "Shows the cost of empty return runs and savings from filling them with backhaul loads."
   },
@@ -1561,13 +1577,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "india-truck-freight-rates-2026": {
-    "title": "PTL vs FTL vs LTL Freight Rates India 2026: Complete Pricing Guide | LoadSaathi",
+    "title": "Truck Freight Rates India 2026: City-Wise Rate Chart Live",
     "keywords": [
-      "ptl vs ftl vs ltl freight rates india 2026 complete pricing guide",
+      "truck freight rates india 2026",
       "india truck freight rates 2026",
       "freight rates"
     ],
-    "summary": "India's road freight market is worth USD 167.5 billion in 2026 and growing at 8.8% CAGR (Mordor Intelligence). This guide compares PTL, FTL, and LTL freight modes — when to use each, per-tonne vs per-km pricing, and how partial-load shipping saves 25–35% on East India corridors.",
+    "summary": "Latest 2026 truck freight rates for major Indian routes — per km & per ton. Updated monthly from real bookings, not broker quotes. Check your route.",
     "author": "Sanjaya Sahu",
     "authorBio": "Sanjaya Sahu is the Founder & CEO of LoadSaathi, an AI-powered shared freight marketplace for East India's industrial corridors.",
     "date": "2026-08-08",
@@ -1577,13 +1593,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "truck-transport-charges-per-km-india": {
-    "title": "Truck Transport Cost per KM in India: What Affects Your Freight Rate? | LoadSaathi",
+    "title": "Truck Rate Per Km India 2026: ₹10–₹85 Chart (All Trucks)",
     "keywords": [
-      "truck transport cost per km in india",
+      "truck rate per km india 2026",
       "truck transport charges per km india",
       "freight rates"
     ],
-    "summary": "Truck transport cost per km in India (2026): mini ₹10–25, medium ₹18–40, container ₹35–85 per km. See what drives your rate — distance, vehicle, fuel, tolls, season and return loads — plus the cost formula.",
+    "summary": "Real truck transport rates per km in India 2026 — Tata Ace to 32ft. Rate chart, cost formula & free calculator. No agent markup, actual market rates.",
     "author": "LoadSaathi Team",
     "authorBio": "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
     "date": "2026-08-16",
@@ -1738,21 +1754,6 @@ const BLOG_DATA = {
     "faq": [],
     "category": "Route Guide"
   },
-  "ptl-vs-ftl-when-to-use-each": {
-    "title": "PTL vs FTL: When to Use Each Freight Mode (2026 Guide) | LoadSaathi",
-    "keywords": [
-      "ptl vs ftl when to use each freight mode 2026 guide",
-      "ptl vs ftl when to use each",
-      "freight guide"
-    ],
-    "summary": "PTL (Part Truck Load) is 25–35% cheaper than FTL for shipments under 8 tonnes. This guide compares PTL and FTL on cost, transit time, safety, and best use cases, with 2026 pricing benchmarks for Indian freight corridors.",
-    "author": "Priya Sharma",
-    "authorBio": "Priya Sharma is the Product Lead at LoadSaathi, specializing in trust and reputation systems for marketplace platforms.",
-    "date": "2026-08-09",
-    "readTime": "4 min",
-    "faq": [],
-    "category": "Freight Guide"
-  },
   "freight-booking-mistakes-to-avoid": {
     "title": "7 Freight Booking Mistakes That Cost Shippers Money | LoadSaathi",
     "keywords": [
@@ -1877,7 +1878,7 @@ const BLOG_DATA = {
       },
       {
         "question": "Which corridors are best for PTL in Odisha and Jharkhand?",
-        "answer": "The highest-volume PTL corridors are Rourkela-Kolkata (430 km), Rourkela-Ranchi (180 km), Rourkela-Bhubaneswar (310 km), Bhubaneswar-Kolkata (470 km), and Ranchi-Kolkata (350 km)."
+        "answer": "The highest-volume PTL corridors are Rourkela-Kolkata (430 km), Rourkela-Ranchi (180 km), Rourkela-Bhubaneswar (310 km), Bhubaneswar-Kolkata (470 km), and Ranchi-Kolkata (420 km)."
       },
       {
         "question": "How do I book PTL transport online?",
@@ -2233,13 +2234,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-23"
   },
   "ranchi-to-kolkata-freight-rates": {
-    "title": "Ranchi to Kolkata Freight Rates 2026: Complete Cost Guide | LoadSaathi",
+    "title": "Ranchi to Kolkata Truck Rate 2026: Fare, Distance & Booking",
     "keywords": [
-      "ranchi to kolkata freight rates 2026 complete cost guide",
+      "ranchi to kolkata truck rate 2026",
       "ranchi to kolkata freight rates",
       "route guide"
     ],
-    "summary": "Ranchi to Kolkata freight rates for 2026: PTL 5-8 rupees per kg, FTL 25,000-40,000 rupees by vehicle type. 420 km via NH-33 and NH-2, 9-11 hours transit. Includes return-load opportunities, cargo types, and booking tips.",
+    "summary": "Ranchi to Kolkata truck freight rate 2026 — fare by truck size, 420km route info & direct booking without transport agents. Get return loads too.",
     "author": "Sanjaya Sahu",
     "date": "2026-08-23",
     "readTime": "5 min",
@@ -2877,13 +2878,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-09-25"
   },
   "what-is-load-board": {
-    "title": "What Is a Truck Load Board? How Load Boards Work in India | LoadSaathi",
+    "title": "What Is a Load Board? Meaning + Best Free Option in India",
     "keywords": [
       "load board for trucks india",
       "what is load board",
       "trucker tips"
     ],
-    "summary": "What is a load board? It is where shippers post loads and truckers post trucks. This 2026 guide covers formats, costs, matching and how to choose one.",
+    "summary": "Load board meaning explained simply + how Indian truckers use one to find loads without brokers. Compare paid apps vs LoadSaathi's free load board.",
     "author": "LoadSaathi Team",
     "authorBio": "LoadSaathi team explains how digital freight matching works for Indian truckers and MSME shippers, corridor by corridor.",
     "date": "2026-09-12",
@@ -2912,6 +2913,24 @@ const BLOG_DATA = {
     ],
     "category": "Trucker Tips",
     "lastUpdated": "2026-09-25"
+  },
+  "best-load-board-apps-india": {
+    title: "5 Best Load Board Apps in India (2026): Free & Paid Ranked",
+    keywords: ["best load board apps india", "truck load app india", "load board comparison 2026", "free load board india", "truck booking app india", "vahak vs blackbuck", "load board for truckers"],
+    summary: "Looking for the best truck load apps in India? We compare LoadSaathi, Vahak, BlackBuck, TruckSuvidha & TrucksUp by features, pricing and coverage in 2026.",
+    author: "LoadSaathi Team",
+    authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry, with a focus on practical cost decisions for MSME shippers and small fleet operators.",
+    date: "2026-10-18",
+    lastUpdated: "2026-10-18",
+    readTime: "10 min read",
+    faq: [
+      { question: "Which is the best free load board app in India?", answer: "LoadSaathi is the only major platform in this list that is fully free for truckers with zero commission on freight. Most other platforms are freemium: free to browse, with paid plans, badges, or margin built into managed load rates." },
+      { question: "Are load board apps free for truckers in India?", answer: "It depends on the model. Some charge a monthly subscription, some take a commission per completed load, some are free for carriers and monetise shipper-side features, and some build margin into managed rates. Always confirm the true cost per load before you commit — a free browse tier can still carry per-booking charges." },
+      { question: "Which load app is best for East India corridors?", answer: "For Jharkhand, Odisha, and West Bengal corridors such as Ranchi–Kolkata, Rourkela–Kolkata, and Jamshedpur–Kolkata, LoadSaathi concentrates its network and adds AI matching plus return-load discovery. For pan-India coverage, add a national platform like Vahak or BlackBuck alongside it." },
+      { question: "How do load boards help reduce empty kilometres?", answer: "They make the return leg visible before the truck commits to the outbound trip. With over 35% of commercial truck-kilometres in India running empty, seeing who needs a truck on your way back turns a dead leg into a booked one. Return-load matching is a free core feature on LoadSaathi." },
+      { question: "Can I use more than one load board app?", answer: "Yes, and most successful truckers do. A common pattern is a free, zero-commission board for regular home corridors and return loads, plus one national discovery app for weeks when local lanes run thin. Just keep your postings consistent across platforms to avoid double-booking." },
+    ],
+    category: "Industry Insights",
   },
   "electric-trucks-small-fleets-india": {
     title: "Are Electric Trucks Viable for Small Fleets in India? A Practical Cost Checklist",
@@ -3139,9 +3158,9 @@ const BLOG_DATA = {
 // ── Guide SEO metadata (3 guides) ─────────────────────────────────────────────
 const GUIDE_DATA = {
   "ptl-vs-ftl": {
-    title: "PTL vs FTL in Logistics: Full Forms, Differences, and Which to Choose | LoadSaathi",
+    title: "FTL & PTL Full Form: Difference, Rates & Which Is Cheaper",
     keywords: ["ptl vs ftl", "part truck load", "full truck load", "shipping comparison india"],
-    summary: "PTL means Part Truck Load and FTL means Full Truck Load. PTL shares truck space for shipments under 3 tonnes at 30-40% less; FTL gives exclusive vehicle use for loads over 7 tonnes. Differences, costs and how to choose.",
+    summary: "FTL = Full Truck Load, PTL = Part Truck Load. See the difference, 2026 rates per kg & km, and which saves money. Free PTL vs FTL calculator inside.",
     author: "LoadSaathi Team",
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
     readTime: "6 min read",
@@ -5001,6 +5020,16 @@ const STATIC_FAQ = {
     { q: "How is LoadSaathi different from Vahak, BlackBuck, Trukky or Porter?", a: "Mostly in network shape and settlement. Enterprise load boards optimise for large shippers with dedicated fleets. LoadSaathi is built for MSMEs, first-time shippers and owner-driver truckers on East India corridors, with free joining, a per-transaction fee and a public credit score that works for an operator running a single vehicle." },
     { q: "Does LoadSaathi charge a commission per truck?", a: "No. The published fee is a percentage on a completed shipment — 1.5-3% for shippers and 1.5-2.5% for truckers — and there is no listing fee or subscription on either side." },
     { q: "Can I still work with a broker?", a: "Yes. A lot of the value on an unmanaged lane is visibility: what is moving out of the destination, and what is running empty in the opposite direction. Use the marketplace for the lane you cannot cover and a broker for the rest." },
+  ],
+  '/compare/loadsaathi-vs-trucksuvidha': [
+    { q: "Is TruckSuvidha free to use?", a: "TruckSuvidha offers limited basic access, but viewing contact numbers and premium features generally requires paid membership packages." },
+    { q: "Why is LoadSaathi free?", a: "LoadSaathi connects shippers and truck owners directly with no intermediary margin. Our goal is to reduce empty kilometers through technology, not charge subscription fees for contact information." },
+    { q: "Which is better for small truck owners?", a: "If you own 1–5 trucks and want instant load leads without paying thousands of rupees in upfront fees, LoadSaathi is built for you." },
+  ],
+  '/compare/loadsaathi-vs-blackbuck': [
+    { q: "Is BlackBuck commission-free like LoadSaathi?", a: "No. BlackBuck monetises transactions via a commission on freight and financing margins on its truck cards and fuel cards. LoadSaathi charges ₹0 commission on freight — permanently." },
+    { q: "Which is better for fleet owners with 10+ trucks?", a: "For multi-truck fleet owners who mostly find loads through their own networks and want a free board plus fuel and tyre savings, LoadSaathi is the better fit. BlackBuck suits fleet owners who want managed GPS tracking and prefer app-based truck card payments." },
+    { q: "Does BlackBuck offer return loads?", a: "BlackBuck's core strength is outbound truck discovery and tracking. Return load discovery is limited compared to LoadSaathi, where return-load matching and AI load planning are free core features for every trucker." },
   ],
   '/for-msmes': [
     { q: "What changes freight cost for a small business?", a: "Three things move the number more than rate negotiation does: shipping small consignments as part loads instead of booking whole vehicles, comparing more than one rate on the same morning rather than accepting the first quote, and filling the return leg so the lane costs less per kilometre in both directions." },

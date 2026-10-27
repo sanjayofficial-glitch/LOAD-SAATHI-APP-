@@ -196,8 +196,8 @@ src/
 | `src/hooks/useSmartMatch.ts` | Smart matching hook |
 | `src/types/index.ts` | TypeScript type definitions |
 | `src/integrations/supabase/final-schema.sql` | Full DB schema + RLS policies |
-| `CONTEXT.md` | AI agent context (architecture overview) |
-| `REPO_HANDBOOK.md` | Master handover document |
+| `docs/CONTEXT.md` | AI agent context (architecture overview) |
+| `docs/REPO_HANDBOOK.md` | Master handover document |
 | `AI_RULES.md` | Rules for AI coding agents |
 
 ---

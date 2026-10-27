@@ -18,7 +18,6 @@ interface ForecastRequest {
   destinationCity?: string;
   vehicleType?: string;
   daysAhead?: number;
-  allowPublic?: boolean;
 }
 
 interface DailyForecast {
@@ -73,17 +72,14 @@ Deno.serve(async (req: Request) => {
       // use defaults
     }
 
-    const isPublic = body.allowPublic === true;
-
-    if (!isPublic) {
-      const token = extractBearerToken(req);
-      if (!token) {
-        return errorResponse("Unauthorized", 401, headers, requestId);
-      }
-      const authUser = await verifyJwt(token);
-      if (!authUser) {
-        return errorResponse("Invalid or expired token", 401, headers, requestId);
-      }
+    // Auth required for all requests (no allowPublic bypass)
+    const token = extractBearerToken(req);
+    if (!token) {
+      return errorResponse("Unauthorized", 401, headers, requestId);
+    }
+    const authUser = await verifyJwt(token);
+    if (!authUser) {
+      return errorResponse("Invalid or expired token", 401, headers, requestId);
     }
 
     const ip = getRequestIp(req);

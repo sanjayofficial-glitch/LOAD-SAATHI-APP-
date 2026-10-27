@@ -233,6 +233,8 @@ function main() {
       "/freight-marketplace",
       "/tools/freight-rate-calculator",
       "/data",
+      "/compare/loadsaathi-vs-trucksuvidha",
+      "/compare/loadsaathi-vs-blackbuck",
     ];
     let canonicalOk = 0;
     for (const route of canonicalPages) {
@@ -257,6 +259,55 @@ function main() {
       }
     }
     console.log(`  ℹ ${canonicalOk}/${canonicalPages.length} prerendered pages have correct canonical tags`);
+  }
+
+  // 7. Title/meta SEO rules for the priority pages (Phase 2/3 CTR work).
+  // Titles must be <=60 chars, meta descriptions 140-155 chars. Guards the
+  // copy rules from the SEO plan so a bad edit fails the build, not the SERP.
+  const seoRulePages = [
+    "/",
+    "/about",
+    "/tools/freight-rate-calculator",
+    "/compare/loadsaathi-vs-trucksuvidha",
+    "/compare/loadsaathi-vs-blackbuck",
+  ];
+  const decodeEntities = (s) =>
+    s
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&rsquo;/g, "’")
+      .replace(/&ndash;/g, "–")
+      .replace(/&mdash;/g, "—")
+      .replace(/&#x27;/g, "'");
+  for (const route of seoRulePages) {
+    const pagePath = route === "/"
+      ? path.join(DIST, "index.html")
+      : path.join(DIST, route, "index.html");
+    if (!fs.existsSync(pagePath)) continue;
+    const content = fs.readFileSync(pagePath, "utf-8");
+    // SeoMeta marks its managed tags with a data-ls-seo attribute, so the
+    // title tag may be <title data-ls-seo="">...</title>.
+    const titleMatch = content.match(/<title[^>]*>([^<]*)<\/title>/);
+    const descMatch = content.match(/<meta\s+name="description"\s+content="([^"]*)"/);
+    check(`title tag present for ${route}`, !!titleMatch);
+    if (titleMatch) {
+      const t = decodeEntities(titleMatch[1]).trim();
+      check(`title <=60 chars for ${route} (got ${t.length})`, t.length <= 60, t);
+      const brands = t.match(/LoadSaathi/gi) || [];
+      check(`no double brand in title for ${route}`, brands.length <= 1, t);
+    }
+    check(`meta description present for ${route}`, !!descMatch);
+    if (descMatch) {
+      const d = decodeEntities(descMatch[1]).trim();
+      check(
+        `meta 140-155 chars for ${route} (got ${d.length})`,
+        d.length >= 140 && d.length <= 155,
+        d
+      );
+    }
   }
 
   // Summary

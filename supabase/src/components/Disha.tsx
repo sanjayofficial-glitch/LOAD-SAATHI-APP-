@@ -1,5 +1,30 @@
 ﻿import { motion, AnimatePresence } from 'framer-motion'
 
+// Web Speech API type declarations (not in standard TS DOM lib)
+declare global {
+  interface Window {
+    SpeechRecognition: {
+      new (): SpeechRecognition
+      prototype: SpeechRecognition
+    }
+    webkitSpeechRecognition: {
+      new (): SpeechRecognition
+      prototype: SpeechRecognition
+    }
+  }
+  interface SpeechRecognition extends EventTarget {
+    continuous: boolean
+    interimResults: boolean
+    lang: string
+    start(): void
+    stop(): void
+    abort(): void
+    onresult: (this: SpeechRecognition, event: Event) => void
+    onend: (this: SpeechRecognition, event: Event) => void
+    onerror: (this: SpeechRecognition, event: Event) => void
+  }
+}
+
 import { cn } from '@/lib/utils'
 import { useReducedMotion, useDishaKeyboard } from './DishaMascot'
 import { useDisha } from './DishaContext'
@@ -11,6 +36,38 @@ import { useDishaPageTip, pageContextMessages } from './DishaOnboardingTips'
 import { useIdleDetection } from '@/hooks/useIdleDetection'
 import { MASCOT_BADGE_EVENT } from '@/hooks/useMascotInteractionTracker'
 import type { DishaMood } from './DishaMascot'
+import { useAuth as useClerkAuth } from '@clerk/clerk-react'
+import { Mic } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
+interface FreddyLoad {
+  id: string
+  origin_city: string
+  destination_city: string
+  departure_date: string
+  price_per_tonne?: number
+  available_capacity_tonnes?: number
+  vehicle_type?: string
+  status?: string
+  trucker?: { full_name?: string; rating?: number; is_verified?: boolean }
+}
+
+interface FreddyMessage {
+  id: number
+  role: 'user' | 'freddy'
+  content: string
+  loads?: FreddyLoad[]
+  summary?: string
+  tool?: string
+  strengths?: string[]
+  improvements?: string[]
+  tips?: string[]
+  projection?: string
+}
+
+const CHAT_STORAGE_KEY = 'loadsaathi-freddy-chat'
+const MAX_CONTEXT_MESSAGES = 6
 
 export { DishaProvider } from './DishaContext'
 export { DishaCharacter } from './DishaCharacter'
@@ -75,6 +132,185 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
   const [renderedMascot, setRenderedMascot] = useState<{ x: number; y: number } | null>(null)
   const [reactionBadge, setReactionBadge] = useState<{ label: string; emoji: string; nonce: number } | null>(null)
   const reactionBadgeTimer = useRef<number | null>(null)
+
+  // ── Freddy chat state (additive — does not touch existing tip/guide flows) ──
+  const { getToken } = useClerkAuth()
+  const [chatMode, setChatMode] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [chatMessages, setChatMessages] = useState<FreddyMessage[]>([])
+  const [chatInput, setChatInput] = useState('')
+  const [chatLoading, setChatLoading] = useState(false)
+  const [voiceListening, setVoiceListening] = useState(false)
+  const [newAlerts, setNewAlerts] = useState(0)
+  const speechRef = useRef<SpeechRecognition | null>(null)
+
+  // Load conversation history from localStorage on mount.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(CHAT_STORAGE_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed.sessionId) setSessionId(parsed.sessionId)
+        if (Array.isArray(parsed.messages)) {
+          setChatMessages((prev) => [
+            ...prev,
+            ...parsed.messages.slice(-20),
+          ])
+        }
+      }
+    } catch {
+      // ignore
+    }
+    // Generate a sessionId if none exists.
+    if (!sessionId) {
+      const newId = crypto.randomUUID()
+      setSessionId(newId)
+    }
+  }, [sessionId])
+
+  // Persist chat to localStorage whenever it changes.
+  useEffect(() => {
+    if (sessionId && chatMessages.length > 0) {
+      try {
+        localStorage.setItem(
+          CHAT_STORAGE_KEY,
+          JSON.stringify({ sessionId, messages: chatMessages.slice(-20) }),
+        )
+      } catch {
+        // ignore
+      }
+    }
+  }, [sessionId, chatMessages])
+
+  const sendFreddyMessage = useCallback(async (text: string) => {
+    if (!text.trim() || chatLoading) return
+    const userMsg: FreddyMessage = { id: Date.now(), role: 'user', content: text }
+    setChatMessages((prev) => [...prev, userMsg])
+    setChatInput('')
+    setChatLoading(true)
+    setMood('thinking')
+    setTip({ message: "Thinking…", mood: 'thinking' })
+    setShowBubble(true)
+
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      if (!supabaseUrl) throw new Error('Service unavailable')
+
+      const token = await getToken({ template: 'supabase' })
+      if (!token) throw new Error('Authentication required')
+
+      // Build history from recent messages (exclude the just-added user msg).
+      const history = chatMessages.slice(-MAX_CONTEXT_MESSAGES).map((m) => ({
+        role: m.role,
+        content: m.content,
+      }))
+
+      const res = await fetch(`${supabaseUrl}/functions/v1/agent-router`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: text.trim(),
+          sessionId,
+          history,
+        }),
+        signal: AbortSignal.timeout(20000),
+      })
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error(errData.detail || `Freddy error (${res.status})`)
+      }
+
+      const data = await res.json()
+
+      if (!data.ok) {
+        throw new Error(data.detail || 'Freddy returned no results')
+      }
+
+      const freddyMsg: FreddyMessage = {
+        id: Date.now() + 1,
+        role: 'freddy',
+        content: data.summary || 'Here are the matching trucks:',
+        loads: data.loads,
+        tool: data.tool,
+        strengths: data.strengths,
+        improvements: data.improvements,
+        tips: data.tips,
+        projection: data.projection,
+      }
+      setChatMessages((prev) => [...prev, freddyMsg])
+
+      if (data.tool === 'credit-insights') {
+        setMood('celebrate')
+        setTip({
+          message: data.summary || 'Here are your credit score insights.',
+          mood: 'celebrate',
+        })
+      } else if (data.loads && data.loads.length > 0) {
+        setMood('celebrate')
+        setTip({ message: data.summary || 'Here are the matching trucks:', mood: 'celebrate' })
+      } else {
+        setMood('idle')
+        setTip({ message: data.summary || "I couldn't find any matches.", mood: 'idle' })
+      }
+
+      // Track new alerts for notification badge.
+      if (data.loads && data.loads.length > 0) {
+        setNewAlerts((prev) => prev + 1)
+      }
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'Something went wrong'
+      setChatMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, role: 'freddy', content: `Sorry, ${errMsg}. Try again or use the filters on the browse page.` },
+      ])
+      setMood('confused')
+      setTip({ message: `Sorry, ${errMsg}.`, mood: 'confused' })
+    } finally {
+      setChatLoading(false)
+    }
+  }, [chatLoading, chatMessages, getToken, sessionId, setMood, setTip, setShowBubble])
+
+  // ── Voice input (Web Speech API) ──
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) return
+
+    const recognition = new SpeechRecognition()
+    recognition.continuous = false
+    recognition.interimResults = false
+    recognition.lang = 'en-IN'
+
+    recognition.onresult = (event: Event) => {
+      const transcript = (event as any).results[0][0].transcript
+      setChatInput(transcript)
+    }
+
+    recognition.onend = () => {
+      setVoiceListening(false)
+    }
+
+    recognition.onerror = () => {
+      setVoiceListening(false)
+    }
+
+    speechRef.current = recognition
+
+    return () => {
+      recognition.abort()
+    }
+  }, [])
+
+  const startVoiceInput = () => {
+    if (!speechRef.current || voiceListening) return
+    setVoiceListening(true)
+    speechRef.current.start()
+  }
 
 
   const isGuideActive = guideState?.isActive && guideTargetPosition && !isDragging && !minimized
@@ -184,7 +420,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
   }, [minimized, dismissed, mood, guideState, guideStep, setGuideMood])
 
   useEffect(() => {
-    if (dismissed || minimized || guideState?.isActive) return
+    if (dismissed || minimized || guideState?.isActive || chatMode) return
 
     const idleMessages: Array<{ message: string; mood: DishaMood }> =
       pageContextMessages[pageContext] ??
@@ -195,7 +431,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       ]
 
     const interval = setInterval(() => {
-      if (idle) {
+      if (idle && !chatMode) {
         const randomMsg = idleMessages[Math.floor(Math.random() * idleMessages.length)]!
         setTip(randomMsg)
         setShowBubble(true)
@@ -207,7 +443,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     }, 30000)
 
     return () => clearInterval(interval)
-  }, [dismissed, minimized, guideState?.isActive, idle, setTip, setShowBubble, setMood])
+  }, [dismissed, minimized, guideState?.isActive, chatMode, idle, setTip, setShowBubble, setMood])
 
   useEffect(() => {
     if (reaction && reaction.name) {
@@ -353,16 +589,14 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       }
       return;
     }
+    // Enter Freddy chat mode (non-guide path). Chat is additive — existing
+    // tip/guide flows are untouched.
+    setChatMode(true)
     if (!showBubble) {
-      setMood('listening');
-      setTip({
-        message: "How may I help you? I can guide you through posting a load, finding trucks, or answer questions about the platform.",
-        mood: 'listening',
-        when: 'help-open',
-      });
-      setShowBubble(true);
+      setMood('listening')
+      setShowBubble(true)
     } else {
-      setShowBubble(false);
+      setShowBubble(false)
     }
   }, [dismissed, showBubble, setMood, setTip, setShowBubble, guideState?.isActive, guideStep])
 
@@ -453,7 +687,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
         </div>
 
         <AnimatePresence>
-          {!minimized && !dismissed && showBubble && (tip || guideStep) && (
+          {!minimized && !dismissed && showBubble && (
             <motion.div
               className="pointer-events-none absolute z-[10001]"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -461,44 +695,213 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
-              <DishaSpeechBubble open={!minimized && !dismissed && showBubble} side={bubbleSide} gap={3} mascotX={renderedMascot?.x} mascotY={renderedMascot?.y} mascotSize={mascotSize}>
-                <div className="flex flex-row items-start gap-2 w-[280px] max-w-[calc(100vw-4rem)]">
-                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white text-[11px] font-bold mt-0.5">
-                    F
-                  </span>
-                  <div className="flex flex-col gap-0.5">
+              {chatMode ? (
+                <DishaSpeechBubble open={!minimized && !dismissed && showBubble} side={bubbleSide} gap={3} mascotX={renderedMascot?.x} mascotY={renderedMascot?.y} mascotSize={mascotSize}>
+                  <div className="flex flex-col gap-2 w-[300px] max-w-[calc(100vw-4rem)]">
                     <div className="flex items-center gap-2">
-                      <p className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
-                      {guideStep?.example && (
-                        <p className="text-[11px] text-orange-600 dark:text-orange-400 font-mono">
-                          {guideStep.example}
-                        </p>
+                      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white text-[11px] font-bold mt-0.5">
+                        F
+                      </span>
+                      <div className="flex flex-col gap-0">
+                        <p className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
+                        <p className="text-[10px] text-gray-500 dark:text-gray-400">Chat</p>
+                      </div>
+                    </div>
+
+                    {/* Message list */}
+                    <div className="flex-1 min-h-[120px] max-h-[200px] overflow-y-auto pr-2 space-y-2 scroll-smooth">
+                      {chatMessages.map((msg) => (
+                        <div
+                          key={msg.id}
+                          className={cn(
+                            'rounded-lg p-2 text-xs leading-snug break-words max-w-[260px]',
+                            msg.role === 'user'
+                              ? 'ml-auto bg-orange-100 dark:bg-orange-900/40 text-orange-900 dark:text-orange-100 rounded-tr-none'
+                              : 'mr-auto bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-tl-none',
+                          )}
+                        >
+                          {msg.content}
+
+                          {/* Credit score insights details */}
+                          {msg.tool === 'credit-insights' && msg.strengths && (
+                            <div className="mt-1 pt-1 border-t border-orange-200/50 dark:border-orange-900/30">
+                              <div className="flex gap-2 mt-1">
+                                <div className="flex-1 bg-green-50 dark:bg-green-900/20 rounded p-1 text-[10px]">
+                                  <div className="text-xs font-semibold text-green-700 dark:text-green-300 mb-0.5">Strengths</div>
+                                  <ul className="text-[9px] text-green-600 dark:text-green-400 list-disc pl-2 space-y-0.5">
+                                    {msg.strengths.slice(0, 3).map((s, i) => (
+                                      <li key={i}>{s}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <div className="flex-1 bg-orange-50 dark:bg-orange-900/20 rounded p-1 text-[10px]">
+                                  <div className="text-xs font-semibold text-orange-700 dark:text-orange-300 mb-0.5">Improve</div>
+                                  <ul className="text-[9px] text-orange-600 dark:text-orange-400 list-disc pl-2 space-y-0.5">
+                                    {msg.improvements?.slice(0, 3).map((s, i) => (
+                                      <li key={i}>{s}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                              {msg.projection && (
+                                <div className="mt-1 text-[9px] text-gray-500 dark:text-gray-400 italic">
+                                  {msg.projection}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {msg.loads && msg.loads.length > 0 && (
+                            <div className="mt-1 pt-1 border-t border-orange-200/50 dark:border-orange-900/30">
+                              {msg.loads.slice(0, 3).map((load) => (
+                                <div key={load.id} className="flex items-start gap-2 text-[10px] text-gray-600 dark:text-gray-400">
+                                  <div className="min-w-[48px]">{load.origin_city}</div>
+                                  <div className="text-[10px] text-gray-400">→</div>
+                                  <div className="min-w-[48px]">{load.destination_city}</div>
+                                  <div className="ml-2">
+                                    {load.price_per_tonne ? `₹${load.price_per_tonne}/t` : '—'}
+                                  </div>
+                                  {load.available_capacity_tonnes && (
+                                    <span className="ml-1">· {load.available_capacity_tonnes}t</span>
+                                  )}
+                                  {load.trucker?.is_verified && (
+                                    <span className="ml-1 text-orange-500">✓</span>
+                                  )}
+                                </div>
+                              ))}
+                              {msg.loads.length > 3 && (
+                                <div className="mt-0.5 text-[10px] text-gray-500">
+                                  + {msg.loads.length - 3} more load{msg.loads.length > 4 ? 's' : ''}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {chatLoading && (
+                        <div className="mr-auto bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-tl-none rounded-lg p-2 text-xs">
+                          Freddy is searching…
+                        </div>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug break-normal">
-                      {guideStep?.message || tip?.message}
-                    </p>
-                    <div className="flex gap-3 items-center mt-1">
-                      <button
-                        type="button"
-                        className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
-                        onClick={handleCloseBubble}
-                      >
-                        Dismiss
-                      </button>
-                      {guideState?.isActive && guideStep && (
+
+                    {/* Alert badge */}
+                    {newAlerts > 0 && (
+                      <div className="mb-1 flex items-center justify-between px-2">
+                        <span className="text-[10px] font-semibold text-orange-600 dark:text-orange-400">
+                          🔔 {newAlerts} new match alert{newAlerts > 1 ? 's' : ''}
+                        </span>
                         <button
                           type="button"
-                          className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
-                          onClick={handleNextStep}
+                          onClick={() => setNewAlerts(0)}
+                          className="text-[10px] text-muted-foreground hover:text-foreground"
                         >
-                          Next
+                          Clear
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Input */}
+                    <div className="flex gap-1.5 mt-1">
+                      <Input
+                        value={chatInput}
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            sendFreddyMessage(chatInput)
+                          }
+                        }}
+                        placeholder="Ask me to find trucks…"
+                        className="h-8 text-xs px-3 flex-1"
+                        disabled={chatLoading}
+                      />
+                      {typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition) ? (
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={startVoiceInput}
+                          disabled={chatLoading || voiceListening}
+                          className="h-8 w-8 px-0 rounded-full"
+                          aria-label="Voice input"
+                        >
+                          <Mic className="h-4 w-4" />
+                        </Button>
+                      ) : null}
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => sendFreddyMessage(chatInput)}
+                        disabled={chatLoading || !chatInput.trim()}
+                        className="h-8 px-3 text-xs bg-orange-600 hover:bg-orange-700 disabled:opacity-50"
+                      >
+                        Send
+                      </Button>
+                    </div>
+                    <div className="flex justify-between items-center mt-1">
+                      <button
+                        type="button"
+                        className="text-[10px] font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
+                        onClick={() => {
+                          setChatMode(false)
+                          setShowBubble(false)
+                        }}
+                      >
+                        Close chat
+                      </button>
+                      {chatMode && (
+                        <button
+                          type="button"
+                          className="text-[10px] font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
+                          onClick={handleCloseBubble}
+                        >
+                          Dismiss
                         </button>
                       )}
                     </div>
                   </div>
-                </div>
-              </DishaSpeechBubble>
+                </DishaSpeechBubble>
+              ) : (
+                <>
+                  {!minimized && !dismissed && (tip || guideStep) && (
+                    <div className="flex flex-row items-start gap-2 w-[280px] max-w-[calc(100vw-4rem)]">
+                      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white text-[11px] font-bold mt-0.5">
+                        F
+                      </span>
+                      <div className="flex flex-col gap-0.5">
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
+                          {guideStep?.example && (
+                            <p className="text-[11px] text-orange-600 dark:text-orange-400 font-mono">
+                              {guideStep.example}
+                            </p>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug break-normal">
+                          {guideStep?.message || tip?.message}
+                        </p>
+                        <div className="flex gap-3 items-center mt-1">
+                          <button
+                            type="button"
+                            className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
+                            onClick={handleCloseBubble}
+                          >
+                            Dismiss
+                          </button>
+                          {guideState?.isActive && guideStep && (
+                            <button
+                              type="button"
+                              className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
+                              onClick={handleNextStep}
+                            >
+                              Next
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

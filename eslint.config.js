@@ -5,7 +5,23 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", "android"] },
+  {
+    ignores: [
+      "dist",
+      "android",
+      // Vendored AI-agent skill packs (third-party examples, not app code)
+      ".agents",
+      "agent",
+      ".claude",
+      ".kilo",
+      ".memory",
+      "graphify-out",
+      // Separate Remotion sub-project with its own toolchain/config
+      "demo-video",
+      // Doc-embedded example snippets (not compiled app code)
+      "docs",
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],

@@ -38,7 +38,8 @@ flowchart TB
 
 | Document | Central diagram |
 | --- | --- |
-| [Repository Handbook](../REPO_HANDBOOK.md) | Reader paths into one shared understanding |
+| [Repository Handbook](REPO_HANDBOOK.md) | Reader paths into one shared understanding |
+| [Visual Guide](VISUAL_GUIDE.md) | One-glance visual story of the app, features, and history |
 | [Handbook Index](handbook/00-index.md) | Mindmap of non-technical, developer, AI, and operations paths |
 | [Non-technical Overview](handbook/01-overview-non-technical.md) | Shipper/trucker marketplace value loop |
 | [Architecture and Stack](handbook/02-architecture-and-stack.md) | Layered application and service view |
@@ -64,6 +65,7 @@ flowchart TB
 | [Deployment](deployment.md) | Branch, CI, Vercel, and Android delivery |
 | [Mobile Android](mobile-android.md) | Vite build to APK/App Bundle |
 | [Supabase Migration Notes](../supabase/MIGRATION_NOTES.md) | Auth migration and RLS path |
+| [Audit Report](AUDIT_REPORT.md) | Full-repository audit findings and severity fixes |
 | [Product Roadmap](roadmap.md) | MVP to launch, growth, and network effects |
 | [Firebase Chat Migration Plan](FIREBASE-CHAT-MIGRATION-PLAN.md) | Assessment, prototype, parallel validation, and cutover |
 
@@ -76,6 +78,8 @@ flowchart TB
 | [SEO/GEO Implementation Plan](seo/geo-implementation-plan.md) | Phased technical and content sequence |
 | [SEO Recovery Plan](seo/loadsaathi_seo_recovery_plan.md) | Diagnose, fix, measure, and repeat |
 | [Directory Backlinks](seo/backlinks.md) | Tiered authority-building funnel |
+| [SEO Strategy](seo/SEO-STRATEGY.md) | Search and AI-citation strategy for loadsaathi.in |
+| [Security B1 Remediation](SECURITY-B1-REMEDIATION.md) | Credential-hygiene remediation and verification steps |
 | [PostHog Setup](analytics/posthog-setup.md) | User action to product decision |
 | [Contributing](../CONTRIBUTING.md) | Idea to reviewed and merged change |
 | [Security Policy](../SECURITY.md) | Private report to responsible disclosure |

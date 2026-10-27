@@ -71,8 +71,8 @@ const About = () => {
         </div>
       </noscript>
       <SeoMeta
-        title="About Us — India's Smart Freight Network"
-        description="LoadSaathi is India's shared freight marketplace connecting shippers and truckers directly. AI-powered matching, zero middlemen, lower costs for East India corridors."
+        title="About LoadSaathi - India's Trusted Freight Marketplace"
+        description="Learn about LoadSaathi's mission to connect shippers with verified truckers across India. Founded at NIT Rourkela, serving 500+ freight corridors."
         keywords="about LoadSaathi, freight marketplace India, logistics startup Rourkela, shared freight East India"
         canonical="/about"
         breadcrumbs={[{ name: "Home", url: "/" }, { name: "About", url: "/about" }]}
@@ -80,7 +80,7 @@ const About = () => {
           "@context": "https://schema.org",
           "@type": "AboutPage",
           "name": "About LoadSaathi",
-          "description": "LoadSaathi is India's shared freight marketplace connecting shippers and truckers directly. AI-powered matching, zero middlemen, lower costs for East India corridors.",
+          "description": "Learn about LoadSaathi's mission to connect shippers with verified truckers across India. Founded at NIT Rourkela, serving 500+ freight corridors.",
           "url": "https://loadsaathi.in/about",
           "mainEntity": {
             "@type": "Organization",

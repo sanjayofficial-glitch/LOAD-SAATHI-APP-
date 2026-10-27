@@ -188,7 +188,7 @@ export default function FreightRateCalculator() {
         </div>
       </noscript>
       <SeoMeta
-        title="Freight Rate Calculator India | Estimate Truck Rates & Cost per KM"
+        title="Freight Rate Calculator - Estimate Per KG/Per KM Rates"
         description="Calculate estimated freight rates for PTL, LTL, and FTL shipments across India. Get distance, cost/km, truck recommendation, and freight range."
         keywords="freight rate calculator India, truck rate per km, transport cost calculator, freight charges India, PTL LTL rate estimate"
         canonical="/tools/freight-rate-calculator"

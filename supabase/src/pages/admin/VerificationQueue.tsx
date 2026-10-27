@@ -66,15 +66,15 @@ function formatDate(value?: string | null): string {
 // styled dark-only, which made its white headings invisible in light mode.
 function statusChip(status: VerificationStatus) {
   if (status === 'verified') {
-    return { label: 'Verified', className: 'border-green-200 text-green-700' };
+    return { label: 'Verified', className: 'border-green-200 dark:border-green-800 text-green-700 dark:text-green-400' };
   }
   if (status === 'rejected') {
-    return { label: 'Rejected', className: 'border-red-200 text-red-700' };
+    return { label: 'Rejected', className: 'border-red-200 dark:border-red-800 text-red-700 dark:text-red-400' };
   }
   if (status === 'pending') {
-    return { label: 'Pending', className: 'border-amber-200 text-amber-700' };
+    return { label: 'Pending', className: 'border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400' };
   }
-  return { label: 'Not started', className: 'border-gray-300 text-gray-500' };
+  return { label: 'Not started', className: 'border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400' };
 }
 
 const VerificationQueue = () => {
@@ -223,17 +223,17 @@ const VerificationQueue = () => {
       <button
         key={user.id}
         onClick={() => void openUser(user)}
-        className="flex w-full items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-gray-300 hover:bg-gray-50"
+        className="flex w-full items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 text-left transition-colors hover:border-gray-300 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
       >
-        <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-100">
+        <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
           {user.avatar_url ? (
             <img src={user.avatar_url} alt="" className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
               {user.user_type === 'trucker' ? (
-                <Truck className="h-5 w-5 text-gray-400" />
+                <Truck className="h-5 w-5 text-gray-400 dark:text-gray-500" />
               ) : (
-                <ShieldCheck className="h-5 w-5 text-gray-400" />
+                <ShieldCheck className="h-5 w-5 text-gray-400 dark:text-gray-500" />
               )}
             </div>
           )}
@@ -241,17 +241,17 @@ const VerificationQueue = () => {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <p className="truncate font-medium text-gray-900">{user.full_name || 'Unnamed user'}</p>
+            <p className="truncate font-medium text-gray-900 dark:text-gray-100">{user.full_name || 'Unnamed user'}</p>
             <Badge variant="outline" className={cn('text-[10px]', chip.className)}>
               {chip.label}
             </Badge>
             {needsAttention && user.pendingDocCount > 0 && (
-              <Badge variant="outline" className="border-orange-200 text-[10px] text-orange-700">
+              <Badge variant="outline" className="border-orange-200 dark:border-orange-800 text-[10px] text-orange-700 dark:text-orange-400">
                 {user.pendingDocCount} doc{user.pendingDocCount > 1 ? 's' : ''} to check
               </Badge>
             )}
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-gray-500">
+          <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
             <span className="flex items-center gap-1">
               <Phone className="h-3 w-3" />
               {user.phone || 'No phone'}
@@ -267,7 +267,7 @@ const VerificationQueue = () => {
           </div>
         </div>
 
-        <span className="shrink-0 text-xs text-gray-400">Review →</span>
+        <span className="shrink-0 text-xs text-gray-400 dark:text-gray-500">Review →</span>
       </button>
     );
   };
@@ -276,8 +276,8 @@ const VerificationQueue = () => {
     <div className="container mx-auto max-w-5xl px-4 py-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Verification Queue</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Verification Queue</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Check the licence and truck documents, then approve or reject.
           </p>
         </div>
@@ -290,7 +290,7 @@ const VerificationQueue = () => {
             size="sm"
             onClick={() => void queueQuery.refetch()}
             disabled={queueQuery.isFetching}
-            className="border-gray-200 text-gray-600 hover:bg-gray-100"
+            className="border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <RefreshCw className={cn('mr-2 h-4 w-4', queueQuery.isFetching && 'animate-spin')} />
             Refresh
@@ -301,16 +301,16 @@ const VerificationQueue = () => {
       {queueQuery.isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-20 w-full rounded-lg bg-gray-200" />
+            <Skeleton key={i} className="h-20 w-full rounded-lg bg-gray-200 dark:bg-gray-800" />
           ))}
         </div>
       ) : queueQuery.isError ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/50 p-4 text-sm text-red-700 dark:text-red-400">
           Could not load the queue: {(queueQuery.error as Error).message}
         </div>
       ) : (
         <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
-          <TabsList className="bg-gray-100">
+          <TabsList className="bg-gray-100 dark:bg-gray-800">
             <TabsTrigger value="pending">
               Pending{grouped.pending.length ? ` (${grouped.pending.length})` : ''}
             </TabsTrigger>
@@ -325,7 +325,7 @@ const VerificationQueue = () => {
           {(['pending', 'verified', 'rejected'] as const).map((key) => (
             <TabsContent key={key} value={key} className="mt-4 space-y-3">
               {grouped[key].length === 0 ? (
-                <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-400">
+                <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-8 text-center text-sm text-gray-400 dark:text-gray-500">
                   Nothing here right now.
                 </div>
               ) : (
@@ -337,12 +337,12 @@ const VerificationQueue = () => {
       )}
 
       <Sheet open={Boolean(selected)} onOpenChange={(open) => !open && setSelected(null)}>
-        <SheetContent className="w-full overflow-y-auto border-gray-200 bg-white sm:max-w-xl">
+        <SheetContent className="w-full overflow-y-auto border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sm:max-w-xl">
           {selected && (
             <>
               <SheetHeader>
-                <SheetTitle className="text-gray-900">{selected.full_name || 'Unnamed user'}</SheetTitle>
-                <SheetDescription className="text-gray-500">
+                <SheetTitle className="text-gray-900 dark:text-gray-100">{selected.full_name || 'Unnamed user'}</SheetTitle>
+                <SheetDescription className="text-gray-500 dark:text-gray-400">
                   {selected.phone || 'No phone on file'} · {selected.user_type || 'no role'} · joined{' '}
                   {formatDate(selected.created_at)}
                 </SheetDescription>
@@ -350,7 +350,7 @@ const VerificationQueue = () => {
 
               <div className="mt-6 space-y-4">
                 {selected.verification_note && selected.verification_status === 'rejected' && (
-                  <div className="rounded border border-amber-200 bg-amber-50 p-3 text-xs text-amber-700">
+                  <div className="rounded border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/50 p-3 text-xs text-amber-700 dark:text-amber-400">
                     Last rejection note: {selected.verification_note}
                   </div>
                 )}
@@ -358,11 +358,11 @@ const VerificationQueue = () => {
                 {docsLoading ? (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
-                      <Skeleton key={i} className="h-24 w-full rounded-lg bg-gray-200" />
+                      <Skeleton key={i} className="h-24 w-full rounded-lg bg-gray-200 dark:bg-gray-800" />
                     ))}
                   </div>
                 ) : docs.length === 0 ? (
-                  <p className="rounded border border-gray-200 bg-gray-50 p-4 text-sm text-gray-500">
+                  <p className="rounded border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 text-sm text-gray-500 dark:text-gray-400">
                     This user has not uploaded any documents yet.
                   </p>
                 ) : (
@@ -371,12 +371,12 @@ const VerificationQueue = () => {
                       const spec = getDocSpec(doc.doc_type);
                       const expiry = expiryState(doc.valid_until);
                       return (
-                        <div key={doc.id} className="rounded-lg border border-gray-200 bg-white p-3">
+                        <div key={doc.id} className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-3">
                           <div className="flex items-center justify-between gap-2">
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                               {spec?.label || doc.doc_type}
                               {spec?.required ? (
-                                <span className="ml-2 text-[10px] text-orange-600">required</span>
+                                <span className="ml-2 text-[10px] text-orange-600 dark:text-orange-400">required</span>
                               ) : null}
                             </p>
                             <Badge
@@ -384,10 +384,10 @@ const VerificationQueue = () => {
                               className={cn(
                                 'text-[10px]',
                                 doc.status === 'approved'
-                                  ? 'border-green-200 text-green-700'
+                                  ? 'border-green-200 dark:border-green-800 text-green-700 dark:text-green-400'
                                   : doc.status === 'rejected'
-                                    ? 'border-red-200 text-red-700'
-                                    : 'border-amber-200 text-amber-700',
+                                    ? 'border-red-200 dark:border-red-800 text-red-700 dark:text-red-400'
+                                    : 'border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400',
                               )}
                             >
                               {documentStatusLabel(doc)}
@@ -400,7 +400,7 @@ const VerificationQueue = () => {
                                 href={signedUrls[doc.id]}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="shrink-0 overflow-hidden rounded border border-gray-200"
+                                className="shrink-0 overflow-hidden rounded border border-gray-200 dark:border-gray-800"
                               >
                                 <img
                                   src={signedUrls[doc.id]}
@@ -414,7 +414,7 @@ const VerificationQueue = () => {
                                 href={signedUrls[doc.id] || undefined}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex h-24 w-32 shrink-0 flex-col items-center justify-center gap-1 rounded border border-gray-200 bg-gray-100 text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                                className="flex h-24 w-32 shrink-0 flex-col items-center justify-center gap-1 rounded border border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-700 hover:text-gray-700 dark:hover:text-gray-300"
                               >
                                 <FileText className="h-6 w-6" />
                                 <span className="text-[11px]">
@@ -423,21 +423,21 @@ const VerificationQueue = () => {
                               </a>
                             )}
 
-                            <div className="min-w-0 flex-1 space-y-1 text-xs text-gray-500">
+                            <div className="min-w-0 flex-1 space-y-1 text-xs text-gray-500 dark:text-gray-400">
                               <p>Size: {formatBytes(doc.file_size)}</p>
                               {doc.original_size && doc.file_size && doc.original_size > doc.file_size ? (
-                                <p className="text-green-600">
+                                <p className="text-green-600 dark:text-green-400">
                                   Compressed from {formatBytes(doc.original_size)}
                                 </p>
                               ) : null}
                               <p>Valid until: {doc.valid_until ? formatDate(doc.valid_until) : 'not provided'}</p>
                               {expiry === 'expired' && (
-                                <p className="flex items-center gap-1 text-red-600">
+                                <p className="flex items-center gap-1 text-red-600 dark:text-red-400">
                                   <AlertTriangle className="h-3 w-3" /> Expired
                                 </p>
                               )}
                               {expiry === 'expiring' && (
-                                <p className="flex items-center gap-1 text-amber-600">
+                                <p className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
                                   <AlertTriangle className="h-3 w-3" /> Expiring within 30 days
                                 </p>
                               )}
@@ -446,7 +446,7 @@ const VerificationQueue = () => {
                                   href={signedUrls[doc.id]}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-block underline hover:text-gray-900"
+                                  className="inline-block underline hover:text-gray-900 dark:hover:text-gray-100"
                                 >
                                   Open full size
                                 </a>
@@ -460,7 +460,7 @@ const VerificationQueue = () => {
                 )}
 
                 <div className="space-y-2">
-                  <label htmlFor="review-note" className="text-xs font-medium text-gray-700">
+                  <label htmlFor="review-note" className="text-xs font-medium text-gray-700 dark:text-gray-300">
                     Note to the trucker
                   </label>
                   <Textarea
@@ -468,7 +468,7 @@ const VerificationQueue = () => {
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     placeholder="Required when rejecting. Example: the RC photo is blurry, please retake it."
-                    className="min-h-[90px] border-gray-200 bg-white text-gray-900 placeholder:text-gray-400"
+                    className="min-h-[90px] border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   />
                 </div>
 
@@ -489,7 +489,7 @@ const VerificationQueue = () => {
                     onClick={() => void handleDecision('rejected')}
                     disabled={deciding !== null}
                     variant="outline"
-                    className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
+                    className="flex-1 border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50"
                   >
                     {deciding === 'rejected' ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

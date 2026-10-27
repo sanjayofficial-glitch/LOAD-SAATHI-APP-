@@ -20,7 +20,6 @@ import RouteMap from '@/components/RouteMap';
 import EmissionsCard from '@/components/EmissionsCard';
 import LiveMap from '@/components/LiveMap';
 import type { TruckLocation } from '@/components/LiveMap';
-import { notifyTruckerOfBookingRequest } from '@/utils/notifications';
 import { useCreditScore } from '@/hooks/useCreditScore';
 import CreditScoreBadge from '@/components/CreditScoreBadge';
 
@@ -208,18 +207,6 @@ const TripDetail = () => {
         });
 
       if (insertError) throw insertError;
-
-      // Send notification to trucker
-      await notifyTruckerOfBookingRequest({
-        truckerId: trip.trucker_id,
-        shipperName: userProfile.full_name || 'A shipper',
-        weightTonnes: requestedWeight,
-        goodsDescription: description.trim(),
-        originCity: trip.origin_city,
-        destinationCity: trip.destination_city,
-        tripId: trip.id,
-        getToken: () => getToken({ template: 'supabase' }),
-      });
 
       showSuccess('Booking request sent successfully!');
       navigate('/shipper/my-shipments?tab=sent');

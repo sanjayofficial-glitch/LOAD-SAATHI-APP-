@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSupabase } from "@/hooks/useSupabase";
 import { useProductTour } from "@/contexts/ProductTourContext";
 import { useNavigate, Link, useLocation } from "react-router-dom";
+import { ThemeToggle } from "./ThemeToggle";
 import { supabase as supabaseAnon } from "@/integrations/supabase/client";
 import { authorizeRealtime } from "@/utils/realtime";
 import { startPresence, stopPresence } from "@/utils/presence";
@@ -326,6 +327,14 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
   // Truckers get the brand orange accent, shippers get blue.
   const navAccent: NavAccent = isTrucker ? "orange" : "blue";
 
+  const dashboardPath = userProfile?.user_type === 'admin'
+    ? '/admin/dashboard'
+    : userProfile?.user_type === 'trucker'
+      ? '/trucker/dashboard'
+      : userProfile?.user_type === 'shipper'
+        ? '/shipper/dashboard'
+        : '/';
+
   // Mobile-only bottom bar: a few quick tabs + a hamburger "Menu" button that
   // opens a bottom sheet with the full navigation. No horizontal scrolling.
   const mobileTabs = useMemo<MobileTabItem[]>(() => {
@@ -431,7 +440,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto px-4">
           <div className="flex justify-between h-14 sm:h-16">
             <div className="flex items-center gap-4 sm:gap-8">
-              <Link id="layout-brand" to="/" className="flex items-center gap-2 shrink-0">
+              <Link id="layout-brand" to={dashboardPath} className="flex items-center gap-2 shrink-0">
                 <LogoMark size="h-8 w-8 sm:h-9 sm:w-9" />
                 <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
                   <span className="sm:hidden">LS</span>
@@ -440,7 +449,10 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
 
-            <div className="flex items-center gap-1 sm:gap-3">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="hidden sm:block">
+                <ThemeToggle />
+              </div>
               <span id="app-notifications"><NotificationBell /></span>
 
               <Link id="layout-messages" to="/messages" aria-label="Messages">
@@ -560,14 +572,20 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         accent={navAccent}
         visible={mobileNavOpen}
         footer={
-          <Button
-            variant="ghost"
-            className="w-full text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
-            onClick={handleSignOut}
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
-          </Button>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between px-2 py-1.5">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</span>
+              <ThemeToggle />
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
+              onClick={handleSignOut}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
         }
       />
       <ScrollToTopFab bottomClass="bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))]" />

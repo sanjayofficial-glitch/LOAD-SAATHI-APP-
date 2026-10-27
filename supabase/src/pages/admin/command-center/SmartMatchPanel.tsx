@@ -12,14 +12,16 @@ interface SmartMatchPanelProps {
   onReview?: (load: LoadLocation) => void;
 }
 
-interface MatchSuggestion {
+export interface MatchSuggestion {
   truck: TruckLocation;
   load: LoadLocation;
   score: number;
   reasons: string[];
 }
 
-function computeMatches(trucks: TruckLocation[], loads: LoadLocation[]): MatchSuggestion[] {
+/** Scored truck↔load pairings — shared by the panel and the Quick Actions auto-match. */
+// eslint-disable-next-line react-refresh/only-export-components -- pure helper, not a component
+export function computeMatches(trucks: TruckLocation[], loads: LoadLocation[]): MatchSuggestion[] {
   const suggestions: MatchSuggestion[] = [];
 
   for (const truck of trucks) {

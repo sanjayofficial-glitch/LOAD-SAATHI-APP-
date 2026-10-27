@@ -109,10 +109,17 @@ export default function SeoMeta({
   alternates,
 }: SeoMetaProps) {
   // Avoid "X — LoadSaathi | LoadSaathi" double branding: some pages already
-  // include the brand in their title. Only append when it isn't there.
-  const fullTitle = /loadsaathi\s*$/i.test(title.trim())
-    ? title.trim()
-    : `${title} | LoadSaathi`;
+  // include the brand in their title. Only append when it isn't there AND the
+  // result still fits a ~60-char search snippet — a truncated title reads worse
+  // than an unbranded one, so titles that are already long render bare.
+  const BRAND_SUFFIX = " | LoadSaathi";
+  const trimmedTitle = title.trim();
+  const fullTitle =
+    /loadsaathi\s*$/i.test(trimmedTitle) ||
+    /^loadsaathi\b/i.test(trimmedTitle) ||
+    trimmedTitle.length + BRAND_SUFFIX.length > 60
+      ? trimmedTitle
+      : `${trimmedTitle}${BRAND_SUFFIX}`;
   const url = canonical
     ? `${BASE_URL}${canonical}`
     : typeof window !== "undefined"

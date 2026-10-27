@@ -2,21 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Lock LIGHT theme BEFORE first paint. Dark mode was removed:
-         old stored 'dark'/'system' themes used to re-apply html.dark and
-         color-scheme: dark, so we normalize the document and clear the
-         legacy preference key instead. -->
+    <!-- Initialize theme BEFORE first paint to avoid flash -->
     <script>
       (function () {
         try {
           var root = document.documentElement;
-          root.setAttribute('data-theme', 'light');
-          root.classList.remove('dark');
-          root.style.colorScheme = 'light';
+          var storageKey = 'loadsaathi-theme';
+          var stored = localStorage.getItem(storageKey);
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark = stored === 'dark' || (stored === 'system' && prefersDark) || (!stored && prefersDark);
+          if (isDark) {
+            root.classList.add('dark');
+            root.setAttribute('data-theme', 'dark');
+            root.style.colorScheme = 'dark';
+          } else {
+            root.classList.remove('dark');
+            root.setAttribute('data-theme', 'light');
+            root.style.colorScheme = 'light';
+          }
           var themeColor = document.querySelector('meta[name="theme-color"]');
-          if (themeColor) themeColor.setAttribute('content', '#ea580c');
-          try { localStorage.removeItem('loadsaathi-theme'); } catch (e) { /* storage may be blocked */ }
-        } catch (e) {}
+          if (themeColor) themeColor.setAttribute('content', isDark ? '#0f172a' : '#ea580c');
+        } catch (e) {
+          try {
+            var root = document.documentElement;
+            root.classList.remove('dark');
+            root.setAttribute('data-theme', 'light');
+            root.style.colorScheme = 'light';
+          } catch (e2) {}
+        }
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
@@ -27,7 +40,7 @@
     <!-- No maximum-scale/user-scalable restrictions: pinch-zoom must stay
          enabled for accessibility (WCAG 1.4.4 / Lighthouse best practice). -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ea580c" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,12 +64,12 @@
          separate prerendered files). Every other URL gets its canonical
          replaced by api/agent.js on the server and by SeoMeta on hydration. -->
     <link rel="canonical" href="https://loadsaathi.in/" />
-    <title>Shared Freight Marketplace | PTL/LTL East India | LoadSaathi</title>
-    <meta name="description" content="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs on the Rourkela–Ranchi–Burdwan corridor. Book part loads online." />
+    <title>LoadSaathi: Free Load Board & Return Loads India</title>
+    <meta name="description" content="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes." />
     <meta name="robots" content="index, follow" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Shared Freight Marketplace | PTL/LTL East India | LoadSaathi" />
-    <meta property="og:description" content="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs on the Rourkela–Ranchi–Burdwan corridor." />
+    <meta property="og:title" content="LoadSaathi: Free Load Board & Return Loads India" />
+    <meta property="og:description" content="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes." />
     <meta property="og:image" content="https://loadsaathi.in/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -64,8 +77,8 @@
     <meta property="og:site_name" content="LoadSaathi" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Shared Freight Marketplace | PTL/LTL East India | LoadSaathi" />
-    <meta name="twitter:description" content="LoadSaathi connects shippers and truckers for PTL and LTL shared freight across East India. Save up to 40% on freight costs." />
+    <meta name="twitter:title" content="LoadSaathi: Free Load Board & Return Loads India" />
+    <meta name="twitter:description" content="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes." />
     <meta name="twitter:image" content="https://loadsaathi.in/og-image.png" />
     <meta name="google-site-verification" content="f4bedcfa3ed7330b" />
     <!-- Bing Webmaster Tools: uncomment and replace with your verification code -->

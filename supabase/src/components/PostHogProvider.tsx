@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react'
+import { isPostHogEnabled } from '@/utils/posthogConfig'
 
 /**
  * PostHog is loaded lazily after first paint so the ~50KB analytics library
@@ -11,11 +12,7 @@ import { useEffect, type ReactNode } from 'react'
  */
 export function PostHogProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
-    if (
-      !import.meta.env.VITE_POSTHOG_API_KEY ||
-      !import.meta.env.VITE_POSTHOG_HOST ||
-      import.meta.env.VITE_POSTHOG_API_KEY.includes('ROTATE_ME')
-    ) {
+    if (!isPostHogEnabled()) {
       return
     }
 

@@ -16,6 +16,8 @@ export interface StatsData {
   pendingRevenue: number;
   /** Busiest hour of the day from trip creation times, e.g. "10-12". */
   peakHour: string;
+  /** Trips posted so far today (all statuses). */
+  tripsToday: number;
 }
 
 export interface TrendData {
@@ -27,4 +29,25 @@ export interface TrendData {
   unmatched: number[];
   completed: number[];
   revenue: number[];
+  /** The 7 days immediately before the series above, summed — for WoW deltas. */
+  prev: {
+    trucks: number;
+    loads: number;
+    leads: number;
+    trips: number;
+    pending: number;
+    unmatched: number;
+    completed: number;
+    revenue: number;
+  };
+}
+
+/** Ageing buckets for money sitting on unmatched (pending) loads. */
+export interface PendingAgeing {
+  /** 0–7 days old. */
+  fresh: number;
+  /** 8–30 days old. */
+  mid: number;
+  /** Older than 30 days. */
+  aged: number;
 }

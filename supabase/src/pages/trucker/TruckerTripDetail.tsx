@@ -2,7 +2,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useSupabase } from '@/hooks/useSupabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,17 +27,9 @@ import { showSuccess, showError } from '@/utils/toast';
 import RouteMap from '@/components/RouteMap';
 import EmissionsCard from '@/components/EmissionsCard';
 import GpsTracker from '@/components/GpsTracker';
-import {
-  notifyShipperOfRequestAccepted,
-  notifyShipperOfRequestDeclined,
-  notifyShipperOfTripStarted,
-  notifyShipperOfTripDelivered,
-  notifyShipperOfTripCompletion,
-} from '@/utils/notifications';
 import ReviewDialog from '@/components/ReviewDialog';
 import type { Trip, Request } from '@/types';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { posthog } from '@/utils/posthog';
 import { trackEvent } from '@/utils/analytics';
 import { createLogger } from '@/lib/logger';
 
@@ -65,7 +56,6 @@ const StatusBadge = ({ status }: { status: string }) => {
 const TruckerTripDetail = () => {
   const { tripId } = useParams<{ tripId: string }>();
   const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
   const { getAuthenticatedClient, withAuthRetry } = useSupabase();
   const navigate = useNavigate();
 
@@ -113,12 +103,13 @@ const TruckerTripDetail = () => {
 
   const updateLinkedShipmentStatuses = async (supabase: SupabaseClient, newStatus: string) => {
     const linked = bookingRequests.filter(r => r.status === 'accepted' && r.shipment_id);
-    if (linked.length === 0) return;
+    if (linked.length === 0) return { error: null };
     const shipmentIds = linked.map(r => r.shipment_id!);
-    await supabase
+    const { error } = await supabase
       .from('shipments')
       .update({ status: newStatus })
       .in('id', shipmentIds);
+    return { error };
   };
 
   const handleStartTrip = async () => {
@@ -132,31 +123,22 @@ const TruckerTripDetail = () => {
       const result = typeof data === 'string' ? JSON.parse(data) : data;
       if (result?.error) throw new Error(result.error);
 
-      // Fire-and-forget: update linked shipments and notify shippers.
+      // Fire-and-forget: update linked shipments.
       void (async () => {
         try {
           const supabase = await getAuthenticatedClient();
-          updateLinkedShipmentStatuses(supabase, 'in_transit').catch(() =>
-            console.warn('[handleStartTrip] Failed to update linked shipment statuses')
-          );
+          const { error } = await updateLinkedShipmentStatuses(supabase, 'in_transit');
+          if (error) {
+            showError('Trip started, but linked shipments could not be updated. Please refresh.');
+          }
         } catch (_e) {
-          console.warn('[handleStartTrip] Failed to get client for side effects');
+          showError('Trip started, but linked shipments could not be updated. Please refresh.');
         }
       })();
 
       const acceptedShippers = bookingRequests.filter(r => r.status === 'accepted');
-      Promise.all(acceptedShippers.map(request =>
-        notifyShipperOfTripStarted({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          originCity: trip.origin_city,
-          destinationCity: trip.destination_city,
-          tripId: trip.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        })
-      )).catch(() =>
-        console.warn('[handleStartTrip] Failed to notify some shippers')
-      );
+      // Shippers are notified by the trg_trip_status_notify trigger inside
+      // the RPC's transaction — no client-side notification needed.
 
       trackEvent('trip_status_updated', {
         trip_id: trip.id,
@@ -185,7 +167,7 @@ const TruckerTripDetail = () => {
       const result = typeof data === 'string' ? JSON.parse(data) : data;
       if (result?.error) throw new Error(result.error);
 
-      // Fire-and-forget: update linked shipments and notify shippers.
+      // Fire-and-forget: update linked shipments.
       void (async () => {
         try {
           const supabase = await getAuthenticatedClient();
@@ -198,18 +180,7 @@ const TruckerTripDetail = () => {
       })();
 
       const acceptedShippers = bookingRequests.filter(r => r.status === 'accepted');
-      Promise.all(acceptedShippers.map(request =>
-        notifyShipperOfTripDelivered({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          originCity: trip.origin_city,
-          destinationCity: trip.destination_city,
-          tripId: trip.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        })
-      )).catch(() =>
-        console.warn('[handleMarkDelivered] Failed to notify some shippers')
-      );
+      // Shippers are notified by the trg_trip_status_notify trigger.
 
       trackEvent('trip_status_updated', {
         trip_id: trip.id,
@@ -241,7 +212,7 @@ const TruckerTripDetail = () => {
       const result = typeof data === 'string' ? JSON.parse(data) : data;
       if (result?.error) throw new Error(result.error);
 
-      // Fire-and-forget: update linked shipments and notify shippers.
+      // Fire-and-forget: update linked shipments.
       // These must NOT block the success flow — a stale/rotated token
       // in getAuthenticatedClient() should not prevent the success toast.
       void (async () => {
@@ -256,18 +227,7 @@ const TruckerTripDetail = () => {
       })();
 
       const acceptedRequests = bookingRequests.filter(r => r.status === 'accepted');
-      Promise.all(acceptedRequests.map(request =>
-        notifyShipperOfTripCompletion({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          originCity: trip.origin_city,
-          destinationCity: trip.destination_city,
-          tripId: trip.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        })
-      )).catch(() =>
-        console.warn('[handleCompleteTrip] Failed to notify some shippers')
-      );
+      // Shippers are notified by the trg_trip_status_notify trigger.
 
       trackEvent('trip_status_updated', {
         trip_id: trip.id,
@@ -312,31 +272,16 @@ const TruckerTripDetail = () => {
       });
 
       if (status === 'accepted') {
-        await notifyShipperOfRequestAccepted({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          truckerPhone: userProfile?.phone || 'N/A',
-          originCity: trip?.origin_city || '',
-          destinationCity: trip?.destination_city || '',
-          requestId: request.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        });
+        // Shipper is notified by trg_request_decided_notify in the same
+        // transaction as the status write.
         showSuccess('✅ Request accepted! Shipper has been notified.');
       } else {
-        await notifyShipperOfRequestDeclined({
-          shipperId: request.shipper_id,
-          truckerName: userProfile?.full_name || 'The trucker',
-          originCity: trip?.origin_city || '',
-          destinationCity: trip?.destination_city || '',
-          requestId: request.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        });
         showSuccess('Request declined. Shipper has been notified.');
       }
       fetchData();
     } catch (err) {
       log.error('Failed to update booking request', { requestId: request.id, status, error: err });
-      posthog.captureException(err, { flow: 'update_booking_request', new_status: status });
+      import('@/utils/posthog').then(({ posthog }) => posthog.captureException(err, { flow: 'update_booking_request', new_status: status })).catch(() => {});
       showError(`Failed to ${status} request. Please try again.`);
     } finally {
       setActionLoading(null);
@@ -551,8 +496,7 @@ const TruckerTripDetail = () => {
             const filtered = bookingRequests.filter(r => r.status === tab);
             return (
               <TabsContent key={tab} value={tab} className="mt-4">
-                {filtered.length === 0 ? (
-                  <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+                {filtered.length === 0 ? (                   <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700">
                     <Clock className="h-10 w-10 text-gray-300 mx-auto mb-3 dark:text-gray-600" />
                     <p className="text-gray-500 dark:text-gray-400">No {tab} requests</p>
                   </div>

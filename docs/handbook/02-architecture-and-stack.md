@@ -316,6 +316,10 @@ LOAD-SAATHI-APP-1-OSRM/
 ├── .memory/                            # PARA-style agent memory
 ├── Blogs/                              # Blog drafts & marketing content
 ├── scripts/                            # Build/utility scripts
+│   ├── CONTEXT.md                       # AI-agent context (needs updating)
+│   ├── REPO_HANDBOOK.md                 # This handbook (master file)
+│   ├── VISUAL_GUIDE.md                  # One-glance visual story (diagrams)
+│   └── ...
 ├── index.html                          # SPA entry point (JSON-LD schemas)
 ├── vercel.json                         # Vercel deployment config
 ├── vite.config.ts                      # Vite config (manual chunks)
@@ -323,9 +327,9 @@ LOAD-SAATHI-APP-1-OSRM/
 ├── tsconfig.json                       # TypeScript config
 ├── capacitor.config.ts                 # Capacitor Android config
 ├── package.json                        # Dependencies + scripts
-├── CONTEXT.md                          # AI-agent context (needs updating)
-├── AI_RULES.md                         # Coding agent rules
-├── REPO_HANDBOOK.md                    # This handbook (master file)
+├── CONTEXT.md                            # AI-agent context (needs updating)
+├── AI_RULES.md                           # Coding agent rules
+├── REPO_HANDBOOK.md                      # This handbook (master file)
 └── README.md                           # Public-facing README
 ```
 

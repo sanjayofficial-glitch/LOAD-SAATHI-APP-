@@ -2,7 +2,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useSupabase } from '@/hooks/useSupabase';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -37,10 +36,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { showSuccess, showError } from '@/utils/toast';
-import {
-  notifyTruckerOfOfferAccepted,
-  notifyTruckerOfOfferDeclined,
-} from '@/utils/notifications';
 import { Skeleton } from '@/components/ui/skeleton';
 import EmptyState from '@/components/EmptyState';
 import ErrorState from '@/components/ErrorState';
@@ -65,7 +60,6 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 const MyShipments = () => {
   const { userProfile } = useAuth();
-  const { getToken } = useClerkAuth();
   const { getAuthenticatedClient } = useSupabase();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -83,13 +77,17 @@ const MyShipments = () => {
     try {
       const supabase = await getAuthenticatedClient();
 
-      const { data: shipmentsData } = await supabase
+      const { data: shipmentsData, error: shipmentsError } = await supabase
         .from('shipments')
         .select('id, origin_city, destination_city, goods_description, weight_tonnes, budget_per_tonne, departure_date, status, created_at, shipper_id, pickup_address, delivery_address')
         .eq('shipper_id', userProfile.id)
         .order('created_at', { ascending: false });
 
-      const { data: sent } = await supabase
+      // A failed read must not look like "you have posted nothing" — throw so
+      // the page shows its error state instead of a fake empty list.
+      if (shipmentsError) throw shipmentsError;
+
+      const { data: sent, error: sentError } = await supabase
         .from('requests')
         .select(`
           id, created_at, status, weight_tonnes, goods_description, trip_id, shipper_id, pickup_address, delivery_address,
@@ -98,7 +96,9 @@ const MyShipments = () => {
         .eq('shipper_id', userProfile.id)
         .order('created_at', { ascending: false });
 
-      const { data: incoming } = await supabase
+      if (sentError) throw sentError;
+
+      const { data: incoming, error: incomingError } = await supabase
         .from('shipment_requests')
         .select(`
           id, created_at, status, proposed_price_per_tonne, message, trucker_id, shipment_id, shipper_id,
@@ -107,6 +107,8 @@ const MyShipments = () => {
         `)
         .eq('shipper_id', userProfile.id)
         .order('created_at', { ascending: false });
+
+      if (incomingError) throw incomingError;
 
       const mappedShipments = (shipmentsData || []).map(s => ({
         ...s
@@ -162,30 +164,16 @@ const MyShipments = () => {
 
       if (error) throw error;
 
+      // Notification to the trucker is created by the DB trigger on
+      // shipment_requests UPDATE — same transaction, cannot be lost.
       if (status === 'accepted') {
         await supabase
           .from('shipments')
           .update({ status: 'matched' })
           .eq('id', offer.shipment_id);
 
-        await notifyTruckerOfOfferAccepted({
-          truckerId: offer.trucker_id,
-          shipperName: userProfile?.full_name || 'The shipper',
-          shipperPhone: userProfile?.phone || 'N/A',
-          originCity: offer.shipment?.origin_city ?? '',
-          destinationCity: offer.shipment?.destination_city ?? '',
-          requestId: offer.id,
-          getToken: () => getToken({ template: 'supabase' }),
-        });
         showSuccess('✅ Offer accepted!');
       } else {
-        await notifyTruckerOfOfferDeclined({
-          truckerId: offer.trucker_id,
-          shipperName: userProfile?.full_name || 'The shipper',
-          originCity: offer.shipment?.origin_city ?? '',
-          destinationCity: offer.shipment?.destination_city ?? '',
-          getToken: () => getToken({ template: 'supabase' }),
-        });
         showSuccess('Offer declined.');
       }
       

@@ -33,6 +33,8 @@ const STATIC_ROUTES = [
   "/contact",
   "/safety-trust",
   "/compare",
+  "/compare/loadsaathi-vs-trucksuvidha",
+  "/compare/loadsaathi-vs-blackbuck",
   "/privacy",
   "/terms",
   "/solutions/shippers",

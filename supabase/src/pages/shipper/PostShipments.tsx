@@ -22,7 +22,6 @@ import ReturnLoadProbability from "@/components/ReturnLoadProbability";
 import { PricePredictor } from "@/components/PricePredictor";
 import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
-import { posthog } from "@/utils/posthog";
 import { trackEvent } from "@/utils/analytics";
 import { useDishaGuideRegistration } from "@/hooks/useDishaGuide";
 
@@ -175,7 +174,7 @@ const PostShipments = () => {
       notifySuccess('submit');
       navigate('/shipper/dashboard');
     } catch (err: unknown) {
-      posthog.captureException(err, { flow: 'post_shipment' });
+      import("@/utils/posthog").then(({ posthog }) => posthog.captureException(err, { flow: 'post_shipment' })).catch(() => {});
       showError(err instanceof Error ? err.message : 'An unexpected error occurred.');
     } finally {
       setLoading(false);

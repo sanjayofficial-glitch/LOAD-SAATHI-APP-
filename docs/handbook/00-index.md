@@ -78,8 +78,8 @@ mindmap
 
 | File | Purpose |
 |------|---------|
-| `REPO_HANDBOOK.md` | Master handover file (root) |
-| `CONTEXT.md` | AI-agent context (needs updating — see 07) |
+| `docs/REPO_HANDBOOK.md` | Master handover file |
+| `docs/CONTEXT.md` | AI-agent context (needs updating — see 07) |
 | `AI_RULES.md` | Coding agent rules |
 | `README.md` | Public-facing project README |
 | `docs/architecture.md` | Deep architecture docs |

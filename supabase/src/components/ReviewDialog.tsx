@@ -15,8 +15,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Star, Loader2 } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
-import { notifyTruckerOfNewReview, notifyShipperOfNewReview } from '@/utils/notifications';
-import { posthog } from '@/utils/posthog';
 import { trackEvent } from '@/utils/analytics';
 
 interface ReviewDialogProps {
@@ -99,21 +97,8 @@ const ReviewDialog = ({
 
       if (error) throw error;
 
-      if (reviewerRole === 'shipper') {
-        notifyTruckerOfNewReview({
-          truckerId,
-          shipperName: shipperName || 'A shipper',
-          tripId,
-          getToken: () => getToken({ template: 'supabase' }),
-        });
-      } else {
-        notifyShipperOfNewReview({
-          shipperId,
-          truckerName: truckerName || 'A trucker',
-          tripId,
-          getToken: () => getToken({ template: 'supabase' }),
-        });
-      }
+      // The reviewed party is notified by trg_review_created_notify in the
+      // same transaction as the insert.
 
       trackEvent('review_submitted', {
         trip_id: tripId,
@@ -125,7 +110,7 @@ const ReviewDialog = ({
       if (onSuccess) onSuccess();
       onClose();
     } catch (err: unknown) {
-      posthog.captureException(err, { flow: 'submit_review', reviewer_role: reviewerRole });
+      import('@/utils/posthog').then(({ posthog }) => posthog.captureException(err, { flow: 'submit_review', reviewer_role: reviewerRole })).catch(() => {});
       showError(err instanceof Error ? err.message : 'Failed to submit review');
     } finally {
       setSubmitting(false);
