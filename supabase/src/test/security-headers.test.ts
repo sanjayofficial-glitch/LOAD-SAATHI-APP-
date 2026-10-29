@@ -43,12 +43,11 @@ describe('Security: vercel.json headers', () => {
     expect(policy).toContain('microphone=()');
   });
 
-  it('ships the CSP in report-only mode so it cannot break the app', () => {
-    // Enforcing a first CSP on a site with Clerk, Supabase, PostHog, GA/GTM and
-    // four map tile providers is how you turn a security fix into an outage.
-    // Report-only collects violations first; enforce once the log is clean.
-    expect(valueFor('Content-Security-Policy')).toBeUndefined();
-    const csp = valueFor('Content-Security-Policy-Report-Only');
+  it('ships an enforced CSP (no longer report-only)', () => {
+    // Report-only collected violations; the log is clean so the policy is now
+    // enforced. Keep report-uri wired so regressions still surface.
+    expect(valueFor('Content-Security-Policy-Report-Only')).toBeUndefined();
+    const csp = valueFor('Content-Security-Policy');
     expect(csp).toBeDefined();
     expect(csp).toContain("object-src 'none'");
     expect(csp).toContain("base-uri 'self'");
@@ -57,7 +56,7 @@ describe('Security: vercel.json headers', () => {
   });
 
   it('allows the third-party origins the app actually calls', () => {
-    const csp = valueFor('Content-Security-Policy-Report-Only')!;
+    const csp = valueFor('Content-Security-Policy')!;
     // Auth
     expect(csp).toContain('https://*.clerk.com');
     expect(csp).toContain('https://*.clerk.accounts.dev');
@@ -75,7 +74,7 @@ describe('Security: vercel.json headers', () => {
   });
 
   it('scopes the CSP report cache rule to the path the policy actually posts to', () => {
-    const csp = valueFor('Content-Security-Policy-Report-Only')!;
+    const csp = valueFor('Content-Security-Policy')!;
     const postedTo = csp.match(/report-uri\s+(\S+)/)?.[1];
     expect(postedTo).toBeDefined();
     const rule = config.headers.find(
