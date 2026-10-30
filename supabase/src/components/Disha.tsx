@@ -221,19 +221,47 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
 
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
-        throw new Error(errData.detail || `Freddy error (${res.status})`)
+        throw new Error(errData.detail || errData.error || `Freddy error (${res.status})`)
       }
 
       const data = await res.json()
 
       if (!data.ok) {
-        throw new Error(data.detail || 'Freddy returned no results')
+        throw new Error(data.detail || data.error || 'Freddy returned no results')
+      }
+
+      // Kill switch / disabled state: backend reports enabled:false.
+      if (data.enabled === false) {
+        const freddyMsg: FreddyMessage = {
+          id: Date.now() + 1,
+          role: 'freddy',
+          content: 'Freddy is temporarily unavailable. Please try again later, or use the browse filters on the search page.',
+        }
+        setChatMessages((prev) => [...prev, freddyMsg])
+        setMood('idle')
+        setTip({ message: 'Freddy is temporarily unavailable.', mood: 'idle' })
+        setChatLoading(false)
+        return
+      }
+
+      // No tool executed (e.g. no usable filters extracted).
+      if (!data.tool && data.detail) {
+        const freddyMsg: FreddyMessage = {
+          id: Date.now() + 1,
+          role: 'freddy',
+          content: data.detail,
+        }
+        setChatMessages((prev) => [...prev, freddyMsg])
+        setMood('idle')
+        setTip({ message: data.detail, mood: 'idle' })
+        setChatLoading(false)
+        return
       }
 
       const freddyMsg: FreddyMessage = {
         id: Date.now() + 1,
         role: 'freddy',
-        content: data.summary || 'Here are the matching trucks:',
+        content: data.summary || (data.tool === 'credit-insights' ? 'Here are your credit insights.' : 'Here are the matching trucks:'),
         loads: data.loads,
         tool: data.tool,
         strengths: data.strengths,

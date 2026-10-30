@@ -78,7 +78,7 @@ function okJsonResponse(body: unknown, status = 200): Response {
 function authEnv(): Record<string, string> {
   return {
     FREDDY_ENABLED: "true",
-    SUPABASE_JWT_SECRET: TEST_SECRET,
+    FREDDY_JWT_SECRET: TEST_SECRET,
     FREDDY_EXPECTED_ISSUER: TEST_ISSUER,
     FREDDY_EXPECTED_AUDIENCE: TEST_AUDIENCE,
     SUPABASE_URL: TEST_SUPABASE_URL,
@@ -349,7 +349,7 @@ Deno.test("missing auth configuration fails closed with a sanitized 500", async 
   const capture: FetchCapture = { request: null, callCount: 0 };
   const token = await mintToken();
   for (const missing of [
-    "SUPABASE_JWT_SECRET",
+    "FREDDY_JWT_SECRET",
     "FREDDY_EXPECTED_ISSUER",
     "FREDDY_EXPECTED_AUDIENCE",
   ] as const) {

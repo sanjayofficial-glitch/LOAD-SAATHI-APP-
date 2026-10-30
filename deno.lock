@@ -40,7 +40,7 @@
       "dependencies": [
         "npm:@capacitor/android@^8.5.3",
         "npm:@capacitor/app@^8.1.2",
-        "npm:@capacitor/cli@^8.5.3",
+        "npm:@capacitor/cli@^8.6.0",
         "npm:@capacitor/core@^8.5.3",
         "npm:@clerk/clerk-react@5.61.10",
         "npm:@dyad-sh/react-vite-component-tagger@0.9",
@@ -86,6 +86,7 @@
         "npm:@vercel/analytics@^2.0.1",
         "npm:@vercel/speed-insights@2",
         "npm:@vitejs/plugin-react-swc@^3.9.0",
+        "npm:@vitest/coverage-v8@^3.2.1",
         "npm:autoprefixer@^10.4.20",
         "npm:browser-image-compression@^2.0.2",
         "npm:class-variance-authority@~0.7.1",
@@ -124,7 +125,7 @@
         "npm:vaul@~0.9.3",
         "npm:vite@6.4.4",
         "npm:vitest@^3.2.1",
-        "npm:zod@^3.23.8"
+        "npm:zod@4"
       ]
     }
   }

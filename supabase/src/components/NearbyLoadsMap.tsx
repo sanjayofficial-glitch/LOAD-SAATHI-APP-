@@ -60,7 +60,9 @@ export default function NearbyLoadsMap() {
         };
         setGps({ status: 'error', message: messages[err.code] || 'Could not get your location.' });
       },
-      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 },
+      // allow slow GPS lock (was 12s): a moving device on flaky cellular can
+      // take the better part of a minute to acquire a high-accuracy fix.
+      { enableHighAccuracy: true, timeout: 60000, maximumAge: 30000 },
     );
   }, []);
 

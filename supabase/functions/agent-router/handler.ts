@@ -26,7 +26,7 @@ import {
   searchMarket,
   validateSearchMarketParams,
 } from "../_shared/searchMarket.ts";
-import type { MarketLoad, SearchMarketOutcome } from "../_shared/searchMarket.ts";
+import type { MarketLoad, SearchMarketOutcome, SearchMarketFilters } from "../_shared/searchMarket.ts";
 import {
   parseFreddyIntent,
   isCreditScoreQuery,
@@ -182,12 +182,12 @@ export async function handleAgentRouter(
     return errorResponse("Missing bearer token.", 401, headers, requestId);
   }
 
-  const jwtSecret = env("SUPABASE_JWT_SECRET") ?? "";
+  const jwtSecret = env("FREDDY_JWT_SECRET") ?? "";
   const expectedIssuer = env("FREDDY_EXPECTED_ISSUER") ?? "";
   const expectedAudience = env("FREDDY_EXPECTED_AUDIENCE") ?? "";
   if (!jwtSecret || !expectedIssuer || !expectedAudience) {
     console.error(
-      `[${requestId}] agent-router: required auth configuration missing (SUPABASE_JWT_SECRET / FREDDY_EXPECTED_ISSUER / FREDDY_EXPECTED_AUDIENCE)`,
+      `[${requestId}] agent-router: required auth configuration missing (FREDDY_JWT_SECRET / FREDDY_EXPECTED_ISSUER / FREDDY_EXPECTED_AUDIENCE)`,
     );
     return errorResponse("Server configuration error.", 500, headers, requestId);
   }
@@ -358,7 +358,7 @@ export async function handleAgentRouter(
 
   // ── Phase 2b: search_market (load matching) ──
   let filters: SearchMarketFilters | null = null;
-  let intentSource: "explicit" | "llm" | "fallback" | null = null;
+  let intentSource: "explicit" | "llm" | "fallback" | "empty" | null = null;
   let intentRaw: string | undefined;
 
   if (body.filters !== undefined && body.filters !== null) {
@@ -372,8 +372,8 @@ export async function handleAgentRouter(
     const parsed = await parseFreddyIntent(message.trim(), {
       fetchImpl,
       env,
-    });
-    // Pass conversation context to the LLM for better disambiguation.
+    }, contextString);
+    // Conversation context is forwarded to the LLM for pronoun disambiguation.
     filters = parsed.filters;
     intentSource = parsed.source;
     intentRaw = parsed.raw;
@@ -456,7 +456,7 @@ export async function handleAgentRouter(
 function buildFreddySummary(
   loads: MarketLoad[],
   filters: SearchMarketFilters,
-  intentSource: "explicit" | "llm" | "fallback" | null,
+  intentSource: "explicit" | "llm" | "fallback" | "empty" | null,
 ): string {
   const count = loads.length;
   if (count === 0) {

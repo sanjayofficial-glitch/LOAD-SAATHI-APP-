@@ -18,6 +18,18 @@ export function useLocationPermission(): UseLocationPermissionReturn {
   const permissionStatusRef = useRef<PermissionStatus | null>(null);
   const changeListenerRef = useRef<(() => void) | null>(null);
 
+  const queryLive = useCallback(async (): Promise<LocationPermissionState | null> => {
+    if (typeof navigator === 'undefined' || !navigator.permissions || !navigator.permissions.query) {
+      return null;
+    }
+    try {
+      const status = await navigator.permissions.query({ name: 'geolocation' });
+      return status.state as LocationPermissionState;
+    } catch {
+      return null;
+    }
+  }, []);
+
   const refreshPermission = useCallback(() => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
       setIsSupported(false);
@@ -28,10 +40,8 @@ export function useLocationPermission(): UseLocationPermissionReturn {
     setIsSupported(true);
 
     if (typeof navigator.permissions === 'undefined' || !navigator.permissions.query) {
-      // Permissions API unavailable (iOS Safari pre-16, older WebViews, non-HTTPS
-      // in some browsers). Without it we cannot know the user's actual decision,
-      // so default to 'prompt' — this lets the LocationPermissionBanner show
-      // and ask for explicit consent instead of silently assuming 'granted'.
+      // Permissions API unavailable. Never trust a stale cached grant; fall
+      // back to the conservative 'prompt' so the banner keeps offering consent.
       setPermissionState('prompt');
       return;
     }
@@ -39,22 +49,23 @@ export function useLocationPermission(): UseLocationPermissionReturn {
     navigator.permissions
       .query({ name: 'geolocation' })
       .then((status) => {
-        permissionStatusRef.current = status;
-        setPermissionState(status.state as LocationPermissionState);
-
         // Clean up any previously-attached listener before adding a new one
         // (HMR + re-mounts would otherwise leak listeners).
-        if (changeListenerRef.current) {
+        if (changeListenerRef.current && permissionStatusRef.current) {
           try {
-            permissionStatusRef.current?.removeEventListener('change', changeListenerRef.current);
+            permissionStatusRef.current.removeEventListener('change', changeListenerRef.current);
           } catch {
             // ignore
           }
           changeListenerRef.current = null;
         }
 
+        permissionStatusRef.current = status;
+        setPermissionState(status.state as LocationPermissionState);
+
         const handleChange = () => {
           setPermissionState(status.state as LocationPermissionState);
+          // Best-effort cache write only; reads never override a live check.
           try {
             sessionStorage.setItem(LOCATION_STORAGE_KEY, status.state);
           } catch {
@@ -66,12 +77,8 @@ export function useLocationPermission(): UseLocationPermissionReturn {
       })
       .catch((err: { message?: string }) => {
         logger.warn('Failed to query geolocation permission', { error: err?.message ?? err }, 'useLocationPermission');
-        const cached = sessionStorage.getItem(LOCATION_STORAGE_KEY);
-        if (cached === 'granted') {
-          setPermissionState('granted');
-        } else {
-          setPermissionState('prompt');
-        }
+        // Never assume 'granted' from a stale cache. Conservative fallback.
+        setPermissionState('prompt');
       });
   }, []);
 
@@ -80,12 +87,8 @@ export function useLocationPermission(): UseLocationPermissionReturn {
       return false;
     }
 
-    // Single getCurrentPosition call. Previously this hook fired a second
-    // nested call when the first one returned a non-PERMISSION_DENIED error;
-    // that nested pattern could leave the outer promise dangling if the
-    // browser threw synchronously on the second call. One attempt is enough:
-    // a denied/timeout result is the user's answer; we surface it instead of
-    // swallowing it via a retry.
+    let ok = false;
+    let denied = false;
     try {
       const result = await new Promise<{ ok: boolean; reason?: string }>((resolve) => {
         navigator.geolocation.getCurrentPosition(
@@ -101,11 +104,19 @@ export function useLocationPermission(): UseLocationPermissionReturn {
               resolve({ ok: false, reason: 'unknown' });
             }
           },
-          { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }
+          // This call is used by the permission banner to detect the user's
+          // decision. On slow devices/networks a GPS lock can take longer
+          // than the default 10s and surface a spurious TIMEOUT. Lengthening
+          // this to 20s is still snappy for permission detection but avoids
+          // flapping the banner on slow locks.
+          { enableHighAccuracy: false, timeout: 20000, maximumAge: 0 }
         );
       });
 
-      if (result.ok) {
+      ok = result.ok;
+      denied = result.reason === 'denied';
+
+      if (ok) {
         setPermissionState('granted');
         try {
           sessionStorage.setItem(LOCATION_STORAGE_KEY, 'granted');
@@ -116,7 +127,7 @@ export function useLocationPermission(): UseLocationPermissionReturn {
         // For 'denied' the OS-level decision is final — leave that state alone
         // (the browser caches the denial). For unavailable/timeout/unknown,
         // surface as 'prompt' so the banner keeps offering retry.
-        const next: LocationPermissionState = result.reason === 'denied' ? 'denied' : 'prompt';
+        const next: LocationPermissionState = denied ? 'denied' : 'prompt';
         setPermissionState(next);
         try {
           sessionStorage.setItem(LOCATION_STORAGE_KEY, next);
@@ -124,13 +135,41 @@ export function useLocationPermission(): UseLocationPermissionReturn {
           // ignore
         }
       }
-      return result.ok;
     } catch (err) {
       logger.warn('requestPermission failed', { error: err }, 'useLocationPermission');
       setPermissionState('prompt');
-      return false;
     }
-  }, []);
+
+    // Second verification path: re-query the live permission state if available.
+    // On iPad the Permissions API may lag or be stuck; reconcile with the
+    // practical geolocation outcome when it is unavailable or stuck.
+    const live = await queryLive();
+    if (live !== null) {
+      if (live === 'denied' || live === 'prompt') {
+        // Live check must not be overridden by an optimistic granted.
+        setPermissionState(live);
+        try {
+          sessionStorage.setItem(LOCATION_STORAGE_KEY, live);
+        } catch {
+          // ignore
+        }
+      } else if (live === 'granted' && ok) {
+        setPermissionState('granted');
+        try {
+          sessionStorage.setItem(LOCATION_STORAGE_KEY, 'granted');
+        } catch {
+          // ignore
+        }
+      }
+    } else {
+      // No live API: rely on the geolocation outcome already applied above.
+      if (denied) {
+        setPermissionState('denied');
+      }
+    }
+
+    return ok && !denied;
+  }, [queryLive]);
 
   useEffect(() => {
     refreshPermission();

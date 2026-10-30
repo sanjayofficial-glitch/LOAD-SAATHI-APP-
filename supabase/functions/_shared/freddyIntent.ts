@@ -151,6 +151,7 @@ export function isCreditScoreQuery(message: string): boolean {
 export async function parseFreddyIntent(
   message: string,
   deps: FreddyIntentDeps = {},
+  context?: string,
 ): Promise<{
   filters: SearchMarketFilters;
   source: "llm" | "fallback" | "empty";
@@ -160,7 +161,7 @@ export async function parseFreddyIntent(
     return { filters: {}, source: "empty" };
   }
 
-  const prompt = buildIntentPrompt(message.trim());
+  const prompt = buildIntentPrompt(message.trim(), context);
 
   // Try LLM first
   const llmResult = await geminiIntent(prompt, deps);
