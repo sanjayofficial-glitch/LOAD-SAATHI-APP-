@@ -101,6 +101,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     setMood,
     minimized,
     dismissed,
+    setDismissed,
     tip,
     showBubble,
     setShowBubble,
@@ -610,7 +611,24 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     }
   }, [guideState?.isActive, nextStep])
 
-  if (dismissed || isProfilePage) return null
+  if (isProfilePage) return null
+
+  // If Freddy was previously dismissed, keep a small restore chip visible so the
+  // mascot can always be brought back (the persisted dismissal must never be a
+  // permanent soft-lock with no recovery path).
+  if (dismissed) {
+    return (
+      <button
+        type="button"
+        onClick={() => setDismissed(false)}
+        className="fixed bottom-24 left-6 z-[100] inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/95 px-4 py-2 text-xs font-semibold text-orange-700 shadow-lg backdrop-blur transition-colors hover:bg-orange-50 dark:border-orange-900/40 dark:bg-gray-900/95 dark:text-orange-300 dark:hover:bg-gray-800"
+        aria-label="Show Freddy the LoadSaathi assistant"
+        data-disha-restore
+      >
+        <span aria-hidden>🐻</span> Show Freddy
+      </button>
+    )
+  }
 
   // Bubble is now rendered inside the mascot container so it moves together with 10px gap
 
