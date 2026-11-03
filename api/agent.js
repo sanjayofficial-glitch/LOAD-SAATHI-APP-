@@ -237,7 +237,7 @@ const ROUTE_DATA = {
     distanceKm: 30,
     transitTime: "1",
     dataStatus: "needs_review",
-    description: "Quick part load, PTL and LTL freight from Bhubaneswar to Cuttack — Odisha's twin cities corridor. LoadSaathi's local trucker network ensures fast, affordable intrastate shipping.",
+    description: "Bhubaneswar and Cuttack are Odisha's twin cities, about 30 km apart, with some of the densest short-haul truck movement in the state. Textiles, food grains and trading goods shuttle between them daily, so small part loads can usually be matched to a local vehicle the same day.",
     keywords: "part load Bhubaneswar to Cuttack, PTL freight Bhubaneswar to Cuttack, LTL transport Bhubaneswar Cuttack, Odisha intrastate freight, truck booking Cuttack",
   },
   "bhubaneswar-to-jamshedpur": {
@@ -248,7 +248,7 @@ const ROUTE_DATA = {
     distanceKm: 347,
     transitTime: "7",
     dataStatus: "corrected",
-    description: "Book part load, PTL and LTL freight from Bhubaneswar to Jamshedpur on the NH-16 / NH-220 corridor. Move goods from Odisha's capital to Jharkhand's steel city with AI-matched trucks and live GPS tracking.",
+    description: "About 347 km via NH-16 and NH-220 connects Odisha's capital with Jharkhand's steel city, Jamshedpur. Consumer goods, FMCG and agricultural produce move east while finished steel and automobile parts return west, keeping this cross-state lane active in both directions.",
     keywords: "part load Bhubaneswar to Jamshedpur, PTL freight Bhubaneswar to Jamshedpur, LTL transport Bhubaneswar Jamshedpur, truck booking Jamshedpur, Odisha Jharkhand freight, steel city transport",
   },
   "bhubaneswar-to-kolkata": {
@@ -281,7 +281,7 @@ const ROUTE_DATA = {
     distanceKm: 340,
     transitTime: "7",
     dataStatus: "needs_review",
-    description: "Book part load, PTL and LTL freight from Bhubaneswar to Rourkela — the return leg into Odisha's steel capital. LoadSaathi's AI matching finds trucks heading west across the state with transparent pricing and live GPS tracking.",
+    description: "Bhubaneswar to Rourkela is the reverse leg of Odisha's principal freight corridor, about 340 km across the state. Cargo returning west includes consumer goods, FMCG and building materials, while steel and industrial output load eastbound — so matching a truck in either direction is usually possible on this lane.",
     keywords: "part load Bhubaneswar to Rourkela, PTL freight Bhubaneswar to Rourkela, LTL transport Bhubaneswar Rourkela, truck booking Rourkela, Odisha freight, return load Bhubaneswar Rourkela",
   },
   "bhubaneswar-to-sambalpur": {
@@ -292,7 +292,7 @@ const ROUTE_DATA = {
     distanceKm: 350,
     transitTime: "7",
     dataStatus: "needs_review",
-    description: "Book part load, PTL and LTL freight from Bhubaneswar to Sambalpur — from the state capital into western Odisha's industrial belt. AI-matched trucks and fair pricing on LoadSaathi.",
+    description: "From the state capital into western Odisha's aluminium, paper and handloom belt, this lane runs about 350 km to Sambalpur. Aluminium products, paper and paddy move to coastal markets while consumer goods travel back west, giving shippers matching options in both directions.",
     keywords: "part load Bhubaneswar to Sambalpur, PTL freight Bhubaneswar to Sambalpur, LTL transport Bhubaneswar Sambalpur, truck booking Sambalpur, Odisha freight, intra-Odisha logistics",
   },
   "bhubaneswar-to-vizag": {
@@ -303,7 +303,7 @@ const ROUTE_DATA = {
     distanceKm: 445,
     transitTime: "7",
     dataStatus: "corrected",
-    description: "Coastal corridor PTL and LTL freight from Bhubaneswar to Visakhapatnam (Vizag). LoadSaathi's AI platform streamlines cross-state shipping along the East Coast with real-time tracking and fair pricing.",
+    description: "This coastal corridor runs about 445 km along NH-16 between Bhubaneswar and Visakhapatnam (Vizag), a major eastern-seaboard port. Steel, minerals and port-bound cargo move south from Odisha, while general merchandise and packaging return north — a steady lane for part-load and full-truck freight.",
     keywords: "part load Bhubaneswar to Visakhapatnam, PTL freight Bhubaneswar to Visakhapatnam, LTL transport Bhubaneswar Vizag, Odisha Andhra Pradesh freight, truck booking Vizag, coastal corridor logistics",
   },
   "burdwan-to-bhubaneswar": {
@@ -457,7 +457,7 @@ const ROUTE_DATA = {
     distanceKm: 198,
     transitTime: "4.5",
     dataStatus: "corrected",
-    description: "Find efficient PTL and LTL freight from Jamshedpur to Rourkela. Leverage LoadSaathi's returning trucks and AI matching for cost-effective shipping on this key industrial corridor.",
+    description: "Jamshedpur to Rourkela runs about 198 km on NH-220 between two major steel cities. Finished steel, automobile components, machinery and chemicals move west while coiled steel and engineering goods load eastbound, so trucks rarely need to complete this lane empty.",
     keywords: "part load Jamshedpur to Rourkela, PTL freight Jamshedpur to Rourkela, LTL transport Jamshedpur Rourkela, truck booking Jharkhand Odisha, Jamshedpur Rourkela load, return load Jamshedpur Rourkela",
   },
   "jharsuguda-to-sambalpur": {
@@ -578,7 +578,7 @@ const ROUTE_DATA = {
     distanceKm: 180,
     transitTime: "4",
     dataStatus: "needs_review",
-    description: "Ship goods from the capital of Jharkhand to the steel hub of Odisha. Find returning trucks and competitive rates on the Ranchi–Rourkela route with LoadSaathi's real-time matching and transparent pricing.",
+    description: "Ranchi and Rourkela sit at the heart of the Jharkhand–Odisha industrial corridor, about 180 km apart. Coal, heavy machinery and agricultural produce move out of Ranchi while steel and cement load from Rourkela, which keeps return freight flowing on both legs of this lane.",
     keywords: "part load Ranchi to Rourkela, PTL freight Ranchi to Rourkela, LTL transport Ranchi Rourkela, truck booking Jharkhand Odisha, return load Ranchi Rourkela, freight transport Ranchi",
   },
   "rourkela-to-bhubaneswar": {
@@ -589,7 +589,7 @@ const ROUTE_DATA = {
     distanceKm: 340,
     transitTime: "7",
     dataStatus: "needs_review",
-    description: "Reliable PTL and LTL freight from Rourkela to Bhubaneswar — the capital of Odisha. LoadSaathi connects these key Odisha cities with AI-optimized truck matching and live GPS tracking.",
+    description: "This is Odisha's main west–east freight artery: about 340 km from the steel city of Rourkela to the state capital, Bhubaneswar, and onward to coastal markets. Steel, metals and engineering goods travel east while consumer goods and construction material move west, giving trucks cargo on both legs.",
     keywords: "part load Rourkela to Bhubaneswar, PTL freight Rourkela to Bhubaneswar, LTL transport Rourkela Bhubaneswar, Odisha freight, truck booking Rourkela Bhubaneswar, part load Bhubaneswar",
   },
   "rourkela-to-burdwan": {
@@ -622,7 +622,7 @@ const ROUTE_DATA = {
     distanceKm: 198,
     transitTime: "4.5",
     dataStatus: "corrected",
-    description: "Move freight between two of India's largest steel cities. LoadSaathi connects Rourkela and Jamshedpur with AI-matched PTL and LTL trucks, real-time tracking, and competitive rates.",
+    description: "About 198 km on NH-220 connects two of India's largest steel cities, Rourkela and Jamshedpur. Hot-rolled steel, iron ore, machinery and automobile parts dominate the flow in both directions, which makes this one of the most consistent industrial corridors for PTL and LTL loads.",
     keywords: "part load Rourkela to Jamshedpur, PTL freight Rourkela to Jamshedpur, LTL transport Rourkela Jamshedpur, truck booking Rourkela Jharkhand, steel corridor freight, Rourkela Jamshedpur load",
   },
   "rourkela-to-kolkata": {
@@ -633,7 +633,7 @@ const ROUTE_DATA = {
     distanceKm: 420,
     transitTime: "8.8",
     dataStatus: "corrected",
-    description: "Ship PTL and LTL loads from Rourkela to Kolkata — the commercial capital of East India. LoadSaathi offers AI-matched trucks, real-time tracking, and competitive rates on this busy corridor.",
+    description: "About 420 km separates Rourkela from Kolkata, East India's commercial capital and port city. Steel, minerals and machinery head east to West Bengal while consumer goods, FMCG and project material return west, keeping this one of the busiest cross-state lanes LoadSaathi serves.",
     keywords: "part load Rourkela to Kolkata, PTL freight Rourkela to Kolkata, LTL transport Rourkela Kolkata, truck booking Kolkata, Odisha West Bengal logistics, Kolkata freight corridor",
   },
   "rourkela-to-ranchi": {
@@ -644,7 +644,7 @@ const ROUTE_DATA = {
     distanceKm: 180,
     transitTime: "4",
     dataStatus: "needs_review",
-    description: "Connect the steel city of Odisha with the capital of Jharkhand via LoadSaathi's AI-powered freight marketplace. Book PTL and LTL truck loads on the Rourkela–Ranchi corridor with GPS tracking, transparent pricing, and digital credit scores.",
+    description: "Rourkela and Ranchi anchor the Odisha–Jharkhand industrial belt about 180 km apart. Steel, cement and engineering cargo from Rourkela meets coal, machinery and consumer goods moving out of Ranchi, so trucks run full in both directions and part-load space is regularly available on this lane.",
     keywords: "part load Rourkela to Ranchi, PTL freight Rourkela to Ranchi, LTL transport Rourkela Ranchi, truck booking Rourkela Jharkhand, shared freight Odisha Jharkhand, LoadSaathi Rourkela Ranchi",
   },
   "rourkela-to-sambalpur": {
@@ -3536,7 +3536,7 @@ function laneSeoMeta(r) {
   const bands = laneRates(r.distanceKm);
   const statusPart =
     r.dataStatus === 'needs_review'
-      ? `${r.distanceKm} km, ~${r.transitTime} hrs (distance pending re-verification)`
+      ? `Est. ${r.distanceKm} km, ~${r.transitTime} hrs driving (indicative — confirm at booking)`
       : `Verified ${r.distanceKm} km, ~${r.transitTime} hrs`;
   return {
     seoTitle: `Part Load Transport ${r.from} to ${r.to} | PTL & LTL Truck Booking | LoadSaathi`,
@@ -4728,7 +4728,139 @@ function titleCase(slug) {
     .join(' ');
 }
 
+/** Service links for calculator pages — contextual to each tool's intent. */
+const TOOL_SERVICE_LINKS = {
+  '/tools/fare-calculator': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Truck load booking', href: '/truck-load-booking' },
+    { label: 'All freight routes', href: '/routes' },
+    { label: 'Return loads', href: '/return-load' },
+  ],
+  '/tools/freight-rate-calculator': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+    { label: 'Contact the LoadSaathi team', href: '/contact' },
+  ],
+  '/tools/return-load-calculator': [
+    { label: 'Transporter solutions', href: '/solutions/truckers' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/ptl-vs-ftl-calculator': [
+    { label: 'Part load guide (PTL vs FTL)', href: '/guide/ptl-vs-ftl' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/truck-load-calculator': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/toll-fuel': [
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Route optimizer', href: '/tools/route-optimizer' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/gst-calculator': [
+    { label: 'E-way bill & GST guide', href: '/blog/indian-logistics-eway-bill-gst-2026' },
+    { label: 'Document checklist', href: '/tools/document-checklist' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/route-optimizer': [
+    { label: 'Toll and fuel calculator', href: '/tools/toll-fuel' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/shipment-brief': [
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/freight-quote-comparison': [
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+};
+
 /** Contextual internal links shown under every injected content block. */
+const COMMERCIAL_LINKS = {
+  '/return-load': [
+    { label: 'Return load calculator', href: '/tools/return-load-calculator' },
+    { label: 'Transporter solutions', href: '/solutions/truckers' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'How to find return loads in India', href: '/blog/how-to-find-return-loads-india' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/ptl-transport': [
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'Part load guide (PTL vs FTL)', href: '/guide/ptl-vs-ftl' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/ltl-transport': [
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/truck-load-booking': [
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Truck load calculator', href: '/tools/truck-load-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/freight-marketplace': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Transporter solutions', href: '/solutions/truckers' },
+    { label: 'Truck load booking', href: '/truck-load-booking' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/truck-near-me': [
+    { label: 'All freight routes', href: '/routes' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+  ],
+  '/solutions/shippers': [
+    { label: 'Post a shipment for free', href: '/register?type=shipper' },
+    { label: 'Truck load booking', href: '/truck-load-booking' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/solutions/truckers': [
+    { label: 'Register as a transporter for free', href: '/register?type=trucker' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'Return load calculator', href: '/tools/return-load-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools': [
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Return load calculator', href: '/tools/return-load-calculator' },
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/routes': [
+    { label: 'Rourkela to Ranchi', href: '/routes/rourkela-to-ranchi' },
+    { label: 'Rourkela to Bhubaneswar', href: '/routes/rourkela-to-bhubaneswar' },
+    { label: 'Bhubaneswar to Cuttack', href: '/routes/bhubaneswar-to-cuttack' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Rourkela location page', href: '/location/rourkela' },
+  ],
+  '/blog': [
+    { label: 'What is a load board?', href: '/blog/what-is-load-board' },
+    { label: 'Truck transport charges per km', href: '/blog/truck-transport-charges-per-km-india' },
+    { label: 'How to find return loads', href: '/blog/how-to-find-return-loads-india' },
+    { label: 'Freight rates in India', href: '/blog/india-truck-freight-rates-2026' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+};
+
 function relatedLinksFor(path, seoMeta) {
   if (seoMeta.type === 'route') {
     const links = [{ label: 'All freight routes', href: '/routes' }];
@@ -4781,6 +4913,26 @@ function relatedLinksFor(path, seoMeta) {
     links.push({ label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' });
     links.push({ label: 'All freight routes', href: '/routes' });
     return links;
+  }
+  if (path === '/') {
+    // Homepage crawl-visible pathways → commercial destinations.
+    return [
+      { label: 'Shipper solutions', href: '/solutions/shippers' },
+      { label: 'Transporter solutions', href: '/solutions/truckers' },
+      { label: 'Truck load booking', href: '/truck-load-booking' },
+      { label: 'Return loads', href: '/return-load' },
+      { label: 'Freight tools', href: '/tools' },
+      { label: 'All freight routes', href: '/routes' },
+    ];
+  }
+  if (COMMERCIAL_LINKS[path]) return COMMERCIAL_LINKS[path];
+  // Calculator pages get contextually relevant service links (alias-aware).
+  if (path.startsWith('/tools/') || TOOL_ALIASES[path]) {
+    return (
+      TOOL_SERVICE_LINKS[path] ||
+      TOOL_SERVICE_LINKS[TOOL_ALIASES[path]] ||
+      COMMERCIAL_LINKS['/tools']
+    );
   }
   return [
     { label: 'All freight routes', href: '/routes' },
@@ -4938,6 +5090,105 @@ const TOOL_DETAILS = {
   },
 };
 
+/**
+ * Tool extras: a worked example and a plain-language interpretation for every
+ * calculator, plus complete input/method/limit details for the five tools that
+ * predated TOOL_DETAILS. "Example" figures are illustrative, not quoted rates.
+ */
+const TOOL_EXTRAS = {
+  '/tools/fare-calculator': {
+    example: 'Illustrative: a 1.5-tonne consignment from Rourkela to Bhubaneswar (~340 km) returns a per-kilometre band for the part-load vehicle and a per-kilogram charge on top. Multiply the per-kilogram figure by 1,500 kg to see the cargo share, then add the vehicle component.',
+    interpret: 'A result near the floor of the band usually means good truck availability on your date; near the ceiling, check whether loading, unloading and waiting are included, because those are the line items most likely to move a quote inside the band.',
+  },
+  '/tools/freight-rate-calculator': {
+    example: 'Illustrative: a 2-tonne PTL shipment on Rourkela–Ranchi (180 km) returns a low and high figure per kilogram; multiply each by 2,000 kg to get the total range for the consignment.',
+    interpret: 'Compare the range directly against carrier quotes for the same lane and weight. If a quote sits outside the band, the difference is usually vehicle availability at your loading hour or an inclusion the quote does not state.',
+  },
+  '/tools/ptl-vs-ftl-calculator': {
+    example: 'Illustrative: at 2 tonnes the shared-vehicle curve normally sits below the dedicated-vehicle curve; at 8 tonnes it usually crosses above it. The weight where the curves cross is your switch point.',
+    interpret: 'If your date cannot move, the time value of a dedicated vehicle can outweigh the price difference even below the crossover — treat the crossover as the starting point, not the final answer.',
+  },
+  '/tools/truck-load-calculator': {
+    example: 'Illustrative: 1.5 tonnes of light packaging might fill 80% of a 20-foot body’s volume but only 25% of its payload — the tool reports both percentages so the binding constraint is visible.',
+    interpret: 'Book based on whichever percentage is higher. A truck is full by the measure that matters first, and the correct vehicle is the one where neither percentage is stretched past 100%.',
+  },
+  '/tools/return-load-calculator': {
+    example: 'Illustrative: an empty 340 km return leg is priced at its fuel, driver and toll cost with no revenue, and the same leg with a backhaul load is priced against it — the difference is what the return load is worth to you.',
+    interpret: 'The empty-running figure is a cost, not a loss. Accepting a lower outbound rate to secure a return load pays only if the loaded return beats running empty to the next pickup.',
+  },
+  '/tools/route-optimizer': {
+    example: 'Illustrative: with an origin and four stops, the tool compares the recommended order’s road distance and driving time against the sequence you entered, so backtracking is visible as extra kilometres.',
+    interpret: 'A shorter distance does not always mean a faster trip — check the driving time too, and factor in loading windows at each stop before locking an order.',
+  },
+  '/tools/empty-km-savings': {
+    example: 'Illustrative: a lane where 120 of 340 km would otherwise run empty shows the cost of those 120 km as a per-trip figure, and what booking return loads against that distance is worth.',
+    interpret: 'The saving is only realised if a load is actually available and accepted on the return, so treat the figure as the ceiling of what a return posting is worth to you.',
+  },
+  '/tools/trip-profit': {
+    example: 'Illustrative: a ₹30,000 freight invoice minus diesel, tolls, driver pay, food and lodging, a maintenance reserve and the load-finding commission leaves the figure that actually reaches your account.',
+    interpret: 'If the result is thin, work backwards: each line is visible, so the number shows which cost is consuming the margin rather than only confirming there is none.',
+  },
+  '/tools/shared-savings': {
+    example: 'Illustrative: the same 2-tonne consignment priced alone in a dedicated vehicle and again sharing space with other consignments shows the money and the fuel and carbon difference between the two.',
+    interpret: 'Consolidation adds handling and transit time, so read the saving against your delivery deadline — if the date cannot move, the time cost usually outweighs the saving.',
+  },
+  '/tools/document-checklist': {
+    example: 'Illustrative: selecting an inter-state route, an open truck and a steel commodity generates the registration, permit, fitness, insurance, e-way bill and driver-paper list for that combination.',
+    interpret: 'Use the list as a pre-departure checklist — a missing document found at the office costs minutes; the same gap found at a check post can cost a day.',
+  },
+  '/tools/carbon-savings': {
+    example: 'Illustrative: a 340 km lane with a half-empty vehicle and an empty return leg shows the CO2 of the current pattern, and what consolidation and a filled return would save in kilograms.',
+    interpret: 'Emission factors are class and fuel averages, not measurements of your truck — read the absolute number as an order of magnitude and trust the comparison more than the total.',
+  },
+  '/tools/toll-fuel': {
+    example: 'Illustrative: a 340 km lane with a 16-tonne truck returns a per-kilometre fuel figure and a toll estimate for that vehicle class, broken out separately.',
+    interpret: 'These are the two line items that move between quotes without the cargo changing. If a quote differs from your estimate, ask the carrier which tolls and fuel assumption are inside it.',
+  },
+  '/tools/gst-calculator': {
+    example: 'Illustrative: a ₹20,000 transport invoice between two states returns the IGST split; the same invoice within one state returns the CGST plus SGST split.',
+    interpret: 'This splits a transport invoice only — it does not compute the e-way bill or decide whether your specific supply is inter-state, so confirm the classification with your accountant for large consignments.',
+  },
+  '/tools/payload-utilization': {
+    example: 'Illustrative: 2 tonnes in a 9-tonne truck reads as 22% by weight while a bulky load may read 70% by volume — both numbers are shown against the vehicle’s rated capacity.',
+    interpret: 'The higher percentage is the binding one. Utilisation above the rated figure is overloading whatever the body looks like, so size the vehicle to the lower of the two margins.',
+  },
+  '/tools/shipment-brief': {
+    inputs: 'origin, destination, cargo type, weight, volume, packaging and the loading window',
+    method: 'It compiles the same fields a booking needs into one standard brief, so the load can be posted or quoted consistently across carriers.',
+    limits: 'The brief describes what you are moving; it does not price it. Rates still depend on live availability on the date.',
+    example: 'Illustrative: a 1.2-tonne steel-coil brief from Rourkela to Ranchi with a next-day loading window produces a one-page summary ready to post.',
+    interpret: 'A complete brief gets better matches than a partial one — missing volume or packaging data forces the matcher to guess the vehicle size.',
+  },
+  '/tools/waiting-time-cost': {
+    inputs: 'the truck’s daily or hourly rate and the expected waiting hours at loading or unloading',
+    method: 'It converts expected detention into a monetary figure using the rate you enter, so waiting time becomes a line item rather than an invisible cost.',
+    limits: 'It covers the truck’s time at your entered rate; it does not include contractual demurrage, gate fees or penalties unless you add them to the rate.',
+    example: 'Illustrative: a truck billed at ₹8,000/day waiting 4 hours beyond allowance shows the detention cost of those 4 hours.',
+    interpret: 'Compare the figure against the cost of scheduling a firm loading slot — if waiting is predictable, a slot is usually cheaper than paying detention.',
+  },
+  '/tools/freight-quote-comparison': {
+    inputs: 'two quotes with their rate, vehicle type, transit time and what each includes',
+    method: 'It normalises both quotes to an all-in comparison so differences in inclusions become visible rather than hidden in the headline number.',
+    limits: 'The comparison is only as complete as the inclusions you enter — a quote that omits loading or waiting will look cheaper than it is.',
+    example: 'Illustrative: two quotes for the same 2-tonne lane, one per kilogram and one per vehicle, are converted to a common basis and compared line by line.',
+    interpret: 'The cheaper headline rate is not always the cheaper total — the tool shows which quote covers loading, unloading and waiting, which is usually where the difference sits.',
+  },
+  '/tools/cargo-volume-planner': {
+    inputs: 'the number of pieces and the length, width and height of each',
+    method: 'It computes the total cubic volume and suggests how the pieces pack into standard truck bodies, so the volume side of the vehicle decision is made before asking for a quote.',
+    limits: 'It assumes regular, stackable pieces. Irregular shapes, pallets and weight limits are not captured, so treat the volume as a planning figure.',
+    example: 'Illustrative: 40 cartons of 0.5 m × 0.4 m × 0.4 m produce a total cube the tool compares against standard body sizes.',
+    interpret: 'If the cube nearly fills a body, the load is volume-bound — expect the vehicle to be full before payload, and quote on that basis.',
+  },
+  '/tools/load-securing-checklist': {
+    inputs: 'the cargo category the consignment falls under',
+    method: 'It generates a securing checklist for that category — lashing, dunnage, edge protection and cover — matched to the cargo’s movement and fragility profile.',
+    limits: 'It is a general checklist, not a substitute for a site-specific lashing plan for hazardous or unusually shaped cargo.',
+    example: 'Illustrative: selecting steel coils returns a checklist covering coil orientation, chocking and lashing points on the deck.',
+    interpret: 'Use it to brief the loader before the vehicle arrives, so securing decisions are made before loading rather than improvised after it.',
+  },
+};
+
 const TOOL_LINKS = [
   { label: 'Truck fare calculator', href: '/tools/fare-calculator', note: 'per-km and per-kg freight estimates for any Indian corridor' },
   { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator', note: 'PTL, LTL and FTL rate ranges with a recommended truck type' },
@@ -5041,6 +5292,22 @@ const STATIC_FAQ = {
     { q: "Which calculator should I start with?", a: "The fare calculator for a lane you already know, then the truck load calculator to check whether the volume fits the vehicle you had in mind. The PTL versus FTL calculator settles the load-type question once you have a weight, and the toll and fuel calculator explains the gap between two quotes for the same cargo." },
     { q: "Can I use these estimates in a budget?", a: "Yes, as a planning range. The calculators separate the components — distance, fuel, tolls, and the cargo charge — so you can see which part of a quote is moving and defend the number with arithmetic rather than assertion." },
   ],
+  '/tools/fare-calculator': [
+    { q: "Is the fare calculator result a final quote?", a: "No. It returns a planning range built from distance, fuel, tolls and a per-kilogram cargo charge, and it is only as accurate as the inputs. Use it to sanity-check a rate you have been quoted, then confirm the inclusions with the carrier." },
+    { q: "What inputs give the most accurate result?", a: "Use the real weight from your packing list rather than a rounded figure, name both cities precisely, and pick the date you actually need the truck — availability on the date is one of the inputs that moves the result." },
+  ],
+  '/tools/freight-rate-calculator': [
+    { q: "Why does the calculator return a range instead of one number?", a: "Because the same movement prices differently depending on vehicle availability at the loading hour and how many trucks are already committed to that lane on the date. Treat the range as the band a reasonable quote should sit inside." },
+    { q: "Can I compare this against a carrier quote?", a: "Yes — that is the main use. Enter the same lane, weight and load type the carrier quoted, and compare the low and high figures directly. A quote outside the band usually differs on vehicle availability or an unstated inclusion." },
+  ],
+  '/tools/return-load-calculator': [
+    { q: "What is an empty return leg actually costing me?", a: "Fuel, driver time and tolls for a vehicle with nothing in the body. The calculator prices that leg as it would really be run, then shows what a backhaul load would add against it — which is the number that tells you whether a lower outbound rate is worth accepting." },
+    { q: "When is a return load worth taking?", a: "When it covers more than the cost of running empty to the next pickup. The calculator makes both figures visible, so the decision is arithmetic rather than guesswork." },
+  ],
+  '/tools/ptl-vs-ftl-calculator': [
+    { q: "At what weight should I switch from part load to a full truck?", a: "The calculator plots both curves against your weight; the point where they cross is your starting switch point. Below roughly three tonnes sharing normally wins on cost; above roughly seven tonnes, or when the date cannot move, a dedicated vehicle wins on cost and time." },
+    { q: "Does the crossover ever move?", a: "Yes. Peak-season lanes, remote pickups and consignments that cannot share a vehicle all push the crossover higher, so treat the calculator's figure as a baseline and adjust for your specific conditions." },
+  ],
   '/data': [
     { q: "Where do these figures come from?", a: "The numbers are corridor-level and derived from road routing for distance and duration, published rate bands for the pricing side, and the operating conditions of each city. They are not national averages, because national averages hide the variation that actually moves a rate." },
     { q: "How often is this data updated?", a: "Distance and duration are computed on the server rather than stored, so they stay in step with the routing data. Rate bands are reviewed against current lane conditions and carry a last-updated date on the page." },
@@ -5108,6 +5375,74 @@ const STATIC_FAQ = {
     { q: "ट्रक का लाइव लोकेशन कौन देख सकता है?", a: "बुकिंग पर लगे दूसरे पक्ष को — यानी शिपर या ट्रकर, और वह ट्रिप चलने तक के लिए। लोकेशन सार्वजनिक नहीं होता।" },
     { q: "क्रेडिट स्कोर कैसे बनता है?", a: "300 से 900 के बीच का स्कोर ट्रिप पूरी करने की दर, समय पर डिलीवरी, संवाद, रिव्यू और खाते की अवधि से बनता है। यह सार्वजनिक है, इसलिए बुकिंग से पहले ही दूसरे पक्ष की स्थिति दिख जाती है।" },
   ],
+};
+
+/** Next-step conversion blocks for commercial landing pages (crawl-visible). */
+const COMMERCIAL_CTA = {
+  '/return-load': {
+    h2: 'Next step: post or match a return load',
+    links: [
+      { label: 'Register as a transporter (free)', href: '/register?type=trucker' },
+      { label: 'Explore transporter solutions', href: '/solutions/truckers' },
+      { label: 'Estimate your return-leg saving', href: '/tools/return-load-calculator' },
+    ],
+  },
+  '/ptl-transport': {
+    h2: 'Next step: book a part load',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Compare PTL vs FTL cost', href: '/tools/ptl-vs-ftl-calculator' },
+      { label: 'Browse freight routes', href: '/routes' },
+    ],
+  },
+  '/ltl-transport': {
+    h2: 'Next step: ship as LTL',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Estimate your freight rate', href: '/tools/freight-rate-calculator' },
+      { label: 'Browse freight routes', href: '/routes' },
+    ],
+  },
+  '/truck-load-booking': {
+    h2: 'Next step: book a full truck',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Estimate truck fare', href: '/tools/fare-calculator' },
+      { label: 'Compare truck types', href: '/tools/truck-load-calculator' },
+    ],
+  },
+  '/freight-marketplace': {
+    h2: 'Next step: join the marketplace',
+    links: [
+      { label: 'Join as a shipper (free)', href: '/register?type=shipper' },
+      { label: 'Join as a transporter (free)', href: '/register?type=trucker' },
+      { label: 'Browse freight routes', href: '/routes' },
+    ],
+  },
+  '/truck-near-me': {
+    h2: 'Next step: find trucks near you',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Search freight routes', href: '/routes' },
+      { label: 'Estimate truck fare', href: '/tools/fare-calculator' },
+    ],
+  },
+  '/solutions/shippers': {
+    h2: 'Next step: start shipping with LoadSaathi',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Book a truck load', href: '/truck-load-booking' },
+      { label: 'Estimate your freight rate', href: '/tools/freight-rate-calculator' },
+    ],
+  },
+  '/solutions/truckers': {
+    h2: 'Next step: start finding loads',
+    links: [
+      { label: 'Register as a transporter (free)', href: '/register?type=trucker' },
+      { label: 'Explore return loads', href: '/return-load' },
+      { label: 'Estimate trip profit', href: '/tools/trip-profit' },
+    ],
+  },
 };
 
 const STATIC_CONTENT_NOTES = {
@@ -5284,22 +5619,59 @@ function contentFor(path, seoMeta) {
     if (faq.length) blocks.push({ h2: `${seoMeta.cityName} transport questions`, dl: faq });
     blocks.push({ h2: 'Free freight tools', ul: TOOL_LINKS.map((t) => ({ ...t, plain: true })) });
   } else {
-    // Static page.
-    heading = title;
-    blocks.push({ p: seoMeta.summary || seoMeta.metaDescription });
+    // Static page. `heading` is declared at the top of contentFor and is
+    // overridden below for the homepage.
+
+    // Homepage: purpose-built crawl-visible block (exactly one H1 + pathways).
+    if (path === '/') {
+      heading = 'Move Goods Smarter with Shared Freight';
+      blocks.push({
+        p: 'LoadSaathi is a shared freight marketplace that connects shippers, MSMEs and businesses that need to move goods with truck owners and transporters who have truck space. Matching part-load and full-load cargo across trips helps shippers find suitable transport faster and helps transporters reduce empty return journeys — starting from Rourkela and growing across Odisha, Jharkhand and East India corridors.'
+      });
+      blocks.push({ h2: 'For shippers and businesses' });
+      blocks.push({
+        p: 'If you are an MSME, trader or manufacturer moving steel, cement, FMCG, agro or engineering goods, post your shipment on LoadSaathi. Your load is matched against trucks whose route, capacity and date fit, and you can book part-load (PTL/LTL) or full-truck movement with live tracking.'
+      });
+      blocks.push({ h2: 'For truck owners and transporters' });
+      blocks.push({
+        p: 'If you operate a truck or fleet, list your trip once. LoadSaathi matches your available truck space against open loads on the same corridor — including return-load opportunities — so both legs of a journey earn instead of running empty.'
+      });
+      blocks.push({ h2: 'Part load (PTL) and LTL explained' });
+      blocks.push({
+        p: 'Part Truckload (PTL) and Less-Than-Truckload (LTL) let several shippers share one vehicle when cargo does not fill it. Shippers pay for the space they use rather than a whole truck, and transporters earn more per trip by filling otherwise-empty capacity.'
+      });
+      blocks.push({ h2: 'How to start with LoadSaathi' });
+      blocks.push({
+        ul: [
+          'Post what you need — a load (shipper) or a trip (transporter)',
+          'Get matched on route, capacity, date and price alignment',
+          'Confirm the booking, share live tracking, and settle payments on milestones'
+        ]
+      });
+    } else {
+      blocks.push({ p: seoMeta.summary || seoMeta.metaDescription });
+    }
     // Tool pages live under /tools/*, but their notes are keyed by the bare
     // slug (/carbon-savings) because that is the name the tools index uses.
     const noteKey = path.startsWith('/tools/') ? path.slice('/tools'.length) : path;
     const note = STATIC_CONTENT_NOTES[path] || STATIC_CONTENT_NOTES[noteKey];
     if (note) blocks.push({ p: note });
     const detail = TOOL_DETAILS[path] || TOOL_DETAILS[TOOL_ALIASES[path]];
-    if (detail) {
-      blocks.push({
-        h2: 'What this calculator asks for',
-        p: `Enter ${detail.inputs}. The estimate is only as good as those inputs, so use the weight from your packing list rather than a rounded figure.`,
-      });
-      blocks.push({ h2: 'How the estimate is built', p: detail.method });
-      blocks.push({ h2: 'Where this number stops being reliable', p: detail.limits });
+    const extras = TOOL_EXTRAS[path] || TOOL_EXTRAS[TOOL_ALIASES[path]] || {};
+    const inputs = extras.inputs || (detail && detail.inputs);
+    const method = extras.method || (detail && detail.method);
+    const limits = extras.limits || (detail && detail.limits);
+    if (inputs || method || limits || extras.example) {
+      if (inputs) {
+        blocks.push({
+          h2: 'What this calculator asks for',
+          p: `Enter ${inputs}. The estimate is only as good as those inputs, so use the weight from your packing list rather than a rounded figure.`,
+        });
+      }
+      if (method) blocks.push({ h2: 'How the estimate is built', p: method });
+      if (extras.example) blocks.push({ h2: 'Worked example', p: extras.example });
+      if (extras.interpret) blocks.push({ h2: 'How to read your result', p: extras.interpret });
+      if (limits) blocks.push({ h2: 'Where this number stops being reliable', p: limits });
       blocks.push({
         h2: 'Next step after the estimate',
         p: `Once you have a figure to test, post the load on LoadSaathi or publish the trip for the return leg. Matching scores every open pair on capacity, proximity, route overlap, price alignment, date and credit standing, so real quotes come back against the same numbers you just used here. Joining is free for both sides, and ${FEES.shipper} applies to shippers on a completed shipment while truckers pay ${FEES.trucker}.`,
@@ -5328,6 +5700,11 @@ function contentFor(path, seoMeta) {
     const staticFaq = normaliseFaq(STATIC_FAQ[path]);
     if (staticFaq.length) {
       blocks.push({ h2: isHindi ? 'अक्सर पूछे जाने वाले सवाल' : 'Questions on this page', dl: staticFaq });
+    }
+    const cta = COMMERCIAL_CTA[path];
+    if (cta && !isHindi) {
+      blocks.push({ h2: cta.h2 });
+      blocks.push({ ul: cta.links });
     }
   }
 

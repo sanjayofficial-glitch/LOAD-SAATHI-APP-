@@ -1,0 +1,217 @@
+url,http_status,canonical_self,h1_present,content_changed,what_changed,how_tested,deploy_required
+"/",200 (live),yes (self),no (stale cache; fixed in build),yes,"H1 + intro + pathways + 6 links (injected block)",live probe / harness / smoke,yes (to take effect)
+"/features",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/how-it-works",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/about",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/pricing",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/faq",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/contact",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/safety-trust",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/compare",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/compare/loadsaathi-vs-trucksuvidha",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/compare/loadsaathi-vs-blackbuck",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/privacy",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/terms",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/solutions/shippers",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/solutions/truckers",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/gallery",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/return-load",200 (live),yes (self),yes,yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/ptl-transport",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/ltl-transport",200 (live),yes (self),yes,yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/truck-load-booking",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/freight-marketplace",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/truck-near-me",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-cost-calculator",200 (live),yes (self),yes,no,"no content change",live probe / harness / smoke,no
+"/tools/fare-calculator",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/freight-rate-calculator",200 (live),yes (self),yes,yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/return-load-calculator",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/truck-load-calculator",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/ptl-vs-ftl-calculator",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/route-optimizer",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/empty-km-savings",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/trip-profit",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/shared-savings",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/document-checklist",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/carbon-savings",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/toll-fuel",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/gst-calculator",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/payload-utilization",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/shipment-brief",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/waiting-time-cost",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/freight-quote-comparison",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/cargo-volume-planner",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/tools/load-securing-checklist",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/for-msmes",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/ai-logistics",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/data",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/sitemap",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/hi",200 (live),yes (self),yes,no,"no content change",live probe / harness / smoke,no
+"/hi/ptl-transport",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/hi/return-load",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/hi/bhada-kaise-book-kare",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/hi/route/rourkela-to-ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/rourkela-to-ranchi",200 (live),yes (self),yes,yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/ranchi-to-rourkela",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/rourkela-to-jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/jamshedpur-to-rourkela",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/rourkela-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/rourkela-to-burdwan",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/rourkela-to-kolkata",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/ranchi-to-jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/jamshedpur-to-ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/ranchi-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/ranchi-to-kolkata",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/jamshedpur-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/jamshedpur-to-burdwan",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/jamshedpur-to-kolkata",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-kolkata",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-burdwan",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/rourkela-to-sambalpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/ranchi-to-dhanbad",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-vizag",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/balasore-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/berhampur-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/dhanbad-to-jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/kolkata-to-burdwan",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/sambalpur-to-jharsuguda",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/cuttack-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/cuttack-to-rourkela",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/sambalpur-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/rourkela-to-cuttack",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-rourkela",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/kolkata-to-rourkela",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/kolkata-to-ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/kolkata-to-jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/kolkata-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/dhanbad-to-ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/jamshedpur-to-dhanbad",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/sambalpur-to-rourkela",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/burdwan-to-rourkela",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/burdwan-to-jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/burdwan-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/visakhapatnam-to-bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-balasore",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-berhampur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/burdwan-to-kolkata",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/jharsuguda-to-sambalpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/routes/bhubaneswar-to-cuttack",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/routes/bhubaneswar-to-sambalpur",200 (build),yes (smoke sample),yes (smoke sample),yes,"crawl-visible content/links/CTA (or route description)",live probe / harness / smoke,yes (to take effect)
+"/location/rourkela",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/kolkata",200 (live),yes (self),yes,no,"no content change",live probe / harness / smoke,no
+"/location/bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/cuttack",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/sambalpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/angul",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/jharsuguda",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/burdwan",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/dhanbad",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/balasore",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/berhampur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/location/visakhapatnam",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/bhubaneswar",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/rourkela",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/balasore",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/berhampur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/kolkata",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/durgapur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-service/burdwan",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/guide/ptl-vs-ftl",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/guide/freight-rates-east-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/guide/shipping-steel",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/reduce-empty-kilometers",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/freight-credit-score-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/first-shipment-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/real-time-tracking-launch",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ai-price-prediction",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/indian-logistics-eway-bill-gst-2026",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/broker-to-direct-shipper",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/rourkela-to-ranchi-trucking-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/jamshedpur-to-kolkata-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/how-to-ship-textiles-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/seafood-transport-odisha",200 (live),yes (self),yes,no,"no content change",live probe / harness / smoke,no
+"/blog/coal-transport-jharkhand",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/shipping-agricultural-products-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/monsoon-logistics-tips",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/how-to-become-truck-owner-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/digital-payments-for-truckers",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/rourkela-logistics-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ranchi-logistics-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/bhubaneswar-logistics-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/kolkata-logistics-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/jamshedpur-industrial-logistics",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/east-india-freight-corridors",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/shipper-tips-lower-freight-cost",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/how-load-saathi-matching-works",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/india-truck-freight-rates-2026",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/rourkela-to-bhubaneswar-freight",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/kolkata-to-rourkela-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/freight-booking-mistakes-to-avoid",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/steel-transport-india-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/msme-freight-saving-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/trucker-credit-score-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/return-loads-rourkela",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ptl-transport-odisha-jharkhand-2026",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/steel-transport-rourkela-2026",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/trucker-earnings-odisha-2026",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/truck-transport-charges-per-km-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/how-to-find-return-loads-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/digital-freight-matching-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ptl-freight-rates-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/hidden-cost-empty-miles-msme-logistics",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/return-loads-kolkata",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/trucker-earnings-jharkhand-2026",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/loadsaathi-vs-brokers",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/return-loads-ranchi",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/return-loads-jamshedpur",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ranchi-to-bhubaneswar-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ranchi-to-kolkata-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/jamshedpur-to-bhubaneswar-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/kolkata-to-burdwan-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/dhanbad-to-jamshedpur-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ranchi-to-dhanbad-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/bhubaneswar-to-vizag-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/balasore-to-bhubaneswar-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/berhampur-to-bhubaneswar-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/rourkela-to-sambalpur-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/cuttack-to-bhubaneswar-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ranchi-to-rourkela-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/rourkela-to-jamshedpur-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/jamshedpur-to-rourkela-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/rourkela-to-burdwan-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/ranchi-to-jamshedpur-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/jamshedpur-to-ranchi-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/jamshedpur-to-burdwan-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/bhubaneswar-to-burdwan-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/sambalpur-to-jharsuguda-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/sambalpur-to-bhubaneswar-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/rourkela-to-cuttack-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/bhubaneswar-to-kolkata-freight-rates",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/cargo-insurance-guide-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/gst-verified-transporters",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/what-is-load-board",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/best-load-board-apps-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/electric-trucks-small-fleets-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/electric-truck-charging-guide-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/trucks-on-trains-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/gati-shakti-cargo-terminals-guide",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/electric-truck-battery-health",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/reduce-truck-waiting-time",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/truck-driver-fatigue-dispatch",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/cargo-damage-prevention-checklist",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/reverse-logistics-msme-india",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/factory-to-port-export-checklist",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/reliable-trucking-partner-checklist",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/load-board-safety-checklist",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/blog/choose-right-truck-for-cargo",200 (build),yes (smoke sample),yes (smoke sample),no,"no content change",live probe / harness / smoke,no
+"/transport-cost-calculator (legacy alias)",200 live (self-canonical),yes,yes,yes,alias reuses /tools/fare-calculator extras,live probe,yes

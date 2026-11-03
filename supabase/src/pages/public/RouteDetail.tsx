@@ -421,7 +421,7 @@ export default function RouteDetail() {
               {route.dataStatus === "needs_review" ? (
                 <p className="flex items-start gap-2 text-xs text-amber-600 dark:text-amber-400 max-w-2xl mb-8">
                   <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-                  Distance pending re-verification — published road-routing figure shown. Rates updated {RATES_UPDATED_LABEL}.
+                  Indicative figures — published road-routing distance shown; confirm the exact distance at booking. Rates updated {RATES_UPDATED_LABEL}.
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground max-w-2xl mb-8">

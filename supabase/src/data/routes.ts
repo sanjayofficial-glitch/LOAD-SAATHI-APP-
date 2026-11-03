@@ -98,7 +98,7 @@ export function laneMetaDescription(
   const bands = rateBand(route as RouteInfo);
   const statusPart =
     route.dataStatus === "needs_review"
-      ? `${route.distanceKm} km, ~${route.transitTime} hrs (distance pending re-verification)`
+      ? `Est. ${route.distanceKm} km, ~${route.transitTime} hrs driving (indicative — confirm at booking)`
       : `Verified ${route.distanceKm} km, ~${route.transitTime} hrs`;
   return (
     `${statusPart}. Book part load, PTL & LTL trucks ${route.from} to ${route.to}. ` +
@@ -125,7 +125,7 @@ export const routes: RouteInfo[] = [
     transitTime: "4",
     dataStatus: "needs_review",
     description:
-      "Connect the steel city of Odisha with the capital of Jharkhand via LoadSaathi's AI-powered freight marketplace. Book PTL and LTL truck loads on the Rourkela–Ranchi corridor with GPS tracking, transparent pricing, and digital credit scores.",
+      "Rourkela and Ranchi anchor the Odisha–Jharkhand industrial belt about 180 km apart. Steel, cement and engineering cargo from Rourkela meets coal, machinery and consumer goods moving out of Ranchi, so trucks run full in both directions and part-load space is regularly available on this lane.",
     keywords:
       "PTL freight Rourkela to Ranchi, LTL transport Rourkela Ranchi, part load Rourkela to Ranchi, truck booking Rourkela Jharkhand, shared freight Odisha Jharkhand, LoadSaathi Rourkela Ranchi",
     commodities: ["Steel products", "Industrial machinery", "Cement", "FMCG goods"],
@@ -140,7 +140,7 @@ export const routes: RouteInfo[] = [
     transitTime: "4",
     dataStatus: "needs_review",
     description:
-      "Ship goods from the capital of Jharkhand to the steel hub of Odisha. Find returning trucks and competitive rates on the Ranchi–Rourkela route with LoadSaathi's real-time matching and transparent pricing.",
+      "Ranchi and Rourkela sit at the heart of the Jharkhand–Odisha industrial corridor, about 180 km apart. Coal, heavy machinery and agricultural produce move out of Ranchi while steel and cement load from Rourkela, which keeps return freight flowing on both legs of this lane.",
     keywords:
       "part load Ranchi to Rourkela, PTL freight Ranchi to Rourkela, LTL transport Ranchi Rourkela, truck booking Jharkhand Odisha, return load Ranchi Rourkela, freight transport Ranchi",
     commodities: ["Agricultural products", "Machinery parts", "Packaged food", "Textiles"],
@@ -156,7 +156,7 @@ export const routes: RouteInfo[] = [
     dataStatus: "corrected",
     highway: "NH-220",
     description:
-      "Move freight between two of India's largest steel cities. LoadSaathi connects Rourkela and Jamshedpur with AI-matched PTL and LTL trucks, real-time tracking, and competitive rates.",
+      "About 198 km on NH-220 connects two of India's largest steel cities, Rourkela and Jamshedpur. Hot-rolled steel, iron ore, machinery and automobile parts dominate the flow in both directions, which makes this one of the most consistent industrial corridors for PTL and LTL loads.",
     keywords:
       "part load Rourkela to Jamshedpur, PTL freight Rourkela to Jamshedpur, LTL transport Rourkela Jamshedpur, truck booking Rourkela Jharkhand, steel corridor freight, Rourkela Jamshedpur load",
     commodities: ["Steel coils", "Iron ore", "Industrial equipment", "Automobile parts"],
@@ -172,7 +172,7 @@ export const routes: RouteInfo[] = [
     dataStatus: "corrected",
     highway: "NH-220",
     description:
-      "Find efficient PTL and LTL freight from Jamshedpur to Rourkela. Leverage LoadSaathi's returning trucks and AI matching for cost-effective shipping on this key industrial corridor.",
+      "Jamshedpur to Rourkela runs about 198 km on NH-220 between two major steel cities. Finished steel, automobile components, machinery and chemicals move west while coiled steel and engineering goods load eastbound, so trucks rarely need to complete this lane empty.",
     keywords:
       "part load Jamshedpur to Rourkela, PTL freight Jamshedpur to Rourkela, LTL transport Jamshedpur Rourkela, truck booking Jharkhand Odisha, Jamshedpur Rourkela load, return load Jamshedpur Rourkela",
     commodities: ["Steel products", "Automobile components", "Machinery", "Chemicals"],
@@ -187,7 +187,7 @@ export const routes: RouteInfo[] = [
     transitTime: "7",
     dataStatus: "needs_review",
     description:
-      "Reliable PTL and LTL freight from Rourkela to Bhubaneswar — the capital of Odisha. LoadSaathi connects these key Odisha cities with AI-optimized truck matching and live GPS tracking.",
+      "This is Odisha's main west–east freight artery: about 340 km from the steel city of Rourkela to the state capital, Bhubaneswar, and onward to coastal markets. Steel, metals and engineering goods travel east while consumer goods and construction material move west, giving trucks cargo on both legs.",
     keywords:
       "part load Rourkela to Bhubaneswar, PTL freight Rourkela to Bhubaneswar, LTL transport Rourkela Bhubaneswar, Odisha freight, truck booking Rourkela Bhubaneswar, part load Bhubaneswar",
     commodities: ["Steel products", "Consumer electronics", "Textiles", "Packaged goods"],
@@ -217,7 +217,7 @@ export const routes: RouteInfo[] = [
     transitTime: "8.8",
     dataStatus: "corrected",
     description:
-      "Ship PTL and LTL loads from Rourkela to Kolkata — the commercial capital of East India. LoadSaathi offers AI-matched trucks, real-time tracking, and competitive rates on this busy corridor.",
+      "About 420 km separates Rourkela from Kolkata, East India's commercial capital and port city. Steel, minerals and machinery head east to West Bengal while consumer goods, FMCG and project material return west, keeping this one of the busiest cross-state lanes LoadSaathi serves.",
     keywords:
       "part load Rourkela to Kolkata, PTL freight Rourkela to Kolkata, LTL transport Rourkela Kolkata, truck booking Kolkata, Odisha West Bengal logistics, Kolkata freight corridor",
     commodities: ["Steel products", "Minerals", "FMCG goods", "Industrial machinery"],
@@ -399,7 +399,7 @@ export const routes: RouteInfo[] = [
     transitTime: "7",
     dataStatus: "corrected",
     description:
-      "Coastal corridor PTL and LTL freight from Bhubaneswar to Visakhapatnam (Vizag). LoadSaathi's AI platform streamlines cross-state shipping along the East Coast with real-time tracking and fair pricing.",
+      "This coastal corridor runs about 445 km along NH-16 between Bhubaneswar and Visakhapatnam (Vizag), a major eastern-seaboard port. Steel, minerals and port-bound cargo move south from Odisha, while general merchandise and packaging return north — a steady lane for part-load and full-truck freight.",
     keywords:
       "part load Bhubaneswar to Visakhapatnam, PTL freight Bhubaneswar to Visakhapatnam, LTL transport Bhubaneswar Vizag, Odisha Andhra Pradesh freight, truck booking Vizag, coastal corridor logistics",
     commodities: ["Minerals", "Steel products", "Agricultural produce", "Consumer goods"],
@@ -553,7 +553,7 @@ export const routes: RouteInfo[] = [
     transitTime: "7",
     dataStatus: "needs_review",
     description:
-      "Book part load, PTL and LTL freight from Bhubaneswar to Rourkela — the return leg into Odisha's steel capital. LoadSaathi's AI matching finds trucks heading west across the state with transparent pricing and live GPS tracking.",
+      "Bhubaneswar to Rourkela is the reverse leg of Odisha's principal freight corridor, about 340 km across the state. Cargo returning west includes consumer goods, FMCG and building materials, while steel and industrial output load eastbound — so matching a truck in either direction is usually possible on this lane.",
     keywords:
       "part load Bhubaneswar to Rourkela, PTL freight Bhubaneswar to Rourkela, LTL transport Bhubaneswar Rourkela, truck booking Rourkela, Odisha freight, return load Bhubaneswar Rourkela",
     commodities: ["Consumer goods", "Textiles", "Packaged food", "Machinery parts"],
@@ -615,7 +615,7 @@ export const routes: RouteInfo[] = [
     dataStatus: "corrected",
     highway: "NH-220 / NH-16",
     description:
-      "Book part load, PTL and LTL freight from Bhubaneswar to Jamshedpur on the NH-16 / NH-220 corridor. Move goods from Odisha's capital to Jharkhand's steel city with AI-matched trucks and live GPS tracking.",
+      "About 347 km via NH-16 and NH-220 connects Odisha's capital with Jharkhand's steel city, Jamshedpur. Consumer goods, FMCG and agricultural produce move east while finished steel and automobile parts return west, keeping this cross-state lane active in both directions.",
     keywords:
       "part load Bhubaneswar to Jamshedpur, PTL freight Bhubaneswar to Jamshedpur, LTL transport Bhubaneswar Jamshedpur, truck booking Jamshedpur, Odisha Jharkhand freight, steel city transport",
     commodities: ["Consumer goods", "Agricultural produce", "Cement", "FMCG goods"],
@@ -826,7 +826,7 @@ export const routes: RouteInfo[] = [
     transitTime: "1",
     dataStatus: "needs_review",
     description:
-      "Quick part load, PTL and LTL freight from Bhubaneswar to Cuttack — Odisha's twin cities corridor. LoadSaathi's local trucker network ensures fast, affordable intrastate shipping.",
+      "Bhubaneswar and Cuttack are Odisha's twin cities, about 30 km apart, with some of the densest short-haul truck movement in the state. Textiles, food grains and trading goods shuttle between them daily, so small part loads can usually be matched to a local vehicle the same day.",
     keywords:
       "part load Bhubaneswar to Cuttack, PTL freight Bhubaneswar to Cuttack, LTL transport Bhubaneswar Cuttack, Odisha intrastate freight, truck booking Cuttack",
     commodities: ["Agricultural produce", "Textiles", "Consumer electronics", "Packaged goods"],
@@ -841,7 +841,7 @@ export const routes: RouteInfo[] = [
     transitTime: "7",
     dataStatus: "needs_review",
     description:
-      "Book part load, PTL and LTL freight from Bhubaneswar to Sambalpur — from the state capital into western Odisha's industrial belt. AI-matched trucks and fair pricing on LoadSaathi.",
+      "From the state capital into western Odisha's aluminium, paper and handloom belt, this lane runs about 350 km to Sambalpur. Aluminium products, paper and paddy move to coastal markets while consumer goods travel back west, giving shippers matching options in both directions.",
     keywords:
       "part load Bhubaneswar to Sambalpur, PTL freight Bhubaneswar to Sambalpur, LTL transport Bhubaneswar Sambalpur, truck booking Sambalpur, Odisha freight, intra-Odisha logistics",
     commodities: ["Consumer goods", "Packaged food", "Textiles", "Machinery parts"],

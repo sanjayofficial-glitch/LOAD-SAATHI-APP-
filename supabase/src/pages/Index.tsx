@@ -34,7 +34,7 @@ const Index = () => {
               logo: 'https://loadsaathi.in/logo.png',
               description:
                 'AI-powered shared freight marketplace connecting shippers and truckers for PTL and LTL loads across East India.',
-              foundingDate: '2024',
+              foundingDate: '2025',
               founders: [
                 { '@type': 'Person', name: 'Sanjaya Sahu' },
                 { '@type': 'Person', name: 'Prince Mallik' },
