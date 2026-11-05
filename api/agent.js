@@ -5817,6 +5817,14 @@ function buildContentBlock(path, seoMeta, headingTag = 'h1') {
  * get the block inserted right after `<body>`.
  */
 function injectContentBlock(html, path, seoMeta) {
+  // The static shell carries a full homepage fallback (H1 + crawl content) so
+  // `/` is strong even if it is ever served without the edge engine. On any
+  // other page that fallback must be removed first, otherwise the injected
+  // block would sit next to a stray homepage H1 and the page would lose its
+  // own H1 (hasOwnH1 would see the stale one and downgrade the block to h2).
+  if (path !== '/') {
+    html = html.replace(/<div id="ssr-home-fallback"[\s\S]*?<\/div>/, '');
+  }
   const block = buildContentBlock(path, seoMeta, hasOwnH1(html) ? 'h2' : 'h1');
   const slotRe = /(<div id="ssr-fallback-content"[^>]*>)([\s\S]*?)(<\/div>\s*<\/div>)/;
   if (slotRe.test(html)) {
