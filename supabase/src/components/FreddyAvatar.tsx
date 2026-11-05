@@ -32,4 +32,5 @@ export const moodToFreddyAnimation: Record<DishaMood, AnimationName> = {
   surprised: 'surprised',
   happy: 'happy',
   laughing: 'laughing',
+  helpful: 'happy',
 } as const satisfies Record<string, AnimationName>;

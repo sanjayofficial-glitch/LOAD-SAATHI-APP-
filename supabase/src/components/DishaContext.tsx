@@ -63,6 +63,12 @@ interface DishaContextValue {
   triggerSuccessReaction: (message: string) => void
   nextStep: () => void
   dismissStep: () => void
+  /** Accept the pending "Can I guide you?" offer and start the walkthrough. */
+  acceptGuide: () => boolean
+  /** Decline the pending offer and park the mascot back in its circle. */
+  declineGuide: () => boolean
+  /** Stop the active guide and return the mascot to its circle. */
+  stopGuide: () => void
 }
 
 const DishaContext = createContext<DishaContextValue | null>(null)
@@ -256,6 +262,18 @@ export function DishaProvider({ children }: { children: ReactNode }) {
     guideEngine.dismissCurrentStep()
   }, [])
 
+  const acceptGuide = useCallback(() => {
+    return guideEngine.acceptGuide()
+  }, [])
+
+  const declineGuide = useCallback(() => {
+    return guideEngine.declineGuide()
+  }, [])
+
+  const stopGuide = useCallback(() => {
+    guideEngine.stopGuide()
+  }, [])
+
   // Subscribe to guide engine updates
   useEffect(() => {
     const unsubscribe = guideEngine.subscribe((s: GuideState) => {
@@ -296,6 +314,9 @@ export function DishaProvider({ children }: { children: ReactNode }) {
       triggerSuccessReaction,
       nextStep,
       dismissStep,
+      acceptGuide,
+      declineGuide,
+      stopGuide,
     }),
     [
       mood,
@@ -325,6 +346,9 @@ export function DishaProvider({ children }: { children: ReactNode }) {
       triggerSuccessReaction,
       nextStep,
       dismissStep,
+      acceptGuide,
+      declineGuide,
+      stopGuide,
     ],
   )
 

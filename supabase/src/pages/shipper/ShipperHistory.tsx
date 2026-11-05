@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Package, Clock, TrendingUp, Calendar, MapPin, Eye, CheckCircle, Search, Send, IndianRupee, Inbox } from 'lucide-react';
+import { Package, Clock, Calendar, MapPin, Eye, CheckCircle, Search, Send, IndianRupee, Inbox } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
 import ErrorState from '@/components/ErrorState';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -240,7 +240,7 @@ const ShipperHistory = () => {
 
       <div id="shipper-history-stat-cards" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Total', val: stats.total, icon: TrendingUp, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/50' },
+          { label: 'Total', val: stats.total, icon: Inbox, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/50' },
           { label: 'Completed', val: stats.completed, icon: CheckCircle, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-950/50' },
           { label: 'Pending', val: stats.pending, icon: Clock, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-950/50' },
           { label: 'This Month', val: stats.thisMonth, icon: Calendar, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/50' }

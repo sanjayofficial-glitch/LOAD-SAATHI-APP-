@@ -10,8 +10,6 @@ import {
   Phone,
   Building2,
   CheckCircle2,
-  Truck,
-  Package,
   ArrowRight,
   LayoutDashboard,
 } from 'lucide-react';
@@ -105,15 +103,24 @@ const OnboardingFlow = () => {
       return;
     }
 
+    // The localStorage flag alone is per-device: the same account would see
+    // onboarding again on every new device or after browser data is cleared.
+    // A saved phone number is the durable signal that the profile step was
+    // completed (name is set at role selection, so it can't be used here).
+    const hasSavedPhone = Boolean(userProfile?.phone && userProfile.phone.trim());
+
     try {
-      if (localStorage.getItem(onboardedKey) === '1') {
+      if (localStorage.getItem(onboardedKey) === '1' || hasSavedPhone) {
         navigate(dashboardPath(), { replace: true });
       }
     } catch {
-      // localStorage unavailable — show onboarding anyway, never crash
+      // localStorage unavailable — fall back to the profile signal
+      if (hasSavedPhone) {
+        navigate(dashboardPath(), { replace: true });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, isSignedIn, user, role, navigate]);
+  }, [isLoaded, isSignedIn, user, role, userProfile, navigate]);
 
   // Prefill fields when the profile step opens
   useEffect(() => {
@@ -252,19 +259,13 @@ const OnboardingFlow = () => {
         {/* Step 1: Welcome */}
         {step === 'welcome' && (
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8">
-            <div
-              className={`w-16 h-16 ${
-                isTrucker
-                  ? 'bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50'
-                  : 'bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50'
-              } rounded-full flex items-center justify-center mx-auto mb-6`}
-            >
-              {isTrucker ? (
-                <Truck className="h-8 w-8 text-orange-600 dark:text-orange-400" />
-              ) : (
-                <Package className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-              )}
-            </div>
+            <img
+              src="/illustrations/rocket.png"
+              alt=""
+              draggable={false}
+              loading="lazy"
+              className="h-32 w-32 sm:h-36 sm:w-36 object-contain mx-auto mb-4 animate-float"
+            />
             <h1 className="text-3xl font-black text-gray-900 dark:text-white text-center mb-2">
               {isTrucker ? 'Great choice, Trucker!' : 'Great choice, Shipper!'}
             </h1>

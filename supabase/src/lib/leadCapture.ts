@@ -25,7 +25,7 @@ interface LeadInsertInput {
  */
 export async function insertLead(input: LeadInsertInput): Promise<void> {
   try {
-    const { error } = await supabaseAnon.from('leads').insert({
+    const { data, error } = await supabaseAnon.from('leads').insert({
       phone: input.phone,
       name: input.name,
       source: input.source,
@@ -35,14 +35,16 @@ export async function insertLead(input: LeadInsertInput): Promise<void> {
       // Only sent when captured — quoting an absent field would still insert
       // an empty email and skip the trigger, but staying explicit reads better.
       ...(input.email && input.email.trim() ? { email: input.email.trim() } : {}),
-    });
+    }).select('id').single();
 
     if (error) {
       console.warn('[leadCapture] insert failed:', error.message);
+      // Fallback alert without an id — the edge function re-verifies the row.
+      fireLeadAlert(input);
       return;
     }
 
-    fireLeadAlert(input);
+    fireLeadAlert(input, data?.id);
   } catch (err) {
     console.warn('[leadCapture] insert exception:', (err as Error).message);
   }
@@ -54,18 +56,20 @@ export async function insertLead(input: LeadInsertInput): Promise<void> {
  * Fired right after the DB insert succeeds so the founder gets a
  * real-time ping (the 2-hour promise starts the moment the visitor
  * submits). The function itself re-verifies that a matching fresh lead
- * row exists, so this call is safe even if the payload is forged.
+ * row exists, so this call is safe even if the payload is forged. When the
+ * insert succeeded, the inserted lead id is included so the function can pin
+ * the exact row.
  * Best effort: never awaited, never affects the page — the leads row and
  * the 10:00 daily digest are the authoritative record.
  */
-function fireLeadAlert(input: LeadInsertInput): void {
+function fireLeadAlert(input: LeadInsertInput, leadId?: string): void {
   const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
   if (!url) return;
   try {
     void fetch(`${url}/functions/v1/lead-alert`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
+      body: JSON.stringify(leadId ? { ...input, leadId } : input),
       keepalive: true, // survive the page even if the visitor closes it
       signal: AbortSignal.timeout(8000),
     }).catch(() => {

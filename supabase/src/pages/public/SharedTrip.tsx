@@ -31,7 +31,14 @@ interface TripData {
   origin_lng?: number;
   destination_lat?: number;
   destination_lng?: number;
-  trucker?: { full_name: string; rating?: number; is_verified?: boolean; phone?: string };
+}
+
+interface OwnerProfile {
+  id: string;
+  full_name: string;
+  rating?: number;
+  is_verified?: boolean;
+  phone?: string;
 }
 
 export default function SharedTrip() {
@@ -39,6 +46,7 @@ export default function SharedTrip() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [trip, setTrip] = useState<TripData | null>(null);
+  const [ownerProfile, setOwnerProfile] = useState<OwnerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,14 +61,18 @@ export default function SharedTrip() {
 
     supabase
       .from("trips")
-      .select("id, origin_city, destination_city, origin_state, destination_state, departure_date, available_capacity_tonnes, price_per_tonne, vehicle_type, vehicle_number, status, estimated_distance_km, estimated_duration_min, origin_lat, origin_lng, destination_lat, destination_lng, trucker:users!trips_trucker_id_fkey(full_name, rating, is_verified)")
+      .select("id, origin_city, destination_city, origin_state, destination_state, departure_date, available_capacity_tonnes, price_per_tonne, vehicle_type, vehicle_number, status, estimated_distance_km, estimated_duration_min, origin_lat, origin_lng, destination_lat, destination_lng")
       .eq("id", id)
       .single()
-      .then(({ data, error: fetchError }) => {
+      .then(async ({ data, error: fetchError }) => {
         if (fetchError || !data) {
           setError("Trip not found or no longer available");
         } else {
+          const { data: owner } = await supabase
+            .rpc("public_share_owner", { p_trip_id: id })
+            .maybeSingle();
           setTrip(data as unknown as TripData);
+          setOwnerProfile((owner ?? null) as OwnerProfile | null);
         }
         setLoading(false);
       });
@@ -104,9 +116,8 @@ export default function SharedTrip() {
     );
   }
 
-  const trucker = trip.trucker;
-  const whatsAppUrl = trucker?.phone
-    ? generateWhatsAppLink(trucker.phone, {
+  const whatsAppUrl = ownerProfile?.phone
+    ? generateWhatsAppLink(ownerProfile.phone, {
         id: trip.id,
         goods_description: "Cargo",
         pickup_city: trip.origin_city,
@@ -172,16 +183,16 @@ export default function SharedTrip() {
             </div>
 
             {/* Trucker Info */}
-            {trucker && (
+            {ownerProfile && (
               <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-4 mb-6 border border-orange-100 dark:border-orange-800">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold">
-                    {(trucker.full_name || "T").charAt(0)}
+                    {(ownerProfile.full_name || "T").charAt(0)}
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 dark:text-white">{trucker.full_name}</p>
+                    <p className="font-bold text-gray-900 dark:text-white">{ownerProfile.full_name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {trucker.rating ? `⭐ ${trucker.rating.toFixed(1)} rating` : "New trucker"}
+                      {ownerProfile.rating ? `⭐ ${ownerProfile.rating.toFixed(1)} rating` : "New trucker"}
                     </p>
                   </div>
                 </div>

@@ -11,6 +11,11 @@ import {
   type SearchMarketFilters,
 } from "./searchMarket.ts";
 
+// Hard cap on the LLM intent call so a hung Gemini request cannot hold the
+// edge function invocation open. The deterministic keyword fallback covers
+// the timeout path.
+const GEMINI_FETCH_TIMEOUT_MS = 4_500;
+
 interface LLMProviderResult {
   success: boolean;
   filters?: SearchMarketFilters;
@@ -65,7 +70,8 @@ async function geminiIntent(
   prompt: string,
   deps: FreddyIntentDeps,
 ): Promise<LLMProviderResult> {
-  const apiKey = deps.env?.("GEMINI_API_KEY") ?? Deno.env.get("GEMINI_API_KEY");
+  const env = deps.env ?? ((name: string) => undefined);
+  const apiKey = env("GEMINI_API_KEY");
   if (!apiKey) return { success: false, rateLimited: false };
   try {
     const fetchImpl = deps.fetchImpl ?? fetch;
@@ -75,6 +81,7 @@ async function geminiIntent(
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        signal: AbortSignal.timeout(GEMINI_FETCH_TIMEOUT_MS),
       },
     );
     if (res.status === 429) return { success: false, rateLimited: true };
@@ -117,9 +124,50 @@ function keywordFallback(message: string): SearchMarketFilters {
     "rourkela", "ranchi", "bhubaneswar", "kolkata", "jamshedpur", "cuttack",
     "sambalpur", "berhampur", "balasore", "jharsuguda", "angul", "dhanbad",
     "bilaspur", "bhilai", "vizag", "visakhapatnam", "bokaro", "asansol",
-    "durgapur", "raipur", "bhilwara", "bokaro", "adra", "tatanagar",
+    "durgapur", "raipur", "bhilwara", "adra", "tatanagar", "cuttack",
+    "hyderabad", "chennai", "bangalore", "mumbai", "delhi", "pune",
+    "nagpur", "indore", "bhopal", "jaipur", "ahmedabad", "surat",
+    "lucknow", "kanpur", "ghaziabad", "meerut", "patna", "muzaffarpur",
+    "gaya", "bodh gaya", "varanasi", "allahabad", "coimbatore", "madurai",
+    "trivandrum", "kochi", "goa", "panaji", "dehradun", "haridwar",
+    "siliguri", "darjeeling", "guwahati", "shillong", "agartala",
+    "imphal", "tripura", "ahmednagar", "solapur", "wardha", "yavatmal",
+    "akola", "amravati", "jalgaon", "bhusawal", "jalna", "parbhani",
+    "nanded", "latur", "osmanabad", "kolhapur", "sangli", "satara",
+    "ratnagiri", "dhule", "nashik", "mathura", "bharatpur",
+    "dholpur", "karauli", "alwar", "kishangarh", "pushkar", "beawar",
+    "sikar", "tonk", "dungarpur", "banswara", "udaipur", "chittorgarh",
+    "bharatpur", "dausa", "ajmer", "anand", "kheda", "vadodara",
+    "bharuch", "narmada", "vapi", "navsari", "valsad", "tapi",
+    "panchmahal", "mahisagar", "dahod", "sabarkantha", "aravalli",
+    "gir somnath", "junagadh", "jamnagar", "morbi", "kutch", "bhuj",
+    "gandhidham", "adipur", "pathankot", "hoshiarpur", "gurdaspur",
+    "batala", "dhariwal", "jalandhar", "phagwara", "kapurthala",
+    "ropar", "nawanshahr", "ludhiana", "srinagar", "haldwani",
+    "kathgodam", "ramnagar", "nainital", "kashipur", "kichha",
+    "mukteshwar", "dharchula", "pithoragarh", "bageshwar",
+    "kotdwara", "rishikesh", "jhilmjhir", "hansapur", "rudrapur",
+    "kotdwar", "pauri", "thakurdwar", "shakti",
+    "agra", "bareilly", "lucknow", "varanasi", "kanpur", "allahabad",
+    "dehradun", "haridwar", "haldwani", "kaladhungi", "nainital",
+    "kashipur", "kichha", "pilibhit", "baheri", "shadipur",
+    "budaun", "bisauli", "atrauliganj", "bilsi", "sadulpur",
+    "kakori", "raibareli", " Sultanpur", "jhanjharpur",
+    "samastipur", "muzaffarpur", "siwan", "saran", "gopalganj",
+    "siwan", "bagaha", "harha", "piro", "socket", "jaltikri",
+    "kaptanganj", "thawe", "barharia", "chhapra", "samastipur",
   ];
   const lower = m.toLowerCase();
+
+  // "get help" / "i need help" / "what can you do" → no filters, handled as help
+  if (lower.includes("get help") || lower.includes("i need help") ||
+      lower.includes("help me") || lower.includes("how does this work") ||
+      lower.includes("what can you do") || lower.includes("show me how") ||
+      lower.includes("i'm new") || lower.includes("explain") ||
+      lower.includes("guide me") || lower.includes("tutorial")) {
+    return {};
+  }
+
   const foundCities = indianCities.filter((c) => lower.includes(c));
   if (foundCities.length >= 1) filters.origin = foundCities[0]
     .split(" ")

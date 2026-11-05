@@ -49,14 +49,20 @@ export default function SharedShipment() {
 
     supabase
       .from("shipments")
-      .select("id, origin_city, destination_city, origin_state, destination_state, departure_date, goods_description, weight_tonnes, budget_per_tonne, pickup_address, delivery_address, status, estimated_distance_km, estimated_duration_min, shipper:users(full_name, rating, is_verified)")
+      .select("id, origin_city, destination_city, origin_state, destination_state, departure_date, goods_description, weight_tonnes, budget_per_tonne, pickup_address, delivery_address, status, estimated_distance_km, estimated_duration_min")
       .eq("id", id)
       .single()
-      .then(({ data, error: fetchError }) => {
+      .then(async ({ data, error: fetchError }) => {
         if (fetchError || !data) {
           setError("Shipment not found or no longer available");
         } else {
-          setShipment(data as unknown as ShipmentData);
+          const { data: owner } = await supabase
+            .rpc("public_share_shipment_owner", { p_shipment_id: id })
+            .maybeSingle();
+          setShipment({
+            ...(data as unknown as ShipmentData),
+            shipper: (owner ?? null) as ShipmentData["shipper"],
+          });
         }
         setLoading(false);
       });

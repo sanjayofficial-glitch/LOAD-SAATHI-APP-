@@ -377,9 +377,25 @@ const Favorites = () => {
 };
 
 function EmptyState({ type }: { type: string }) {
+  const EMPTY_IMAGES: Record<string, string> = {
+    trips: "/illustrations/truck-delivery.png",
+    shipments: "/illustrations/delivered-boxes.png",
+    users: "/illustrations/heart.png",
+  };
+  const image = EMPTY_IMAGES[type];
   return (
     <div className="text-center py-12">
-      <Heart className="h-12 w-12 text-gray-200 dark:text-gray-700 mx-auto mb-4" />
+      {image ? (
+        <img
+          src={image}
+          alt=""
+          draggable={false}
+          loading="lazy"
+          className="h-32 w-32 object-contain mx-auto mb-4 animate-float"
+        />
+      ) : (
+        <Heart className="h-12 w-12 text-gray-200 dark:text-gray-700 mx-auto mb-4" />
+      )}
       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">No saved {type}</h3>
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Tap the heart icon on any {type.slice(0, -1)} to save it here.

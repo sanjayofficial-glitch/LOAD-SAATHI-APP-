@@ -155,6 +155,16 @@ export default function ReturnLoadCalculator() {
             </p>
           </div>
 
+          <div className="text-center">
+            <img
+              src="/illustrations/phone-map.png"
+              alt=""
+              draggable={false}
+              loading="lazy"
+              className="h-32 w-32 object-contain mx-auto mb-2 animate-float"
+            />
+          </div>
+
           <Card className="glass-card border-border">
             <CardHeader>
               <CardTitle className="text-xl font-bold flex items-center gap-2">

@@ -6,14 +6,24 @@ import LogoMark from "@/components/LogoMark";
 import SeoMeta from "@/components/SeoMeta";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { User as UserType } from "@/types";
 import { useDisha } from "@/components/DishaContext";
 import { useDishaGuide } from "@/components/DishaGuideProvider";
 import { useMascotFormWatcher } from "@/hooks/useMascotFormWatcher";
 
+// Single source of truth for where a signed-in user should land.
+function dashboardPathFor(profile: UserType | null): string {
+  if (!profile) return "/choose-role";
+  if (profile.user_type === "shipper") return "/shipper/dashboard";
+  if (profile.user_type === "trucker") return "/trucker/dashboard";
+  if (profile.user_type === "admin") return "/admin/monitoring";
+  return "/choose-role";
+}
+
 const Login = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const { isSignedIn } = useUser();
-  const { userProfile } = useAuth();
+  const { userProfile, refreshProfile, loading: profileLoading } = useAuth();
   const { triggerErrorReaction, triggerSuccessReaction } = useDisha();
   const { handleClick: guideHandleClick } = useDishaGuide();
   const navigate = useNavigate();
@@ -45,12 +55,11 @@ const Login = () => {
   });
 
   useEffect(() => {
-    if (!isLoaded || !isSignedIn) return;
-    if (userProfile?.user_type === "shipper") navigate("/shipper/dashboard", { replace: true });
-    else if (userProfile?.user_type === "trucker") navigate("/trucker/dashboard", { replace: true });
-    else if (userProfile?.user_type === "admin") navigate("/admin/monitoring", { replace: true });
-    else navigate("/choose-role", { replace: true });
-  }, [isLoaded, isSignedIn, userProfile, navigate]);
+    // Wait for the profile to resolve before routing, so returning users go
+    // straight to their dashboard instead of flashing through /choose-role.
+    if (!isLoaded || !isSignedIn || profileLoading) return;
+    navigate(dashboardPathFor(userProfile), { replace: true });
+  }, [isLoaded, isSignedIn, profileLoading, userProfile, navigate]);
 
   const handleGoogleSignIn = async () => {
     if (!isLoaded) return;
@@ -84,7 +93,10 @@ const Login = () => {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         triggerSuccessReaction("Welcome back! Let's get you set up.");
-        navigate("/choose-role", { replace: true });
+        // Fetch the profile *before* navigating so returning users land directly
+        // on their dashboard — no /choose-role detour for existing accounts.
+        const profile = await refreshProfile();
+        navigate(dashboardPathFor(profile), { replace: true });
       } else {
         const msg = "Additional verification required.";
         setError(msg);
@@ -114,6 +126,13 @@ const Login = () => {
         <div className="w-full max-w-sm animate-scale-in overflow-y-auto">
           <div className="text-center mb-8">
             <LogoMark size="h-14 w-14" className="mx-auto mb-4" />
+            <img
+              src="/illustrations/handshake.png"
+              alt=""
+              draggable={false}
+              loading="lazy"
+              className="h-24 w-24 object-contain mx-auto mb-2 animate-float"
+            />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Sign in to your LoadSaathi account</p>
           </div>

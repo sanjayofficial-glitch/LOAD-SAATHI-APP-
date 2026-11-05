@@ -14,20 +14,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { showSuccess, showError } from '@/utils/toast';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
-import { MapPin, Calendar, Truck, IndianRupee, ArrowLeft, CheckCircle, AlertCircle, MessageSquare, Loader2, Flag } from 'lucide-react';
-import Star from '@/components/Star';
+import { MapPin, Calendar, Truck, IndianRupee, ArrowLeft, AlertCircle, MessageSquare, Loader2, CheckCircle2, Weight, Star } from 'lucide-react';
 import RouteMap from '@/components/RouteMap';
 import EmissionsCard from '@/components/EmissionsCard';
 import LiveMap from '@/components/LiveMap';
 import type { TruckLocation } from '@/components/LiveMap';
 import { useCreditScore } from '@/hooks/useCreditScore';
 import CreditScoreBadge from '@/components/CreditScoreBadge';
+import { useT } from '@/i18n/useT';
 
 const TripDetail = () => {
   const { tripId } = useParams();
   const { userProfile } = useAuth();
   const { getToken } = useClerkAuth();
   const navigate = useNavigate();
+  const t = useT();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [reviews, setReviews] = useState<{ id: string; rating: number; comment?: string; shipper?: { full_name: string } }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -256,7 +257,7 @@ const TripDetail = () => {
             <div className="p-3 bg-blue-50 dark:bg-blue-900/20 flex items-center justify-between">
               <p className="text-sm font-bold text-blue-700 dark:text-blue-300 flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-                Live Trucker Location
+                {t('detail.liveLocation')}
               </p>
               <span className={`text-[10px] font-mono ${Date.now() - new Date(truckerLocation.lastUpdated).getTime() > 120000 ? "text-red-500 dark:text-red-400" : "text-blue-500 dark:text-blue-400"}`}>
                 Updated {new Date(truckerLocation.lastUpdated).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
@@ -283,10 +284,10 @@ const TripDetail = () => {
           <Card className="border-orange-100 dark:border-orange-800">
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">Trip Information</CardTitle>
+                <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">{t('detail.tripInfo')}</CardTitle>
                 {isCompleted && (
                   <Badge className="bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700">
-                    <Flag className="h-3 w-3 mr-1" /> COMPLETED
+                    <CheckCircle2 className="h-3 w-3 mr-1" /> COMPLETED
                   </Badge>
                 )}
               </div>
@@ -345,7 +346,7 @@ const TripDetail = () => {
 
               <div className={`p-4 rounded-lg flex items-center justify-between ${isCompleted ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400' : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'}`}>
                 <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-5 w-5" /> {isCompleted ? 'Final Capacity' : 'Available Capacity'}
+                  <Weight className="mr-2 h-5 w-5" /> {isCompleted ? 'Final Capacity' : 'Available Capacity'}
                 </div>
                 <Badge className={`${isCompleted ? 'bg-gray-400 dark:bg-gray-600' : 'bg-blue-600'} text-white text-lg px-3 py-1`}>
                   {trip.available_capacity_tonnes} Tonnes
@@ -363,7 +364,7 @@ const TripDetail = () => {
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white">{trip.trucker?.full_name}</p>
                     <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                      <Star filled className="h-3 w-3 text-yellow-500 mr-1" />
+                      <Star className="h-3 w-3 text-yellow-500 fill-current mr-1" />
                       {trip.trucker?.rating?.toFixed(1) || '0.0'} Rating • {trip.trucker?.total_trips || 0} Trips
                     </div>
                     {truckerCreditScore && <CreditScoreBadge score={truckerCreditScore} size="sm" />}
@@ -378,7 +379,7 @@ const TripDetail = () => {
               <CardHeader>
                 <CardTitle className="text-lg flex items-center text-gray-900 dark:text-white">
                   <MessageSquare className="h-5 w-5 mr-2 text-orange-600 dark:text-orange-400" />
-                  Recent Reviews
+                  {t('detail.recentReviews')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -388,7 +389,7 @@ const TripDetail = () => {
                       <span className="text-sm font-bold text-gray-900 dark:text-white">{review.shipper?.full_name}</span>
                       <div className="flex">
                         {[1, 2, 3, 4, 5].map((s) => (
-                          <Star key={s} filled={review.rating >= s} className="h-3 w-3" />
+                          <Star key={s} className={`h-3 w-3 ${review.rating >= s ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} />
                         ))}
                       </div>
                     </div>
@@ -403,19 +404,19 @@ const TripDetail = () => {
         {userProfile?.user_type === 'shipper' && (
           <Card className={`border-orange-200 dark:border-orange-800 shadow-md h-fit sticky top-24 ${isCompleted ? 'opacity-75 grayscale-[0.5]' : ''}`}>
             <CardHeader className="bg-orange-50/50 dark:bg-orange-900/10">
-              <CardTitle className="text-gray-900 dark:text-white">{isCompleted ? 'Trip Finished' : 'Book Space'}</CardTitle>
+              <CardTitle className="text-gray-900 dark:text-white">{isCompleted ? t('detail.tripFinished') : t('detail.bookSpace')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 pt-6">
               {isCompleted ? (
                 <div className="text-center py-8 space-y-4">
                   <div className="bg-blue-100 dark:bg-blue-900/30 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                    <Flag className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                    <CheckCircle2 className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                   </div>
                   <p className="text-gray-600 dark:text-gray-400 font-medium">
                     This trip has been marked as completed by the trucker and is no longer accepting bookings.
                   </p>
                   <Button variant="outline" className="w-full" onClick={() => navigate('/browse-trucks')}>
-                    Find Other Trucks
+                    {t('detail.findOtherTrucks')}
                   </Button>
                 </div>
               ) : (
@@ -475,7 +476,7 @@ const TripDetail = () => {
 
                   <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500 dark:text-gray-400">Estimated Cost:</span>
+                      <span className="text-gray-500 dark:text-gray-400">{t('detail.estimatedCost')}:</span>
                       <span className="font-bold text-gray-900 dark:text-gray-100">
                         ₹{((parseFloat(weight) || 0) * (trip.price_per_tonne || 0)).toLocaleString()}
                       </span>
@@ -495,7 +496,7 @@ const TripDetail = () => {
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Sending Request...
                       </>
-                    ) : 'Send Booking Request'}
+                    ) : t('detail.sendBookingRequest')}
                   </Button>
                 </>
               )}

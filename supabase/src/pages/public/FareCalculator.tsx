@@ -476,9 +476,13 @@ export default function FareCalculator() {
                   Shipment Mode
                 </Label>
                 <Tabs value={shipmentMode} onValueChange={(v) => setShipmentMode(v as "ftl" | "ptl")} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 h-12">
-                    <TabsTrigger value="ftl" className="text-base font-bold">Full Truckload (FTL)</TabsTrigger>
-                    <TabsTrigger value="ptl" className="text-base font-bold">Partial Truckload (PTL)</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 min-h-12 h-auto gap-1 p-1">
+                    <TabsTrigger value="ftl" className="min-w-0 text-sm sm:text-base font-bold leading-tight py-2 px-2">
+                      Full Truckload (FTL)
+                    </TabsTrigger>
+                    <TabsTrigger value="ptl" className="min-w-0 text-sm sm:text-base font-bold leading-tight py-2 px-2">
+                      Partial Truckload (PTL)
+                    </TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
@@ -506,6 +510,21 @@ export default function FareCalculator() {
               )}
             </CardContent>
           </Card>
+
+          {!result && (
+            <div className="mt-6 text-center">
+              <img
+                src="/illustrations/route-map.png"
+                alt=""
+                draggable={false}
+                loading="lazy"
+                className="h-32 w-32 object-contain mx-auto mb-2 animate-float"
+              />
+              <p className="text-sm text-gray-400 dark:text-gray-500">
+                भरें और एस्टीमेट पाएं — fill the details above to see the estimate
+              </p>
+            </div>
+          )}
 
           {result && (
             <>

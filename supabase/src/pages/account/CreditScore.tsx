@@ -67,8 +67,15 @@ export default function CreditScorePage() {
           </TabsContent>
         </Tabs>
       ) : (
-        <Card>
+        <Card className="text-center">
           <CardHeader>
+            <img
+              src="/illustrations/shield.png"
+              alt=""
+              draggable={false}
+              loading="lazy"
+              className="h-28 w-28 object-contain mx-auto mb-2 animate-float"
+            />
             <CardTitle>No Score Yet</CardTitle>
             <CardDescription>
               Complete trips and receive reviews to build your credit score. New users start at 550.

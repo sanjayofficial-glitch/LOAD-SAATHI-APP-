@@ -43,6 +43,7 @@ export const MOOD_BADGES: Record<DishaMood, { emoji: string; label: string }> = 
   sleeping: { emoji: '😴', label: 'Zzz…' },
   searching: { emoji: '🔎', label: 'Searching…' },
   curious: { emoji: '👀', label: 'Let’s see…' },
+  helpful: { emoji: '💡', label: 'Happy to help!' },
   surprised: { emoji: '😮', label: 'Oh!' },
   happy: { emoji: '😊', label: 'Happy to help' },
   laughing: { emoji: '😂', label: 'Ha ha!' },

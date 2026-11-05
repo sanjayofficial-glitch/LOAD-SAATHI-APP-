@@ -43,6 +43,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { showSuccess, showError } from '@/utils/toast';
+import { useT } from '@/i18n/useT';
 import type { Trip, ShipmentRequest, Request } from '@/types';
 
 const StatusBadge = ({ status }: { status: string }) => {
@@ -65,6 +66,7 @@ const TruckerHub = () => {
   const { userProfile } = useAuth();
   const { getAuthenticatedClient } = useSupabase();
   const navigate = useNavigate();
+  const t = useT();
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get('tab') || 'trips';
 
@@ -245,7 +247,7 @@ const TruckerHub = () => {
 
       if (status === 'accepted') {
         // Shipper is notified by trg_request_decided_notify (same transaction).
-        showSuccess('✅ Request accepted!');
+        showSuccess('Request accepted!');
       } else {
         showSuccess('Request declined.');
       }
@@ -326,17 +328,17 @@ const TruckerHub = () => {
         <TabsList id="trucker-hub-tabs" className="flex w-full max-w-[600px] overflow-x-auto">
           <TabsTrigger value="trips" className="flex flex-1 min-w-max items-center gap-2">
             <Truck className="h-4 w-4" />
-            My Trips
+            {t('hub.myTrips')}
             {trips.length > 0 && <Badge className="ml-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">{trips.length}</Badge>}
           </TabsTrigger>
           <TabsTrigger value="sent" className="flex flex-1 min-w-max items-center gap-2">
             <Send className="h-4 w-4" />
-            Sent Offers
+            {t('hub.sentOffers')}
             {sentOffers.length > 0 && <Badge className="ml-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">{sentOffers.length}</Badge>}
           </TabsTrigger>
           <TabsTrigger value="incoming" className="flex flex-1 min-w-max items-center gap-2 relative">
             <Inbox className="h-4 w-4" />
-            Booking Requests
+            {t('hub.bookingRequests')}
             {pendingIncoming.length > 0 && (
               <Badge className="ml-1 bg-orange-600 text-white">{pendingIncoming.length}</Badge>
             )}
@@ -348,6 +350,7 @@ const TruckerHub = () => {
             <EmptyState
               accent="orange"
               icon={<Truck className="h-8 w-8 sm:h-10 sm:w-10" />}
+              image="/illustrations/forklift.png"
               title="No trips posted yet"
               description="Post a trip to start finding loads to carry and earn more."
               primaryAction={{ label: 'Post Your First Trip', to: '/trucker/post-trip' }}
@@ -389,14 +392,14 @@ const TruckerHub = () => {
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0 dark:border-gray-700">
-                        <Link to={`/trucker/trips/${trip.id}`}><Button variant="outline" size="sm" className="border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950"><Eye className="h-4 w-4 mr-2" />View</Button></Link>
+                        <Link to={`/trucker/trips/${trip.id}`}><Button variant="outline" size="sm" className="border-orange-200 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950"><Eye className="h-4 w-4 mr-2" />{t('hub.view')}</Button></Link>
                         
                         {trip.status === 'in_transit' && (
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button variant="outline" size="sm" className="border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400 dark:hover:bg-purple-950">
                                 <Flag className="h-4 w-4 mr-2" />
-                                Mark Delivered
+                                {t('hub.markDelivered')}
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -407,7 +410,7 @@ const TruckerHub = () => {
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogCancel>{t('form.cancel')}</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => { if (!actionLoading) handleMarkDelivered(trip.id); }}
                                   disabled={!!actionLoading}
@@ -416,7 +419,7 @@ const TruckerHub = () => {
                                   {actionLoading === trip.id ? (
                                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
                                   ) : (
-                                    'Mark Delivered'
+                                    t('hub.markDelivered')
                                   )}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
@@ -429,7 +432,7 @@ const TruckerHub = () => {
                             <AlertDialogTrigger asChild>
                               <Button variant="outline" size="sm" className="border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-950">
                                 <CheckCircle className="h-4 w-4 mr-2" />
-                                Trip Completed
+                                {t('hub.tripCompleted')}
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -440,7 +443,7 @@ const TruckerHub = () => {
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogCancel>{t('form.cancel')}</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => { if (!actionLoading) handleCompleteTrip(trip.id); }}
                                   disabled={!!actionLoading}
@@ -449,7 +452,7 @@ const TruckerHub = () => {
                                   {actionLoading === trip.id ? (
                                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
                                   ) : (
-                                    'Trip Completed'
+                                    t('hub.tripCompleted')
                                   )}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
@@ -458,7 +461,7 @@ const TruckerHub = () => {
                         )}
                         {trip.status !== 'completed' && trip.status !== 'cancelled' && (
                           <Button asChild variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950">
-                            <Link to={`/trucker/trips/${trip.id}/edit`}>Edit</Link>
+                            <Link to={`/trucker/trips/${trip.id}/edit`}>{t('hub.edit')}</Link>
                           </Button>
                         )}
                         {trip.status !== 'completed' && trip.status !== 'cancelled' && (
@@ -505,6 +508,7 @@ const TruckerHub = () => {
             <EmptyState
               accent="orange"
               icon={<Send className="h-8 w-8 sm:h-10 sm:w-10" />}
+              image="/illustrations/shipping-box.png"
               title="No offers sent yet"
               description="Browse shipments to find loads for your truck and send an offer."
               primaryAction={{ label: 'Find Shipments', to: '/trucker/browse-shipments' }}
@@ -558,6 +562,7 @@ const TruckerHub = () => {
             <EmptyState
               accent="orange"
               icon={<Inbox className="h-8 w-8 sm:h-10 sm:w-10" />}
+              image="/illustrations/chat-bubble.png"
               title="No booking requests"
               description="When shippers book space on your trips, they'll appear here. Post a trip to start receiving requests."
               primaryAction={{ label: 'Post a Trip', to: '/trucker/post-trip' }}
@@ -588,10 +593,10 @@ const TruckerHub = () => {
                         {request.status === 'pending' ? (
                           <>
                             <Button className="bg-green-600 hover:bg-green-700" onClick={() => handleBookingAction(request, 'accepted')} disabled={!!actionLoading}>
-                              {actionLoading === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Check className="h-4 w-4 mr-2" />Accept</>}
+                              {actionLoading === request.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Check className="h-4 w-4 mr-2" />{t('hub.accept')}</>}
                             </Button>
                             <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-950" onClick={() => handleBookingAction(request, 'declined')} disabled={!!actionLoading}>
-                              <X className="h-4 w-4 mr-2" />Decline
+                              <X className="h-4 w-4 mr-2" />{t('hub.decline')}
                             </Button>
                           </>
                         ) : request.status === 'accepted' && (

@@ -30,7 +30,14 @@ export function generateRequestId(): string {
 // --- IP Extraction ---
 
 export function getRequestIp(req: Request): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  // Prefer platform-set peer identity when present; only fall back to the
+  // client-suppliable X-Forwarded-For first hop.
+  return (
+    req.headers.get("cf-connecting-ip")?.trim() ||
+    req.headers.get("x-real-ip")?.trim() ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
 }
 
 // --- Rate Limiting ---
@@ -41,6 +48,7 @@ interface RateLimitEntry {
 }
 
 const rateLimitMap = new Map<string, RateLimitEntry>();
+const RATE_LIMIT_MAP_CAP = 10_000;
 
 export function checkRateLimit(
   ip: string,
@@ -48,6 +56,25 @@ export function checkRateLimit(
   windowMs: number,
 ): boolean {
   const now = Date.now();
+
+  // Bounded memory: evict expired entries; when the map exceeds its cap,
+  // drop expired keys first and then the oldest entries.
+  if (rateLimitMap.size > RATE_LIMIT_MAP_CAP) {
+    const expired: string[] = [];
+    for (const [key, entry] of rateLimitMap) {
+      if (now > entry.resetAt) expired.push(key);
+    }
+    for (const key of expired) rateLimitMap.delete(key);
+    if (rateLimitMap.size > RATE_LIMIT_MAP_CAP) {
+      const oldest = [...rateLimitMap.entries()].sort(
+        (a, b) => a[1].resetAt - b[1].resetAt,
+      );
+      for (let i = 0; i < oldest.length && rateLimitMap.size > RATE_LIMIT_MAP_CAP; i++) {
+        rateLimitMap.delete(oldest[i][0]);
+      }
+    }
+  }
+
   const entry = rateLimitMap.get(ip);
   if (!entry || now > entry.resetAt) {
     rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs });

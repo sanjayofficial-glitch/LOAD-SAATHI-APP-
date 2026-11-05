@@ -15,6 +15,8 @@ interface DishaSpeechBubbleProps {
   mascotX?: number
   mascotY?: number
   mascotSize?: number
+  /** Render as an interactive dialog (role="dialog") instead of a live status bubble. */
+  asDialog?: boolean
 }
 
 interface BubbleLayout {
@@ -24,7 +26,7 @@ interface BubbleLayout {
   centered: boolean
 }
 
-export default function DishaSpeechBubble({ children, open, side = 'right', className, gap = 3, mascotX, mascotY, mascotSize = 150 }: DishaSpeechBubbleProps) {
+export default function DishaSpeechBubble({ children, open, side = 'right', className, gap = 3, mascotX, mascotY, mascotSize = 150, asDialog = false }: DishaSpeechBubbleProps) {
   const reducedMotion = useReducedMotion()
   const bubbleRef = useRef<HTMLDivElement>(null)
 
@@ -135,9 +137,11 @@ export default function DishaSpeechBubble({ children, open, side = 'right', clas
         >
           <motion.div
             ref={bubbleRef}
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
+            role={asDialog ? 'dialog' : 'status'}
+            aria-modal={asDialog ? true : undefined}
+            aria-live={asDialog ? undefined : 'polite'}
+            aria-atomic={asDialog ? undefined : true}
+            aria-labelledby={asDialog ? 'freddy-chat-title' : undefined}
             initial={reducedMotion ? {} : { opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1, transform: layout.transform }}
             exit={reducedMotion ? {} : { opacity: 0, scale: 0.9, transform: layout.transform }}

@@ -3,7 +3,9 @@
 // Capabilities:
 //   - search_market: read-only marketplace trip search (LLM-parsed from natural language)
 //   - credit-insights: explain your Digital Freight Credit Score
-//   - conversation memory: sessionId-scoped context across messages
+//   - conversation memory: sessionId-scoped context across messages; when
+//     FREDDY_MEMORY_ENABLED=true the store is server-side (freddy_sessions,
+//     owner-only RLS) and authoritative over client-sent history
 //
 // Security properties (all preserved):
 //   - Kill switch (FREDDY_ENABLED) — fail closed when off
@@ -32,6 +34,10 @@ import {
   isCreditScoreQuery,
 } from "../_shared/freddyIntent.ts";
 import { verifyClerkJwt } from "../_shared/verifyClerkJwt.ts";
+import {
+  fetchSessionHistory,
+  persistSessionHistory,
+} from "../_shared/freddyMemory.ts";
 
 const MAX_MESSAGE_LENGTH = 2_000;
 const MAX_BODY_BYTES = 16 * 1024;
@@ -39,6 +45,10 @@ const RATE_LIMIT_REQUESTS = 10;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_RETRY_AFTER_SECONDS = 60;
 const RATE_LIMIT_KEY_PREFIX = "agent-router:";
+
+// Retry configuration for transient failures
+const MAX_RETRIES = 2;
+const RETRY_DELAYS_MS = [1000, 2000];
 
 // Max recent messages to include as conversation context for the LLM.
 const MAX_CONTEXT_MESSAGES = 6;
@@ -100,6 +110,31 @@ function buildContextString(history: ChatMessage[]): string {
     .join("\n");
 }
 
+// Retry an async operation with exponential back-off.
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  label: string,
+  deps: AgentRouterDeps,
+): Promise<{ ok: true; value: T } | { ok: false; reason: string }> {
+  const log = deps.env ? undefined : console.error;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const result = await fn();
+      return { ok: true, value: result };
+    } catch (err) {
+      if (attempt < MAX_RETRIES) {
+        const delay = RETRY_DELAYS_MS[attempt] ?? 2000;
+        if (log) log(`[${label}] attempt ${attempt + 1} failed, retrying in ${delay}ms:`, err);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      if (log) log(`[${label}] all ${MAX_RETRIES + 1} attempts failed:`, err);
+      return { ok: false, reason: `${label} unavailable after retries` };
+    }
+  }
+  return { ok: false, reason: `${label} unavailable` };
+}
+
 // Call the credit-insights edge function to generate credit score insights.
 async function fetchCreditInsights(
   supabaseUrl: string,
@@ -107,8 +142,9 @@ async function fetchCreditInsights(
   userJwt: string,
   fetchImpl: typeof fetch,
   userId: string,
+  userName: string,
 ): Promise<{ ok: true; data: CreditInsightsResult } | { ok: false; reason: string }> {
-  try {
+  const result = await withRetry(async () => {
     const res = await fetchImpl(`${supabaseUrl}/functions/v1/credit-insights`, {
       method: "POST",
       headers: {
@@ -116,16 +152,17 @@ async function fetchCreditInsights(
         Authorization: `Bearer ${userJwt}`,
         apikey: supabaseAnonKey,
       },
-      body: JSON.stringify({ userId }),
+      body: JSON.stringify({ userId, userName }),
+      signal: AbortSignal.timeout(10000),
     });
     if (!res.ok) {
-      return { ok: false, reason: `Credit insights unavailable (${res.status})` };
+      const body = await res.json().catch(() => ({}));
+      throw new Error(`${res.status}: ${(body.error || body.detail || "unknown").slice(0, 200)}`);
     }
     const data = await res.json();
-    return { ok: true, data: data as CreditInsightsResult };
-  } catch {
-    return { ok: false, reason: "Credit insights service error" };
-  }
+    return data as CreditInsightsResult;
+  }, "credit-insights", { env: deps.env });
+  return result;
 }
 
 export async function handleAgentRouter(
@@ -135,8 +172,6 @@ export async function handleAgentRouter(
   const env = deps.env ?? ((name: string) => Deno.env.get(name));
   const checkRateLimitImpl = deps.checkRateLimitImpl ?? checkRateLimit;
   const fetchImpl = deps.fetchImpl ?? fetch;
-  const getSessionHistory = deps.getSessionHistory;
-  const appendSessionHistory = deps.appendSessionHistory;
 
   const requestId = generateRequestId();
   const headers = { ...getCorsHeaders(req), "X-Request-Id": requestId };
@@ -201,6 +236,40 @@ export async function handleAgentRouter(
     return errorResponse("Invalid or expired token.", 401, headers, requestId);
   }
   const userId = user.userId;
+
+  // Optional server-side conversation memory (opt-in via
+  // FREDDY_MEMORY_ENABLED=true). When enabled, the store is authoritative and
+  // the client-sent history is ignored; when disabled, the client-provided
+  // history remains the only context source.
+  const memoryEnabled =
+    (env("FREDDY_MEMORY_ENABLED") ?? "").trim().toLowerCase() === "true";
+  const getSessionHistory = deps.getSessionHistory ??
+    (memoryEnabled
+      ? async (sid: string): Promise<ChatMessage[]> => {
+          const supabaseUrl = env("SUPABASE_URL") ?? "";
+          const supabaseAnonKey = env("SUPABASE_ANON_KEY") ?? "";
+          if (!supabaseUrl || !supabaseAnonKey) return [];
+          return fetchSessionHistory(
+            { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token, userId },
+            sid,
+            { fetchImpl },
+          );
+        }
+      : undefined);
+  const appendSessionHistory = deps.appendSessionHistory ??
+    (memoryEnabled
+      ? async (sid: string, msgs: ChatMessage[]): Promise<void> => {
+          const supabaseUrl = env("SUPABASE_URL") ?? "";
+          const supabaseAnonKey = env("SUPABASE_ANON_KEY") ?? "";
+          if (!supabaseUrl || !supabaseAnonKey) return;
+          await persistSessionHistory(
+            { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token, userId },
+            sid,
+            msgs,
+            { fetchImpl },
+          );
+        }
+      : undefined);
 
   const contentType = req.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
@@ -280,13 +349,15 @@ export async function handleAgentRouter(
     }
   }
 
-  // Load conversation history for context (if session provided and store available).
+  // Load conversation history for context. When server-side memory is
+  // enabled the store is authoritative; otherwise fall back to the
+  // client-provided window.
   let history: ChatMessage[] = body.history ?? [];
-  if (sessionId && getSessionHistory && history.length === 0) {
+  if (sessionId && getSessionHistory) {
     try {
       history = await getSessionHistory(sessionId);
     } catch {
-      history = [];
+      history = body.history ?? [];
     }
   }
 
@@ -302,12 +373,16 @@ export async function handleAgentRouter(
       return errorResponse("Server configuration error.", 500, headers, requestId);
     }
 
+    // Look up the user's display name from the JWT claims.
+    const userName = user.email ?? user.sub ?? userId;
+
     const creditResult = await fetchCreditInsights(
       supabaseUrl,
       supabaseAnonKey,
       token,
       fetchImpl,
       userId,
+      userName,
     );
 
     if (creditResult.ok) {
@@ -406,11 +481,17 @@ export async function handleAgentRouter(
     return errorResponse("Server configuration error.", 500, headers, requestId);
   }
 
-  const outcome: SearchMarketOutcome = await searchMarket(
-    { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token },
-    filters,
-    { fetchImpl },
-  );
+  const outcomeResult = await withRetry(async () => {
+    return searchMarket(
+      { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token },
+      filters,
+      { fetchImpl },
+    );
+  }, "search-market", { env: deps.env });
+  if (!outcomeResult.ok) {
+    return errorResponse(outcomeResult.reason, 502, phaseHeaders, requestId);
+  }
+  const outcome = outcomeResult.value;
   if (!outcome.ok) {
     return errorResponse(outcome.reason, 502, phaseHeaders, requestId);
   }

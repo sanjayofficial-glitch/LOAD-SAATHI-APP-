@@ -203,6 +203,28 @@
   button > * {
     pointer-events: none;
   }
+
+  /* Native-app touch feel: no long-press text selection on controls, no
+     callout on links used as buttons. Content text stays selectable. */
+  button,
+  [role="button"],
+  .tab,
+  .chip,
+  .drag-handle {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Build the 16px input rule with pointer:coarse so tablets/keyboard
+     pointers keep desktop sizing; iOS Safari zooms into <16px inputs. */
+  @media (pointer: coarse) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
 }
 
 /* Custom styles for LoadSaathi */

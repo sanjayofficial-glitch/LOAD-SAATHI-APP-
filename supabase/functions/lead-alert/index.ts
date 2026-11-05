@@ -46,7 +46,14 @@ function getCorsHeaders(req: Request): Record<string, string> {
 }
 
 function getRequestIp(req: Request): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  // Prefer platform-set peer identity when present; only fall back to the
+  // client-suppliable X-Forwarded-For first hop.
+  return (
+    req.headers.get("cf-connecting-ip")?.trim() ||
+    req.headers.get("x-real-ip")?.trim() ||
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "unknown"
+  );
 }
 
 interface RateLimitEntry {
@@ -54,9 +61,27 @@ interface RateLimitEntry {
   resetAt: number;
 }
 const rateLimitMap = new Map<string, RateLimitEntry>();
+const RATE_LIMIT_MAP_CAP = 10_000;
 
 function checkRateLimit(ip: string, maxRequests: number, windowMs: number): boolean {
   const now = Date.now();
+
+  if (rateLimitMap.size > RATE_LIMIT_MAP_CAP) {
+    const expired: string[] = [];
+    for (const [key, entry] of rateLimitMap) {
+      if (now > entry.resetAt) expired.push(key);
+    }
+    for (const key of expired) rateLimitMap.delete(key);
+    if (rateLimitMap.size > RATE_LIMIT_MAP_CAP) {
+      const oldest = [...rateLimitMap.entries()].sort(
+        (a, b) => a[1].resetAt - b[1].resetAt,
+      );
+      for (let i = 0; i < oldest.length && rateLimitMap.size > RATE_LIMIT_MAP_CAP; i++) {
+        rateLimitMap.delete(oldest[i][0]);
+      }
+    }
+  }
+
   const entry = rateLimitMap.get(ip);
   if (!entry || now > entry.resetAt) {
     rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs });
@@ -80,6 +105,7 @@ function optionsResponse(headers: Record<string, string>): Response {
 }
 
 interface LeadAlertPayload {
+  leadId?: string;
   phone?: string;
   name?: string;
   source?: string;
@@ -153,16 +179,31 @@ async function handler(req: Request): Promise<Response> {
   const rows = recent ?? [];
   const phone = (payload.phone ?? "").trim();
   const message = (payload.message ?? "").trim();
-  const backed =
-    rows.findIndex(
-      (r) =>
-        (phone.length > 0 && r.phone === phone) ||
-        (phone.length === 0 &&
-          message.length > 0 &&
-          (r.message ?? "").trim() === message) ||
-        (r.source === (payload.source ?? "") &&
-          r.page_path === (payload.page_path ?? "")),
-    ) >= 0;
+
+  // Substantiation: prefer an exact inserted-row binding (the id returned by
+  // the insert). Without an id, require full equality on (source, page_path)
+  // plus phone or message against a single row — a bare (source, page_path)
+  // pair match is no longer sufficient.
+  let backed = false;
+  if (payload.leadId) {
+    const { data: hit } = await admin
+      .from("leads")
+      .select("id")
+      .eq("id", payload.leadId)
+      .gte("created_at", since)
+      .maybeSingle();
+    backed = !!hit;
+  } else {
+    backed =
+      rows.findIndex(
+        (r) =>
+          r.source === (payload.source ?? "") &&
+          r.page_path === (payload.page_path ?? "") &&
+          (phone.length > 0 ? r.phone === phone : true) &&
+          (message.length > 0 ? (r.message ?? "").trim() === message : true) &&
+          (phone.length > 0 || message.length > 0),
+      ) >= 0;
+  }
 
   if (!backed) {
     // No matching recent insert — treat as fabricated and stay silent

@@ -233,7 +233,13 @@ const Verification = () => {
     }
     return (
       <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/40">
-        <ShieldCheck className="mt-0.5 h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <img
+          src="/illustrations/checklist.png"
+          alt=""
+          draggable={false}
+          loading="lazy"
+          className="h-12 w-12 object-contain shrink-0"
+        />
         <div>
           <p className="font-medium text-blue-800 dark:text-blue-300">Get your verified badge</p>
           <p className="text-sm text-blue-700 dark:text-blue-400">
@@ -503,8 +509,7 @@ const Verification = () => {
               <ShieldCheck className="mr-2 h-4 w-4" />
             )}
             Submit for verification
-          </Button>
-          {!summary.canSubmit && (
+          </Button>          {!summary.canSubmit && (
             <p className="text-xs text-gray-500 dark:text-gray-400 sm:text-right">
               Add the required documents to enable submission.
             </p>

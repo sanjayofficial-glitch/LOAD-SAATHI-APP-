@@ -30,7 +30,7 @@ const UserManagement = () => {
     const fetchUsers = async () => {
       try {
         const supabase = await getAuthenticatedClient();
-        const { data } = await supabase.from('users').select('*').order('created_at', { ascending: false }).limit(100);
+        const { data } = await supabase.rpc('admin_users_view');
         setUsers((data || []) as unknown as User[]);
       } catch (err) {
         console.error('[UserManagement]', err);

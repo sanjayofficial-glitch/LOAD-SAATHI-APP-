@@ -92,9 +92,15 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  // ── Auth: CRON_SECRET only ──
+  // ── Auth: CRON_SECRET only (fail-closed) ──
   const cronSecret = getEnv("CRON_SECRET");
-  if (cronSecret) {
+  if (!cronSecret) {
+    return new Response(
+      JSON.stringify({ error: "CRON_SECRET not configured" }),
+      { status: 503, headers: jsonHeaders },
+    );
+  }
+  {
     const auth = req.headers.get("authorization") ?? "";
     if (auth !== `Bearer ${cronSecret}`) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {

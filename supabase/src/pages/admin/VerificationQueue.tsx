@@ -97,16 +97,18 @@ const VerificationQueue = () => {
       const client = await getAuthenticatedClient();
 
       const [{ data: users, error: usersError }, { data: docs, error: docsError }] = await Promise.all([
-        client
-          .from('users')
-          .select('id, full_name, phone, user_type, avatar_url, verification_status, verification_note, kyc_submitted_at, verified_at, created_at')
-          .in('verification_status', ['pending', 'verified', 'rejected'])
-          .order('kyc_submitted_at', { ascending: false }),
+        client.rpc('admin_users_view'),
         client.from('user_documents').select('user_id, status'),
       ]);
 
       if (usersError) throw new Error(friendlyKycError(usersError));
       if (docsError) throw new Error(friendlyKycError(docsError));
+
+      // admin_users_view returns every user row; replicate the previous
+      // server-side filtering and ordering locally.
+      const queueUsers = ((users || []) as any[])
+        .filter((u) => ['pending', 'verified', 'rejected'].includes(u.verification_status))
+        .sort((a, b) => (b.kyc_submitted_at || '').localeCompare(a.kyc_submitted_at || ''));
 
       const pendingByUser = new Map<string, number>();
       const totalByUser = new Map<string, number>();
@@ -117,7 +119,7 @@ const VerificationQueue = () => {
         }
       }
 
-      return ((users || []) as Omit<QueueUser, 'pendingDocCount' | 'docCount'>[])
+      return (queueUsers as Omit<QueueUser, 'pendingDocCount' | 'docCount'>[])
         .map((u) => ({
           ...u,
           pendingDocCount: pendingByUser.get(u.id) || 0,

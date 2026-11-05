@@ -18,6 +18,7 @@ export type DishaMood =
   | 'surprised'
   | 'happy'
   | 'laughing'
+  | 'helpful'
 
 const MOOD_TRANSITION_MS = 220
 

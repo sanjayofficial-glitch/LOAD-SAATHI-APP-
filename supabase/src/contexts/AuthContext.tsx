@@ -11,7 +11,7 @@ interface AuthContextType {
   userProfile: User | null;
   loading: boolean;
   signOut: () => Promise<void>;
-  refreshProfile: () => Promise<void>;
+  refreshProfile: () => Promise<User | null>;
   setProfile: (profile: User) => void;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   isLoaded: boolean;
@@ -73,11 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       const { createClerkSupabaseClient } = await loadSupabaseClient();
       const supabaseClient = createClerkSupabaseClient(supabaseToken);
-      const { data, error } = await supabaseClient
-        .from('users')
-        .select('id, user_type, full_name, phone, company_name, rating, total_trips, is_verified, created_at, avatar_url, verification_status, verification_note, kyc_submitted_at, verified_at')
-        .eq('id', user.id)
-        .maybeSingle();
+      const { data, error } = await (supabaseClient.rpc('get_own_profile') as any).maybeSingle();
 
       if (error) {
         console.error('[AuthContext] Error fetching profile:', error);
@@ -177,7 +173,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshProfile = useCallback(async () => {
     setLoading(true);
-    await fetchProfile();
+    const profile = await fetchProfile();
+    return profile;
   }, [fetchProfile]);
 
   const setProfile = useCallback((profile: User) => {

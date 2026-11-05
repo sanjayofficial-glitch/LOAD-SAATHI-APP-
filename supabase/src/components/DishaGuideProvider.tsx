@@ -17,6 +17,12 @@ interface DishaGuideContextValue {
   targetPosition: { x: number; y: number; side: string; targetRect: DOMRect | null } | null;
   registerPageElements: (elements: Record<string, HTMLElement>) => void;
   startFlow: (flowId: string) => boolean;
+  /** True when the mascot is showing a "Can I guide you?" offer bubble. */
+  offerPending: boolean;
+  /** Accept the pending offer and begin the guided walkthrough. */
+  acceptGuide: () => boolean;
+  /** Decline the pending offer and park the mascot back in its circle. */
+  declineGuide: () => boolean;
   nextStep: () => void;
   previousStep: () => void;
   dismissStep: () => void;
@@ -70,6 +76,9 @@ export function DishaGuideProvider({ children }: { children: ReactNode }) {
       targetPosition,
       registerPageElements,
       startFlow: guideEngine.startFlow,
+      offerPending: state.offerPending,
+      acceptGuide: guideEngine.acceptGuide,
+      declineGuide: guideEngine.declineGuide,
       nextStep: guideEngine.nextStep,
       previousStep: guideEngine.previousStep,
       dismissStep: guideEngine.dismissCurrentStep,

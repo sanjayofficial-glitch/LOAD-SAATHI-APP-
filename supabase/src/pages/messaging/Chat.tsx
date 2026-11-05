@@ -12,7 +12,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowLeft, Send, Loader2, User as UserIcon, WifiOff, Phone } from 'lucide-react';
+import { ArrowLeft, Send, Loader2, User as UserIcon, WifiOff, Phone, Mic } from 'lucide-react';
+import { useT } from "@/i18n/useT";
+import { useSpeechToText } from "@/hooks/useSpeechToText";
 import { showError } from '@/utils/toast';
 import { supabase } from '@/integrations/supabase/client';
 import { trackEvent } from '@/utils/analytics';
@@ -46,6 +48,8 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const t = useT();
+  const { supported: speechSupported, isListening, start: startSpeech } = useSpeechToText();
   const [recipient, setRecipient] = useState<{ id: string; full_name: string; phone?: string } | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -171,9 +175,9 @@ const Chat = () => {
     }
   }, [recipient, requestId, getToken, userProfile]);
 
-  const handleSendMessage = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!recipient || !requestId || !newMessage.trim() || sending) return;
+  /** Send a preset quick reply — same pipeline as typed messages. */
+  const sendText = useCallback(async (raw: string) => {
+    if (!recipient || !requestId || !raw.trim() || sending) return;
     if (!isOnline) {
       showError('You are offline. Cannot send messages.');
       return;
@@ -181,7 +185,7 @@ const Chat = () => {
 
     // Apply the same sanitization the DB write uses, so the optimistic bubble
     // is byte-identical to the realtime/insert payload (dedupe relies on it).
-    const sanitized = sanitizeContent(newMessage);
+    const sanitized = sanitizeContent(raw);
     if (!sanitized) {
       showError('Message is empty');
       return;
@@ -209,7 +213,12 @@ const Chat = () => {
     } finally {
       setSending(false);
     }
-  }, [recipient, requestId, newMessage, sending, isOnline, userProfile, sendOptimistic]);
+  }, [recipient, requestId, sending, isOnline, userProfile, sendOptimistic]);
+
+  const handleSendMessage = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    void sendText(newMessage);
+  }, [sendText, newMessage]);
 
   const handleRetry = useCallback((msg: OptimisticMessage) => {
     if (!recipient || !requestId || msg.status !== 'failed') return;
@@ -321,22 +330,51 @@ const Chat = () => {
             </div>
           )}
 
+          {/* Quick replies — one tap, no typing */}
+          {isOnline && (
+            <div className="flex items-center gap-2 overflow-x-auto px-3 sm:px-4 pt-3 pb-0 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {[t('chat.q1'), t('chat.q2'), t('chat.q3')].map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => void sendText(q)}
+                  disabled={sending}
+                  className="press shrink-0 min-h-11 rounded-full border border-orange-200 dark:border-orange-800 bg-orange-50/70 dark:bg-orange-950/40 px-3.5 text-xs font-semibold text-orange-700 dark:text-orange-300 disabled:opacity-50"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Input */}
           <form onSubmit={handleSendMessage} className="p-3 sm:p-4 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex gap-2">
+            {speechSupported && (
+              <Button
+                type="button"
+                size="icon"
+                onClick={() => startSpeech((transcript) => setNewMessage(transcript))}
+                aria-label={t('voice.mic')}
+                className={`h-12 w-12 shrink-0 ${isListening ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
+              >
+                {isListening ? <Loader2 className="h-5 w-5 animate-spin" /> : <Mic className="h-5 w-5" />}
+              </Button>
+            )}
             <Input
               placeholder="Type a message..."
               value={newMessage}
               onChange={e => setNewMessage(e.target.value)}
               disabled={sending || !isOnline}
-              className="min-w-0 border-gray-200 dark:border-gray-700 focus-visible:ring-orange-500"
+              className="min-w-0 h-12 border-gray-200 dark:border-gray-700 focus-visible:ring-orange-500"
             />
             <Button
               type="submit"
               disabled={sending || !newMessage.trim() || !isOnline}
               size="icon"
-              className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 shadow-sm shrink-0"
+              aria-label="Send message"
+              className="h-12 w-12 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 shadow-sm shrink-0"
             >
-              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
             </Button>
           </form>
         </CardContent>

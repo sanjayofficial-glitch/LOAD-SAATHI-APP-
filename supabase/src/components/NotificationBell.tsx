@@ -294,7 +294,13 @@ const NotificationBell = React.memo(() => {
             <div className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">Loading...</div>
           ) : notifications.length === 0 ? (
             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-              <BellRing className="h-12 w-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+              <img
+                src="/illustrations/bell.png"
+                alt=""
+                draggable={false}
+                loading="lazy"
+                className="h-24 w-24 object-contain mx-auto mb-3 animate-float"
+              />
               <p>No notifications yet</p>
             </div>
           ) : (

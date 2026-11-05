@@ -13,6 +13,7 @@ import { PostHogProvider } from "./components/PostHogProvider";
 import { GoogleAnalyticsTracker } from "./components/GoogleAnalytics";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SimpleLabelsProvider } from "@/contexts/SimpleLabelsContext";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 import { Suspense, useState, useEffect, type ReactNode } from "react";
 import { AppRoutes } from "./routes";
 import "@/styles/product-tour.css";
@@ -120,6 +121,7 @@ function App() {
             <QueryClientProvider client={queryClient}>
               <TooltipProvider>
                 <ThemeProvider>
+                  <LanguageProvider>
                     <AuthProvider>
                       <SimpleLabelsProvider value={{}}>
                         <ProductTourProvider>
@@ -134,6 +136,7 @@ function App() {
                       </ProductTourProvider>
                     </SimpleLabelsProvider>
                   </AuthProvider>
+                  </LanguageProvider>
                 </ThemeProvider>
               </TooltipProvider>
             </QueryClientProvider>

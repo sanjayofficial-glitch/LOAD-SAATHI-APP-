@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import EmptyState from '@/components/EmptyState';
+import { useT } from '@/i18n/useT';
 import ErrorState from '@/components/ErrorState';
 import {
   Search,
@@ -27,6 +28,7 @@ import {
   List as ListIcon,
   MapPin,
   ChevronLeft,
+  Star,
 } from 'lucide-react';
 import {
   Select,
@@ -55,6 +57,7 @@ import type { Shipment } from '@/types';
 const BrowseShipments = () => {
   const { userProfile, getSupabaseToken } = useAuth();
   const navigate = useNavigate();
+  const t = useT();
   const [searchParams] = useSearchParams();
   const viewModeParam = searchParams.get('view') as 'list' | 'map' | 'card' | null;
 
@@ -307,7 +310,7 @@ const BrowseShipments = () => {
              <div id="browse-shipments-search" className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input
-                placeholder="Search by city, goods, or shipper..."
+                placeholder={t('browse.searchPh')}
                 className="pl-10 border-orange-100 dark:border-orange-800"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -333,10 +336,10 @@ const BrowseShipments = () => {
               <Select value={sortBy} onValueChange={(value: typeof sortBy) => setSortBy(value)}>
                 <SelectTrigger className="flex-1 min-w-[140px] sm:flex-none sm:w-[160px] border-gray-200 dark:border-gray-700">
                   <ArrowUpDown className="h-4 w-4 mr-2 text-gray-400" />
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue placeholder={t('browse.sortBy')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="match">Best Match</SelectItem>
+                  <SelectItem value="match">{t('browse.bestMatch')}</SelectItem>
                   <SelectItem value="budget_asc">Budget: Low to High</SelectItem>
                   <SelectItem value="budget_desc">Budget: High to Low</SelectItem>
                   <SelectItem value="date">Pickup Date</SelectItem>
@@ -360,7 +363,7 @@ const BrowseShipments = () => {
                 className={`${hasActiveFilters ? 'border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950' : 'border-gray-200 dark:border-gray-700'}`}
               >
                 <Filter className="h-4 w-4 mr-2" />
-                Filters {hasActiveFilters ? 'Applied' : ''}
+                {t('browse.filters')} {hasActiveFilters ? t('browse.filtersApplied') : ''}
               </Button>
             </div>
           </div>
@@ -368,7 +371,7 @@ const BrowseShipments = () => {
           {showFilters && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Origin</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.origin')}</Label>
                 <Input
                   placeholder="e.g. Mumbai"
                   value={filters.origin}
@@ -377,7 +380,7 @@ const BrowseShipments = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Destination</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.destination')}</Label>
                 <Input
                   placeholder="e.g. Delhi"
                   value={filters.destination}
@@ -386,7 +389,7 @@ const BrowseShipments = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Min Weight (T)</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.minWeight')}</Label>
                 <Input
                   type="number"
                   placeholder="e.g. 5"
@@ -396,7 +399,7 @@ const BrowseShipments = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Max Budget (₹/T)</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.maxBudget')}</Label>
                 <Input
                   type="number"
                   placeholder="e.g. 2000"
@@ -415,10 +418,11 @@ const BrowseShipments = () => {
           <EmptyState
             accent="orange"
             icon={<Package className="h-8 w-8 sm:h-10 sm:w-10" />}
+            image="/illustrations/search-noresults.png"
             title="No shipments found"
             description="Try adjusting your search or filters, or post a trip and let shippers come to you."
             primaryAction={{
-              label: 'Clear All Filters',
+              label: t('browse.clearFilters'),
               onClick: () => {
                 setFilters({ origin: '', destination: '', minWeight: '', maxBudget: '' });
                 setSearchTerm('');
@@ -468,7 +472,7 @@ const BrowseShipments = () => {
                         className="ml-1 bg-orange-500 hover:bg-orange-600 text-white h-7 px-2"
                         onClick={(e) => { e.stopPropagation(); navigate(`/trucker/shipments/${s.id}`); }}
                       >
-                        View
+                        {t('hub.view')}
                       </Button>
                     </div>
                   </CardContent>
@@ -564,7 +568,12 @@ const BrowseShipments = () => {
                         </span>
                         <VerificationBadge isVerified={s.shipper?.is_verified} />
                         <span className="text-xs text-gray-400 dark:text-gray-500 ml-2">
-                          {s.shipper?.rating ? `⭐ ${s.shipper.rating.toFixed(1)}` : 'New'}
+                          {s.shipper?.rating ? (
+                            <span className="inline-flex items-center gap-1">
+                              <Star className="h-3 w-3 fill-current text-yellow-500" />
+                              {s.shipper.rating.toFixed(1)}
+                            </span>
+                          ) : 'New'}
                         </span>
                       </div>
                     </div>

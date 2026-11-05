@@ -192,6 +192,7 @@ export default React.memo(function LoadSaathiMap({
         scrollWheelZoom
         touchZoom
         zoomControl={false}
+        preferCanvas
       >
         <MapSizeHandler />
         <MapClickHandler onClick={onMapClick} />

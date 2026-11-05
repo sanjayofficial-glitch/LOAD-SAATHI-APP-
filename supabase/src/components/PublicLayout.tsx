@@ -1,5 +1,5 @@
 import { Suspense, useState, useEffect, lazy } from "react";
-import { DishaProvider, Disha } from "./Disha";
+import { DishaProvider } from "./Disha";
 import { DishaGuideProvider } from "./DishaGuideProvider";
 import { MascotInteractionTracker } from "@/hooks/useMascotInteractionTracker";
 
@@ -29,7 +29,6 @@ import LogoMark from "./LogoMark";
 import MobileMenu from "./MobileMenu";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
 import ScrollToTopFab from "./ScrollToTopFab";
-import FloatingCTA from "./FloatingCTA";
 import TrustStrip from "./TrustStrip";
 import { usePageFade } from "@/hooks/usePageFade";
 import type { BottomNavItem } from "./DockNav";
@@ -37,6 +36,9 @@ import type { BottomNavItem } from "./DockNav";
 // Desktop-only animated dock. Lazy so framer-motion (~130KB) is never
 // downloaded on phones — the lightweight MobileTabBar handles mobile nav.
 const DockNav = lazy(() => import("./DockNav"));
+
+// Freddy AI assistant — unified floating mascot/chat/help (auth + guest)
+import FreddyAssistant from "./FreddyAssistant";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./ui/tooltip";
 import { socialLinks } from "@/data/socialLinks";
 import { useAuth } from "@/contexts/AuthContext";
@@ -353,8 +355,7 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
         }
       />
       <ScrollToTopFab bottomClass="bottom-[calc(9rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))]" />
-      <FloatingCTA />
-      <Disha accent="orange" />
+      <FreddyAssistant />
       <MascotInteractionTracker />
     </div>
   );

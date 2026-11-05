@@ -1,6 +1,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useT } from '@/i18n/useT';
 import { useAuth as useClerkAuth, useUser } from '@clerk/clerk-react'; // Clerk's useAuth for getToken
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { Button } from '@/components/ui/button';
@@ -31,12 +32,11 @@ import {
   Lock,
   Loader2,
   CheckCircle2,
-  MessageSquare,
   ShieldCheck,
   RefreshCw,
   Camera,
 } from 'lucide-react';
-import Star from '@/components/Star';
+
 import type { Review } from '@/types';
 
 const ALLOWED_ADMIN_ID = import.meta.env.VITE_ADMIN_USER_ID || '';
@@ -46,6 +46,7 @@ const Profile = () => {
   const { getToken } = useClerkAuth();
   const { user: clerkUser } = useUser();
   const navigate = useNavigate();
+  const t = useT();
   const [fullName, setFullName] = useState(userProfile?.full_name || '');
   const [phone, setPhone] = useState(userProfile?.phone || '');
   const [companyName, setCompanyName] = useState(userProfile?.company_name || '');
@@ -369,10 +370,10 @@ const Profile = () => {
                   <ShieldCheck className="h-4 w-4 mr-2" />
                 )}
                 {verificationStatus === 'pending'
-                  ? 'Verification in review'
+                  ? t('status.pending')
                   : verificationStatus === 'rejected'
                     ? 'Fix verification'
-                    : 'Get verified'}
+                    : t('profile.getVerified')}
               </Link>
             </Button>
           )}
@@ -381,11 +382,11 @@ const Profile = () => {
 
       <Tabs id="profile-tabs" defaultValue="overview" className="space-y-6">
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-[500px] lg:grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="overview">{t('profile.overview')}</TabsTrigger>
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="personal">Personal Info</TabsTrigger>
+          <TabsTrigger value="personal">{t('profile.personal')}</TabsTrigger>
           {userProfile?.user_type === 'trucker' && (<TabsTrigger value="documents">Verification</TabsTrigger>)}
-          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="security">{t('profile.security')}</TabsTrigger>
         </TabsList>
 
         <TabsContent id="profile-overview" value="overview">
@@ -525,7 +526,13 @@ const Profile = () => {
                 </div>
               ) : reviews.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 dark:bg-gray-900 rounded-xl border border-dashed dark:border-gray-700">
-                  <MessageSquare className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                  <img
+                    src="/illustrations/star.png"
+                    alt=""
+                    draggable={false}
+                    loading="lazy"
+                    className="h-24 w-24 object-contain mx-auto mb-3 animate-float"
+                  />
                   <p className="text-gray-500 dark:text-gray-400">
                     {userProfile?.user_type === 'trucker'
                       ? 'No reviews yet. Complete trips to get feedback!'
@@ -547,7 +554,7 @@ const Profile = () => {
                           <div className="flex items-center gap-2">
                             <div className="flex">
                               {[1, 2, 3, 4, 5].map((s) => (
-                                <Star key={s} filled={review.rating >= s} className="h-4 w-4" />
+                                <StarIcon key={s} className={`h-4 w-4 ${review.rating >= s ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} />
                               ))}
                             </div>
                             <span className="text-sm font-bold text-gray-900 dark:text-white">
@@ -660,7 +667,7 @@ const Profile = () => {
                   disabled={loading || !fullName.trim()}
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  Save Changes
+                  {t('profile.saveChanges')}
                 </Button>
               </form>
             </CardContent>

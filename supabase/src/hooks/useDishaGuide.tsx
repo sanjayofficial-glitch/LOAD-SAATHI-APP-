@@ -82,10 +82,14 @@ export function useDishaGuideRegistration(options: UseDishaGuideOptions = {}) {
   }, [customFlow, engine]);
 
   useEffect(() => {
-    if (flowId && state.userPreferences.autoGuide) {
+    if (!flowId) return;
+    // Offer-first flows always present their "Can I guide you?" ask (the offer
+    // itself is the opt-in), even if auto-guide was turned off.
+    const flow = engine.getFlow(flowId);
+    if (flow?.offerFirst || state.userPreferences.autoGuide) {
       startFlow(flowId);
     }
-  }, [flowId, state.userPreferences.autoGuide, startFlow]);
+  }, [flowId, state.userPreferences.autoGuide, startFlow, engine]);
 
   const getElementRef = useCallback((key: string) => {
     return elementRefs.current[key] || { current: null };

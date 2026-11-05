@@ -8,17 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { 
   Truck, 
-  Clock, 
-  TrendingUp, 
   IndianRupee, 
-  PlusCircle, 
-  Search, 
   ArrowRight,
-  Package,
-  Calendar,
   Star as StarIcon,
   WifiOff,
   Shield,
+  Inbox,
+  CheckCircle2,
 } from 'lucide-react';
 import { showError } from '@/utils/toast';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
@@ -35,6 +31,9 @@ import OnboardingChecklist from '@/components/OnboardingChecklist';
 import ProfileProgressBar from '@/components/ProfileProgressBar';
 import { useProfileProgress } from '@/hooks/useProfileProgress';
 import type { TruckLocation } from '@/components/LiveMap';
+import { useT } from '@/i18n/useT';
+import { I8 } from '@/components/icons/I8';
+import CountUp from '@/components/ui/CountUp';
 
 const LazyBarChart = React.lazy(() => import('./TruckerEarningsChart'));
 
@@ -51,6 +50,7 @@ interface DriverLocationRow {
 const TruckerDashboard = () => {
   const { userProfile, getSupabaseToken } = useAuth();
   const { isOnline } = useNetworkStatus();
+  const t = useT();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [stats, setStats] = useState({
@@ -179,7 +179,7 @@ const TruckerDashboard = () => {
 
   const statCards = useMemo(() => [
     {
-      title: 'Live Trips',
+      titleKey: 'trucker.activeTrips',
       value: stats.activeTrips,
       icon: Truck,
       color: 'text-orange-600',
@@ -188,26 +188,26 @@ const TruckerDashboard = () => {
       iconBg: 'bg-orange-100 dark:bg-orange-900/30',
     },
     {
-      title: 'New Requests',
+      titleKey: 'trucker.newRequests',
       value: stats.pendingRequests,
-      icon: Clock,
+      icon: Inbox,
       color: 'text-yellow-600',
       bg: 'bg-yellow-50 dark:bg-yellow-900/20',
       border: 'border-yellow-100 dark:border-yellow-800',
       iconBg: 'bg-yellow-100 dark:bg-yellow-900/30',
     },
     {
-      title: 'Completed',
+      titleKey: 'trucker.completed',
       value: stats.completedTrips,
-      icon: TrendingUp,
+      icon: CheckCircle2,
       color: 'text-green-600',
       bg: 'bg-green-50 dark:bg-green-900/20',
       border: 'border-green-100 dark:border-green-800',
       iconBg: 'bg-green-100 dark:bg-green-900/30',
     },
     {
-      title: 'Total Earnings',
-      value: `₹${stats.totalEarnings.toLocaleString('en-IN')}`,
+      titleKey: 'trucker.totalEarnings',
+      value: stats.totalEarnings,
       icon: IndianRupee,
       color: 'text-green-600',
       bg: 'bg-green-50 dark:bg-green-900/20',
@@ -228,8 +228,9 @@ const TruckerDashboard = () => {
     <div className="container mx-auto px-4 py-6 sm:py-8 animate-fade-in">
       {error && (
         <ErrorState
-          title="Failed to load dashboard"
+          title={t('trucker.loadFailed')}
           description={error.message}
+          image="/illustrations/offline.png"
           retry={() => {
             setError(null);
             fetchDashboardData();
@@ -241,26 +242,26 @@ const TruckerDashboard = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <LogoMark size="h-8 w-8" />
-            <h1 id="trucker-dashboard-header" className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">Trucker Dashboard</h1>
+            <h1 id="trucker-dashboard-header" className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">{t('trucker.title')}</h1>
           </div>
           <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1">
-            Welcome, {userProfile?.full_name || 'Partner'}! {isOnline ? (
-              <>You have <span className="text-orange-600 dark:text-orange-400 font-bold">{stats.activeTrips}</span> active trip{stats.activeTrips !== 1 ? 's' : ''}.</>
+            {t('trucker.hello')}, {userProfile?.full_name || t('common.partner')}! {isOnline ? (
+              <>{t('trucker.activeTripsLine').replace('{count}', String(stats.activeTrips))}</>
             ) : (
-              <span className="text-yellow-600 dark:text-yellow-400">You are offline. Showing cached data.</span>
+              <span className="text-yellow-600 dark:text-yellow-400">{t('common.offline')}</span>
             )}
           </p>
         </div>
         <div role="status" className="bg-yellow-50 dark:bg-yellow-900/30 px-3 sm:px-4 py-2 rounded-2xl border border-yellow-200 dark:border-yellow-800 flex items-center gap-2 self-start sm:self-auto">
             <StarIcon className="h-4 w-4 text-yellow-500 fill-current" aria-hidden="true" />
-          <span className="text-sm font-black text-yellow-700 dark:text-yellow-400">{userProfile?.rating?.toFixed(1) || '0.0'} Rating</span>
+          <span className="text-sm font-black text-yellow-700 dark:text-yellow-400">{userProfile?.rating?.toFixed(1) || '0.0'} {t('trucker.rating')}</span>
         </div>
       </div>
 
       {!isOnline && (
         <div className="mb-4 sm:mb-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl px-4 py-3 flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-300 animate-fade-in">
           <WifiOff className="h-4 w-4 shrink-0" />
-          <span>You are offline. Data shown may be out of date.</span>
+          <span>{t('common.offlineBanner')}</span>
         </div>
       )}
 
@@ -273,10 +274,11 @@ const TruckerDashboard = () => {
           <EmptyState
             accent="orange"
             icon={<Truck />}
-            title="Welcome aboard! Let's get your first trip rolling"
-            description="Post your available truck capacity and start earning. LoadSaathi matches you with shippers moving freight on your route."
-            primaryAction={{ label: 'Post Your First Trip', to: '/trucker/post-trip' }}
-            secondaryAction={{ label: 'Browse Available Loads', to: '/trucker/browse-shipments' }}
+            image="/illustrations/truck-delivery.png"
+            title={t('trucker.emptyTitle')}
+            description={t('trucker.emptyDesc')}
+            primaryAction={{ label: t('trucker.postFirstTrip'), to: '/trucker/post-trip' }}
+            secondaryAction={{ label: t('trucker.browseLoads'), to: '/trucker/browse-shipments' }}
           />
         </div>
       )}
@@ -290,38 +292,42 @@ const TruckerDashboard = () => {
             userId={userProfile.id}
             userPhone={userProfile.phone}
             items={[
-              { label: 'Post your first trip', done: stats.activeTrips > 0, to: '/trucker/post-trip' },
-              { label: 'Get a booking request', done: stats.pendingRequests > 0, to: '/trucker/my-trips?tab=incoming' },
+              { label: t('trucker.postFirstTripCheck'), done: stats.activeTrips > 0, to: '/trucker/post-trip' },
+              { label: t('trucker.getBookingRequest'), done: stats.pendingRequests > 0, to: '/trucker/my-trips?tab=incoming' },
             ]}
           />
         </div>
       )}
 
 {/* Stats Grid */}
-      <div id="trucker-stat-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+      <div id="trucker-stat-cards" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
         {statCards.map((card, i) => (
-          <Link key={card.title} to={statCardLinks[i] ?? '/'} className="block group">
+          <Link key={card.titleKey} to={statCardLinks[i] ?? '/'} className="block group">
             <Card className={`${card.border} shadow-sm group-hover:shadow-md group-hover:scale-[1.02] transition-all duration-200 animate-fade-in-up`} style={{ animationDelay: `${i * 80}ms` }}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2 px-4 sm:px-6 pt-4 sm:pt-6">
-                <CardTitle className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{card.title}</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
+                <CardTitle className="text-[11px] sm:text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">{t(card.titleKey)}</CardTitle>
                 <div className={`${card.iconBg} p-2 rounded-lg`}>
                   <card.icon className={`h-4 w-4 ${card.color}`} />
                 </div>
               </CardHeader>
-              <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+              <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
                 {loading ? (
                   <Skeleton className="h-8 w-20" />
                 ) : (
-                  <div className={`text-2xl sm:text-3xl font-black ${card.isCurrency ? card.color : 'text-gray-900 dark:text-white'}`}>
-                    {card.value}
+                  <div className={`text-xl sm:text-3xl font-black ${card.isCurrency ? card.color : 'text-gray-900 dark:text-white'}`}>
+                    {card.isCurrency ? (
+                      <CountUp prefix="₹" value={card.value} />
+                    ) : (
+                      <CountUp value={card.value} />
+                    )}
                   </div>
                 )}
                 {/* Mini progress bar for visual interest */}
-                {!loading && card.title !== 'Total Earnings' && (
+                {!loading && card.titleKey !== 'trucker.totalEarnings' && (
                   <div className="mt-2 h-1 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                     <div 
-                      className={`h-full rounded-full transition-all duration-700 ${card.title === 'Live Trips' ? 'bg-orange-500' : card.title === 'New Requests' ? 'bg-yellow-500' : 'bg-green-500'}`}
-                      style={{ width: `${Math.min(100, (card.title === 'Live Trips' ? stats.activeTrips : card.title === 'New Requests' ? stats.pendingRequests : stats.completedTrips) * 20)}%` }}
+                      className={`h-full rounded-full transition-all duration-700 ${card.titleKey === 'trucker.activeTrips' ? 'bg-orange-500' : card.titleKey === 'trucker.newRequests' ? 'bg-yellow-500' : 'bg-green-500'}`}
+                      style={{ width: `${Math.min(100, (card.titleKey === 'trucker.activeTrips' ? stats.activeTrips : card.titleKey === 'trucker.newRequests' ? stats.pendingRequests : stats.completedTrips) * 20)}%` }}
                     />
                   </div>
                 )}
@@ -341,23 +347,23 @@ const TruckerDashboard = () => {
         <Card id="trucker-quick-actions" className="border-orange-200 dark:border-orange-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '200ms' }}>
           <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
           <CardHeader className="bg-orange-50/50 dark:bg-orange-900/10 px-4 sm:px-6">
-            <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">Quick Actions</CardTitle>
+            <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{t('trucker.quickActions')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-6 px-4 sm:px-6">
             <Link to="/trucker/post-trip" data-guide="post-trip-btn" className="block">
-              <Button className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 h-12 sm:h-14 text-base sm:text-lg font-bold shadow-md hover:shadow-lg transition-all" disabled={!isOnline}>
-                <PlusCircle className="mr-2 h-5 w-5" /> Post New Trip
+              <Button className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 h-14 sm:h-14 text-base sm:text-lg font-bold shadow-md hover:shadow-lg transition-all" disabled={!isOnline}>
+                <I8 name="plus" className="mr-2 h-5 w-5" /> {t('trucker.postNewTrip')}
               </Button>
             </Link>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <Link to="/trucker/browse-shipments" data-guide="find-loads-btn">
-                <Button variant="outline" className="w-full border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 h-10 sm:h-12 font-bold text-sm sm:text-base">
-                  <Search className="mr-2 h-4 w-4" /> Find Loads
+                <Button variant="outline" className="w-full border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 h-14 font-bold text-sm">
+                  <I8 name="search" className="mr-2 h-4 w-4" /> {t('trucker.findLoads')}
                 </Button>
               </Link>
               <Link to="/trucker/my-trips" data-guide="manage-trips-btn">
-                <Button variant="outline" className="w-full border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 h-10 sm:h-12 font-bold text-sm sm:text-base">
-                  <Truck className="mr-2 h-4 w-4" /> Manage Trips
+                <Button variant="outline" className="w-full border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 h-14 font-bold text-sm">
+                  <I8 name="truck" className="mr-2 h-4 w-4" /> {t('trucker.manageTrips')}
                 </Button>
               </Link>
             </div>
@@ -367,18 +373,18 @@ const TruckerDashboard = () => {
         <Card className="border-gray-100 dark:border-gray-800 shadow-md overflow-hidden animate-fade-in-up" style={{ animationDelay: '300ms' }}>
           <div className="h-1 bg-gradient-to-r from-blue-500 to-blue-400" />
           <CardHeader className="px-4 sm:px-6">
-            <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">Quick Links</CardTitle>
+            <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">{t('trucker.quickLinks')}</CardTitle>
           </CardHeader>
           <CardContent className="pt-2 px-4 sm:px-6">
             <div className="space-y-3">
               <Link to="/trucker/my-trips?tab=incoming" className="flex items-center justify-between p-3 sm:p-4 hover:bg-orange-50 dark:hover:bg-orange-950/50 rounded-2xl transition-all group border border-transparent hover:border-orange-100 dark:hover:border-orange-800">
                 <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                   <div className="bg-orange-100 dark:bg-orange-900/30 p-2 rounded-xl group-hover:bg-orange-600 dark:group-hover:bg-orange-700 transition-colors shrink-0">
-                    <Package className="h-5 w-5 text-orange-600 dark:text-orange-400 group-hover:text-white dark:group-hover:text-white transition-colors" />
+                    <I8 name="box" className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-bold text-gray-800 dark:text-gray-200 text-sm sm:text-base truncate">Booking Requests</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-widest truncate">Incoming from shippers</p>
+                    <p className="font-bold text-gray-800 dark:text-gray-200 text-sm sm:text-base truncate">{t('trucker.bookingRequests')}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-widest truncate">{t('trucker.incomingShippers')}</p>
                   </div>
                 </div>
                 <ArrowRight className="h-5 w-5 text-gray-200 dark:text-gray-700 group-hover:text-orange-600 dark:group-hover:text-orange-400 group-hover:translate-x-1 transition-all shrink-0" />
@@ -386,11 +392,11 @@ const TruckerDashboard = () => {
               <Link to="/trucker/history" className="flex items-center justify-between p-3 sm:p-4 hover:bg-orange-50 dark:hover:bg-orange-950/50 rounded-2xl transition-all group border border-transparent hover:border-orange-100 dark:hover:border-orange-800">
                 <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                   <div className="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-xl group-hover:bg-blue-600 dark:group-hover:bg-blue-700 transition-colors shrink-0">
-                    <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400 group-hover:text-white dark:group-hover:text-white transition-colors" />
+                    <I8 name="history" className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-bold text-gray-800 dark:text-gray-200 text-sm sm:text-base truncate">Work History</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-widest truncate">Past trips and earnings</p>
+                    <p className="font-bold text-gray-800 dark:text-gray-200 text-sm sm:text-base truncate">{t('trucker.workHistory')}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 font-medium uppercase tracking-widest truncate">{t('trucker.pastTrips')}</p>
                   </div>
                 </div>
                 <ArrowRight className="h-5 w-5 text-gray-200 dark:text-gray-700 group-hover:text-orange-600 dark:group-hover:text-orange-400 group-hover:translate-x-1 transition-all shrink-0" />
@@ -408,7 +414,7 @@ const TruckerDashboard = () => {
             <CardHeader className="px-4 sm:px-6 pb-2">
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-red-500" />
-                <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">Driver Risk Score</CardTitle>
+                <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">{t('trucker.driverRiskScore')}</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="px-4 sm:px-6 pb-4">
@@ -437,10 +443,10 @@ const TruckerDashboard = () => {
             <CardHeader className="bg-green-50/50 dark:bg-green-900/10 px-4 sm:px-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Truck className="h-5 w-5 text-green-600" />
-                  <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">Live Fleet</CardTitle>
+                  <I8 name="truck" className="h-6 w-6" />
+                  <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">{t('trucker.liveFleet')}</CardTitle>
                 </div>
-                <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{activeTrucks.length} truck{activeTrucks.length !== 1 ? 's' : ''} active</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">{activeTrucks.length} {t('trucker.trucksActive')}</span>
               </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -456,23 +462,23 @@ const TruckerDashboard = () => {
           <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
           <CardHeader className="bg-orange-50/50 dark:bg-orange-900/10 px-4 sm:px-6">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-orange-600" />
-              <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">Monthly Earnings</CardTitle>
+              <IndianRupee className="h-5 w-5 text-orange-600" />
+              <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">{t('trucker.monthlyEarnings')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-4 sm:px-6 pb-6">
             <div className="mb-4 flex gap-1 p-0.5 bg-muted rounded-lg w-fit">
-              <Button variant={range === '7d' ? 'default' : 'outline'} size="sm" onClick={() => setRange('7d')}>Last 7 days</Button>
-              <Button variant={range === '30d' ? 'default' : 'outline'} size="sm" onClick={() => setRange('30d')}>Last 30 days</Button>
-              <Button variant={range === '90d' ? 'default' : 'outline'} size="sm" onClick={() => setRange('90d')}>Last 90 days</Button>
+              <Button variant={range === '7d' ? 'default' : 'outline'} size="sm" onClick={() => setRange('7d')}>{t('trucker.last7')}</Button>
+              <Button variant={range === '30d' ? 'default' : 'outline'} size="sm" onClick={() => setRange('30d')}>{t('trucker.last30')}</Button>
+              <Button variant={range === '90d' ? 'default' : 'outline'} size="sm" onClick={() => setRange('90d')}>{t('trucker.last90')}</Button>
             </div>
             {loading ? (
               <Skeleton className="h-64 w-full rounded-xl" />
             ) : monthlyData.length === 0 ? (
               <div className="h-64 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600">
-                <IndianRupee className="h-10 w-10 mb-2 opacity-50" />
-                <p className="font-medium">No data yet</p>
-                <p className="text-sm">Complete trips to see earnings trends</p>
+                <I8 name="history" className="h-10 w-10 mb-2 opacity-50" />
+                <p className="font-medium">{t('trucker.noDataYet')}</p>
+                <p className="text-sm">{t('trucker.completeTripsForTrend')}</p>
               </div>
             ) : (
               <Suspense fallback={<Skeleton className="h-64 w-full rounded-xl" />}>
@@ -486,8 +492,8 @@ const TruckerDashboard = () => {
           <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400" />
           <CardHeader className="bg-orange-50/50 dark:bg-orange-900/10 px-4 sm:px-6">
             <div className="flex items-center gap-2">
-              <Package className="h-5 w-5 text-orange-600" />
-              <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">Recent Activity</CardTitle>
+              <Inbox className="h-5 w-5 text-orange-600" />
+              <CardTitle className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">{t('trucker.recentActivity')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-4 sm:px-6 pb-6">
@@ -499,9 +505,9 @@ const TruckerDashboard = () => {
               </div>
             ) : recentActivity.length === 0 ? (
               <div className="h-64 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600">
-                <Calendar className="h-10 w-10 mb-2 opacity-50" />
-                <p className="font-medium">No activity yet</p>
-                <p className="text-sm">Your recent trips will appear here</p>
+                <I8 name="history" className="h-10 w-10 mb-2 opacity-50" />
+                <p className="font-medium">{t('trucker.noActivityYet')}</p>
+                <p className="text-sm">{t('trucker.recentTripsHere')}</p>
               </div>
             ) : (
               <div className="divide-y divide-gray-100 dark:divide-gray-800">
