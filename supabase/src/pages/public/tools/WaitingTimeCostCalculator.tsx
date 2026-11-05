@@ -92,7 +92,7 @@ export default function WaitingTimeCostCalculator() {
         </div>
       </noscript>
       <SeoMeta
-        title="Truck Waiting Time Cost Calculator India | Detention Cost Estimate"
+        title="Truck Waiting Time Cost Calculator – Detention Cost"
         description="Estimate the cost of truck waiting time at loading and unloading points in India. Enter wait hours, truck and driver costs, and missed-trip costs to see a transparent estimate with assumptions shown."
         keywords="truck waiting time calculator, detention cost calculator India, truck demurrage charges, loading waiting charges calculator, truck delay cost estimate"
         canonical="/tools/waiting-time-cost"

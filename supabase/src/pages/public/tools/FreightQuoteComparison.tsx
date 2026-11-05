@@ -112,7 +112,7 @@ export default function FreightQuoteComparison() {
         </div>
       </noscript>
       <SeoMeta
-        title="Freight Quote Comparison Worksheet India | Compare Transport Rates"
+        title="Freight Quote Comparison Worksheet – Compare Truck Rates"
         description="Compare up to three freight quotes side by side — base freight, fuel surcharge, tolls, loading, waiting, taxes and insurance — and get an all-in total with transit time and payment terms."
         keywords="freight quote comparison, transport rate comparison India, compare truck quotes, lorry rate comparison worksheet, all-in freight cost calculator"
         canonical="/tools/freight-quote-comparison"

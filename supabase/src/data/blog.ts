@@ -111,7 +111,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "indian-logistics-eway-bill-gst-2026": {
     category: "Industry Insights",
-    title: "e-Way Bill Rules 2026: New GST Compliance Changes Every Indian Business Must Know",
+    title: "e-Way Bill Rules 2026: GST Compliance Guide for Logistics",
     coverImage: "/blog/og/indian-logistics-eway-bill-gst-2026.svg",
     date: "July 23, 2026",
     lastUpdated: "August 14, 2026",
@@ -120,7 +120,7 @@ export const articles: Record<string, BlogArticle> = {
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry. With deep expertise in GST compliance, e-Way Bill automation, and MSME freight operations, the team helps Indian businesses navigate regulatory changes in real time.",
     summary: "The GSTN put the Ship-To GSTIN field and voluntary e-Way Bill closure on hold under Advisory 668, announced August 5, 2026 — no system changes are required for now. This guide explains the current status of both proposals, what remains unchanged under existing e-Way Bill rules, penalty risks, transporter obligations — including Part-B vehicle details and driver documentation — and how LoadSaathi automates compliance for freight operators.",
     content: [
-      "India's logistics industry has been tracking one of the most significant regulatory shifts since the introduction of GST: the proposed Ship-To GSTIN capture and voluntary e-Way Bill closure. On August 5, 2026, GSTN put both changes on hold under Advisory 668 (source: gst.gov.in), so no immediate system changes are required. Here is what Indian MSMEs, truckers, and transporters actually need to know, what remains unchanged, and how LoadSaathi helps you stay compliant. For the latest official status, read our companion article, GST Advisory 668: E-Way Bill Rule Enhancements Put On Hold — What Indian MSMEs & Transporters Must Do Now, at loadsaathi.in/blog/gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026.",
+      "India's logistics industry has been tracking one of the most significant regulatory shifts since the introduction of GST: the proposed Ship-To GSTIN capture and voluntary e-Way Bill closure. On August 5, 2026, GSTN put both changes on hold under Advisory 668 (source: gst.gov.in), so no immediate system changes are required. Here is what Indian MSMEs, truckers, and transporters actually need to know, what remains unchanged, and how LoadSaathi helps you stay compliant. For the latest official status, read our companion article, GST Advisory 668: E-Way Bill Rule Changes Put on Hold, at loadsaathi.in/blog/gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026.",
       "Here's the bottom line: the Ship-To GSTIN capture and voluntary e-Way Bill closure that GSTN had scheduled for August 1, 2026 are now on hold. GSTN Advisory 668, published August 5, 2026, states that no system or process changes are required until further notice. That does not change the existing e-Way Bill rules — valid Part-A/Part-B data, correct invoices, and accurate movement details are still mandatory, and penalties for non-compliance still apply.",
       "What Changed: The Two Proposed e-Way Bill Rules Put on Hold. GSTN had extended its original June 2026 deadline to August 1, 2026 for the two new rules. On August 5, 2026, GSTN issued Advisory 668 placing both changes on hold, effective immediately — no ERP updates, no portal changes, and no new compliance fields are required right now.",
       "Rule 1: Mandatory Ship-To GSTIN Field (On Hold). The requirement to capture the exact Ship-To GSTIN on every Bill-To / Ship-To e-Way Bill has been put on hold under GSTN Advisory 668. The Ship-To field remains optional, and businesses using their registered GSTIN for invoicing can continue as before. When the rule eventually goes live, shippers sending goods to a different destination entity will need to record that entity's GSTIN (or URP for unregistered recipients).",
@@ -182,7 +182,7 @@ export const articles: Record<string, BlogArticle> = {
 
   "rourkela-to-ranchi-trucking-rates": {
     category: "Shipper Guide",
-    title: "Trucking Rates from Rourkela to Ranchi: Complete Pricing Guide 2026",
+    title: "Rourkela to Ranchi Trucking Rates: 2026 Pricing Guide",
     coverImage: "/blog/og/rourkela-to-ranchi-trucking-rates.svg",
     date: "July 25, 2026",
     readTime: "5 min read",
@@ -235,7 +235,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "seafood-transport-odisha": {
     category: "Trucker Tips",
-    title: "Cold Chain Transport: Shipping Seafood from Odisha Ports",
+    title: "Shipping Seafood from Odisha: Cold Chain Guide for Ports",
     coverImage: "/blog/og/seafood-transport-odisha.svg",
     date: "July 12, 2026",
     lastUpdated: "August 22, 2026",
@@ -289,7 +289,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "monsoon-logistics-tips": {
     category: "Trucker Tips",
-    title: "Monsoon Logistics: Shipping During India's Rainy Season",
+    title: "Monsoon Logistics Tips: Shipping Safely During Indian Rain",
     coverImage: "/blog/og/monsoon-logistics-tips.svg",
     date: "July 5, 2026",
     lastUpdated: "August 22, 2026",
@@ -434,7 +434,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "east-india-freight-corridors": {
     category: "Industry Insights",
-    title: "East India Freight Corridors: Routes, Industries, Rates, and Return Loads",
+    title: "East India Freight Corridors: Routes, Industries and Rates",
     coverImage: "/blog/og/east-india-freight-corridors.svg",
     date: "June 12, 2026",
     lastUpdated: "August 16, 2026",
@@ -516,7 +516,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026": {
     category: "Industry Insights",
-    title: "GST Advisory 668: E-Way Bill Rule Enhancements Put On Hold — What Indian MSMEs & Transporters Must Do Now",
+    title: "GST Advisory 668: E-Way Bill Rule Changes Put on Hold",
     coverImage: "/blog/og/gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026.svg",
     date: "August 5, 2026",
     lastUpdated: "August 22, 2026",
@@ -602,7 +602,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "kolkata-to-rourkela-freight-rates": {
     category: "Route Guide",
-    title: "Kolkata to Rourkela Freight Rates 2026: Complete Cost Guide",
+    title: "Kolkata to Rourkela Freight Rates 2026: Cost Guide",
     coverImage: "/blog/og/kolkata-rourkela.svg",
     date: "August 9, 2026",
     readTime: "5 min read",
@@ -638,7 +638,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "steel-transport-india-guide": {
     category: "Industry Guide",
-    title: "Steel Transport in India: Complete Guide to Safe & Cost-Effective Shipping",
+    title: "Steel Transport in India: Complete Shipping Guide for Manufacturers",
     coverImage: "/blog/og/steel-transport-india.svg",
     date: "August 9, 2026",
     lastUpdated: "October 7, 2026",
@@ -657,7 +657,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "msme-freight-saving-guide": {
     category: "Shipper Guide",
-    title: "MSME Freight Saving Guide: Cut Logistics Costs by 30% in 2026",
+    title: "MSME Freight Saving Guide: Cut Logistics Costs in 2026",
     coverImage: "/blog/og/msme-freight-saving.svg",
     date: "August 9, 2026",
     lastUpdated: "August 22, 2026",
@@ -821,7 +821,7 @@ export const articles: Record<string, BlogArticle> = {
 
   "trucker-earnings-odisha-2026": {
     category: "Trucker Tips",
-    title: "Trucker Salary and Earnings in Odisha 2026: Complete Pay Breakdown",
+    title: "Trucker Earnings in Odisha 2026: Complete Pay Guide",
     coverImage: "/blog/og/trucker-earnings-odisha-2026.svg",
     date: "August 14, 2026",
     readTime: "11 min read",
@@ -905,7 +905,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "how-to-find-return-loads-india": {
     category: "Trucker Tips",
-    title: "How to Find Return Loads in India: A Practical Backhaul Guide for Truckers",
+    title: "How to Find Return Loads in India: Backhaul Guide for Truckers",
     coverImage: "/blog/og/find-return-loads.svg",
     date: "August 16, 2026",
     lastUpdated: "August 16, 2026",
@@ -991,7 +991,7 @@ export const articles: Record<string, BlogArticle> = {
   },
   "ptl-freight-rates-india": {
     category: "Freight Rates",
-    title: "PTL Freight Rates in India: How Part-Load Shipping Costs Are Calculated",
+    title: "PTL Freight Rates in India: How Part-Load Costs Work",
     coverImage: "/blog/og/ptl-vs-ftl-2026.svg",
     date: "August 16, 2026",
     lastUpdated: "August 16, 2026",
@@ -1074,7 +1074,7 @@ export const articles: Record<string, BlogArticle> = {
   },
 
   "return-loads-kolkata": {
-    title: "Finding Return Loads from Kolkata: A Trucker's Complete Guide",
+    title: "Finding Return Loads from Kolkata: Trucker's Complete Guide",
     category: "Trucker Tips",
     date: "August 20, 2026",
     lastUpdated: "August 22, 2026",
@@ -1100,7 +1100,7 @@ export const articles: Record<string, BlogArticle> = {
   },
 
   "trucker-earnings-jharkhand-2026": {
-    title: "Trucker Salary and Earnings in Jharkhand 2026: Complete Pay Breakdown",
+    title: "Trucker Earnings in Jharkhand 2026: Complete Pay Guide",
     category: "Trucker Tips",
     date: "August 18, 2026",
     lastUpdated: "August 22, 2026",
@@ -1236,7 +1236,7 @@ export const articles: Record<string, BlogArticle> = {
   },
 
   "ranchi-to-kolkata-freight-rates": {
-    title: "Ranchi to Kolkata Truck Rate 2026: Fare, Distance & Booking",
+    title: "Ranchi to Kolkata Truck Rates 2026: Fare & Distance Guide",
     category: "Route Guide",
     date: "August 23, 2026",
     lastUpdated: "August 23, 2026",
@@ -1828,7 +1828,7 @@ export const articles: Record<string, BlogArticle> = {
   },
 
   "cargo-insurance-guide-india": {
-    title: "Cargo Insurance in India: What Truckers and Shippers Must Know",
+    title: "Cargo Insurance in India: Practical Guide for Shippers",
     category: "Compliance",
     date: "August 12, 2026",
     lastUpdated: "August 22, 2026",

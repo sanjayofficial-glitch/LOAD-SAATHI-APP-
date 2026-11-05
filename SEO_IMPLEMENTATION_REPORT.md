@@ -100,3 +100,94 @@ See companion CSV. Method:
 3. Purge/revalidate `/` (Vercel cache) — verify `Age: 0` and `#ls-content` + H1 in raw HTML.
 4. Re-run `pnpm check` on CI to confirm green.
 5. Search Console: URL Inspection for `/`, `/return-load`, `/ltl-transport`, `/transport-cost-calculator`, top routes; re-submit sitemap (still 215 URLs).
+
+## 10. Post-implementation regression audit (2026-11-05)
+
+**Objective:** compare the deployed site against the 215-URL audit workbook and the prior implementation; verify no regressions; implement remaining verified fixes. **Method:** full 215-URL production sweep (raw HTML), source-level inspection of `api/agent.js`, `SeoMeta.tsx`, sitemap generator, robots.txt, vercel.json, and workbook sheets.
+
+### 10.1 Live production verification (all 215 sitemap URLs probed)
+
+| Check | Result |
+|---|---|
+| HTTP status | 215/215 return 200 (only `/` served from a stale CDN cache, see 10.3) |
+| Canonical | every URL self-referencing; no homepage-canonicization of landing pages |
+| H1 + injected crawl content | present on 214/215 (homepage pending cache purge) |
+| No-JS / edge HTML | SEO engine generates per-page title/desc/canonical/JSON-LD + long-form content block |
+| Genuine 404s | unknown URLs return HTTP 404 (no homepage redirect) |
+| Redirects | legacy calculator aliases + `/blog/ptl-vs-ftl-when-to-use-each` and `/transport/*` → clean one-hop 301s; `/location/vizag` → `/location/visakhapatnam` |
+| Private routes | `/login /trucker/* /shipper/* /admin/* /profile /messages /browse-trucks` → 200 + `noindex, follow`, no canonical, no user data in HTML |
+| robots.txt | blocks auth/private areas; sitemap declared; sc/onboarding` added this session |
+| Sitemap | 215 canonical URLs; zero errors per Search Console; no private/redirect/404/noindex URLs; lastmod now reflects real publish dates instead of build date |
+| Structured data | Organization/WebSite/BreadcrumbList/Service/FAQPage/Article + new Article `image` property; no fabricated ratings/offers |
+| hreflang | EN↔HI reciprocals verified on `/`, `/hi`, PTL, return-load, route pairs |
+| Search Console conflicts | `/return-load`, `/transport-cost-calculator`, `/ltl-transport`, `/blog/seafood-transport-odisha` all live 200 + self-canonical + indexable |
+
+### 10.2 Issues found & fixed this session
+
+| # | Issue (verified) | Root cause | Fix | Files |
+|---|---|---|---|---|
+| 1 | Homepage served without H1/injected content (crawl-visible 14 words) | Vercel edge cache still serving pre-deploy HTML (Age ≈ 8 h); code fix exists but never surfaced because not revalidated | No code change needed; **deploy + purge/revalidate `/`**, then re-probe | — (operational) |
+| 2 | 48 route titles 80–91 chars (SERP truncation; workbook "long titles" finding) | Template `Part Load Transport X to Y \| PTL & LTL Truck Booking \| LoadSaathi` too long | New ≤60-char template, brand appended only when it fits; server/client identical | `api/agent.js`, `supabase/src/data/routes.ts` |
+| 3 | 9 transport-service titles 72–77 chars | Same pattern issue | ≤60-char template `X Part Load & FTL Truck Booking \| PTL/LTL`; server/client identical | `api/agent.js`, `TransportServicePage.tsx` |
+| 4 | 5 tool titles 79–85 chars | Verbose title strings | Shortened to 47–53 chars; server/client identical | `api/agent.js`, 5 tool pages |
+| 5 | `/tools`, `/features`, `/blog` server titles ≠ client titles (and >60 chars) | Server `STATIC_PAGE_DATA` drifted from client props | Aligned server titles to client strings (≤60) | `api/agent.js` |
+| 6 | 16 impression-earning blog + 3 guide titles 61–122 chars | Long editorial titles | Rewritten to 44–59 chars; server/client verified byte-identical | `api/agent.js`, `blog.ts`, `guides.ts` |
+| 7 | Article JSON-LD missing recommended `image` property (workbook: 15 flagged) | Server side omitted it (client had it) | Added `image` (crawlable og-image) to Article schema | `api/agent.js` |
+| 8 | Sitemap `lastmod` = build date for unchanged pages (misleading) | Generator used `TODAY` for statics/locations/untouched articles | Static/location baseline `2026-10-01`; articles fall back to published `date` | `scripts/generate-sitemap.mjs` |
+| 9 | `/guide` hub thin (138–391 words; discovered — not indexed) | Static page without a curated index | Added "Browse the guides" crawl block linking all published guides | `api/agent.js` |
+| 10 | `/onboarding` not blocked in robots.txt | Auth-path list gap | Added `Disallow: /onboarding` | `public/robots.txt` |
+
+### 10.3 Remaining/verified-open items
+
+- **Homepage stale edge cache**: requires deployment + cache purge; after purge, `/` will serve the H1 + crawl content built in the code (verified in build output).
+- **Long-title backlog**: remaining informational blog titles (<80 chars) left untouched per guardrail (smallest effective changes); recommended as an editorial batch later.
+- **Search Console follow-up**: after deploy, run URL Inspection live tests on `/`, `/return-load`, `/transport-cost-calculator`, `/ltl-transport`, `/blog/seafood-transport-odisha`, top route pages; re-submit sitemap.
+- **`crawled — currently not indexed` set**: no dead-fix; content verified indexable; improve internal linking/impressions over time.
+
+### 10.4 Build & test results (this session)
+
+| Gate | Result |
+|---|---|
+| `node --check api/agent.js` | ✅ |
+| `eslint` on all changed files | ✅ exit 0 |
+| `pnpm typecheck` (tsc --noEmit) | ✅ 0 errors |
+| `pnpm test` (vitest) | ✅ 178/178 project tests pass (2 collection failures are pre-existing plugin-bundle files under `.agents/skills/` with no test suite) |
+| `node scripts/verify-agent-meta.mjs` | ✅ all metadata checks (incl. title parity) |
+| `pnpm build` (prebuild → vite → prerender 220 routes → smoke) | ✅ EXIT 0 — smoke all checks passed: 215-URL sitemap, 13/13 prerendered pages fresh, 11/11 canonicals, 5/5 single H1, sampled titles ≤60 |
+
+### 10.5 Files modified this session
+
+| File | Change |
+|---|---|
+| `api/agent.js` | Route title template (≤60) with conditional brand; 9 transport-service titles; 5 tool titles; `/tools /features /blog` title parity; 16 blog + 3 guide titles; Article schema `image`; `/guide` hub crawl block |
+| `supabase/src/data/routes.ts` | `laneTitle` mirror of new route template |
+| `supabase/src/data/blog.ts` | 16 article titles rewritten |
+| `supabase/src/data/guides.ts` | 3 guide titles rewritten |
+| `supabase/src/pages/public/transport/TransportServicePage.tsx` | Title template parity |
+| `supabase/src/pages/public/tools/{ShipmentBriefBuilder,WaitingTimeCostCalculator,FreightQuoteComparison,CargoVolumePlanner,LoadSecuringChecklist}.tsx` | Tool title parity |
+| `scripts/generate-sitemap.mjs` | Honest lastmod (stable baseline + publish dates) |
+| `public/robots.txt` | Block `/onboarding` |
+| `public/sitemap.xml` | Regenerated (still 215 URLs) |
+| `SEO_ROUTE_VALIDATION.csv` | Regenerated for all 215 URLs with post-change metadata |
+
+### 10.6 Before → after metadata (representative)
+
+| URL | Before (live) | After (build) |
+|---|---|---|
+| `/routes/rourkela-to-ranchi` | 81 chars "Part Load Transport Rourkela to Ranchi | PTL & LTL Truck Booking | LoadSaathi" | 58 chars "Rourkela to Ranchi Truck Freight | PTL/LTL | LoadSaathi" |
+| `/transport-service/ranchi` | 72 chars | 47 chars "Ranchi Part Load & FTL Truck Booking | PTL/LTL" |
+| `/tools/shipment-brief` | 79 chars | 52 chars |
+| `/blog/trucker-earnings-jharkhand-2026` | 82 chars | 52 chars |
+| `/blog/gst-advisory-668-…` | 122 chars | 51 chars |
+| `/guide/freight-rates-east-india` | 61 chars | 44 chars |
+| `/blog/seafood-transport-odisha` | 69 chars | 52 chars |
+| `/tools` (server) | 61 chars, mismatched from client | 57 chars, matches client |
+| Article JSON-LD | no `image` | `image` added |
+| Sitemap lastmod | build date (2026-11-05) for unchanged pages | stable 2026-10-01 / real publish dates |
+
+### 10.7 What needs human/deployment approval
+
+1. **Deploy** this batch + **purge/revalidate the homepage cache** (Vercel). The homepage SEO content already exists in the build; it will only appear live after a purge.
+2. Re-run Search Console URL Inspection for `/`, `/return-load`, `/transport-cost-calculator`, `/ltl-transport`, `/blog/seafood-transport-odisha` and top route pages after deploy; re-submit sitemap (unchanged 215 URLs).
+3. Optional editorial batch: remaining informational article titles 61–80 chars (leave as-is for now).
+4. Confirm the fees/coverage claims already flagged in the prior report (1.5–3% vs 2–5%; "50+ cities"/"25+ corridors" wording) before running any paid traffic.

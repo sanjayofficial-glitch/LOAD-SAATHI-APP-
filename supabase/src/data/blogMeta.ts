@@ -97,7 +97,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "indian-logistics-eway-bill-gst-2026",
   category: "Industry Insights",
-  title: "e-Way Bill Rules 2026: New GST Compliance Changes Every Indian Business Must Know",
+  title: "e-Way Bill Rules 2026: GST Compliance Guide for Logistics",
   date: "July 23, 2026",
   lastUpdated: "August 14, 2026",
   readTime: "14 min read",
@@ -121,7 +121,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "rourkela-to-ranchi-trucking-rates",
   category: "Shipper Guide",
-  title: "Trucking Rates from Rourkela to Ranchi: Complete Pricing Guide 2026",
+  title: "Rourkela to Ranchi Trucking Rates: 2026 Pricing Guide",
   date: "July 25, 2026",
   readTime: "5 min read",
   author: "Amit Verma",
@@ -159,7 +159,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "seafood-transport-odisha",
   category: "Trucker Tips",
-  title: "Cold Chain Transport: Shipping Seafood from Odisha Ports",
+  title: "Shipping Seafood from Odisha: Cold Chain Guide for Ports",
   date: "July 12, 2026",
   lastUpdated: "August 22, 2026",
   readTime: "5 min read",
@@ -198,7 +198,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "monsoon-logistics-tips",
   category: "Trucker Tips",
-  title: "Monsoon Logistics: Shipping During India's Rainy Season",
+  title: "Monsoon Logistics Tips: Shipping Safely During Indian Rain",
   date: "July 5, 2026",
   lastUpdated: "August 22, 2026",
   readTime: "5 min read",
@@ -301,7 +301,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "east-india-freight-corridors",
   category: "Industry Insights",
-  title: "East India Freight Corridors: Routes, Industries, Rates, and Return Loads",
+  title: "East India Freight Corridors: Routes, Industries and Rates",
   date: "June 12, 2026",
   lastUpdated: "August 16, 2026",
   readTime: "8 min read",
@@ -338,7 +338,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026",
   category: "Industry Insights",
-  title: "GST Advisory 668: E-Way Bill Rule Enhancements Put On Hold — What Indian MSMEs & Transporters Must Do Now",
+  title: "GST Advisory 668: E-Way Bill Rule Changes Put on Hold",
   date: "August 5, 2026",
   lastUpdated: "August 22, 2026",
   readTime: "14 min read",
@@ -373,7 +373,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "kolkata-to-rourkela-freight-rates",
   category: "Route Guide",
-  title: "Kolkata to Rourkela Freight Rates 2026: Complete Cost Guide",
+  title: "Kolkata to Rourkela Freight Rates 2026: Cost Guide",
   date: "August 9, 2026",
   readTime: "5 min read",
   author: "LoadSaathi Team",
@@ -396,7 +396,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "steel-transport-india-guide",
   category: "Industry Guide",
-  title: "Steel Transport in India: Complete Guide to Safe & Cost-Effective Shipping",
+  title: "Steel Transport in India: Complete Shipping Guide for Manufacturers",
   date: "August 9, 2026",
   lastUpdated: "October 7, 2026",
   readTime: "6 min read",
@@ -409,7 +409,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "msme-freight-saving-guide",
   category: "Shipper Guide",
-  title: "MSME Freight Saving Guide: Cut Logistics Costs by 30% in 2026",
+  title: "MSME Freight Saving Guide: Cut Logistics Costs in 2026",
   date: "August 9, 2026",
   lastUpdated: "August 22, 2026",
   readTime: "5 min read",
@@ -471,7 +471,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "trucker-earnings-odisha-2026",
   category: "Trucker Tips",
-  title: "Trucker Salary and Earnings in Odisha 2026: Complete Pay Breakdown",
+  title: "Trucker Earnings in Odisha 2026: Complete Pay Guide",
   date: "August 14, 2026",
   readTime: "11 min read",
   author: "LoadSaathi Team",
@@ -495,7 +495,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "how-to-find-return-loads-india",
   category: "Trucker Tips",
-  title: "How to Find Return Loads in India: A Practical Backhaul Guide for Truckers",
+  title: "How to Find Return Loads in India: Backhaul Guide for Truckers",
   date: "August 16, 2026",
   lastUpdated: "August 16, 2026",
   readTime: "7 min read",
@@ -520,7 +520,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "ptl-freight-rates-india",
   category: "Freight Rates",
-  title: "PTL Freight Rates in India: How Part-Load Shipping Costs Are Calculated",
+  title: "PTL Freight Rates in India: How Part-Load Costs Work",
   date: "August 16, 2026",
   lastUpdated: "August 16, 2026",
   readTime: "7 min read",
@@ -545,7 +545,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "return-loads-kolkata",
   category: "Trucker Tips",
-  title: "Finding Return Loads from Kolkata: A Trucker's Complete Guide",
+  title: "Finding Return Loads from Kolkata: Trucker's Complete Guide",
   date: "August 20, 2026",
   lastUpdated: "August 22, 2026",
   readTime: "6 min read",
@@ -557,7 +557,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "trucker-earnings-jharkhand-2026",
   category: "Trucker Tips",
-  title: "Trucker Salary and Earnings in Jharkhand 2026: Complete Pay Breakdown",
+  title: "Trucker Earnings in Jharkhand 2026: Complete Pay Guide",
   date: "August 18, 2026",
   lastUpdated: "August 22, 2026",
   readTime: "6 min read",
@@ -617,7 +617,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "ranchi-to-kolkata-freight-rates",
   category: "Route Guide",
-  title: "Ranchi to Kolkata Truck Rate 2026: Fare, Distance & Booking",
+  title: "Ranchi to Kolkata Truck Rates 2026: Fare & Distance Guide",
   date: "August 23, 2026",
   lastUpdated: "August 23, 2026",
   readTime: "5 min read",
@@ -900,7 +900,7 @@ export const blogMeta: BlogMetaEntry[] = [
   {
   slug: "cargo-insurance-guide-india",
   category: "Compliance",
-  title: "Cargo Insurance in India: What Truckers and Shippers Must Know",
+  title: "Cargo Insurance in India: Practical Guide for Shippers",
   date: "August 12, 2026",
   lastUpdated: "August 22, 2026",
   readTime: "6 min read",

@@ -731,13 +731,13 @@ const STATIC_PAGE_DATA = {
     summary: "LoadSaathi charges transparent fees: 1.5-3% for shippers, 1.5-2.5% for truckers with no hidden charges."
   },
   "/tools": {
-    title: "Freight Tools - Fare Calculator, Distance Finder | LoadSaathi",
+    title: "Logistics Tools & Calculators for Indian Truckers & Shippers",
     metaDescription: "Use free freight tools: fare calculator, distance finder, EMI calculator, and weight converter. Plan your shipments with confidence.",
     keywords: ["freight calculator", "fare estimator", "distance calculator india", "truck emi calculator", "weight converter"],
     summary: "Free freight tools: fare calculator, distance finder, EMI calculator, and weight converter for planning shipments."
   },
   "/features": {
-    title: "LoadSaathi Features - AI Matching, Real-Time GPS Tracking, Smart Pricing",
+    title: "Features — AI-Powered Freight Platform",
     metaDescription: "Discover LoadSaathi features: AI-powered matching, real-time GPS tracking, instant quotes, secure payments, and digital credit scores.",
     keywords: ["loadsaathi features", "ai freight matching", "gps tracking trucks", "instant freight quotes"],
     summary: "LoadSaathi offers AI-powered matching, real-time GPS tracking, instant quotes, secure payments, and digital credit scores."
@@ -816,7 +816,7 @@ const STATIC_PAGE_DATA = {
     summary: "Create your free LoadSaathi account as shipper or trucker."
   },
   "/blog": {
-    title: "Logistics Blog - Trucking Tips & Freight Guides | LoadSaathi",
+    title: "Blog — Freight & Logistics Insights",
     metaDescription: "Practical guides on trucking, return loads, PTL vs FTL shipping, freight pricing, and Indian logistics trends from the LoadSaathi team.",
     keywords: ["trucking blog india", "freight logistics articles", "loadsaathi blog", "truck driver tips"],
     summary: "Articles and guides covering trucking business advice, freight market trends, and shipping best practices in India."
@@ -996,31 +996,31 @@ const STATIC_PAGE_DATA = {
     summary: "Shows the cost of empty return runs and savings from filling them with backhaul loads."
   },
   "/tools/shipment-brief": {
-    title: "Free Shipment Brief Builder India | Freight Request Template | LoadSaathi",
+    title: "Shipment Brief Builder – Free Freight Request Template",
     metaDescription: "Build a complete shipment brief in minutes. Enter pickup, drop-off, cargo type, weight, dimensions, ready date and loading needs — then copy or download a clean freight request to share with transporters.",
     keywords: ["shipment brief template", "freight request builder", "load request format", "cargo details format for transporter", "shipment specification sheet India"],
     summary: "Build a complete shipment brief in minutes — pickup, drop-off, cargo type, weight, dimensions, ready date and loading needs — and share a clean freight request with transporters."
   },
   "/tools/waiting-time-cost": {
-    title: "Truck Waiting Time Cost Calculator India | Detention Cost Estimate | LoadSaathi",
+    title: "Truck Waiting Time Cost Calculator – Detention Cost",
     metaDescription: "Estimate the cost of truck waiting time at loading and unloading points in India. Enter wait hours, truck and driver costs, and missed-trip costs to see a transparent estimate with assumptions shown.",
     keywords: ["truck waiting time calculator", "detention cost calculator India", "truck demurrage charges", "loading waiting charges calculator", "truck delay cost estimate"],
     summary: "Estimate detention costs: enter wait hours, truck and driver costs and missed-trip costs for a transparent waiting-time estimate with assumptions shown."
   },
   "/tools/freight-quote-comparison": {
-    title: "Freight Quote Comparison Worksheet India | Compare Transport Rates | LoadSaathi",
+    title: "Freight Quote Comparison Worksheet – Compare Truck Rates",
     metaDescription: "Compare up to three freight quotes side by side — base freight, fuel surcharge, tolls, loading, waiting, taxes and insurance — and get an all-in total with transit time and payment terms.",
     keywords: ["freight quote comparison", "transport rate comparison India", "compare truck quotes", "lorry rate comparison worksheet", "all-in freight cost calculator"],
     summary: "Compare up to three freight quotes side by side across base freight, fuel surcharge, tolls, loading, waiting, taxes and insurance for an all-in total."
   },
   "/tools/cargo-volume-planner": {
-    title: "PTL Cargo Volume & Space Planner India | Part Load Size Calculator | LoadSaathi",
+    title: "PTL Cargo Volume Planner – Part Load Size Calculator",
     metaDescription: "Plan your part-load shipment: enter package dimensions, quantity and weight to get total volume (cbm and cu ft), weight, density and a basic space estimate for PTL cargo.",
     keywords: ["cargo volume calculator", "cbm calculator for transport", "part load volume calculator", "PTL space planner", "shipment volume calculator India", "cubic meter calculator freight"],
     summary: "Plan a part-load shipment: enter package dimensions, quantity and weight to get total volume in cbm and cu ft, density and a basic space estimate."
   },
   "/tools/load-securing-checklist": {
-    title: "Load Securing & Dispatch Checklist Builder India | Cargo Preparation | LoadSaathi",
+    title: "Load Securing Checklist Builder – Cargo Preparation",
     metaDescription: "Build a free packing, loading and dispatch checklist for your cargo. Choose cargo category and handling needs to get practical load-securing steps before your truck leaves.",
     keywords: ["load securing checklist", "cargo loading checklist India", "truck loading procedure checklist", "dispatch checklist logistics", "lashing and securing cargo guide"],
     summary: "Build a packing, loading and dispatch checklist for your cargo — choose the cargo category and handling needs for practical load-securing steps before dispatch."
@@ -1236,7 +1236,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-06-15"
   },
   "indian-logistics-eway-bill-gst-2026": {
-    "title": "e-Way Bill Rules 2026: New GST Compliance Changes Every Indian Business Must Know | LoadSaathi",
+    "title": "e-Way Bill Rules 2026: GST Compliance Guide for Logistics",
     "keywords": [
       "e way bill rules 2026 new gst compliance changes every indian business must know",
       "indian logistics eway bill gst 2026",
@@ -1273,7 +1273,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-14"
   },
   "rourkela-to-ranchi-trucking-rates": {
-    "title": "Trucking Rates from Rourkela to Ranchi: Complete Pricing Guide 2026 | LoadSaathi",
+    "title": "Rourkela to Ranchi Trucking Rates: 2026 Pricing Guide",
     "keywords": [
       "trucking rates from rourkela to ranchi complete pricing guide 2026",
       "rourkela to ranchi trucking rates",
@@ -1320,7 +1320,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "seafood-transport-odisha": {
-    "title": "Cold Chain Transport: Shipping Seafood from Odisha Ports | LoadSaathi",
+    "title": "Shipping Seafood from Odisha: Cold Chain Guide for Ports",
     "keywords": [
       "cold chain transport shipping seafood from odisha ports",
       "seafood transport odisha",
@@ -1368,7 +1368,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "monsoon-logistics-tips": {
-    "title": "Monsoon Logistics: Shipping During India's Rainy Season | LoadSaathi",
+    "title": "Monsoon Logistics Tips: Shipping Safely During Indian Rain",
     "keywords": [
       "monsoon logistics shipping during india s rainy season",
       "monsoon logistics tips",
@@ -1496,7 +1496,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "east-india-freight-corridors": {
-    "title": "East India Freight Corridors: Routes, Industries, Rates, and Return Loads | LoadSaathi",
+    "title": "East India Freight Corridors: Routes, Industries and Rates",
     "keywords": [
       "east india freight corridors routes industries rates and return loads",
       "east india freight corridors",
@@ -1561,7 +1561,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026": {
-    "title": "GST Advisory 668: E-Way Bill Rule Enhancements Put On Hold — What Indian MSMEs & Transporters Must Do Now | LoadSaathi",
+    "title": "GST Advisory 668: E-Way Bill Rule Changes Put on Hold",
     "keywords": [
       "gst advisory 668 e way bill rule enhancements put on hold what indian msmes transporters must do now",
       "gst advisory 668 eway bill ship to gstin hold msme logistics 2026",
@@ -1626,7 +1626,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-16"
   },
   "how-to-find-return-loads-india": {
-    "title": "How to Find Return Loads in India: A Practical Backhaul Guide for Truckers | LoadSaathi",
+    "title": "How to Find Return Loads in India: Backhaul Guide for Truckers",
     "keywords": [
       "how to find return loads in india a practical backhaul guide for truckers",
       "how to find return loads india",
@@ -1692,7 +1692,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-16"
   },
   "ptl-freight-rates-india": {
-    "title": "PTL Freight Rates in India: How Part-Load Shipping Costs Are Calculated | LoadSaathi",
+    "title": "PTL Freight Rates in India: How Part-Load Costs Work",
     "keywords": [
       "ptl freight rates in india how part load shipping costs are calculated",
       "ptl freight rates india",
@@ -1740,7 +1740,7 @@ const BLOG_DATA = {
     "category": "Route Guide"
   },
   "kolkata-to-rourkela-freight-rates": {
-    "title": "Kolkata to Rourkela Freight Rates 2026: Complete Cost Guide | LoadSaathi",
+    "title": "Kolkata to Rourkela Freight Rates 2026: Cost Guide",
     "keywords": [
       "kolkata to rourkela freight rates 2026 complete cost guide",
       "kolkata to rourkela freight rates",
@@ -1771,7 +1771,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "steel-transport-india-guide": {
-    "title": "Steel Transport in India: Complete Guide to Safe & Cost-Effective Shipping | LoadSaathi",
+    "title": "Steel Transport in India: Complete Shipping Guide for Manufacturers",
     "keywords": [
       "steel transport in india complete guide to safe cost effective shipping",
       "steel transport india guide",
@@ -1787,7 +1787,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "msme-freight-saving-guide": {
-    "title": "MSME Freight Saving Guide: Cut Logistics Costs by 30% in 2026 | LoadSaathi",
+    "title": "MSME Freight Saving Guide: Cut Logistics Costs in 2026",
     "keywords": [
       "msme freight saving guide cut logistics costs by 30 in 2026",
       "msme freight saving guide",
@@ -1924,7 +1924,7 @@ const BLOG_DATA = {
     "category": "Industry Guide"
   },
   "trucker-earnings-odisha-2026": {
-    "title": "Trucker Salary and Earnings in Odisha 2026: Complete Pay Breakdown | LoadSaathi",
+    "title": "Trucker Earnings in Odisha 2026: Complete Pay Guide",
     "keywords": [
       "trucker salary and earnings in odisha 2026 complete pay breakdown",
       "trucker earnings odisha 2026",
@@ -1992,7 +1992,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "return-loads-kolkata": {
-    "title": "Finding Return Loads from Kolkata: A Trucker's Complete Guide | LoadSaathi",
+    "title": "Finding Return Loads from Kolkata: Trucker's Complete Guide",
     "keywords": [
       "finding return loads from kolkata a trucker s complete guide",
       "return loads kolkata",
@@ -2020,7 +2020,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "trucker-earnings-jharkhand-2026": {
-    "title": "Trucker Salary and Earnings in Jharkhand 2026: Complete Pay Breakdown | LoadSaathi",
+    "title": "Trucker Earnings in Jharkhand 2026: Complete Pay Guide",
     "keywords": [
       "trucker salary and earnings in jharkhand 2026 complete pay breakdown",
       "trucker earnings jharkhand 2026",
@@ -2116,7 +2116,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "cargo-insurance-guide-india": {
-    "title": "Cargo Insurance in India: What Truckers and Shippers Must Know | LoadSaathi",
+    "title": "Cargo Insurance in India: Practical Guide for Shippers",
     "keywords": [
       "cargo insurance in india what truckers and shippers must know",
       "cargo insurance guide india",
@@ -2234,7 +2234,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-23"
   },
   "ranchi-to-kolkata-freight-rates": {
-    "title": "Ranchi to Kolkata Truck Rate 2026: Fare, Distance & Booking",
+    "title": "Ranchi to Kolkata Truck Rates 2026: Fare & Distance Guide",
     "keywords": [
       "ranchi to kolkata truck rate 2026",
       "ranchi to kolkata freight rates",
@@ -3186,7 +3186,7 @@ const GUIDE_DATA = {
     }
   },
   "freight-rates-east-india": {
-    title: "Freight Rates in East India: Complete Guide 2026 | LoadSaathi",
+    title: "Freight Rates in East India: Complete Guide 2026",
     keywords: ["east india freight rates", "freight rates odisha", "west bengal freight", "jharkhand shipping rates"],
     summary: "Freight rates across East India corridors vary by distance, cargo type, and vehicle availability. The Rourkela–Ranchi corridor averages ₹1,800-2,500/tonne for PTL, while longer routes like Rourkela–Kolkata range from ₹2,500-3,500/tonne.",
     author: "Amit Verma",
@@ -3212,7 +3212,7 @@ const GUIDE_DATA = {
     }
   },
   "shipping-steel": {
-    title: "How to Ship Steel in India: A Complete Guide for Manufacturers | LoadSaathi",
+    title: "How to Ship Steel in India: A Complete Guide for Manufacturers",
     keywords: ["shipping steel india", "steel transport", "steel logistics", "heavy cargo shipping"],
     summary: "Shipping steel requires specialized handling: covered trucks to prevent rust, proper load distribution, and secure tie-downs. Major corridors include Rourkela–Jamshedpur, Jamshedpur–Kolkata, and Bhubaneswar–Vizag.",
     author: "Rajesh Kumar",
@@ -3233,7 +3233,7 @@ const GUIDE_DATA = {
 const TRANSPORT_SERVICE_DATA = {
   "ranchi": {
     "cityName": "Ranchi",
-    "title": "Part Load Transport in Ranchi - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Ranchi Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport ranchi",
       "PTL booking ranchi",
@@ -3262,7 +3262,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "bhubaneswar": {
     "cityName": "Bhubaneswar",
-    "title": "Part Load Transport in Bhubaneswar - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Bhubaneswar Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport bhubaneswar",
       "PTL booking bhubaneswar",
@@ -3291,7 +3291,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "rourkela": {
     "cityName": "Rourkela",
-    "title": "Part Load Transport in Rourkela - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Rourkela Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport rourkela",
       "PTL booking rourkela",
@@ -3320,7 +3320,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "jamshedpur": {
     "cityName": "Jamshedpur",
-    "title": "Part Load Transport in Jamshedpur - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Jamshedpur Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport jamshedpur",
       "PTL booking jamshedpur",
@@ -3349,7 +3349,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "balasore": {
     "cityName": "Balasore",
-    "title": "Part Load Transport in Balasore - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Balasore Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport balasore",
       "PTL booking balasore",
@@ -3378,7 +3378,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "berhampur": {
     "cityName": "Berhampur",
-    "title": "Part Load Transport in Berhampur - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Berhampur Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport berhampur",
       "PTL booking berhampur",
@@ -3407,7 +3407,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "kolkata": {
     "cityName": "Kolkata",
-    "title": "Part Load Transport in Kolkata - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Kolkata Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport kolkata",
       "PTL booking kolkata",
@@ -3436,7 +3436,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "durgapur": {
     "cityName": "Durgapur",
-    "title": "Part Load Transport in Durgapur - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Durgapur Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport durgapur",
       "PTL booking durgapur",
@@ -3465,7 +3465,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "burdwan": {
     "cityName": "Burdwan",
-    "title": "Part Load Transport in Burdwan - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Burdwan Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport burdwan",
       "PTL booking burdwan",
@@ -3538,8 +3538,9 @@ function laneSeoMeta(r) {
     r.dataStatus === 'needs_review'
       ? `Est. ${r.distanceKm} km, ~${r.transitTime} hrs driving (indicative — confirm at booking)`
       : `Verified ${r.distanceKm} km, ~${r.transitTime} hrs`;
+  const baseTitle = `${r.from} to ${r.to} Truck Freight | PTL/LTL`;
   return {
-    seoTitle: `Part Load Transport ${r.from} to ${r.to} | PTL & LTL Truck Booking | LoadSaathi`,
+    seoTitle: baseTitle.length + 15 <= 60 ? `${baseTitle} | LoadSaathi` : baseTitle,
     metaDescription: `${statusPart}. Book part load, PTL & LTL trucks ${r.from} to ${r.to}. Rates from ₹${inr(bands.perTonneMin)}/tonne. Updated ${RATES_UPDATED_LABEL}.`,
   };
 }
@@ -5650,6 +5651,21 @@ function contentFor(path, seoMeta) {
       });
     } else {
       blocks.push({ p: seoMeta.summary || seoMeta.metaDescription });
+      // Guide hub: make /guide a genuine index of the published guides rather
+      // than a thin static page. Grows automatically as GUIDE_DATA grows.
+      if (path === '/guide') {
+        const guideLinks = Object.entries(GUIDE_DATA).map(([slug, g]) => ({
+          label: g.title || slug,
+          href: `/guide/${slug}`,
+        }));
+        blocks.push({
+          h2: 'Browse the guides',
+          ul: guideLinks,
+        });
+        blocks.push({
+          p: 'Each guide explains one freight decision in practical terms — what actually changes the cost, how to ask for the right quote, and where LoadSaathi fits in. For the full set of corridors and cities, see the routes index.',
+        });
+      }
     }
     // Tool pages live under /tools/*, but their notes are keyed by the bare
     // slug (/carbon-savings) because that is the name the tools index uses.
@@ -5918,6 +5934,7 @@ function buildJsonLd(path, seoMeta) {
       "headline": schemaTitle,
       "description": schemaDesc,
       "url": canonicalUrl,
+      "image": `${baseUrl}/og-image.png`,
       "author": { "@type": "Person", "name": seoMeta.author || "LoadSaathi Team", ...(seoMeta.authorBio ? { "description": seoMeta.authorBio } : {}) },
       "publisher": { "@type": "Organization", "name": "LoadSaathi", "url": baseUrl, "logo": { "@type": "ImageObject", "url": `${baseUrl}/logo-512.png` } },
       "datePublished": seoMeta.date || new Date().toISOString().slice(0, 10),

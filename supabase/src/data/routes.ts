@@ -84,7 +84,8 @@ export function formatINR(n: number): string {
 
 /** Title-tag formula — identical for every lane, generated from lane data. */
 export function laneTitle(route: Pick<RouteInfo, "from" | "to">): string {
-  return `Part Load Transport ${route.from} to ${route.to} | PTL & LTL Truck Booking`;
+  const base = `${route.from} to ${route.to} Truck Freight | PTL/LTL`;
+  return base.length + 15 <= 60 ? `${base} | LoadSaathi` : base;
 }
 
 /**

@@ -146,10 +146,30 @@ const TRANSPORT_SERVICE_SLUGS = extractSlugs(
 ).filter((s) => !["serviceBlurbs", "about", "contactPoint"].includes(s));
 
 // Extract real lastmod dates from data files
+// - Blog/guides: use lastUpdated when present; otherwise fall back to the
+//   published `date` (never the build date — a rebuild does not mean the
+//   article changed).
+// - Static pages and locations: content changes are rare and editorial, so
+//   they get a fixed baseline date instead of today's build date.
 const BLOG_DATES = extractLastMod(
   path.join(ROOT, "supabase/src/data/blog.ts"),
   BLOG_SLUGS,
   /lastUpdated:\s*"([^"]+)"/
+);
+const GUIDE_DATES = extractLastMod(
+  path.join(ROOT, "supabase/src/data/guides.ts"),
+  GUIDE_SLUGS,
+  /lastUpdated:\s*"([^"]+)"/
+);
+const BLOG_PUBLISHED = extractLastMod(
+  path.join(ROOT, "supabase/src/data/blog.ts"),
+  BLOG_SLUGS,
+  /date:\s*"([^"]+)"/
+);
+const GUIDE_PUBLISHED = extractLastMod(
+  path.join(ROOT, "supabase/src/data/guides.ts"),
+  GUIDE_SLUGS,
+  /date:\s*"([^"]+)"/
 );
 const ROUTE_DATES = extractLastMod(
   path.join(ROOT, "supabase/src/data/routes.ts"),
@@ -158,14 +178,16 @@ const ROUTE_DATES = extractLastMod(
 );
 // Routes use RATES_UPDATED_AT as a fallback for lastmod
 const RATES_UPDATED = "2026-10-01"; // Matches RATES_UPDATED_AT in routes.ts
+// Stable baseline for content that only changes on editorial release.
+const STATIC_LASTMOD = "2026-10-01";
 
 const urls = [
-  ...STATIC.map(([p, changefreq, priority]) => ({ loc: `${BASE}${p}`, changefreq, priority, lastmod: TODAY })),
+  ...STATIC.map(([p, changefreq, priority]) => ({ loc: `${BASE}${p}`, changefreq, priority, lastmod: STATIC_LASTMOD })),
   ...ROUTE_SLUGS.map((s) => ({ loc: `${BASE}/routes/${s}`, changefreq: "monthly", priority: "0.7", lastmod: ROUTE_DATES[s] || RATES_UPDATED })),
-  ...LOCATION_SLUGS.map((s) => ({ loc: `${BASE}/location/${s}`, changefreq: "monthly", priority: "0.8", lastmod: TODAY })),
-  ...TRANSPORT_SERVICE_SLUGS.map((s) => ({ loc: `${BASE}/transport-service/${s}`, changefreq: "monthly", priority: "0.8", lastmod: TODAY })),
-  ...GUIDE_SLUGS.map((s) => ({ loc: `${BASE}/guide/${s}`, changefreq: "monthly", priority: "0.7", lastmod: BLOG_DATES[s] || TODAY })),
-  ...BLOG_SLUGS.map((s) => ({ loc: `${BASE}/blog/${s}`, changefreq: "monthly", priority: "0.6", lastmod: BLOG_DATES[s] || TODAY })),
+  ...LOCATION_SLUGS.map((s) => ({ loc: `${BASE}/location/${s}`, changefreq: "monthly", priority: "0.8", lastmod: STATIC_LASTMOD })),
+  ...TRANSPORT_SERVICE_SLUGS.map((s) => ({ loc: `${BASE}/transport-service/${s}`, changefreq: "monthly", priority: "0.8", lastmod: STATIC_LASTMOD })),
+  ...GUIDE_SLUGS.map((s) => ({ loc: `${BASE}/guide/${s}`, changefreq: "monthly", priority: "0.7", lastmod: GUIDE_DATES[s] || GUIDE_PUBLISHED[s] || STATIC_LASTMOD })),
+  ...BLOG_SLUGS.map((s) => ({ loc: `${BASE}/blog/${s}`, changefreq: "monthly", priority: "0.6", lastmod: BLOG_DATES[s] || BLOG_PUBLISHED[s] || STATIC_LASTMOD })),
 ];
 
 const xml =

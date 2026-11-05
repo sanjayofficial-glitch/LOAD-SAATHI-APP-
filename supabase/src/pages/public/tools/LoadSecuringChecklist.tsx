@@ -168,7 +168,7 @@ export default function LoadSecuringChecklist() {
         </div>
       </noscript>
       <SeoMeta
-        title="Load Securing & Dispatch Checklist Builder India | Cargo Preparation"
+        title="Load Securing Checklist Builder – Cargo Preparation"
         description="Build a free packing, loading and dispatch checklist for your cargo. Choose cargo category and handling needs to get practical load-securing steps before your truck leaves."
         keywords="load securing checklist, cargo loading checklist India, truck loading procedure checklist, dispatch checklist logistics, lashing and securing cargo guide"
         canonical="/tools/load-securing-checklist"
