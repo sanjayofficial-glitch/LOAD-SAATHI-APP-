@@ -10,6 +10,9 @@ import { useEffect, useState, useCallback, useRef, useLayoutEffect } from 'react
 import { useDishaPageTip, pageContextMessages } from './DishaOnboardingTips'
 import { useIdleDetection } from '@/hooks/useIdleDetection'
 import { MASCOT_BADGE_EVENT } from '@/hooks/useMascotInteractionTracker'
+import { useAuth } from '@/contexts/AuthContext'
+import { isDishaUiEnabled } from '@/lib/dishaRequest'
+import DishaAskPanel from './DishaAskPanel'
 import type { DishaMood } from './DishaMascot'
 
 export { DishaProvider } from './DishaContext'
@@ -102,6 +105,13 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
 
   useDishaPageTip()
   const { idle } = useIdleDetection(30000)
+
+  // "Ask Disha" is doubly gated: the default-off VITE_DISHA_UI flag AND a
+  // signed-in user (Disha searches the marketplace with the caller's own
+  // access). Signed-out visitors see Freddy exactly as before.
+  const { user } = useAuth()
+  const [askOpen, setAskOpen] = useState(false)
+  const dishaAvailable = isDishaUiEnabled() && Boolean(user)
 
   useEffect(() => {
     if (isGuideActive && !isDragging && guideTargetPosition) {
@@ -370,6 +380,10 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     setShowBubble(false)
   }, [setShowBubble])
 
+  const closeAskPanel = useCallback(() => {
+    setAskOpen(false)
+  }, [])
+
   const handleNextStep = useCallback(() => {
     if (guideState?.isActive) {
       nextStep()
@@ -495,6 +509,15 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                           Next
                         </button>
                       )}
+                      {dishaAvailable && (
+                        <button
+                          type="button"
+                          className="text-xs font-medium text-orange-600 hover:text-orange-700 pointer-events-auto transition-colors dark:text-orange-400 dark:hover:text-orange-300"
+                          onClick={() => setAskOpen(true)}
+                        >
+                          Ask Disha
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -511,6 +534,8 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
           className="select-none drop-shadow-lg"
         />
       </motion.div>
+
+      {dishaAvailable && <DishaAskPanel open={askOpen} onClose={closeAskPanel} />}
     </div>
   )
 }

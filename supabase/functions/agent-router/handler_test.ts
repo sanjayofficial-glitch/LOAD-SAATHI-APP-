@@ -666,3 +666,492 @@ Deno.test("upstream database failures surface as sanitized 502s (no body or secr
   assert(errorShape.includes("row array"), "payload-shape reason expected");
   assert(!errorShape.includes("rows"), "payload keys must not leak");
 });
+
+// ---------------------------------------------------------------------------
+// Disha (opt-in) — the bounded, read-only workflow wired into the router.
+// Everything below reuses the helpers above; only the fetch stub is new: it
+// routes by URL so one implementation can serve BOTH the LLM providers and
+// PostgREST, and records which side was called (the read-only guarantee).
+// ---------------------------------------------------------------------------
+
+interface OutboundCall {
+  url: string;
+  method: string;
+  headers: Record<string, string>;
+  body: string;
+}
+
+function routingFetch(route: {
+  llm?: (call: OutboundCall, index: number) => Response;
+  db?: (call: OutboundCall, index: number) => Response;
+}): { fetchImpl: typeof fetch; llmCalls: OutboundCall[]; dbCalls: OutboundCall[] } {
+  const llmCalls: OutboundCall[] = [];
+  const dbCalls: OutboundCall[] = [];
+  const fetchImpl = (async (input: unknown, init?: RequestInit) => {
+    const call: OutboundCall = {
+      url: String(input),
+      method: init?.method ?? "GET",
+      headers: (init?.headers ?? {}) as Record<string, string>,
+      body: typeof init?.body === "string" ? init.body : "",
+    };
+    if (call.url.startsWith(TEST_SUPABASE_URL)) {
+      dbCalls.push(call);
+      return route.db
+        ? route.db(call, dbCalls.length - 1)
+        : okJsonResponse([ROW]);
+    }
+    llmCalls.push(call);
+    if (!route.llm) throw new Error(`unexpected outbound LLM call: ${call.url}`);
+    return route.llm(call, llmCalls.length - 1);
+  }) as unknown as typeof fetch;
+  return { fetchImpl, llmCalls, dbCalls };
+}
+
+function geminiText(text: string): Response {
+  return okJsonResponse({
+    candidates: [{ content: { parts: [{ text }] } }],
+  });
+}
+
+const DISHA_ENV = { ...authEnv(), GEMINI_API_KEY: "test-gemini-key-not-real" };
+const DISHA_MESSAGE = "ship chemicals from Mumbai to Surat before Friday";
+
+Deno.test("Disha stays behind the server kill switch even when the client asks", async () => {
+  const { fetchImpl, llmCalls, dbCalls } = routingFetch({});
+  const res = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token: await mintToken() }),
+    { env: envOf({}), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 200, `expected 200, got ${res.status}`);
+  const body = await res.json() as Record<string, unknown>;
+  assert(body.enabled === false, "kill switch must report disabled");
+  assert(body.phase === 1, "disabled response keeps phase 1");
+  assert(!("disha" in body), "no disha block while disabled");
+  assert(llmCalls.length === 0 && dbCalls.length === 0, "no outbound calls while disabled");
+});
+
+Deno.test("requests without disha are byte-identical legacy responses (no disha key)", async () => {
+  const token = await mintToken();
+  const { fetchImpl, llmCalls } = routingFetch({});
+
+  // Legacy no-tool path.
+  const noTool = await handleAgentRouter(
+    makeRequest({ body: { message: "hi" }, token }),
+    { env: envOf(), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  const noToolBody = await noTool.json() as Record<string, unknown>;
+  assert(noToolBody.tool === null, "legacy no-tool response unchanged");
+  assert(!("disha" in noToolBody), "legacy no-tool body must not grow a disha key");
+
+  // Legacy search path.
+  const search = await handleAgentRouter(
+    makeRequest({ body: { message: "hi", filters: { origin: "Mumbai" } }, token }),
+    { env: envOf(), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  const searchBody = await search.json() as Record<string, unknown>;
+  assert(searchBody.tool === "search_market", "legacy search unchanged");
+  assert(!("disha" in searchBody), "legacy search body must not grow a disha key");
+  assert(search.headers.get("X-Freddy-Phase") === "2", "phase header unchanged");
+  assert(llmCalls.length === 0, "the legacy path must never call a model");
+});
+
+Deno.test("a non-boolean disha value is rejected by the strict contract", async () => {
+  const token = await mintToken();
+  for (const disha of ["yes", 1, ["true"], { enabled: true }]) {
+    const res = await handleAgentRouter(
+      makeRequest({ body: { message: "hi", disha }, token }),
+      { env: envOf(), checkRateLimitImpl: () => true },
+    );
+    assert(res.status === 400, `disha=${JSON.stringify(disha)} must be a 400`);
+    const error = assertErrorResponseSize(await res.json(), "disha type");
+    assert(error.includes('"disha"'), "the field must be named in the error");
+  }
+});
+
+Deno.test("disha does not widen the body contract (unknown fields still rejected)", async () => {
+  const res = await handleAgentRouter(
+    makeRequest({
+      body: { message: "hi", disha: true, status: "all", limit: 999 },
+      token: await mintToken(),
+    }),
+    { env: envOf(), checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 400, `expected 400, got ${res.status}`);
+  const error = assertErrorResponseSize(await res.json(), "unknown fields");
+  assert(error.includes("Unknown body fields"), "unknown-field error expected");
+});
+
+Deno.test("Disha happy path: analyst -> one read-only search -> coordinator", async () => {
+  const token = await mintToken();
+  let llmIndex = 0;
+  const { fetchImpl, llmCalls, dbCalls } = routingFetch({
+    llm: () => {
+      llmIndex += 1;
+      // Call 1 = shipment analyst; call 2 = disha coordinator.
+      return llmIndex === 1
+        ? geminiText('{"origin":"Mumbai","destination":"Surat"}')
+        : geminiText("2 trips matched Mumbai -> Surat, departing 2026-10-21.");
+    },
+  });
+  const res = await handleAgentRouter(
+    makeRequest({
+      body: { message: DISHA_MESSAGE, disha: true },
+      token,
+      xfwd: "203.0.113.50",
+    }),
+    { env: envOf(DISHA_ENV), fetchImpl, checkRateLimitImpl: rateLimitRecorder().impl },
+  );
+
+  assert(res.status === 200, `expected 200, got ${res.status}`);
+  assert(res.headers.get("X-Freddy-Phase") === "2", "legacy phase header preserved");
+  const body = await res.json() as Record<string, unknown>;
+
+  // Legacy trio intact.
+  assert(body.ok === true && body.phase === 2, "legacy ok/phase preserved");
+  assert(body.tool === "search_market", "legacy tool preserved");
+  assert(body.count === 1 && body.limit === 50, "legacy count/limit preserved");
+  assert(Array.isArray(body.loads) && (body.loads as unknown[]).length === 1, "legacy loads preserved");
+  assert(typeof body.requestId === "string", "legacy requestId preserved");
+
+  // Exactly two model calls and exactly one database call.
+  assert(llmCalls.length === 2, `expected 2 LLM calls, got ${llmCalls.length}`);
+  assert(dbCalls.length === 1, `expected 1 database call, got ${dbCalls.length}`);
+
+  // The one database call: read-only, exact path, caller JWT, RLS untouched.
+  const db = dbCalls[0];
+  assert(db.method === "GET", "the only database call must be GET");
+  const url = new URL(db.url);
+  assert(url.pathname === "/rest/v1/trips", `unexpected path ${url.pathname}`);
+  assert(
+    db.headers["Authorization"] === `Bearer ${token}`,
+    "the caller's verified JWT must be the bearer",
+  );
+  assert(db.headers["apikey"] === TEST_ANON_KEY, "anon key must be the apikey");
+  assert(!JSON.stringify(db).toLowerCase().includes("service_role"), "no service-role key");
+  assert(
+    url.searchParams.get("origin_city") === "ilike.%Mumbai%" &&
+      url.searchParams.get("destination_city") === "ilike.%Surat%",
+    "extracted filters must reach the tool",
+  );
+  for (const call of llmCalls) {
+    assert(
+      call.url.startsWith("https://generativelanguage.googleapis.com"),
+      `model call must stay on the provider chain, got ${call.url}`,
+    );
+    assert(call.method === "POST", "LLM calls are POST");
+  }
+
+  // Disha block: completed, model explanation, public rows only.
+  const disha = body.disha as Record<string, unknown>;
+  assert(disha.status === "completed", `status ${disha.status}`);
+  assert(disha.intent === "route_search", "route intent expected");
+  assert(
+    JSON.stringify(disha.missing) ===
+      JSON.stringify(["min_capacity_tonnes", "max_price_per_tonne"]),
+    "missing fields expected",
+  );
+  assert(disha.explanationSource === "model", "model explanation expected");
+  assert(disha.provider === "Gemini", `provider ${disha.provider}`);
+  assert(
+    typeof disha.explanation === "string" &&
+      disha.explanation.includes("2 trips matched"),
+    "the explanation must be the coordinator's answer",
+  );
+  const rows = disha.rows as Array<Record<string, unknown>>;
+  assert(rows.length === 1, "rows shown beside the explanation");
+  const rowKeys = Object.keys(rows[0]).sort().join(",");
+  assert(
+    rowKeys ===
+      "capacity_tonnes,departure_date,destination,distance_km,duration_min,origin,price_per_tonne,vehicle_type",
+    `unexpected public row shape: ${rowKeys}`,
+  );
+  assert(!("id" in rows[0]) && !("trucker_id" in rows[0]) && !("trucker" in rows[0]),
+    "rows must not expose ids or names");
+
+  // Trace: 6 events, ordered started-before-terminal, positive durations.
+  const trace = disha.trace as Array<Record<string, unknown>>;
+  assert(trace.length === 6, `expected 6 trace events, got ${trace.length}`);
+  const steps = ["shipment_analyst", "matching_specialist", "disha_coordinator"];
+  steps.forEach((step, index) => {
+    assert(trace[index * 2].step === step && trace[index * 2].status === "started",
+      `started event missing for ${step}`);
+    assert(trace[index * 2 + 1].step === step &&
+      (trace[index * 2 + 1].status === "completed"),
+      `completed event missing for ${step}`);
+    assert(
+      (trace[index * 2 + 1].durationMs as number) >= 0,
+      "duration must be a non-negative number",
+    );
+  });
+
+  // Trace/privacy: no prompt, no token, no raw message, no secret in the block.
+  const dishaJson = JSON.stringify(disha);
+  assert(!dishaJson.includes("chemicals"), "the raw message must not be echoed");
+  assert(!dishaJson.includes("You are the"), "no prompt text in the response");
+  assert(!dishaJson.includes(token) && !dishaJson.includes(TEST_SECRET), "no token/secret");
+  assert(!dishaJson.includes("Ramesh"), "no trucker names in the disha block");
+  assert(!dishaJson.includes(ROW.id), "no trip ids in the disha block");
+});
+
+Deno.test("Disha with no provider keys falls back honestly without searching", async () => {
+  const { fetchImpl, llmCalls, dbCalls } = routingFetch({});
+  const res = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token: await mintToken() }),
+    { env: envOf(), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 200, `expected 200, got ${res.status}`);
+  const body = await res.json() as Record<string, unknown>;
+  const disha = body.disha as Record<string, unknown>;
+  assert(disha.status === "unavailable", `status ${disha.status}`);
+  assert(disha.provider === "none", "no provider may be claimed");
+  assert(disha.rows !== undefined && (disha.rows as unknown[]).length === 0, "no rows");
+  const explanation = disha.explanation as string;
+  assert(explanation.includes("Nothing has been booked."), "no-booking statement");
+  assert(explanation.includes("nothing was searched"), "no-search statement");
+  assert(llmCalls.length === 0 && dbCalls.length === 0, "no outbound calls without keys");
+  const trace = disha.trace as Array<Record<string, unknown>>;
+  assert(trace.length === 4, `expected 4 events (started, failed, 2 skipped), got ${trace.length}`);
+  assert(body.tool === null, "the legacy no-tool field must remain honest (no tool ran)");
+});
+
+Deno.test("Disha analyst failures never reach the database", async () => {
+  const token = await mintToken();
+  const cases: Array<{ name: string; text: string }> = [
+    { name: "garbage", text: "I think you should search everything" },
+    { name: "empty object", text: "{}" },
+    { name: "array", text: "[]" },
+    { name: "non-JSON scalar", text: '"Mumbai"' },
+  ];
+  for (const testCase of cases) {
+    const { fetchImpl, llmCalls, dbCalls } = routingFetch({
+      llm: () => geminiText(testCase.text),
+    });
+    const res = await handleAgentRouter(
+      makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token }),
+      { env: envOf(DISHA_ENV), fetchImpl, checkRateLimitImpl: () => true },
+    );
+    assert(res.status === 200, `${testCase.name}: expected 200, got ${res.status}`);
+    const body = await res.json() as Record<string, unknown>;
+    const disha = body.disha as Record<string, unknown>;
+    assert(disha.status === "failed", `${testCase.name}: status ${disha.status}`);
+    assert(dbCalls.length === 0, `${testCase.name}: the database must not be queried`);
+    assert(llmCalls.length === 1, `${testCase.name}: exactly one model call`);
+    assert(body.tool === null, `${testCase.name}: no tool may be claimed`);
+    assert(
+      (disha.explanation as string).includes("Nothing has been booked."),
+      `${testCase.name}: no-booking statement`,
+    );
+  }
+});
+
+Deno.test("Disha drops unknown and out-of-range model keys before the tool runs", async () => {
+  const token = await mintToken();
+  const { fetchImpl, llmCalls, dbCalls } = routingFetch({
+    llm: (_call, index) =>
+      index === 0
+        ? geminiText(
+          '{"origin":"Mumbai","status":"all","order":"price desc","limit":9999,"select":"*", "min_capacity_tonnes":99999, "destination":"Surat"}',
+        )
+        : geminiText("2 trips matched Mumbai -> Surat."),
+  });
+  const res = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token }),
+    { env: envOf(DISHA_ENV), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 200, `expected 200, got ${res.status}`);
+  const body = await res.json() as Record<string, unknown>;
+  const disha = body.disha as Record<string, unknown>;
+  assert(disha.status === "completed", `status ${disha.status}`);
+
+  assert(dbCalls.length === 1, "exactly one search");
+  const url = new URL(dbCalls[0].url);
+  // "select"/"order"/"limit"/"status" are FIXED parts of the tool's own query;
+  // only the filter columns may vary, and only with allowlisted values.
+  const allowedParams = [
+    "origin_city",
+    "destination_city",
+    "order",
+    "limit",
+    "status",
+    "select",
+  ];
+  for (const key of url.searchParams.keys()) {
+    assert(allowedParams.includes(key), `unexpected tool parameter smuggled: ${key}`);
+  }
+  assert(url.searchParams.get("limit") === "50", "the limit must stay the fixed 50");
+  assert(url.searchParams.get("order") === "departure_date.asc", "ordering must stay fixed");
+  assert(
+    !url.searchParams.toString().includes("99999") &&
+      !url.searchParams.toString().includes("9999"),
+    "out-of-range values must never reach the query",
+  );
+  const missing = disha.missing as string[];
+  assert(missing.includes("min_capacity_tonnes"), "rejected capacity must count as missing");
+  assert(llmCalls.length === 2, "analyst + coordinator only");
+});
+
+Deno.test("Disha search failure returns 502 with an honest disha block", async () => {
+  const token = await mintToken();
+  const { fetchImpl, llmCalls, dbCalls } = routingFetch({
+    llm: () => geminiText('{"origin":"Mumbai"}'),
+    db: () => okJsonResponse({}, 500),
+  });
+  const res = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token }),
+    { env: envOf(DISHA_ENV), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 502, `expected 502, got ${res.status}`);
+  const body = await res.json() as Record<string, unknown>;
+  assertErrorResponseSize(body, "disha search failure");
+  const disha = body.disha as Record<string, unknown>;
+  assert(disha.status === "failed", `status ${disha.status}`);
+  assert((disha.rows as unknown[]).length === 0, "no rows on failure");
+  assert(disha.provider === "none", "no provider claimed");
+  assert(
+    (disha.explanation as string).includes("Nothing has been booked."),
+    "honest fallback text",
+  );
+  const trace = disha.trace as Array<Record<string, unknown>>;
+  assert(trace.length === 5, `expected 5 events, got ${trace.length}`);
+  assert(trace[4].step === "disha_coordinator" && trace[4].status === "skipped",
+    "the coordinator must be reported as skipped");
+  assert(llmCalls.length === 1 && dbCalls.length === 1, "analyst + one failed search only");
+});
+
+Deno.test("Disha with caller-supplied filters skips the model entirely", async () => {
+  const token = await mintToken();
+  const { fetchImpl, llmCalls, dbCalls } = routingFetch({});
+  const res = await handleAgentRouter(
+    makeRequest({
+      body: { message: "hi", filters: { origin: "Mumbai" }, disha: true },
+      token,
+    }),
+    { env: envOf(DISHA_ENV), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 200, `expected 200, got ${res.status}`);
+  assert(res.headers.get("X-Freddy-Phase") === "2", "legacy phase header preserved");
+  const body = await res.json() as Record<string, unknown>;
+
+  // Legacy success shape byte-for-byte.
+  assert(body.ok === true && body.phase === 2, "legacy ok/phase preserved");
+  assert(body.tool === "search_market", "legacy tool preserved");
+  assert(body.count === 1 && body.limit === 50, "legacy count/limit preserved");
+
+  assert(llmCalls.length === 0, "no model call is permitted on the filters path");
+  assert(dbCalls.length === 1, "one read-only search");
+  assert(dbCalls[0].method === "GET" && new URL(dbCalls[0].url).pathname === "/rest/v1/trips",
+    "the only call must be the read-only trips GET");
+
+  const disha = body.disha as Record<string, unknown>;
+  assert(disha.status === "skipped", `status ${disha.status}`);
+  assert(disha.provider === "none", "no model ran, so no provider");
+  assert(disha.explanationSource === "deterministic", "only the deterministic text exists");
+  const trace = disha.trace as Array<Record<string, unknown>>;
+  assert(trace.length === 4, `expected 4 events, got ${trace.length}`);
+  assert(trace[0].status === "skipped", "the analyst must be reported as skipped");
+  assert(trace[3].status === "skipped", "the coordinator must be reported as skipped");
+  const rows = disha.rows as Array<Record<string, unknown>>;
+  assert(rows.length === 1 && !("id" in rows[0]), "rows still use the public projection");
+});
+
+Deno.test("Disha falls back to the deterministic explanation when the coordinator misbehaves", async () => {
+  const token = await mintToken();
+  const { fetchImpl, llmCalls } = routingFetch({
+    llm: (_call, index) =>
+      index === 0
+        ? geminiText('{"origin":"Mumbai","destination":"Surat"}')
+        : geminiText("The best trip is the first one: book it now before Friday."),
+  });
+  const res = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token }),
+    { env: envOf(DISHA_ENV), fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 200, `expected 200, got ${res.status}`);
+  const body = await res.json() as Record<string, unknown>;
+  const disha = body.disha as Record<string, unknown>;
+  assert(disha.status === "completed", "the request still completes");
+  assert(disha.explanationSource === "deterministic", "the model answer must be rejected");
+  assert(disha.provider === "none", "no provider may be credited for a rejected answer");
+  const explanation = disha.explanation as string;
+  assert(explanation.includes("not a ranking"), "the deterministic fallback must be used");
+  assert(!/best/i.test(explanation), "no ranking claim may reach the user");
+  assert(!explanation.includes("https://"), "no link may reach the user");
+  assert(llmCalls.length === 2, "the coordinator was still attempted exactly once");
+  const trace = disha.trace as Array<Record<string, unknown>>;
+  assert(
+    (trace[5].summary as string).includes("ranking_claim"),
+    `rejection reason must be traced, got: ${trace[5].summary}`,
+  );
+});
+
+Deno.test("Disha degrades honestly on provider outage and timeout", async () => {
+  const token = await mintToken();
+  const failures: Array<{ name: string; impl: typeof fetch }> = [
+    {
+      name: "outage",
+      impl: (async () => {
+        throw new TypeError("connection refused");
+      }) as unknown as typeof fetch,
+    },
+    {
+      name: "timeout",
+      impl: (async () => {
+        throw new DOMException("The operation was aborted.", "AbortError");
+      }) as unknown as typeof fetch,
+    },
+  ];
+  for (const failure of failures) {
+    const { dbCalls } = routingFetch({});
+    const res = await handleAgentRouter(
+      makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token }),
+      { env: envOf(DISHA_ENV), fetchImpl: failure.impl, checkRateLimitImpl: () => true },
+    );
+    assert(res.status === 200, `${failure.name}: expected 200, got ${res.status}`);
+    const body = await res.json() as Record<string, unknown>;
+    const disha = body.disha as Record<string, unknown>;
+    assert(disha.status === "failed", `${failure.name}: status ${disha.status}`);
+    assert(disha.provider === "none", `${failure.name}: no provider claimed`);
+    assert(dbCalls.length === 0, `${failure.name}: nothing may be searched`);
+    const explanation = disha.explanation as string;
+    assert(explanation.includes("Nothing has been booked."), `${failure.name}: no-booking`);
+    assert(
+      !JSON.stringify(disha).includes("connection refused") &&
+        !JSON.stringify(disha).includes("aborted"),
+      `${failure.name}: raw failure text must not leak into the block`,
+    );
+  }
+});
+
+Deno.test("Disha shares the legacy auth, rate limit and contract gates", async () => {
+  // 401 without a token: no model call may happen before authentication.
+  const noAuth = routingFetch({});
+  const res401 = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true } }),
+    { env: envOf(), fetchImpl: noAuth.fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res401.status === 401, `expected 401, got ${res401.status}`);
+  assert(noAuth.llmCalls.length === 0 && noAuth.dbCalls.length === 0,
+    "no outbound calls before auth");
+
+  // 429 when the rate limiter rejects: same guarantee.
+  const limited = routingFetch({});
+  const res429 = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token: await mintToken() }),
+    { env: envOf(), fetchImpl: limited.fetchImpl, checkRateLimitImpl: () => false },
+  );
+  assert(res429.status === 429, `expected 429, got ${res429.status}`);
+  assert(limited.llmCalls.length === 0 && limited.dbCalls.length === 0,
+    "no outbound calls when rate limited");
+
+  // Missing marketplace configuration fails closed before any model call.
+  const brokenEnv = authEnv();
+  delete brokenEnv.SUPABASE_URL;
+  const noConfig = routingFetch({});
+  const res500 = await handleAgentRouter(
+    makeRequest({ body: { message: DISHA_MESSAGE, disha: true }, token: await mintToken() }),
+    { env: envOf(brokenEnv), fetchImpl: noConfig.fetchImpl, checkRateLimitImpl: () => true },
+  );
+  assert(res500.status === 500, `expected 500, got ${res500.status}`);
+  assert(noConfig.llmCalls.length === 0, "config must be checked before any model call");
+});
+

@@ -19,6 +19,7 @@ import {
 import {
   Radio,
   RefreshCw,
+  Bot,
   Truck,
   Package,
   Activity,
@@ -38,6 +39,7 @@ import { cn } from '@/lib/utils';
 import CommandCenterMap from './CommandCenterMap';
 import type { RouteTrip, RouteShipment } from './CommandCenterMap';
 import CommandRail from './CommandRail';
+import AgentOrgPanel from './AgentOrgPanel';
 import KPICard from './KPICard';
 import type { KPITone } from './KPICard';
 import AlertPanel from './AlertPanel';
@@ -166,6 +168,9 @@ export default function CommandCenterPage() {
   const [selectedLoad, setSelectedLoad] = useState<LoadLocation | null>(null);
   const [railOpen, setRailOpen] = useState(true);
   const [mobileTab, setMobileTab] = useState<MobileTab>('map');
+  // AI Agents view: a static org chart overlay on the map pane. Opening it
+  // also forces the map tab so the overlay is visible on small screens.
+  const [agentsOpen, setAgentsOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     // Open the sections that represent live operational state by default — the
     // rail should read as a status board, not a list of closed drawers.
@@ -759,6 +764,21 @@ export default function CommandCenterPage() {
           <Button
             variant="outline"
             size="sm"
+            aria-label={agentsOpen ? 'Hide AI agents' : 'Show AI agents'}
+            aria-pressed={agentsOpen}
+            title={agentsOpen ? 'Hide AI agents' : 'Show AI agents'}
+            className="h-8 w-8 p-0 border-gray-200"
+            onClick={() => {
+              setAgentsOpen((open) => !open);
+              // The overlay lives on the map pane — make sure that pane is visible.
+              setMobileTab('map');
+            }}
+          >
+            <Bot className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             aria-label={railOpen ? 'Hide side panel' : 'Show side panel'}
             title={railOpen ? 'Hide side panel' : 'Show side panel'}
             className={cn('h-8 w-8 p-0 border-gray-200 hidden lg:inline-flex')}
@@ -823,6 +843,10 @@ export default function CommandCenterPage() {
             trips={routeData?.trips ?? []}
             shipments={routeData?.shipments ?? []}
           />
+
+          {/* AI Agents view — static org chart + honest Disha request status.
+              Overlay only: opening it never changes what the map is doing. */}
+          {agentsOpen && <AgentOrgPanel onClose={() => setAgentsOpen(false)} />}
 
           {/* Map legend */}
           <div className="absolute bottom-3 left-3 z-[1000] flex flex-wrap items-center gap-2">

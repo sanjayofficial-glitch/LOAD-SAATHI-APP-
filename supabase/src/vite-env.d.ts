@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_POSTHOG_API_KEY: string;
   readonly VITE_POSTHOG_HOST: string;
   readonly VITE_ADMIN_USER_ID?: string;
+  readonly VITE_DISHA_UI?: string;
 }
 
 interface ImportMeta {

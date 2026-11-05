@@ -51,6 +51,31 @@ import {
 } from "../_shared/searchMarket.ts";
 import type { SearchMarketOutcome } from "../_shared/searchMarket.ts";
 import { verifyClerkJwt } from "../_shared/verifyClerkJwt.ts";
+import { llmChat } from "../_shared/llmChat.ts";
+import {
+  analystFailureSummary,
+  analystProviderFailureSummary,
+  buildAnalystPrompt,
+  buildExplanationPrompt,
+  classifyIntent,
+  coordinatorFailureSummary,
+  createDishaTrace,
+  deterministicExplanation,
+  missingFilterFields,
+  noFiltersExplanation,
+  parseAnalystOutput,
+  providerUnavailableExplanation,
+  sanitizeExplanation,
+  toDishaRows,
+} from "../_shared/dishaWorkflow.ts";
+import type {
+  DishaIntent,
+  DishaRow,
+  DishaStepEvent,
+  DishaTrace,
+  MissingFilterKey,
+} from "../_shared/dishaWorkflow.ts";
+import { EXPLANATION_MAX_ROWS } from "../_shared/dishaWorkflow.ts";
 
 const MAX_MESSAGE_LENGTH = 2_000;
 const MAX_BODY_BYTES = 16 * 1024;
@@ -66,6 +91,8 @@ interface AgentRouterBody {
   message: string;
   sessionId?: string;
   filters?: unknown;
+  /** Opt-in Disha workflow flag. Absent/legacy clients are unaffected. */
+  disha?: unknown;
 }
 
 export interface AgentRouterDeps {
@@ -194,11 +221,13 @@ export async function handleAgentRouter(
     return errorResponse("Malformed JSON body.", 400, headers, requestId);
   }
 
-  // Strict contract: exactly { message, sessionId?, filters? }. Extra keys are
-  // rejected so the tool surface cannot be smuggled around its validator.
+  // Strict contract: exactly { message, sessionId?, filters?, disha? }. Extra
+  // keys are rejected so the tool surface cannot be smuggled around its
+  // validator. "disha" is additive: it only opts INTO the model path and can
+  // never widen what the tool itself may do.
   if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
     return errorResponse(
-      'Body must be a JSON object with "message" (string) and optional "sessionId" (string) and optional "filters" (object).',
+      'Body must be a JSON object with "message" (string) and optional "sessionId" (string), optional "filters" (object) and optional "disha" (boolean).',
       400,
       headers,
       requestId,
@@ -207,11 +236,11 @@ export async function handleAgentRouter(
 
   const keys = Object.keys(parsed as Record<string, unknown>);
   const hasUnknownKey = keys.some(
-    (k) => k !== "message" && k !== "sessionId" && k !== "filters",
+    (k) => k !== "message" && k !== "sessionId" && k !== "filters" && k !== "disha",
   );
   if (hasUnknownKey) {
     return errorResponse(
-      'Unknown body fields. Only "message", optional "sessionId" and optional "filters" are accepted.',
+      'Unknown body fields. Only "message", optional "sessionId", optional "filters" and optional "disha" are accepted.',
       400,
       headers,
       requestId,
@@ -245,11 +274,40 @@ export async function handleAgentRouter(
     }
   }
 
+  // "disha" opts INTO the bounded model workflow. Absent or null means "off",
+  // so a client that never sends it takes the exact legacy path below. It is
+  // validated as a boolean so a smuggled object/array can never reach the
+  // model branch.
+  if (
+    body.disha !== undefined &&
+    body.disha !== null &&
+    typeof body.disha !== "boolean"
+  ) {
+    return errorResponse('"disha" must be a boolean when present.', 400, headers, requestId);
+  }
+  const dishaRequested = body.disha === true;
+
   // ---------------------------------------------------------------------------
-  // Phase 2: the deterministic search_market tool step. No model layer exists;
-  // "message" is never interpreted — only explicit tool arguments run.
+  // Phase 2: the deterministic search_market tool step. "message" is never
+  // interpreted by the legacy path — only explicit tool arguments run. The
+  // Disha path below is strictly opt-in via "disha": true and can only ever
+  // call the same one read-only tool.
   // ---------------------------------------------------------------------------
   const phaseHeaders = { ...headers, "X-Freddy-Phase": "2" };
+
+  // Disha full workflow: opt-in AND no caller-supplied filters. With caller
+  // filters the legacy path runs unchanged and only a "disha" block is added
+  // to the response (see the exits further down).
+  if (dishaRequested && (body.filters === undefined || body.filters === null)) {
+    return await runDishaWorkflow({
+      message,
+      token,
+      env,
+      fetchImpl: deps.fetchImpl,
+      requestId,
+      headers: phaseHeaders,
+    });
+  }
 
   // With no tool arguments there is nothing this endpoint can execute
   // deterministically: it does NOT guess intent from "message" and does NOT
@@ -292,21 +350,87 @@ export async function handleAgentRouter(
 
   // The caller's VERIFIED JWT is the database identity (Authorization bearer)
   // — RLS stays authoritative. NEVER pass the service-role key here.
+  // Trace is built ONLY when the caller opted in, so a legacy client's
+  // response stays byte-identical to Phase 2.
+  const dishaTrace: DishaTrace | null = dishaRequested ? createDishaTrace() : null;
+  const checkedAt = dishaRequested ? new Date().toISOString() : "";
+  if (dishaTrace) {
+    dishaTrace.skip(
+      "shipment_analyst",
+      "Skipped: filters were supplied by the caller.",
+    );
+    dishaTrace.begin("matching_specialist");
+  }
+
   const outcome: SearchMarketOutcome = await searchMarket(
     { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token },
     validated.filters,
     { fetchImpl: deps.fetchImpl },
   );
+
   if (!outcome.ok) {
     // The reason is already sanitized by the tool (HTTP status at most; no
     // bodies, secrets, tokens, or SQLSTATE). Upstream/tool failures are
     // reported as 502 — a server-side fault, not a client-input fault.
-    return errorResponse(outcome.reason, 502, phaseHeaders, requestId);
+    if (!dishaTrace) {
+      return errorResponse(outcome.reason, 502, phaseHeaders, requestId);
+    }
+    dishaTrace.end(
+      "matching_specialist",
+      "failed",
+      `Marketplace search failed: ${outcome.reason}`,
+    );
+    dishaTrace.skip("disha_coordinator", "Skipped: no rows to explain.");
+    return new Response(
+      JSON.stringify({
+        error: outcome.reason,
+        requestId,
+        disha: buildDishaBlock({
+          status: "failed",
+          intent: classifyIntent(validated.filters),
+          missing: missingFilterFields(validated.filters),
+          rows: [],
+          explanation:
+            "The marketplace search did not complete, so there are no rows to explain. Nothing has been booked.",
+          explanationSource: "deterministic",
+          provider: "none",
+          checkedAt,
+          trace: dishaTrace.events,
+        }),
+      }),
+      { status: 502, headers: phaseHeaders },
+    );
   }
 
-  // Stable success shape grounded in tool output only: "count" is the number
-  // of returned rows (never a marketplace total) and "limit" is the fixed
-  // 50-row cap, so no response can imply more results than were fetched.
+  if (!dishaTrace) {
+    // Stable success shape grounded in tool output only: "count" is the number
+    // of returned rows (never a marketplace total) and "limit" is the fixed
+    // 50-row cap, so no response can imply more results than were fetched.
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        phase: 2,
+        tool: "search_market",
+        count: outcome.count,
+        limit: outcome.limit,
+        loads: outcome.loads,
+        requestId,
+      }),
+      { status: 200, headers: phaseHeaders },
+    );
+  }
+
+  // Opt-in path: same legacy body as above, plus a Disha block that honestly
+  // reports which steps were skipped (no model ran, so no explanation exists).
+  dishaTrace.end(
+    "matching_specialist",
+    "completed",
+    `Returned ${outcome.count} row(s) of up to ${outcome.limit} checked.`,
+  );
+  dishaTrace.skip(
+    "disha_coordinator",
+    "Skipped: caller-supplied filters skip the model explanation.",
+  );
   return new Response(
     JSON.stringify({
       ok: true,
@@ -316,7 +440,324 @@ export async function handleAgentRouter(
       limit: outcome.limit,
       loads: outcome.loads,
       requestId,
+      disha: buildDishaBlock({
+        status: "skipped",
+        intent: classifyIntent(validated.filters),
+        missing: missingFilterFields(validated.filters),
+        rows: toDishaRows(outcome.loads),
+        explanation:
+          "Filters were supplied with the request, so Disha produced no explanation: the returned rows are the raw marketplace result. Nothing has been booked.",
+        explanationSource: "deterministic",
+        provider: "none",
+        checkedAt,
+        trace: dishaTrace.events,
+      }),
     }),
     { status: 200, headers: phaseHeaders },
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Disha (opt-in) — the bounded, read-only three-step workflow.
+//
+// Pipeline order is preserved: kill switch -> method -> rate limit -> bearer ->
+// auth config -> verifyClerkJwt -> content type -> body size -> JSON ->
+// strict contract -> [disha config check -> shipment_analyst ->
+// matching_specialist -> disha_coordinator].
+//
+// Guarantees encoded here:
+// - Exactly ONE tool runs, and it is the existing read-only searchMarket()
+//   called with the caller's verified JWT (RLS stays authoritative). No SQL,
+//   no arbitrary table/URL/tool, no service-role key, no writes.
+// - At most TWO model calls per request (analyst + coordinator), both bounded
+//   by llmChat. Provider absence/failure never throws and never invents rows:
+//   it degrades to a deterministic answer over the REAL rows returned.
+// - The response keeps the legacy trio (ok/phase/tool ... requestId) and adds
+//   an additive "disha" block. The trace is returned once, after completion.
+// - The raw user message is never logged.
+// ---------------------------------------------------------------------------
+
+type DishaStatus = "completed" | "failed" | "unavailable" | "skipped";
+
+interface DishaBlockInput {
+  status: DishaStatus;
+  intent: DishaIntent;
+  missing: MissingFilterKey[];
+  rows: DishaRow[];
+  explanation: string;
+  explanationSource: "model" | "deterministic";
+  provider: string;
+  checkedAt: string;
+  trace: DishaStepEvent[];
+}
+
+function buildDishaBlock(input: DishaBlockInput): Record<string, unknown> {
+  return {
+    status: input.status,
+    intent: input.intent,
+    missing: input.missing,
+    rows: input.rows,
+    explanation: input.explanation,
+    explanationSource: input.explanationSource,
+    provider: input.provider,
+    checkedAt: input.checkedAt,
+    trace: input.trace,
+  };
+}
+
+/**
+ * Legacy no-tool body (byte-for-byte the Phase 2 response) plus the additive
+ * Disha block, for the cases where no search ran at all.
+ */
+function dishaNoToolResponse(input: {
+  status: DishaStatus;
+  intent: DishaIntent;
+  missing: MissingFilterKey[];
+  explanation: string;
+  provider: string;
+  checkedAt: string;
+  trace: DishaStepEvent[];
+  requestId: string;
+  headers: Record<string, string>;
+}): Response {
+  return new Response(
+    JSON.stringify({
+      ok: true,
+      phase: 2,
+      tool: null,
+      detail:
+        "No tool arguments were supplied. Provide 'filters' to run search_market.",
+      requestId: input.requestId,
+      disha: buildDishaBlock({
+        status: input.status,
+        intent: input.intent,
+        missing: input.missing,
+        rows: [],
+        explanation: input.explanation,
+        explanationSource: "deterministic",
+        provider: input.provider,
+        checkedAt: input.checkedAt,
+        trace: input.trace,
+      }),
+    }),
+    { status: 200, headers: input.headers },
+  );
+}
+
+async function runDishaWorkflow(input: {
+  message: string;
+  token: string;
+  env: (name: string) => string | undefined;
+  fetchImpl?: typeof fetch;
+  requestId: string;
+  headers: Record<string, string>;
+}): Promise<Response> {
+  const { message, token, env, fetchImpl, requestId, headers } = input;
+  const trace = createDishaTrace();
+  const checkedAt = new Date().toISOString();
+  const llmOptions = { env, fetchImpl };
+
+  // Marketplace configuration is mandatory and fail-closed, checked BEFORE
+  // any model call — same rule as the legacy path. The service-role key is
+  // intentionally never read anywhere in this file.
+  const supabaseUrl = env("SUPABASE_URL") ?? "";
+  const supabaseAnonKey = env("SUPABASE_ANON_KEY") ?? "";
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error(
+      `[${requestId}] agent-router: required marketplace configuration missing (SUPABASE_URL / SUPABASE_ANON_KEY)`,
+    );
+    return errorResponse("Server configuration error.", 500, headers, requestId);
+  }
+
+  // --- Step 1: shipment analyst -----------------------------------------
+  trace.begin("shipment_analyst");
+  const analyst = await llmChat(buildAnalystPrompt(message), llmOptions);
+  if (!analyst.ok) {
+    // No key, every key rate limited, or every provider errored. Honest
+    // degradation: nothing was searched and no row is invented.
+    trace.end(
+      "shipment_analyst",
+      "failed",
+      analystProviderFailureSummary(analyst.reason),
+    );
+    trace.skip("matching_specialist", "Skipped: no filters were extracted.");
+    trace.skip("disha_coordinator", "Skipped: nothing was searched.");
+    return dishaNoToolResponse({
+      status: analyst.reason === "not_configured" ? "unavailable" : "failed",
+      intent: "unconstrained",
+      missing: missingFilterFields({}),
+      explanation: providerUnavailableExplanation(analyst.reason),
+      provider: "none",
+      checkedAt,
+      trace: trace.events,
+      requestId,
+      headers,
+    });
+  }
+
+  const parsed = parseAnalystOutput(analyst.text);
+  if (!parsed.ok) {
+    trace.end(
+      "shipment_analyst",
+      "failed",
+      analystFailureSummary(parsed.reason),
+    );
+    trace.skip("matching_specialist", "Skipped: no filters were extracted.");
+    trace.skip("disha_coordinator", "Skipped: nothing was searched.");
+    const missing = missingFilterFields({});
+    return dishaNoToolResponse({
+      status: "failed",
+      intent: "unconstrained",
+      missing,
+      explanation: noFiltersExplanation(missing),
+      provider: "none",
+      checkedAt,
+      trace: trace.events,
+      requestId,
+      headers,
+    });
+  }
+
+  const filters = parsed.filters;
+  const missing = missingFilterFields(filters);
+  const filterKeys = Object.keys(filters);
+
+  // At least one filter is required: a broad, unbounded search never runs.
+  if (filterKeys.length === 0) {
+    trace.end(
+      "shipment_analyst",
+      "failed",
+      `No usable filter field found via ${analyst.provider}.`,
+    );
+    trace.skip("matching_specialist", "Skipped: no filters were extracted.");
+    trace.skip("disha_coordinator", "Skipped: nothing was searched.");
+    return dishaNoToolResponse({
+      status: "failed",
+      intent: classifyIntent(filters),
+      missing,
+      explanation: noFiltersExplanation(missing),
+      provider: "none",
+      checkedAt,
+      trace: trace.events,
+      requestId,
+      headers,
+    });
+  }
+
+  // The summary carries field NAMES and the provider — never the user's text.
+  trace.end(
+    "shipment_analyst",
+    "completed",
+    `Extracted ${filterKeys.length} filter field(s): ${filterKeys.join(", ")} via ${analyst.provider}.`,
+  );
+
+  // --- Step 2: matching specialist (the ONE tool) -----------------------
+  trace.begin("matching_specialist");
+  const outcome: SearchMarketOutcome = await searchMarket(
+    { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token },
+    filters,
+    { fetchImpl },
+  );
+
+  if (!outcome.ok) {
+    trace.end(
+      "matching_specialist",
+      "failed",
+      `Marketplace search failed: ${outcome.reason}`,
+    );
+    trace.skip("disha_coordinator", "Skipped: no rows to explain.");
+    return new Response(
+      JSON.stringify({
+        error: outcome.reason,
+        requestId,
+        disha: buildDishaBlock({
+          status: "failed",
+          intent: classifyIntent(filters),
+          missing,
+          rows: [],
+          explanation:
+            "The marketplace search did not complete, so there are no rows to explain. Nothing has been booked.",
+          explanationSource: "deterministic",
+          provider: "none",
+          checkedAt,
+          trace: trace.events,
+        }),
+      }),
+      { status: 502, headers },
+    );
+  }
+
+  trace.end(
+    "matching_specialist",
+    "completed",
+    `Returned ${outcome.count} row(s) of up to ${outcome.limit} checked.`,
+  );
+
+  // --- Step 3: Disha coordinator ----------------------------------------
+  trace.begin("disha_coordinator");
+  const rows = toDishaRows(outcome.loads);
+  const fallback = deterministicExplanation({
+    filters,
+    missing,
+    rows,
+    limit: outcome.limit,
+  });
+  let explanation = fallback;
+  let explanationSource: "model" | "deterministic" = "deterministic";
+  let provider = "none";
+
+  const coordinator = await llmChat(
+    buildExplanationPrompt({ filters, missing, rows }),
+    llmOptions,
+  );
+  if (coordinator.ok) {
+    const sanitized = sanitizeExplanation(coordinator.text);
+    if (sanitized.ok) {
+      explanation = sanitized.text;
+      explanationSource = "model";
+      provider = coordinator.provider;
+      trace.end(
+        "disha_coordinator",
+        "completed",
+        `Explained ${Math.min(rows.length, EXPLANATION_MAX_ROWS)} row(s) via ${coordinator.provider}.`,
+      );
+    } else {
+      trace.end(
+        "disha_coordinator",
+        "completed",
+        `Model answer rejected (${sanitized.reason}); used the deterministic summary.`,
+      );
+    }
+  } else {
+    trace.end(
+      "disha_coordinator",
+      "completed",
+      coordinatorFailureSummary(coordinator.reason),
+    );
+  }
+
+  // Legacy trio preserved; the Disha block is additive.
+  return new Response(
+    JSON.stringify({
+      ok: true,
+      phase: 2,
+      tool: "search_market",
+      count: outcome.count,
+      limit: outcome.limit,
+      loads: outcome.loads,
+      requestId,
+      disha: buildDishaBlock({
+        status: "completed",
+        intent: classifyIntent(filters),
+        missing,
+        rows,
+        explanation,
+        explanationSource,
+        provider,
+        checkedAt,
+        trace: trace.events,
+      }),
+    }),
+    { status: 200, headers },
   );
 }
