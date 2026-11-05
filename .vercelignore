@@ -1,0 +1,21 @@
+# Heavy / non-deployable directories
+node_modules
+dist
+.git
+.github
+android
+screenshots
+Blogs
+demo-video
+graphify-out
+logs
+plans
+.agents
+.claude
+.claude-flow
+.freebuff
+.kilo
+.memory
+.opencode
+.swarm
+.vercel
