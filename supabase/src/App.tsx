@@ -1,5 +1,6 @@
 import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MotionConfig } from "framer-motion";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LocationProvider } from "@/contexts/LocationContext";
 import { ProductTourProvider } from "@/contexts/ProductTourContext";
@@ -114,8 +115,9 @@ function App() {
   }
 
   return (
-    <ErrorBoundary>
-      <PostHogProvider>
+    <MotionConfig reducedMotion="user">
+      <ErrorBoundary>
+        <PostHogProvider>
         <BrowserRouter>
           <ClerkProviderWithRouter>
             <QueryClientProvider client={queryClient}>
@@ -143,7 +145,8 @@ function App() {
           </ClerkProviderWithRouter>
         </BrowserRouter>
       </PostHogProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </MotionConfig>
   );
 }
 

@@ -149,10 +149,10 @@ class FreddyAI {
     }
   }
 
-  async ask(question: string, context?: string): Promise<AIResponse> {
+  async ask(question: string, context?: string, lang: "en" | "hi" = "en"): Promise<AIResponse> {
     const messages: ChatMessage[] = [
-      { role: 'system', content: this.getSystemPrompt() },
-      { role: 'user', content: this.formatUserQuestion(question, context) },
+      { role: 'system', content: this.getSystemPrompt(lang) },
+      { role: 'user', content: this.formatUserQuestion(question, context, lang) },
     ];
 
     // Try each provider in order
@@ -306,7 +306,10 @@ class FreddyAI {
     };
   }
 
-  private getSystemPrompt(): string {
+  private getSystemPrompt(lang: "en" | "hi" = "en"): string {
+    const languageRule = lang === "hi"
+      ? `- REPLY IN HINDI (Devanagari script). Use simple, friendly Hindi. Keep any page links and numbers as-is.`
+      : `- REPLY IN ENGLISH. Use simple, friendly English.`;
     return `You are Freddy, the friendly AI assistant for LoadSaathi, an Indian freight marketplace platform.
 
 YOUR ROLE:
@@ -316,6 +319,9 @@ YOUR ROLE:
 - Be friendly, helpful, and professional
 - Use simple Hindi/English mix if the user seems more comfortable with that
 - ALWAYS include relevant links to pages when helping users take action
+
+LANGUAGE RULE:
+${languageRule}
 
 IMPORTANT GUIDELINES:
 1. Keep responses concise and actionable
@@ -340,7 +346,7 @@ KEY PAGES TO REFERENCE:
 LoadSaathi is FREE to use for basic features. Users only pay for successful matches/transactions.`;
   }
 
-  private formatUserQuestion(question: string, context?: string): string {
+  private formatUserQuestion(question: string, context?: string, lang: "en" | "hi" = "en"): string {
     let formatted = `Context: ${LOADSAATHI_KNOWLEDGE}\n\n`;
     
     if (context) {
@@ -348,7 +354,9 @@ LoadSaathi is FREE to use for basic features. Users only pay for successful matc
     }
     
     formatted += `User Question: ${question}\n\n`;
-    formatted += `Please provide a helpful, concise answer. Include relevant page links if appropriate. Use friendly language suitable for Indian users.`;
+    formatted += lang === "hi"
+      ? `Please provide a helpful, concise answer IN HINDI (Devanagari script). Include relevant page links if appropriate. Use friendly language suitable for Indian users.`
+      : `Please provide a helpful, concise answer IN ENGLISH. Include relevant page links if appropriate. Use friendly language suitable for Indian users.`;
     
     return formatted;
   }

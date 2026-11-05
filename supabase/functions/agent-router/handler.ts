@@ -2,6 +2,7 @@
 //
 // Capabilities:
 //   - search_market: read-only marketplace trip search (LLM-parsed from natural language)
+//   - search_shipments: read-only open-shipment search for truckers (LLM-parsed)
 //   - credit-insights: explain your Digital Freight Credit Score
 //   - conversation memory: sessionId-scoped context across messages; when
 //     FREDDY_MEMORY_ENABLED=true the store is server-side (freddy_sessions,
@@ -30,8 +31,14 @@ import {
 } from "../_shared/searchMarket.ts";
 import type { MarketLoad, SearchMarketOutcome, SearchMarketFilters } from "../_shared/searchMarket.ts";
 import {
+  searchShipments,
+  validateSearchShipmentsParams,
+} from "../_shared/searchShipments.ts";
+import type { MarketShipment, SearchShipmentsFilters } from "../_shared/searchShipments.ts";
+import {
   parseFreddyIntent,
   isCreditScoreQuery,
+  isShipmentSearchRequest,
 } from "../_shared/freddyIntent.ts";
 import { verifyClerkJwt } from "../_shared/verifyClerkJwt.ts";
 import {
@@ -66,6 +73,7 @@ interface AgentRouterBody {
   sessionId?: string;
   filters?: unknown;
   history?: ChatMessage[];
+  lang?: string;
 }
 
 interface CreditInsightsResult {
@@ -143,7 +151,7 @@ async function fetchCreditInsights(
   fetchImpl: typeof fetch,
   userId: string,
   userName: string,
-): Promise<{ ok: true; data: CreditInsightsResult } | { ok: false; reason: string }> {
+): Promise<{ ok: true; value: CreditInsightsResult } | { ok: false; reason: string }> {
   const result = await withRetry(async () => {
     const res = await fetchImpl(`${supabaseUrl}/functions/v1/credit-insights`, {
       method: "POST",
@@ -161,7 +169,7 @@ async function fetchCreditInsights(
     }
     const data = await res.json();
     return data as CreditInsightsResult;
-  }, "credit-insights", { env: deps.env });
+  }, "credit-insights", { env: undefined });
   return result;
 }
 
@@ -311,11 +319,11 @@ export async function handleAgentRouter(
 
   const keys = Object.keys(parsed as Record<string, unknown>);
   const hasUnknownKey = keys.some(
-    (k) => k !== "message" && k !== "sessionId" && k !== "filters" && k !== "history",
+    (k) => k !== "message" && k !== "sessionId" && k !== "filters" && k !== "history" && k !== "lang",
   );
   if (hasUnknownKey) {
     return errorResponse(
-      'Unknown body fields. Only "message", optional "sessionId", "filters", "history" are accepted.',
+      'Unknown body fields. Only "message", optional "sessionId", "filters", "history", "lang" are accepted.',
       400,
       headers,
       requestId,
@@ -349,6 +357,17 @@ export async function handleAgentRouter(
     }
   }
 
+  const lang = body.lang ?? "en";
+  if (lang !== "en" && lang !== "hi") {
+    return errorResponse(
+      '"lang" must be "en" or "hi" when present.',
+      400,
+      headers,
+      requestId,
+    );
+  }
+  const tr = (en: string, hi: string): string => (lang === "hi" ? hi : en);
+
   // Load conversation history for context. When server-side memory is
   // enabled the store is authoritative; otherwise fall back to the
   // client-provided window.
@@ -374,7 +393,7 @@ export async function handleAgentRouter(
     }
 
     // Look up the user's display name from the JWT claims.
-    const userName = user.email ?? user.sub ?? userId;
+    const userName = user.email ?? userId;
 
     const creditResult = await fetchCreditInsights(
       supabaseUrl,
@@ -391,7 +410,7 @@ export async function handleAgentRouter(
         try {
           await appendSessionHistory(sessionId, [
             { role: "user", content: message },
-            { role: "assistant", content: creditResult.data.summary },
+            { role: "assistant", content: creditResult.value.summary },
           ]);
         } catch {
           // best effort
@@ -404,12 +423,12 @@ export async function handleAgentRouter(
           phase: 2,
           tool: "credit-insights",
           intentSource: "llm",
-          summary: creditResult.data.summary,
-          strengths: creditResult.data.strengths,
-          improvements: creditResult.data.improvements,
-          tips: creditResult.data.tips,
-          projection: creditResult.data.projection,
-          provider: creditResult.data.provider,
+          summary: creditResult.value.summary,
+          strengths: creditResult.value.strengths,
+          improvements: creditResult.value.improvements,
+          tips: creditResult.value.tips,
+          projection: creditResult.value.projection,
+          provider: creditResult.value.provider,
           sessionId,
           requestId,
         }),
@@ -423,7 +442,10 @@ export async function handleAgentRouter(
         ok: true,
         phase: 2,
         tool: null,
-        detail: "Credit insights are temporarily unavailable. Your credit score and factors are visible on your Profile page.",
+        detail: tr(
+          "Credit insights are temporarily unavailable. Your credit score and factors are visible on your Profile page.",
+          "क्रेडिट इनसाइट्स अभी उपलब्ध नहीं हैं। आपका क्रेडिट स्कोर और कारक आपके प्रोफ़ाइल पेज पर देखे जा सकते हैं।",
+        ),
         sessionId,
         requestId,
       }),
@@ -431,7 +453,116 @@ export async function handleAgentRouter(
     );
   }
 
-  // ── Phase 2b: search_market (load matching) ──
+  // ── Phase 2b: tool selection — trucker-side shipment search vs market search ──
+  // Explicit filters are always market-shaped (backwards-compatible contract),
+  // so shipment routing only applies when the model must parse free text.
+  if (
+    isShipmentSearchRequest(message) &&
+    (body.filters === undefined || body.filters === null)
+  ) {
+    let filters: SearchShipmentsFilters | null = null;
+    let intentSource: "explicit" | "llm" | "fallback" | "empty" | null = null;
+
+    const parsed = await parseFreddyIntent(message.trim(), {
+      fetchImpl,
+      env,
+    }, contextString);
+    // Reinterpret market-shaped intent fields for the shipment side:
+    // required capacity ≈ shipment weight, max price per tonne ≈ budget.
+    const mapped: SearchShipmentsFilters = {};
+    if (parsed.filters.origin) mapped.origin = parsed.filters.origin;
+    if (parsed.filters.destination) mapped.destination = parsed.filters.destination;
+    if (parsed.filters.min_capacity_tonnes !== undefined) {
+      mapped.min_weight_tonnes = parsed.filters.min_capacity_tonnes;
+    }
+    if (parsed.filters.max_price_per_tonne !== undefined) {
+      mapped.max_budget_per_tonne = parsed.filters.max_price_per_tonne;
+    }
+    if (parsed.filters.vehicle_type) mapped.vehicle_type = parsed.filters.vehicle_type;
+    const validated = validateSearchShipmentsParams(mapped);
+    filters = validated.ok ? validated.filters : null;
+    intentSource = parsed.source;
+    const intentRaw = parsed.raw;
+
+    // No usable filters: return a stable no-tool response.
+    if (!filters || Object.keys(filters).length === 0) {
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          phase: 2,
+          tool: null,
+          intentSource: intentSource ?? null,
+          detail: tr(
+            "No usable filters were provided or extracted from your message. " +
+              "Try: 'Find shipments from Rourkela to Ranchi for 5 tonnes under 4000 per tonne'",
+            "आपके संदेश से कोई उपयोगी फ़िल्टर नहीं मिला। " +
+              "कोशिश करें: 'राउरकेला से राँची के लिए 5 टन, 4000 प्रति टन से कम शिपमेंट खोजें'",
+          ),
+          sessionId,
+          requestId,
+        }),
+        { status: 200, headers: phaseHeaders },
+      );
+    }
+
+    const supabaseUrl = env("SUPABASE_URL") ?? "";
+    const supabaseAnonKey = env("SUPABASE_ANON_KEY") ?? "";
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error(
+        `[${requestId}] agent-router: required marketplace configuration missing (SUPABASE_URL / SUPABASE_ANON_KEY)`,
+      );
+      return errorResponse("Server configuration error.", 500, headers, requestId);
+    }
+
+    const outcomeResult = await withRetry(async () => {
+      return searchShipments(
+        { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token },
+        filters,
+        { fetchImpl },
+      );
+    }, "search-shipments", { env: deps.env });
+    if (!outcomeResult.ok) {
+      return errorResponse(outcomeResult.reason, 502, phaseHeaders, requestId);
+    }
+    const outcome = outcomeResult.value;
+    if (!outcome.ok) {
+      return errorResponse(outcome.reason, 502, phaseHeaders, requestId);
+    }
+
+    const summary = buildFreddyShipmentsSummary(outcome.shipments, filters, intentSource);
+
+    // Append to conversation memory.
+    if (sessionId && appendSessionHistory) {
+      try {
+        await appendSessionHistory(sessionId, [
+          { role: "user", content: message },
+          { role: "assistant", content: summary },
+        ]);
+      } catch {
+        // best effort
+      }
+    }
+
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        phase: 2,
+        tool: "search_shipments",
+        count: outcome.count,
+        limit: outcome.limit,
+        shipments: outcome.shipments,
+        filters,
+        intentSource,
+        intentRaw,
+        summary,
+        sessionId,
+        requestId,
+      }),
+      { status: 200, headers: phaseHeaders },
+    );
+  }
+
+  // ── Phase 2c: search_market (load matching) ──
   let filters: SearchMarketFilters | null = null;
   let intentSource: "explicit" | "llm" | "fallback" | "empty" | null = null;
   let intentRaw: string | undefined;
@@ -443,6 +574,7 @@ export async function handleAgentRouter(
     }
     filters = validated.filters;
     intentSource = "explicit";
+    intentRaw = undefined;
   } else {
     const parsed = await parseFreddyIntent(message.trim(), {
       fetchImpl,
@@ -462,9 +594,12 @@ export async function handleAgentRouter(
         phase: 2,
         tool: null,
         intentSource: intentSource ?? null,
-        detail:
+        detail: tr(
           "No usable filters were provided or extracted from your message. " +
-          "Try: 'Find trucks from Rourkela to Ranchi for 5 tonnes under 4000 per tonne'",
+            "Try: 'Find trucks from Rourkela to Ranchi for 5 tonnes under 4000 per tonne'",
+          "आपके संदेश से कोई उपयोगी फ़िल्टर नहीं मिला। " +
+            "कोशिश करें: 'राउरकेला से राँची के लिए 5 टन, 4000 प्रति टन से कम ट्रक खोजें'",
+        ),
         sessionId,
         requestId,
       }),
@@ -572,6 +707,49 @@ function buildFreddySummary(
   let summary = `Found ${count} truck${count === 1 ? "" : "s"} on ${route} — ${price}, ${capacity} ${trucker}${verified}.`;
   if (count > 1) {
     summary += ` The best match is ${top.origin_city} to ${top.destination_city} at ${price}.`;
+  }
+  return summary;
+}
+
+function buildFreddyShipmentsSummary(
+  shipments: MarketShipment[],
+  filters: SearchShipmentsFilters,
+  intentSource: "explicit" | "llm" | "fallback" | "empty" | null,
+): string {
+  const count = shipments.length;
+  if (count === 0) {
+    const parts: string[] = [];
+    if (filters.origin && filters.destination) {
+      parts.push(`No open shipments found from ${filters.origin} to ${filters.destination}`);
+    } else if (filters.origin) {
+      parts.push(`No open shipments found from ${filters.origin}`);
+    } else if (filters.destination) {
+      parts.push(`No open shipments found to ${filters.destination}`);
+    } else {
+      parts.push("No open shipments found matching your search.");
+    }
+    if (filters.min_weight_tonnes) {
+      parts.push(`weighing at least ${filters.min_weight_tonnes}t`);
+    }
+    if (filters.max_budget_per_tonne) {
+      parts.push(`with a budget under ₹${filters.max_budget_per_tonne}/tonne`);
+    }
+    return parts.join(" ") + ". Try broadening your filters or check back later.";
+  }
+
+  const top = shipments[0];
+  const route = top.origin_city && top.destination_city
+    ? `${top.origin_city} → ${top.destination_city}`
+    : "your route";
+  const weight = top.weight_tonnes ? `${top.weight_tonnes}t` : "weight TBD";
+  const budget = top.budget_per_tonne ? `₹${top.budget_per_tonne}/tonne` : "budget on request";
+  const goods = top.goods_description ? ` (${top.goods_description})` : "";
+  const shipper = top.shipper?.full_name ? `by ${top.shipper.full_name}` : "";
+  const verified = top.shipper?.is_verified ? " (verified)" : "";
+
+  let summary = `Found ${count} open shipment${count === 1 ? "" : "s"} on ${route} — ${weight}, ${budget} budget${goods} ${shipper}${verified}.`;
+  if (count > 1) {
+    summary += ` The closest match is ${top.origin_city} to ${top.destination_city} at ${budget}.`;
   }
   return summary;
 }

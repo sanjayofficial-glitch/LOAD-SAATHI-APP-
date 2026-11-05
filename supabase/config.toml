@@ -441,3 +441,11 @@ verify_jwt = false
 # other client-facing functions.
 [functions.admin-secrets]
 verify_jwt = false
+
+# tts (Freddy voice, Fish Audio free tier): the Supabase gateway would
+# otherwise pass the Clerk 'supabase'-template JWT to GoTrue, which rejects
+# it ("bad_jwt: sub claim must be a UUID") before the function's own verifier
+# runs. Auth is handled inside the function (kill switch -> verifyClerkJwt
+# with HS256, fail-closed), same as agent-router.
+[functions.tts]
+verify_jwt = false

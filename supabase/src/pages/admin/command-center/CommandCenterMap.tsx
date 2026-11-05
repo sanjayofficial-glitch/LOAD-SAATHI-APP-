@@ -103,7 +103,15 @@ interface ResolvedRoute { id: string; positions: [number, number][]; color: stri
 
 function AnimatedRoute({ route }: { route: ResolvedRoute }) {
   const [offset, setOffset] = useState(0);
-  useEffect(() => { const i = setInterval(() => setOffset((p) => (p - 1) % 16), 80); return () => clearInterval(i); }, []);
+  // 12.5fps dash animation — but never tick while the tab/app is hidden
+  // (wasted re-renders, GPU work and battery on mobile WebViews).
+  useEffect(() => {
+    const i = setInterval(() => {
+      if (document.hidden) return;
+      setOffset((p) => (p - 1) % 16);
+    }, 80);
+    return () => clearInterval(i);
+  }, []);
   if (route.positions.length < 2) return null;
   return (<>
     <Polyline positions={route.positions} pathOptions={{ color: route.color, weight: 6, opacity: 0.12, lineCap: 'round', lineJoin: 'round' }} />

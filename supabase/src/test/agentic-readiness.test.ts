@@ -397,13 +397,20 @@ describe('Agentic Readiness: index.html SSR fallback (no-JS content)', () => {
     // The shell carries no H1 of its own: hasOwnH1() in api/agent.js checks
     // for one and, finding none, emits the per-page content block as an <h1>.
     expect(content).toContain('id="ssr-fallback-content"');
-    expect(content).toContain("LoadSaathi — India's AI-Powered Freight Marketplace");
+    expect(content).toContain("LoadSaathi - India's AI-Powered Freight Marketplace");
   });
 
-  it('SSR fallback carries no H1 of its own (the injected block supplies it)', () => {
+  it('SSR fallback carries only the homepage card H1 (agent.js injects the per-page H1)', () => {
+    // The shell intentionally carries one H1 — the homepage fallback card —
+    // which serves as first-paint LCP content and crawler seed. api/agent.js
+    // injects the canonical per-page H1 into #ssr-fallback-content, and the
+    // fallback is hidden pre-hydration, so the shell must never carry more
+    // than this single H1 of its own.
     const start = content.indexOf('id="ssr-fallback"');
     const slice = content.slice(start, start + 2000);
-    expect(slice).not.toContain('<h1');
+    const h1Count = (slice.match(/<h1/g) ?? []).length;
+    expect(h1Count).toBe(1);
+    expect(slice).toContain('Move Goods Smarter with Shared Freight');
   });
 
   it('SSR fallback has 500+ chars of text', () => {

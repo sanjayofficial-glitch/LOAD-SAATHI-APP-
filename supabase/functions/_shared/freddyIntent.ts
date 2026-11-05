@@ -47,6 +47,7 @@ Extract ONLY these fields if clearly present in the message:
 - destination: city name where the truck/load ends
 - min_capacity_tonnes: minimum truck capacity in tonnes (number)
 - max_price_per_tonne: maximum price per tonne in INR (number)
+- vehicle_type: vehicle/container type if stated (e.g. "Container", "Trailer", "Tipper", "Open", "Closed")
 
 Rules:
 - Return ONLY valid JSON, no markdown, no explanation.
@@ -60,8 +61,8 @@ Rules:
 Example: "Find trucks from Rourkela to Ranchi for 5 tonnes under 4000 per tonne"
 {"origin":"Rourkela","destination":"Ranchi","min_capacity_tonnes":5,"max_price_per_tonne":4000}
 
-Example: "I need a truck from Bhubaneswar to Kolkata"
-{"origin":"Bhubaneswar","destination":"Kolkata"}
+Example: "I need a container truck from Bhubaneswar to Kolkata"
+{"origin":"Bhubaneswar","destination":"Kolkata","vehicle_type":"Container"}
 
 Return ONLY the JSON object:`;
 }
@@ -117,6 +118,17 @@ function keywordFallback(message: string): SearchMarketFilters {
   if (capMatch) {
     const val = capMatch[1] ?? capMatch[2];
     filters.min_capacity_tonnes = Number(val);
+  }
+
+  // Vehicle / container type: "container", "trailer", "tipper", "open", "closed"
+  const vehicleMatch = m.match(/\b(container|trailer|tipper|dumper|openbody|open\s+body|closed|covered)\b/i);
+  if (vehicleMatch) {
+    const raw = vehicleMatch[1].toLowerCase();
+    if (raw.includes("container")) filters.vehicle_type = "Container";
+    else if (raw.includes("trailer")) filters.vehicle_type = "Trailer";
+    else if (raw.includes("tipper") || raw.includes("dumper")) filters.vehicle_type = "Tipper";
+    else if (raw.includes("open")) filters.vehicle_type = "Open";
+    else if (raw.includes("closed") || raw.includes("covered")) filters.vehicle_type = "Closed";
   }
 
   // Very naive city detection: look for known Indian city names in the message
@@ -191,6 +203,32 @@ export function isCreditScoreQuery(message: string): boolean {
     "credit insight", "why is my score", "improve my score", "credit check",
   ];
   return creditKeywords.some((kw) => lower.includes(kw));
+}
+
+/**
+ * Detect trucker-side shipment-search requests ("find goods/loads to haul")
+ * vs. shipper-side truck/load searches. Deterministic keyword heuristic;
+ * used by agent-router to choose between search_shipments and search_market
+ * when no explicit filters object was supplied.
+ */
+export function isShipmentSearchRequest(message: string): boolean {
+  const lower = message.toLowerCase();
+  const shipmentKeywords = [
+    "shipment", "shipments", "load", "loads", "goods", "cargo",
+    "freight", "material", "goods to carry", "something to haul",
+    "haul", "transport for my truck", "find work for my truck",
+    "have a truck", "my truck", "truck is empty", "empty truck",
+    "earn", "income", "find work", "find something to carry",
+    "pickup", "pick up goods",
+  ];
+  // Shipper-side signals win: if the user explicitly wants a truck/vehicle,
+  // treat it as a market (trip) search, not a shipment search.
+  const truckSignals = [
+    "truck", "vehicle", "capacity", "lorry", "transporter",
+    "transport my goods", "move my goods", "ship my goods",
+  ];
+  if (truckSignals.some((kw) => lower.includes(kw))) return false;
+  return shipmentKeywords.some((kw) => lower.includes(kw));
 }
 
 /** Parse a free-text message into search_market filters.

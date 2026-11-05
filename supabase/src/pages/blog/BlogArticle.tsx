@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Calendar, Clock, User, ArrowLeft, ArrowRight, Share2, BookOpen, FileText, Shield, TrendingUp, CheckCircle, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -6,6 +7,7 @@ import SeoMeta from "@/components/SeoMeta";
 import DirectAnswer from "@/components/DirectAnswer";
 import KeyTakeaways from "@/components/KeyTakeaways";
 import { articles, parseDate } from "@/data/blog";
+import { loadArticleContent } from "@/data/blogBodies";
 import { routes } from "@/data/routes";
 import { clampMetaDescription } from "@/config/site";
 
@@ -155,6 +157,25 @@ export default function BlogArticle() {
   const { slug } = useParams<{ slug: string }>();
   const article = slug ? articles[slug.toLowerCase()] : null;
 
+  // Article bodies are split into per-article modules (data/blog/<slug>.ts)
+  // and fetched lazily — opening one article never pays for all 86 bodies.
+  const [body, setBody] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!slug) {
+      setBody(null);
+      return;
+    }
+    setBody(null);
+    loadArticleContent(slug.toLowerCase()).then((content) => {
+      if (!cancelled) setBody(content);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
   if (!article) {
     return (
       <div className="min-h-screen bg-background dark:bg-[#050816] flex items-center justify-center">
@@ -211,7 +232,7 @@ export default function BlogArticle() {
           "@id": `https://loadsaathi.in/blog/${slug}`,
         },
         articleSection: article.category,
-        wordCount: article.content.join(" ").split(/\s+/).length,
+        wordCount: (body ?? []).join(" ").split(/\s+/).length,
         image: coverImage,
         keywords: article.keywords,
         speakable: {
@@ -275,7 +296,7 @@ export default function BlogArticle() {
         {article.lastUpdated && <p>Last updated: {article.lastUpdated}</p>}
         <p>{article.summary}</p>
         <hr />
-        {article.content.map((paragraph, i) => {
+        {(body ?? []).map((paragraph, i) => {
           const isH2 = paragraph.startsWith("## ");
           return isH2 ? (
             <h2 key={i} style={{ marginTop: "1.5rem" }}>{paragraph.replace(/^## /, "")}</h2>
@@ -330,7 +351,7 @@ export default function BlogArticle() {
             qualifier={`By ${article.author} · ${article.date}${article.lastUpdated ? ` · Last updated ${article.lastUpdated}` : ""}`}
           />
           <KeyTakeaways
-            items={article.content.slice(0, 3).map(p => {
+            items={(body ?? []).slice(0, 3).map(p => {
               const text = p.replace(/^##\s*/, "").split(/[.!?]/)[0]?.trim();
               return text && text.length > 20 ? text.slice(0, 100) + (text.length > 100 ? "..." : "") : null;
             }).filter((t): t is string => Boolean(t)).slice(0, 4)}
@@ -369,32 +390,42 @@ export default function BlogArticle() {
         </div>
 
         <div className="prose prose-lg dark:prose-invert max-w-none">
-          {article.content.map((paragraph, i) => {
-            const isH2Heading = paragraph.startsWith("## ");
-            const isHeading = isH2Heading || headingPrefixes.some((p) => paragraph.startsWith(p));
-            const image = sectionImages[i];
-            const headingText = isH2Heading ? paragraph.replace(/^## /, "") : paragraph;
-
-            return (
-              <div key={i}>
-                {image && (
-                  <div className="my-10 rounded-xl bg-gradient-to-br from-orange-500/5 via-blue-500/5 to-transparent dark:from-orange-900/10 dark:via-blue-900/5 border border-orange-500/10 dark:border-orange-500/5 p-8 flex items-center justify-center gap-4">
-                    {image.icon}
-                    <span className="text-sm font-medium text-muted-foreground">{image.label}</span>
-                  </div>
-                )}
-                {isHeading ? (
-                  <h2 className="text-2xl sm:text-3xl font-bold text-foreground mt-12 mb-4 leading-tight">
-                    {headingText}
-                  </h2>
-                ) : (
-                  <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6">
-                    {parseInlineLinks(paragraph)}
-                  </p>
-                )}
+          {body === null ? (
+            /* Body module is loading — skeleton keeps layout stable, no flash. */
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="mb-6">
+                <div className="h-5 w-full rounded bg-muted animate-pulse" style={{ opacity: 1 - i * 0.18 }} />
+                <div className="mt-3 h-5 w-11/12 rounded bg-muted animate-pulse" style={{ opacity: 1 - i * 0.18 }} />
               </div>
-            );
-          })}
+            ))
+          ) : (
+            body.map((paragraph, i) => {
+              const isH2Heading = paragraph.startsWith("## ");
+              const isHeading = isH2Heading || headingPrefixes.some((p) => paragraph.startsWith(p));
+              const image = sectionImages[i];
+              const headingText = isH2Heading ? paragraph.replace(/^## /, "") : paragraph;
+
+              return (
+                <div key={i}>
+                  {image && (
+                    <div className="my-10 rounded-xl bg-gradient-to-br from-orange-500/5 via-blue-500/5 to-transparent dark:from-orange-900/10 dark:via-blue-900/5 border border-orange-500/10 dark:border-orange-500/5 p-8 flex items-center justify-center gap-4">
+                      {image.icon}
+                      <span className="text-sm font-medium text-muted-foreground">{image.label}</span>
+                    </div>
+                  )}
+                  {isHeading ? (
+                    <h2 className="text-2xl sm:text-3xl font-bold text-foreground mt-12 mb-4 leading-tight">
+                      {headingText}
+                    </h2>
+                  ) : (
+                    <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6">
+                      {parseInlineLinks(paragraph)}
+                    </p>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
 
         {/* FAQ Section */}

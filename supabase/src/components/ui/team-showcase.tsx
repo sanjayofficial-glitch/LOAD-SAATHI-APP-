@@ -202,6 +202,8 @@ function PhotoCard({
         src={member.image}
         alt={member.name}
         className="w-full h-full object-cover object-top transition-[filter] duration-500"
+        loading="lazy"
+        decoding="async"
         style={{
           filter: isActive ? 'grayscale(0) brightness(1) saturate(1.1)' : 'grayscale(0.5) brightness(0.85)',
         }}

@@ -240,24 +240,25 @@
   
   .card-hover {
     transition: box-shadow 0.2s ease, transform 0.2s ease;
-    will-change: transform;
   }
   .card-hover:hover {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
+    will-change: transform;
   }
 
   /* Icon micro-interactions — applies to lucide-react <svg> elements.
      Smooth scale on hover, subtle spring on tap, GPU-promoted. */
   .icon-hover {
     transition: transform 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.15s ease;
-    will-change: transform;
   }
   .icon-hover:hover {
     transform: scale(1.12);
+    will-change: transform;
   }
   .icon-hover:active {
     transform: scale(0.95);
+    will-change: transform;
   }
 
   /* Gentle floating animation — use with animate-icon-float or as a group hover effect */
@@ -279,11 +280,18 @@
       background-color var(--dur-base) ease,
       border-color var(--dur-base) ease,
       color var(--dur-base) ease;
-    will-change: transform;
+  }
+  /* Promote only while a press is actually possible — never hold the
+     compositor layer for thousands of idle buttons on low-end GPUs. */
+  @media (hover: hover) {
+    .press:hover {
+      will-change: transform;
+    }
   }
   .press:active {
     transform: scale(0.97);
     transition-duration: var(--dur-press);
+    will-change: transform;
   }
 
   /* ─── Card lift ───
@@ -293,17 +301,18 @@
       transform var(--dur-slow) var(--ease-ios),
       box-shadow var(--dur-slow) var(--ease-ios),
       border-color var(--dur-slow) ease;
-    will-change: transform;
   }
   .elevate:hover {
     transform: translateY(-3px);
     box-shadow:
       0 18px 32px -14px hsl(var(--foreground) / 0.18),
       0 8px 14px -10px hsl(var(--foreground) / 0.12);
+    will-change: transform;
   }
   .elevate:active {
     transform: translateY(-1px) scale(0.995);
     transition-duration: var(--dur-press);
+    will-change: transform;
   }
 
   /* ─── Translucent materials ───
@@ -801,6 +810,52 @@
   select,
   textarea {
     font-size: 16px !important;
+  }
+}
+
+/* ─── Low-end device blur budget ───
+   backdrop-filter is among the most expensive compositor operations on mobile
+   GPUs: every blurred layer allocates a separate texture and re-samples the
+   backdrop on each scroll. On coarse-pointer devices (phones), cap the blur
+   radius of *every* Tailwind backdrop-blur utility. Because this CSS is
+   unlayered, it beats the layered utilities at equal specificity, and the
+   override happens through the same --tw-backdrop-blur custom property the
+   utilities compose — no component markup changes needed. */
+@media (pointer: coarse) {
+  .backdrop-blur-sm {
+    --tw-backdrop-blur: blur(3px);
+  }
+  .backdrop-blur-md {
+    --tw-backdrop-blur: blur(4px);
+  }
+  .backdrop-blur-lg {
+    --tw-backdrop-blur: blur(6px);
+  }
+  .backdrop-blur-xl {
+    --tw-backdrop-blur: blur(8px);
+  }
+  .material {
+    background: hsl(var(--card) / 0.82);
+    backdrop-filter: blur(10px) saturate(160%);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+  }
+  .material-strong {
+    background: hsl(var(--card) / 0.9);
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+  }
+}
+
+/* Devices without backdrop-filter support get solid surfaces — never a
+   faux-glass surface with broken legibility. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .material,
+  .material-strong,
+  .glass-panel,
+  .glass-card {
+    background: hsl(var(--card)) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 }
 

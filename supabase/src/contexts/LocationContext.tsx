@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useMemo, ReactNode } from 'react';
 import { useLocationPermission, type LocationPermissionState } from '@/hooks/useLocationPermission';
 
 export type GpsTrackingState = 'idle' | 'locating' | 'active' | 'error' | 'no-location';
@@ -24,14 +24,23 @@ export function LocationProvider({ children }: { children: ReactNode }) {
 
   const [gpsTrackingState, setGpsTrackingState] = useState<GpsTrackingState>('idle');
 
-  const contextValue = {
-    locationPermission,
-    isLocationSupported,
-    requestLocationPermission,
-    refreshLocationPermission,
-    gpsTrackingState,
-    setGpsTrackingState,
-  };
+  const contextValue = useMemo(
+    () => ({
+      locationPermission,
+      isLocationSupported,
+      requestLocationPermission,
+      refreshLocationPermission,
+      gpsTrackingState,
+      setGpsTrackingState,
+    }),
+    [
+      locationPermission,
+      isLocationSupported,
+      requestLocationPermission,
+      refreshLocationPermission,
+      gpsTrackingState,
+    ],
+  );
 
   return <LocationContext.Provider value={contextValue}>{children}</LocationContext.Provider>;
 }

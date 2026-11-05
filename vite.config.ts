@@ -37,6 +37,7 @@ export default defineConfig(({ mode }) => ({
           "vendor-recharts": ["recharts"],
           "vendor-query": ["@tanstack/react-query"],
           "vendor-motion": ["framer-motion"],
+          "vendor-icons": ["lucide-react"],
           "vendor-forms": ["react-hook-form", "@hookform/resolvers", "zod", "class-variance-authority"],
           "vendor-sonner": ["sonner"],
         },
