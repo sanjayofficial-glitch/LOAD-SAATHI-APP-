@@ -6372,6 +6372,7 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
       } else {
         // Known route with no SEO entry (app/auth/share/admin paths): keep it out of the index.
         html = html
+          .replace(/<div id="ssr-home-fallback"[\s\S]*?<\/div>/, '')
           .replace(/<meta\s+name="robots"[^>]*>/, '<meta name="robots" content="noindex, follow" />')
           .replace(/<link rel="canonical"[^>]*>/, "")
           .replace(/<meta\s+property="og:url"[^>]*>/, "");
