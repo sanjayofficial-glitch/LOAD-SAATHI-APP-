@@ -307,9 +307,31 @@
            injected block is hidden with the fallback the first inline script
            hides, and it replaces this card so the page keeps exactly one h1
            (the one in the injected block). JS clients never see it. -->
-      <div id="ssr-fallback" style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif">
-        <div id="ssr-fallback-content" style="text-align:center;padding:2rem">
-          <p style="color:#6b7280;margin:0;font-size:1.125rem">LoadSaathi — India's AI-Powered Freight Marketplace</p>
+      <div id="ssr-fallback" style="min-height:100vh;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#ffffff">
+        <div id="ssr-fallback-content" style="max-width:860px;margin:0 auto;padding:2rem 1.25rem 3rem;line-height:1.65;color:#1f2937;text-align:left">
+          <h1 style="font-size:2rem;line-height:1.2;margin:0 0 1rem;color:#111827">Move Goods Smarter with Shared Freight</h1>
+          <p style="margin:0 0 1rem">LoadSaathi is a shared freight marketplace that connects shippers, MSMEs and businesses that need to move goods with truck owners and transporters who have truck space. Matching part-load and full-load cargo across trips helps shippers find suitable transport faster and helps transporters reduce empty return journeys — starting from Rourkela and growing across Odisha, Jharkhand and East India corridors.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">For shippers and businesses</h2>
+          <p style="margin:0 0 1rem">If you are an MSME, trader or manufacturer moving steel, cement, FMCG, agro or engineering goods, post your shipment on LoadSaathi. Your load is matched against trucks whose route, capacity and date fit, and you can book part-load (PTL/LTL) or full-truck movement with live tracking.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">For truck owners and transporters</h2>
+          <p style="margin:0 0 1rem">If you operate a truck or fleet, list your trip once. LoadSaathi matches your available truck space against open loads on the same corridor — including return-load opportunities — so both legs of a journey earn instead of running empty.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">Part load (PTL) and LTL explained</h2>
+          <p style="margin:0 0 1rem">Part Truckload (PTL) and Less-Than-Truckload (LTL) let several shippers share one vehicle when cargo does not fill it. Shippers pay for the space they use rather than a whole truck, and transporters earn more per trip by filling otherwise-empty capacity.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">How to start with LoadSaathi</h2>
+          <ul style="margin:0 0 1rem;padding-left:1.5rem">
+            <li style="margin:0 0 0.35rem">Post what you need — a load (shipper) or a trip (transporter)</li>
+            <li style="margin:0 0 0.35rem">Get matched on route, capacity, date and price alignment</li>
+            <li style="margin:0 0 0.35rem">Confirm the booking, share live tracking, and settle payments on milestones</li>
+          </ul>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">Related pages</h2>
+          <ul style="margin:0;padding-left:1.5rem">
+            <li style="margin:0 0 0.35rem"><a href="/solutions/shippers">LoadSaathi for shippers</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/solutions/truckers">LoadSaathi for truckers</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/return-load">Return loads for truckers</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/routes">Freight routes</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/tools">Free freight tools</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/blog">Logistics blog</a></li>
+          </ul>
         </div>
       </div>
       <!-- Inline boot loader: visible instantly, replaced by React on mount (hidden when SSR fallback present, shown via JS) -->

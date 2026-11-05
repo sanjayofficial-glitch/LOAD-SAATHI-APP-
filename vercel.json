@@ -106,6 +106,10 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/api/agent.js"
+    },
+    {
       "source": "/api/agent",
       "destination": "/api/agent.js"
     },
