@@ -71,6 +71,12 @@ const STATIC_PAGES: { group: string; links: { label: string; path: string }[] }[
       { label: "Toll & Fuel", path: "/tools/toll-fuel" },
       { label: "GST Calculator", path: "/tools/gst-calculator" },
       { label: "Payload Utilization", path: "/tools/payload-utilization" },
+      { label: "Transport Cost Calculator", path: "/transport-cost-calculator" },
+      { label: "Shipment Brief Builder", path: "/tools/shipment-brief" },
+      { label: "Waiting Time Cost", path: "/tools/waiting-time-cost" },
+      { label: "Freight Quote Comparison", path: "/tools/freight-quote-comparison" },
+      { label: "Cargo Volume Planner", path: "/tools/cargo-volume-planner" },
+      { label: "Load Securing Checklist", path: "/tools/load-securing-checklist" },
     ],
   },
   {

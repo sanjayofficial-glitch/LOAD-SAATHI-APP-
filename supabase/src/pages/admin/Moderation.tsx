@@ -30,7 +30,7 @@ const Moderation = () => {
           supabase.from('shipments').select('id, origin_city, destination_city, status').limit(20),
         ]);
         const mods: ModerationItem[] = [
-          ...(((users.data ?? []) as any[]).filter((u) => u.suspended === false).slice(0, 20).map((u) => ({ id: u.id, type: 'user' as const, target_name: u.full_name, reason: 'New user verification', status: 'pending' as const, created_at: new Date().toISOString() }))),
+          ...(((users.data ?? []) as Array<{ id: string; suspended: boolean; full_name?: string | null; [key: string]: unknown }>).filter((u) => u.suspended === false).slice(0, 20).map((u) => ({ id: u.id, type: 'user' as const, target_name: u.full_name ?? '', reason: 'New user verification', status: 'pending' as const, created_at: new Date().toISOString() }))),
           ...((trips.data || []).map((t) => ({ id: t.id, type: 'trip' as const, target_name: `${t.origin_city} → ${t.destination_city}`, reason: 'Trip review', status: 'pending' as const, created_at: new Date().toISOString() }))),
           ...((shipments.data || []).map((s) => ({ id: s.id, type: 'shipment' as const, target_name: `${s.origin_city} → ${s.destination_city}`, reason: 'Shipment review', status: 'pending' as const, created_at: new Date().toISOString() }))),
         ];

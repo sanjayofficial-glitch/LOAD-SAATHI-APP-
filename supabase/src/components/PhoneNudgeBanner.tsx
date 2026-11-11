@@ -25,7 +25,6 @@ export default function PhoneNudgeBanner() {
     } catch {
       /* ignore */
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Don't show to admins or users who already have a phone.

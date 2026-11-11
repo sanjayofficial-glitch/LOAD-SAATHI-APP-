@@ -71,7 +71,7 @@ async function geminiIntent(
   prompt: string,
   deps: FreddyIntentDeps,
 ): Promise<LLMProviderResult> {
-  const env = deps.env ?? ((name: string) => undefined);
+  const env = deps.env ?? ((_name: string) => undefined);
   const apiKey = env("GEMINI_API_KEY");
   if (!apiKey) return { success: false, rateLimited: false };
   try {

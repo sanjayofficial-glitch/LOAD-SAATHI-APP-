@@ -6,8 +6,8 @@ import LogoMark from "@/components/LogoMark";
 import SeoMeta from "@/components/SeoMeta";
 import { Loader2, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDisha } from "@/components/DishaContext";
-import { useDishaGuide } from "@/components/DishaGuideProvider";
+import { useDisha } from "@/components/DishaContext.hooks";
+import { useDishaGuide } from "@/components/DishaGuideProvider.hooks";
 import { useMascotFormWatcher } from "@/hooks/useMascotFormWatcher";
 import { trackRegisterStarted } from "@/utils/analytics";
 
@@ -69,7 +69,7 @@ const Register = () => {
   useEffect(() => {
     const source = searchParams.get("source") || "direct";
     trackRegisterStarted({ source, role: roleType as "shipper" | "trucker" | undefined });
-  }, []);
+  }, [roleType, searchParams]);
 
   // Where to send a brand-new user after their account exists but no role is
   // saved yet. The role picked on the page that linked here (via ?type=) is

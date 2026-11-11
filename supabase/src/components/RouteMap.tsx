@@ -19,7 +19,8 @@ import { Button } from '@/components/ui/button';
 import { geocodeCity } from '@/utils/geocode';
 import { getRoute, RouteResult } from '@/utils/osrm';
 import ZoomControls from '@/components/maps/ZoomControls';
-import TileLayerSwitcher, { type TileLayerId, getTileLayer } from '@/components/maps/TileLayerSwitcher';
+import TileLayerSwitcher from '@/components/maps/TileLayerSwitcher';
+import { type TileLayerId, getTileLayer } from '@/components/maps/TileLayerSwitcher.data';
 import MapSizeHandler from '@/components/maps/MapSizeHandler';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
 

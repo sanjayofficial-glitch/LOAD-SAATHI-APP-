@@ -7,8 +7,8 @@ import SeoMeta from "@/components/SeoMeta";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { User as UserType } from "@/types";
-import { useDisha } from "@/components/DishaContext";
-import { useDishaGuide } from "@/components/DishaGuideProvider";
+import { useDisha } from "@/components/DishaContext.hooks";
+import { useDishaGuide } from "@/components/DishaGuideProvider.hooks";
 import { useMascotFormWatcher } from "@/hooks/useMascotFormWatcher";
 
 // Single source of truth for where a signed-in user should land.

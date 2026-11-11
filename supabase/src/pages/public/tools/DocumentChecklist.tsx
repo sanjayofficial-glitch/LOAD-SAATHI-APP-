@@ -103,12 +103,12 @@ export default function DocumentChecklist() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Tata Ace">Tata Ace</SelectItem>
-                    <SelectItem value="Tata 407 Gold SFC">Tata 407 Gold SFC</SelectItem>
+                    <SelectItem value="Tata 407">Tata 407 / 407 Gold SFC</SelectItem>
                     <SelectItem value="Tata LPT">Tata LPT</SelectItem>
                     <SelectItem value="Tata Ultra">Tata Ultra</SelectItem>
                     <SelectItem value="Tata Signa">Tata Signa</SelectItem>
                     <SelectItem value="Tata Prima">Tata Prima</SelectItem>
-                    <SelectItem value="Mahindra Bolero">Mahindra Bolero</SelectItem>
+                    <SelectItem value="Mahindra Furio">Mahindra Furio</SelectItem>
                     <SelectItem value="Eicher Pro">Eicher Pro</SelectItem>
                   </SelectContent>
                 </Select>

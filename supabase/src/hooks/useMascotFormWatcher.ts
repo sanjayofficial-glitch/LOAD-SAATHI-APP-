@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from 'react'
-import { useDisha } from '@/components/DishaContext'
-import { useDishaGuide } from '@/components/DishaGuideProvider'
+import { useDisha } from '@/components/DishaContext.hooks'
+import { useDishaGuide } from '@/components/DishaGuideProvider.hooks'
 import type { DishaMood } from '@/components/DishaMascot'
 
 export interface FormFieldConfig {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useDisha } from '@/components/DishaContext'
+import { useDisha } from '@/components/DishaContext.hooks'
 import type { DishaMood } from '@/components/DishaMascot'
 
 /**

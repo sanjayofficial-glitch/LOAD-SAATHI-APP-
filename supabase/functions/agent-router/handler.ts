@@ -29,7 +29,7 @@ import {
   searchMarket,
   validateSearchMarketParams,
 } from "../_shared/searchMarket.ts";
-import type { MarketLoad, SearchMarketOutcome, SearchMarketFilters } from "../_shared/searchMarket.ts";
+import type { MarketLoad, SearchMarketFilters } from "../_shared/searchMarket.ts";
 import {
   searchShipments,
   validateSearchShipmentsParams,
@@ -672,7 +672,7 @@ export async function handleAgentRouter(
 function buildFreddySummary(
   loads: MarketLoad[],
   filters: SearchMarketFilters,
-  intentSource: "explicit" | "llm" | "fallback" | "empty" | null,
+  _intentSource: "explicit" | "llm" | "fallback" | "empty" | null,
 ): string {
   const count = loads.length;
   if (count === 0) {
@@ -714,7 +714,7 @@ function buildFreddySummary(
 function buildFreddyShipmentsSummary(
   shipments: MarketShipment[],
   filters: SearchShipmentsFilters,
-  intentSource: "explicit" | "llm" | "fallback" | "empty" | null,
+  _intentSource: "explicit" | "llm" | "fallback" | "empty" | null,
 ): string {
   const count = shipments.length;
   if (count === 0) {

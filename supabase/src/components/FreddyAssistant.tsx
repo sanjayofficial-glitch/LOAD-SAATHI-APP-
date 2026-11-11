@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Freddy, moodToFreddyAnimation } from './FreddyAvatar';
+import { Freddy } from './FreddyAvatar';
+import { moodToFreddyAnimation } from './freddyAnimations';
 import { useReducedMotion, type DishaMood } from './DishaMascot';
 import FreddyChatModal from './FreddyChatModal';
 

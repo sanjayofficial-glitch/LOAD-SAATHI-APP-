@@ -8,6 +8,7 @@ import { Users, Search, Truck, Shield, MoreVertical, Phone } from 'lucide-react'
 
 interface User {
   id: string;
+  email?: string;
   user_type: 'trucker' | 'shipper' | 'admin';
   full_name: string;
   phone?: string;
@@ -72,7 +73,7 @@ const UserManagement = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Users</h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{users.length} total users</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{new Set(users.map((u) => u.email)).size} total users</p>
             </div>
           </div>
         </div>

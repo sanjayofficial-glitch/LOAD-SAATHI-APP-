@@ -109,7 +109,7 @@ export default function DishaSpeechBubble({ children, open, side = 'right', clas
     }
 
     setLayout({ side: chosen, position, transform, centered })
-  }, [side, mascotX, mascotY, mascotSize, gap])
+  }, [side, mascotX, mascotY, mascotSize, gap, gapPx])
 
   const getArrowClasses = () => {
     switch (layout.side) {

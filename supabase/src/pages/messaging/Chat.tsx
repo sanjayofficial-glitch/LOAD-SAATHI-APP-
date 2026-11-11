@@ -173,7 +173,7 @@ const Chat = () => {
       setMessages(prev => prev.map(m => (m.tempId === tempId ? { ...m, status: 'failed' as MessageStatus } : m)));
       showError('Failed to send message');
     }
-  }, [recipient, requestId, getToken, userProfile]);
+  }, [recipient, requestId, userProfile]);
 
   /** Send a preset quick reply — same pipeline as typed messages. */
   const sendText = useCallback(async (raw: string) => {

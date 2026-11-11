@@ -7,7 +7,7 @@ import { MascotInteractionTracker } from "@/hooks/useMascotInteractionTracker";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupabase } from "@/hooks/useSupabase";
-import { useProductTour } from "@/contexts/ProductTourContext";
+import { useProductTour } from "@/contexts/ProductTourContext.hooks";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { supabase as supabaseAnon } from "@/integrations/supabase/client";
@@ -287,7 +287,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         })();
       }
     };
-  }, [userProfile?.id, getSupabaseToken]);
+  }, [userProfile?.id, getSupabaseToken, getAuthenticatedClient]);
 
   // App-wide presence: other users see a real "Online" dot in chat while this
   // tab is open. Stops when the user signs out (Layout unmounts).

@@ -41,10 +41,11 @@ import {
   type FreddySlots,
 } from '@/lib/freddyAgent';
 import { speakAssistantText, cancelVoice, detectLanguage } from '@/lib/fishTts';
-import { Freddy, moodToFreddyAnimation } from './FreddyAvatar';
+import { Freddy } from './FreddyAvatar';
+import { moodToFreddyAnimation } from './freddyAnimations';
 import { useReducedMotion, useDishaKeyboard, type DishaMood } from './DishaMascot';
 import { pageContextMessages } from './DishaOnboardingTips';
-import { useDishaGuide } from './DishaGuideProvider';
+import { useDishaGuide } from './DishaGuideProvider.hooks';
 import { PHONE_COMPACT, PHONE_E164 } from '@/config/site';
 
 /**

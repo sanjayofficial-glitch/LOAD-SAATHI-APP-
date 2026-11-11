@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { authorizeRealtime } from '@/utils/realtime';
 import { useAuth } from '@/contexts/AuthContext';
-import type { TruckLocation } from '@/components/maps/TruckMarker';
+import type { TruckLocation } from '@/components/maps/TruckMarker.utils';
 
 /**
  * useLiveDriverLocations - Subscribe to real-time driver positions.

@@ -27,8 +27,9 @@ declare global {
 
 import { cn } from '@/lib/utils'
 import { useReducedMotion, useDishaKeyboard } from './DishaMascot'
-import { useDisha } from './DishaContext'
-import { Freddy, moodToFreddyAnimation } from './FreddyAvatar'
+import { useDisha } from './DishaContext.hooks'
+import { Freddy } from './FreddyAvatar'
+import { moodToFreddyAnimation } from './freddyAnimations'
 import DishaSpeechBubble from './DishaSpeechBubble'
 import { GlowRing } from './DishaSpotlight'
 import { useEffect, useState, useCallback, useRef, useLayoutEffect } from 'react'
@@ -350,21 +351,31 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       // Check cache for previous result
       const cached = getCachedResult(text, sessionId || '')
       if (cached && typeof cached === 'object' && 'ok' in cached) {
+        const cachedResult = cached as {
+          summary?: string;
+          detail?: string;
+          loads?: FreddyLoad[];
+          tool?: string;
+          strengths?: string[];
+          improvements?: string[];
+          tips?: string[];
+          projection?: string;
+        };
         setChatMessages((prev) => [...prev, {
           id: Date.now() + 1,
           role: 'freddy',
-          content: (cached as any).summary || (cached as any).detail || 'Here are the results.',
-          ...(cached as any).loads,
-          ...(cached as any).tool && { tool: (cached as any).tool },
-          ...(cached as any).strengths && { strengths: (cached as any).strengths },
-          ...(cached as any).improvements && { improvements: (cached as any).improvements },
-          ...(cached as any).tips && { tips: (cached as any).tips },
-          ...(cached as any).projection && { projection: (cached as any).projection },
+          content: cachedResult.summary || cachedResult.detail || 'Here are the results.',
+          ...(cachedResult.loads !== undefined ? (cachedResult.loads as unknown as Record<string, unknown>) : {}),
+          ...(cachedResult.tool ? { tool: cachedResult.tool } : {}),
+          ...(cachedResult.strengths ? { strengths: cachedResult.strengths } : {}),
+          ...(cachedResult.improvements ? { improvements: cachedResult.improvements } : {}),
+          ...(cachedResult.tips ? { tips: cachedResult.tips } : {}),
+          ...(cachedResult.projection ? { projection: cachedResult.projection } : {}),
         }])
         setMood('celebrate')
-        setTip({ message: (cached as any).summary || 'Here you go!', mood: 'celebrate' })
+        setTip({ message: cachedResult.summary || 'Here you go!', mood: 'celebrate' })
         setChatLoading(false)
-        if ((cached as any).loads && (cached as any).loads.length > 0) {
+        if (cachedResult.loads && cachedResult.loads.length > 0) {
           setNewAlerts((prev) => prev + 1)
         }
         return
@@ -497,7 +508,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     } finally {
       setChatLoading(false)
     }
-  }, [chatLoading, getToken, sessionId, setChatError, setMood, setTip, setShowBubble, isOnline, sendFreddyMessageRef])
+  }, [chatLoading, getToken, sessionId, chatMessages, getCachedResult, setCachedResult, setChatError, setMood, setTip, setShowBubble, isOnline, sendFreddyMessageRef])
 
   sendFreddyMessageRef.current = sendFreddyMessage
 
@@ -514,7 +525,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     recognition.lang = 'en-IN'
 
     recognition.onresult = (event: Event) => {
-      const transcript = (event as any).results[0][0].transcript
+      const transcript = (event as unknown as { results: Array<Array<{ transcript: string }>> }).results[0]![0]!.transcript
       setChatInput(transcript)
     }
 
@@ -652,7 +663,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       }
     }, 5000)
     return () => clearTimeout(timer)
-  }, [minimized, dismissed, mood, guideState, guideStep, setGuideMood])
+  }, [minimized, dismissed, mood, guideState, guideStep, setGuideMood, setMood])
 
   useEffect(() => {
     if (dismissed || minimized || guideState?.isActive || guideState?.offerPending || chatMode) return
@@ -678,7 +689,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     }, 30000)
 
     return () => clearInterval(interval)
-  }, [dismissed, minimized, guideState?.isActive, guideState?.offerPending, chatMode, idle, setTip, setShowBubble, setMood])
+  }, [dismissed, minimized, guideState?.isActive, guideState?.offerPending, chatMode, idle, pageContext, setTip, setShowBubble, setMood])
 
   useEffect(() => {
     if (reaction && reaction.name) {
@@ -744,7 +755,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       clearTimeout(timeout)
       window.removeEventListener('scroll', checkOverlap)
     }
-  }, [dismissed, minimized, guideState?.isActive, move, mascotSize])
+  }, [dismissed, minimized, guideState?.isActive, move, mascotSize, setMood])
 
   // Transient reaction badge emitted by the global interaction tracker
   // (and by any page via emitMascotReaction). Rendered next to the mascot.
@@ -812,7 +823,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onUp)
     }
-  }, [dismissed, minimized, isDragging, move])
+  }, [dismissed, minimized, isDragging, move, setAnchorSafe])
 
   const handleClick = useCallback(() => {
     if (dismissed) return;

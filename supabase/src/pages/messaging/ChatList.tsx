@@ -116,7 +116,7 @@ const ChatList = () => {
     } finally {
       setLoading(false);
     }
-  }, [getToken, userProfile]);
+  }, [userProfile, getAuthenticatedClient]);
 
   useEffect(() => {
     fetchConversations();

@@ -16,8 +16,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import type { TruckLocation } from '@/components/maps/TruckMarker';
-import { isTruckInTransit, formatTimeAgo } from '@/components/maps/TruckMarker';
+import type { TruckLocation } from '@/components/maps/TruckMarker.utils';
+import { isTruckInTransit, formatTimeAgo } from '@/components/maps/TruckMarker.utils';
 
 export interface TripWithTrucker {
   id: string;

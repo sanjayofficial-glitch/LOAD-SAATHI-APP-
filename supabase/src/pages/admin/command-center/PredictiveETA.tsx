@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, Clock, Navigation } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { TruckLocation } from '@/components/maps/TruckMarker';
+import type { TruckLocation } from '@/components/maps/TruckMarker.utils';
 import { getCityCoords } from './cityCoordCache';
 
 interface PredictiveETAProps {

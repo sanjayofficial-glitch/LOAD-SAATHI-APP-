@@ -106,7 +106,7 @@ const VerificationQueue = () => {
 
       // admin_users_view returns every user row; replicate the previous
       // server-side filtering and ordering locally.
-      const queueUsers = ((users || []) as any[])
+      const queueUsers = ((users || []) as Array<{ verification_status: string; kyc_submitted_at?: string | null; [key: string]: unknown }>)
         .filter((u) => ['pending', 'verified', 'rejected'].includes(u.verification_status))
         .sort((a, b) => (b.kyc_submitted_at || '').localeCompare(a.kyc_submitted_at || ''));
 

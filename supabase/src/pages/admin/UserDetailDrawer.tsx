@@ -41,7 +41,7 @@ const UserDetailDrawer = ({ userId, open, onOpenChange }: UserDetailDrawerProps)
         const supabase = await getAuthenticatedClient();
         const [userRes, tripsRes, shipmentsRes, requestsRes, reviewsRes, messagesRes] = await Promise.all([
           supabase.rpc('admin_users_view').then((r) => ({
-            data: ((r.data ?? []) as any[]).find((u) => u.id === userId) ?? null,
+            data: ((r.data ?? []) as Array<{ id: string; [key: string]: unknown }>).find((u) => u.id === userId) ?? null,
             error: r.error,
           })),
           supabase.from('trips').select('*').eq('trucker_id', userId).order('created_at', { ascending: false }),

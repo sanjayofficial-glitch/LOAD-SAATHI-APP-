@@ -7,7 +7,7 @@ import { showSuccess, showError } from '@/utils/toast';
 import { extractErrorMessage } from '@/utils/errorMessage';
 import { useAuth } from '@/contexts/AuthContext';
 import { User as UserType } from '@/types';
-import { useDishaGuide } from '@/components/DishaGuideProvider';
+import { useDishaGuide } from '@/components/DishaGuideProvider.hooks';
 import LogoMark from '@/components/LogoMark';
 import SeoMeta from '@/components/SeoMeta';
 
@@ -130,7 +130,10 @@ const handleRoleSelection = async (role: 'shipper' | 'trucker') => {
 
       navigate('/onboarding', { replace: true });
     } catch (err: unknown) {
-      const msg = extractErrorMessage(err, 'Failed to set role');
+      const code = (err as { code?: string })?.code;
+      const msg = code === '23505'
+        ? 'This email is already linked to an existing LoadSaathi account. Please sign in with that account.'
+        : extractErrorMessage(err, 'Failed to set role');
       console.error('[ChooseRole] Error:', err);
       setError(msg);
       showError(msg);

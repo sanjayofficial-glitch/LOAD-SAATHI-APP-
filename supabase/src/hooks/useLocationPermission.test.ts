@@ -2,16 +2,16 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useLocationPermission } from '@/hooks/useLocationPermission';
 
-function setNavigator(geo: any, perms: any) {
+function setNavigator(geo?: Geolocation, perms?: Permissions) {
   try {
     Object.defineProperty(window.navigator, 'geolocation', { value: geo, configurable: true, writable: true });
   } catch {
-    (window.navigator as any).geolocation = geo;
+    (window.navigator as unknown as { geolocation?: Geolocation }).geolocation = geo;
   }
   try {
     Object.defineProperty(window.navigator, 'permissions', { value: perms, configurable: true, writable: true });
   } catch {
-    (window.navigator as any).permissions = perms;
+    (window.navigator as unknown as { permissions?: Permissions }).permissions = perms;
   }
 }
 

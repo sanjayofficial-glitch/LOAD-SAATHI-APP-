@@ -301,7 +301,7 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
                       s.onload = () => { try { window.cookiehub?.open(); } catch (_) {} };
                       document.head.appendChild(s);
                     }
-                  } catch (e) {}
+                  } catch (_e) {}
                 }}
                 className="underline hover:text-foreground dark:hover:text-orange-400 transition-colors ml-1"
               >

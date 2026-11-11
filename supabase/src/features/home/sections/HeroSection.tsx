@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, ChevronDown, ShieldCheck, MapPin, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useDishaGuide } from '@/components/DishaGuideProvider';
+import { useDishaGuide } from '@/components/DishaGuideProvider.hooks';
 import HeroQuoteWidget from './HeroQuoteWidget';
 import { trackPostLoadClick } from '@/utils/analytics';
 

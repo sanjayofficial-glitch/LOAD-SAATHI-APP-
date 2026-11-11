@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SeoMeta from "@/components/SeoMeta";
-import RateBenchmarks2026, { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026";
+import RateBenchmarks2026 from "@/components/RateBenchmarks2026";
+import { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026.data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { geocodeCity } from "@/utils/geocode";
 import { getRoute } from "@/utils/osrm";
@@ -54,9 +55,10 @@ export default function ReturnLoadCalculator() {
 
       let returnKm = 0;
       let returnTransit = 0;
+      let hasPlannedReturn = false;
 
       if (retOrigin.trim() && retDest.trim()) {
-        // Explicit return route
+        // Explicit return route — treated as a planned, loaded backhaul leg
         const [rO, rD] = await Promise.all([
           geocodeCity(retOrigin.trim()),
           geocodeCity(retDest.trim()),
@@ -66,16 +68,20 @@ export default function ReturnLoadCalculator() {
           if (returnRoute) {
             returnKm = returnRoute.distance_km;
             returnTransit = returnRoute.duration_min;
+            hasPlannedReturn = true;
           }
         }
       }
 
-      // If no explicit return route, estimate empty distance = delivery distance (truck returns empty along same corridor)
+      // No explicit return route → truck returns empty along the same delivery corridor
       if (returnKm === 0) {
         returnKm = deliveryRoute.distance_km;
       }
 
-      const emptyKm = Math.abs(deliveryRoute.distance_km - returnKm);
+      // Empty km = return leg driven without a load:
+      // - no planned backhaul route → the whole return leg runs empty;
+      // - planned backhaul route given → that leg is loaded, nothing empty.
+      const emptyKm = hasPlannedReturn ? 0 : returnKm;
       const totalKm = deliveryRoute.distance_km + returnKm;
       const fuelLiters = totalKm / TRUCK_MPG;
       const fuelCost = Math.round(fuelLiters * DIESEL_RATE_PER_LITER);
@@ -132,7 +138,7 @@ export default function ReturnLoadCalculator() {
               "name": "How do you calculate return load revenue and empty miles?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "To calculate return load revenue, subtract the return-route distance from the delivery distance. The difference is your empty kilometres. Multiply total kilometres by fuel consumption and diesel rate to estimate fuel cost. Potential return-load revenue is estimated at ₹8–15 per km depending on route and cargo type. Use LoadSaathi's return load calculator above for an instant estimate on your specific route.",
+                "text": "The truck's return leg defaults to the delivery route in reverse. If no return (backhaul) load is planned, the whole return leg counts as empty kilometres; if you enter a planned return route, that leg counts as loaded and empty kilometres drop to zero. Multiply total kilometres by fuel consumption and diesel rate to estimate fuel cost. Potential return-load revenue is estimated at ₹8–15 per km depending on route and cargo type. Use LoadSaathi's return load calculator above for an instant estimate on your specific route.",
               },
             },
           },

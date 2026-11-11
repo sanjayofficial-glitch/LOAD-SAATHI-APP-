@@ -125,8 +125,8 @@ const handleSave = useCallback(async (secretName: keyof typeof SECRET_DESCRIPTIO
 
       const data = await callAdminSecrets('GET');
       setSecrets(data.secrets || []);
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to update API key');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to update API key');
     } finally {
       setSavingIds(prev => {
         const copy = new Set(prev);
@@ -160,8 +160,8 @@ const handleRemove = useCallback(async (secretName: keyof typeof SECRET_DESCRIPT
 
       const data = await callAdminSecrets('GET');
       setSecrets(data.secrets || []);
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to remove API key');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to remove API key');
     } finally {
       setRemovingIds(prev => {
         const copy = new Set(prev);

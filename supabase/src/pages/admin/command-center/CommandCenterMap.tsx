@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Polyline, Popup, CircleMarker, useMap 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { cn } from '@/lib/utils';
-import type { TruckLocation } from '@/components/maps/TruckMarker';
+import type { TruckLocation } from '@/components/maps/TruckMarker.utils';
 import type { LoadLocation } from '@/components/maps/LoadMarker';
 import { getCityCoords } from './cityCoordCache';
 

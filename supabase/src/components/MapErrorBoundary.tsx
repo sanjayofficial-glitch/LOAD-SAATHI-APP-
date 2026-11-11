@@ -37,7 +37,6 @@ export class MapErrorBoundary extends Component<Props, State> {
     import('@/utils/posthog')
       .then(({ posthog }) => posthog.captureException(error, { component_stack: info.componentStack, source: 'map_error_boundary' }))
       .catch(() => {});
-    // eslint-disable-next-line no-console
     console.error('[MapErrorBoundary]', error, info);
   }
 

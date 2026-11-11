@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SeoMeta from "@/components/SeoMeta";
-import RateBenchmarks2026, { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026";
+import RateBenchmarks2026 from "@/components/RateBenchmarks2026";
+import { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026.data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface TruckRecommendation {

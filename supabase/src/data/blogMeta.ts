@@ -574,7 +574,7 @@ export const blogMeta: BlogMetaEntry[] = [
   lastUpdated: "August 22, 2026",
   readTime: "5 min read",
   author: "Sanjaya Sahu",
-  summary: "Traditional freight brokers add 15-25% markup, take 30-45 days to pay truckers, and offer no tracking. See how LoadSaathi AI matching, escrow payments, and digital credit scores compare on cost, trust, and speed for Indian shippers.",
+  summary: "Traditional freight brokers add 15-25% markup, take 30-45 days to pay truckers, and offer no tracking. See how LoadSaathi AI matching, planned escrow payments, and digital credit scores compare on cost, trust, and speed for Indian shippers.",
   relatedRoutes: ["rourkela-to-kolkata","ranchi-to-jamshedpur"],
   coverImage: "/blog/og/loadsaathi-vs-brokers.svg",
   },

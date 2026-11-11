@@ -35,8 +35,9 @@ export default function SharedSavingsCalculator() {
   const [error, setError] = useState<string |null>(null);
 
   const calculate = useCallback(async () => {
-    if (!origin.trim() || !destination.trim() || !cargoWeight) {
-      setError("Please fill in all fields.");
+    const parsedWeight = Number(cargoWeight);
+    if (!origin.trim() || !destination.trim() || !cargoWeight || !(parsedWeight > 0)) {
+      setError("Please fill in all fields with a positive cargo weight.");
       return;
     }
     setLoading(true);

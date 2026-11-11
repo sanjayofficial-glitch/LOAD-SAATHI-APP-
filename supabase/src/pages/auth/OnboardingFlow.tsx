@@ -15,8 +15,8 @@ import {
 } from 'lucide-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDisha } from '@/components/DishaContext';
-import { useDishaGuide } from '@/components/DishaGuideProvider';
+import { useDisha } from '@/components/DishaContext.hooks';
+import { useDishaGuide } from '@/components/DishaGuideProvider.hooks';
 import { useMascotFormWatcher } from '@/hooks/useMascotFormWatcher';
 import { User as UserType } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -162,7 +162,11 @@ const OnboardingFlow = () => {
 
       const payload: { full_name: string; phone: string; company_name?: string } = {
         full_name: fullName.trim() || user.fullName || '',
-        phone: isPhoneValid ? normalizeIndianPhone(phone).replace(/^(\d{5})(\d{5})$/, '$1 $2') : '',
+        // Preserve an existing saved phone when the user skips/leaves the field
+        // blank — never wipe contact info with an empty string.
+        phone: isPhoneValid
+          ? normalizeIndianPhone(phone).replace(/^(\d{5})(\d{5})$/, '$1 $2')
+          : (userProfile?.phone ?? ''),
       };
       if (companyName.trim()) payload.company_name = companyName.trim();
 

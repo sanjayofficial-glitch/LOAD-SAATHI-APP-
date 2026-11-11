@@ -12,7 +12,7 @@ import {
   Route as RouteIcon,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import type { TruckLocation } from '@/components/maps/TruckMarker';
+import type { TruckLocation } from '@/components/maps/TruckMarker.utils';
 import type { LoadLocation } from '@/components/maps/LoadMarker';
 import SmartMatchPanel from './SmartMatchPanel';
 import RevenueTracker from './RevenueTracker';

@@ -9,10 +9,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SeoMeta from "@/components/SeoMeta";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import QuoteLeadCard from "@/components/QuoteLeadCard";
-import VehicleRateCard, { VEHICLE_RATES } from "@/components/VehicleRateCard";
+import VehicleRateCard from "@/components/VehicleRateCard";
+import { VEHICLE_RATES } from "@/components/VehicleRateCard.data";
 import { trackCalculatorStarted, trackEstimateGenerated, trackEvent } from "@/utils/analytics";
 import PriceTrendChart from "@/components/PriceTrendChart";
-import RateBenchmarks2026, { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026";
+import RateBenchmarks2026 from "@/components/RateBenchmarks2026";
+import { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026.data";
 import { routes } from "@/data/routes";
 import distancesData from "@/data/distances.json";
 import { revealStyle } from "@/lib/motion";
@@ -97,7 +99,7 @@ function buildStaticFallback(
   };
 }
 
-function useCountUp(target: number, duration = 600, deps: unknown[] = []) {
+function useCountUp(target: number, duration = 600) {
   const [value, setValue] = useState(target);
   useEffect(() => {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -112,7 +114,7 @@ function useCountUp(target: number, duration = 600, deps: unknown[] = []) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, duration, ...deps]);
+  }, [target, duration]);
   return value;
 }
 

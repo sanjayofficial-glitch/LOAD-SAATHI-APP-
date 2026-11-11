@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { Theme } from "@astryxdesign/core/theme";
+import { themes, defaultThemeSlug } from "../../astryx-themes";
 import "./globals.css";
 import { logger } from '@/lib/logger';
 
@@ -82,7 +84,9 @@ async function mountApp() {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
       <React.StrictMode>
-        <App />
+        <Theme theme={themes[defaultThemeSlug]}>
+          <App />
+        </Theme>
         <Analytics />
         <SpeedInsights />
       </React.StrictMode>

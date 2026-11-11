@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { VEHICLE_RATES } from '@/components/VehicleRateCard';
+import { VEHICLE_RATES } from '@/components/VehicleRateCard.data';
 import { routes } from '@/data/routes';
 import distancesData from '@/data/distances.json';
 
