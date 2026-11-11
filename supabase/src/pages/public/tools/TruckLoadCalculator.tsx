@@ -55,8 +55,8 @@ export default function TruckLoadCalculator() {
   return (
     <>
       <SeoMeta
-        title="Truck Load Calculator India – Free, Instant Fare & Rate"
-        description="Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators."
+        title="Truck Load Calculator – Check Cargo Weight & Capacity"
+        description="Check whether your goods fit a truck's available carrying capacity. Estimate load requirements and plan the right vehicle for your shipment."
         keywords="truck load calculator, which truck for cargo, truck capacity calculator, cargo weight to truck, truck size guide"
         canonical="/tools/truck-load-calculator"
         breadcrumbs={[{ name: "Truck Load Calculator", url: "/tools/truck-load-calculator" }]}

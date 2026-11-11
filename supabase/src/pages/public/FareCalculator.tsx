@@ -325,8 +325,8 @@ export default function FareCalculator() {
         </div>
       </noscript>
       <SeoMeta
-        title="Truck Fare Calculator – Free Bhada Calculator India"
-        description="Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps."
+        title="Truck Bhada Calculator India – Estimate Transport Cost"
+        description="Calculate estimated truck transport charges for your route. Enter pickup, delivery and vehicle details to get a freight cost estimate before planning your shipment."
         keywords="freight fare calculator India, PTL LTL rate calculator, truck freight cost estimation, vehicle rate card"
         canonical="/tools/fare-calculator"
         breadcrumbs={[{ name: "Fare Calculator", url: "/tools/fare-calculator" }]}

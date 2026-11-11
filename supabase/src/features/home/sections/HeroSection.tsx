@@ -4,6 +4,7 @@ import { ArrowRight, Star, ChevronDown, ShieldCheck, MapPin, Lock } from 'lucide
 import { Button } from '@/components/ui/button';
 import { useDishaGuide } from '@/components/DishaGuideProvider';
 import HeroQuoteWidget from './HeroQuoteWidget';
+import { trackPostLoadClick } from '@/utils/analytics';
 
 const HeroSection = React.memo(() => {
   const { handleClick: guideHandleClick } = useDishaGuide();
@@ -48,7 +49,10 @@ const HeroSection = React.memo(() => {
               <Link
                 to="/register?type=shipper"
                 data-guide="hero-shipper-cta"
-                onClick={() => guideHandleClick('[data-guide="hero-shipper-cta"]')}
+                onClick={() => {
+                  guideHandleClick('[data-guide="hero-shipper-cta"]');
+                  trackPostLoadClick({ source: "home-hero" });
+                }}
               >
                 <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg w-full sm:w-auto shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-transform duration-150 active:scale-[0.97]">
                   I Want to Ship Goods <ArrowRight className="ml-2 h-5 w-5 icon-hover" />

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Package, Search, MapPin, Shield, TrendingUp, Clock, BarChart3, Users, ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SeoMeta from "@/components/SeoMeta";
+import { trackPostLoadClick } from '@/utils/analytics';
 
 const problems = [
   {
@@ -180,7 +181,7 @@ export default function ShipperSolution() {
                 Stop chasing brokers and start shipping smarter. LoadSaathi connects you directly with the right truckers, at fair prices, with full visibility from pickup to delivery.
               </p>
               <div className="flex items-center gap-4 pt-4">
-                <Link to="/register?type=shipper">
+                <Link to="/register?type=shipper" onClick={() => trackPostLoadClick({ source: "shipper-solution-hero" })}>
                   <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.4)] group">
                     Start Shipping
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -399,7 +400,7 @@ export default function ShipperSolution() {
             <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-4">Stop Managing Freight.<br />Start Optimizing It.</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md mx-auto">Join thousands of Indian businesses that have cut costs, eliminated broker friction, and gained full control over their supply chain.</p>
             <div className="space-y-3">
-              <Link to="/register?type=shipper">
+              <Link to="/register?type=shipper" onClick={() => trackPostLoadClick({ source: "shipper-solution-cta" })}>
                 <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-6 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] group">
                   Register as Shipper <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>

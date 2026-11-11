@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Truck, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { trackPostLoadClick } from '@/utils/analytics';
 
 const CtaSection = React.memo(() => (
   <Reveal as="section" className="py-16 sm:py-24 lg:py-32 relative overflow-hidden flex items-center justify-center">
@@ -16,7 +17,7 @@ const CtaSection = React.memo(() => (
           <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-4">Ready to Transform Your Freight?</h2>
           <p className="text-sm sm:text-base text-muted-foreground mb-8">Join India&apos;s intelligent freight network. Sign up as a shipper or trucker and start optimizing today.</p>
           <div className="space-y-4">
-            <Link to="/register?type=shipper" className="block">
+            <Link to="/register?type=shipper" className="block" onClick={() => trackPostLoadClick({ source: "home-cta" })}>
               <Button className="w-full bg-orange-700 hover:bg-orange-800 text-white text-sm font-bold tracking-wider uppercase px-6 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)]">
                 <Package className="mr-2 h-5 w-5" /> I Want to Ship Goods
               </Button>

@@ -8,6 +8,9 @@ export const cityData: Record<string, {
   name: string;
   state: string;
   description: string;
+  /** Optional per-city SEO overrides (fall back to the template defaults). */
+  seoTitle?: string;
+  seoDescription?: string;
   industries: string[];
   heroGradient: string;
   commodities: string[];
@@ -42,6 +45,8 @@ export const cityData: Record<string, {
   ranchi: {
     name: "Ranchi",
     state: "Jharkhand",
+    seoTitle: "Goods Transport in Ranchi – Find Trucks & Freight Loads | LoadSaathi",
+    seoDescription: "Looking to move goods from Ranchi or find freight for your truck? Explore LoadSaathi's freight marketplace and available transport opportunities across East India.",
     description: "Ranchi, the capital of Jharkhand, is a growing logistics hub at the crossroads of multiple state highways. It handles coal, heavy machinery, and consumer goods distribution for the Chota Nagpur Plateau region. The city's freight volume grows 12–15% annually.",
     industries: ["Coal & Mining", "Heavy Machinery", "Consumer Goods", "Agriculture"],
     heroGradient: "from-blue-600 to-indigo-600",

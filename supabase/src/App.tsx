@@ -12,6 +12,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider, useTheme } from "@/theme/theme";
 import { PostHogProvider } from "./components/PostHogProvider";
 import { GoogleAnalyticsTracker } from "./components/GoogleAnalytics";
+import { trackOrganicLanding } from "@/utils/analytics";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SimpleLabelsProvider } from "@/contexts/SimpleLabelsContext";
 import { LanguageProvider } from "@/i18n/LanguageContext";
@@ -69,6 +70,11 @@ function ClerkProviderWithRouter({ children }: { children: ReactNode }) {
 function App() {
   const [clerkError, setClerkError] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
+
+  useEffect(() => {
+    // Session-level acquisition attribution (fires once per session).
+    trackOrganicLanding();
+  }, []);
 
   useEffect(() => {
     // Listen for Clerk errors and handle them gracefully

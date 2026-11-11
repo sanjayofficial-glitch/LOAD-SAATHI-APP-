@@ -188,6 +188,9 @@ const OnboardingFlow = () => {
 
       showSuccess('Profile saved!');
       triggerSuccessReaction('Profile saved! Let\'s get you started.');
+      if (role === 'trucker') {
+        trackEvent('transporter_signup', { source: 'onboarding' });
+      }
       if (isPhoneValid) {
         trackEvent('phone_added', { role: (role === 'trucker' || role === 'shipper' ? role : undefined) });
       } else if (phoneSkipped) {

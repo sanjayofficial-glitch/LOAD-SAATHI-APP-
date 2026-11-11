@@ -930,8 +930,8 @@ const STATIC_PAGE_DATA = {
     summary: "Find trucks near your location: compare capacity, market rates and verified trucker credit scores, then book with live GPS tracking."
   },
   "/fare-calculator": {
-    title: "Truck Fare Calculator – Free Bhada Calculator India",
-    metaDescription: "Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps.",
+    title: "Truck Bhada Calculator India – Estimate Transport Cost | LoadSaathi",
+    metaDescription: "Calculate estimated truck transport charges for your route. Enter pickup, delivery and vehicle details to get a freight cost estimate before planning your shipment.",
     keywords: ["truck fare calculator", "freight cost calculator india", "truck rate per km", "transport charge calculator"],
     summary: "Free calculator that estimates truck freight charges by distance, weight, and route."
   },
@@ -942,8 +942,8 @@ const STATIC_PAGE_DATA = {
     summary: "Per-kilometre transport cost calculator covering fuel, tolls, and load type."
   },
   "/truck-load-calculator": {
-    title: "Truck Load Calculator India – Free, Instant Fare & Rate",
-    metaDescription: "Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators.",
+    title: "Truck Load Calculator – Check Cargo Weight & Capacity | LoadSaathi",
+    metaDescription: "Check whether your goods fit a truck's available carrying capacity. Estimate load requirements and plan the right vehicle for your shipment.",
     keywords: ["truck load calculator", "truck capacity calculator", "which truck for my load", "cargo volume calculator"],
     summary: "Calculates cargo weight and volume and suggests the right Indian truck type."
   },
@@ -966,14 +966,14 @@ const STATIC_PAGE_DATA = {
     summary: "Shows the cost of empty return runs and savings from filling them with backhaul loads."
   },
   "/tools/fare-calculator": {
-    title: "Truck Fare Calculator – Free Bhada Calculator India",
-    metaDescription: "Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps.",
+    title: "Truck Bhada Calculator India – Estimate Transport Cost | LoadSaathi",
+    metaDescription: "Calculate estimated truck transport charges for your route. Enter pickup, delivery and vehicle details to get a freight cost estimate before planning your shipment.",
     keywords: ["truck fare calculator", "freight cost calculator india", "truck rate per km", "transport charge calculator"],
     summary: "Free calculator that estimates truck freight charges by distance, weight, and route."
   },
   "/tools/truck-load-calculator": {
-    title: "Truck Load Calculator India – Free, Instant Fare & Rate",
-    metaDescription: "Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators.",
+    title: "Truck Load Calculator – Check Cargo Weight & Capacity | LoadSaathi",
+    metaDescription: "Check whether your goods fit a truck's available carrying capacity. Estimate load requirements and plan the right vehicle for your shipment.",
     keywords: ["truck load calculator", "truck capacity calculator", "which truck for my load", "cargo volume calculator"],
     summary: "Calculates cargo weight and volume and suggests the right Indian truck type."
   },
@@ -1593,13 +1593,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "truck-transport-charges-per-km-india": {
-    "title": "Truck Rate Per Km India 2026: ₹10–₹85 Chart (All Trucks)",
+    "title": "Truck Transport Charges Per KM in India (2026 Guide)",
     "keywords": [
       "truck rate per km india 2026",
       "truck transport charges per km india",
       "freight rates"
     ],
-    "summary": "Real truck transport rates per km in India 2026 — Tata Ace to 32ft. Rate chart, cost formula & free calculator. No agent markup, actual market rates.",
+    "summary": "Understand what affects truck transport charges per kilometre in India, including route distance, vehicle type, fuel, tolls and cargo requirements.",
     "author": "LoadSaathi Team",
     "authorBio": "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
     "date": "2026-08-16",
@@ -2020,13 +2020,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "trucker-earnings-jharkhand-2026": {
-    "title": "Trucker Earnings in Jharkhand 2026: Complete Pay Guide",
+    "title": "Truck Driver Earnings in Jharkhand: Routes, Loads & Costs",
     "keywords": [
       "trucker salary and earnings in jharkhand 2026 complete pay breakdown",
       "trucker earnings jharkhand 2026",
       "trucker tips"
     ],
-    "summary": "How much do truck drivers earn in Jharkhand in 2026? See salary ranges by vehicle type, round-trip P and L for major corridors (Dhanbad-Kolkata, Ranchi-Jamshedpur, Jamshedpur-Bhubaneswar), and how return loads boost net income by 40-60%.",
+    "summary": "Explore the factors that affect truck driver earnings in Jharkhand, including freight rates, operating costs, return loads and vehicle utilisation.",
     "author": "Sanjaya Sahu",
     "date": "2026-08-18",
     "readTime": "6 min",
@@ -2878,13 +2878,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-09-25"
   },
   "what-is-load-board": {
-    "title": "What Is a Load Board? Meaning + Best Free Option in India",
+    "title": "What Is a Truck Load Board? Find Loads & Return Trips in India",
     "keywords": [
       "load board for trucks india",
       "what is load board",
       "trucker tips"
     ],
-    "summary": "Load board meaning explained simply + how Indian truckers use one to find loads without brokers. Compare paid apps vs LoadSaathi's free load board.",
+    "summary": "Learn how truck load boards connect truck drivers with available goods. Understand return loads, freight matching and how transporters can find their next trip.",
     "author": "LoadSaathi Team",
     "authorBio": "LoadSaathi team explains how digital freight matching works for Indian truckers and MSME shippers, corridor by corridor.",
     "date": "2026-09-12",
@@ -3158,9 +3158,9 @@ const BLOG_DATA = {
 // ── Guide SEO metadata (3 guides) ─────────────────────────────────────────────
 const GUIDE_DATA = {
   "ptl-vs-ftl": {
-    title: "FTL & PTL Full Form: Difference, Rates & Which Is Cheaper",
+    title: "Part Load vs Full Truck Load: Meaning, Cost & Differences",
     keywords: ["ptl vs ftl", "part truck load", "full truck load", "shipping comparison india"],
-    summary: "FTL = Full Truck Load, PTL = Part Truck Load. See the difference, 2026 rates per kg & km, and which saves money. Free PTL vs FTL calculator inside.",
+    summary: "Understand the difference between part-load and full-truck transport. Compare when to book shared truck space and when a dedicated vehicle makes more sense.",
     author: "LoadSaathi Team",
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
     readTime: "6 min read",
@@ -3620,11 +3620,15 @@ function getSeoMeta(path) {
     const summary = data && data.description
       ? data.description
       : `Freight services and trucking in ${cityTitle}.`;
+    const seoTitle = data && data.seoTitle
+      ? data.seoTitle
+      : (state ? `${cityTitle}, ${stateTitle} Freight | LoadSaathi` : `${cityTitle} Freight | LoadSaathi`);
+    const metaDescription = data && data.metaDescription
+      ? data.metaDescription
+      : clampMetaDescription(summary);
     return {
-      seoTitle: state ? `${cityTitle}, ${stateTitle} Freight | LoadSaathi` : `${cityTitle} Freight | LoadSaathi`,
-      // clampMetaDescription keeps the React and server-rendered descriptions
-      // byte-identical; LocationPage uses the same helper on the same string.
-      metaDescription: clampMetaDescription(summary),
+      seoTitle,
+      metaDescription,
       keywords: [`freight ${dataName}`, `trucking ${dataName}`, `${dataName} logistics`, `PTL ${dataName}`, `FTL ${dataName}`],
       summary,
       author: 'LoadSaathi Team',
@@ -3736,6 +3740,8 @@ const LOCATION_DATA = {
   "ranchi": {
     "name": "Ranchi",
     "state": "Jharkhand",
+    "seoTitle": "Goods Transport in Ranchi – Find Trucks & Freight Loads | LoadSaathi",
+    "metaDescription": "Looking to move goods from Ranchi or find freight for your truck? Explore LoadSaathi's freight marketplace and available transport opportunities across East India.",
     "description": "Ranchi, the capital of Jharkhand, is a growing logistics hub at the crossroads of multiple state highways. It handles coal, heavy machinery, and consumer goods distribution for the Chota Nagpur Plateau region. The city's freight volume grows 12–15% annually.",
     "industries": [
       "Coal & Mining",

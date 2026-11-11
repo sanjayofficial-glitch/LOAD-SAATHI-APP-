@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SeoMeta from "@/components/SeoMeta";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { trackEvent } from '@/utils/analytics';
+import { trackEvent, trackPhoneClick } from '@/utils/analytics';
 
 const supportInfo = [
   { icon: Mail, label: "Email Us", value: "support@loadsaathi.in", detail: "We respond within 2-4 hours" },
@@ -297,7 +297,7 @@ const Contact = () => {
                   Building LoadSaathi to bridge the gap between shippers and truckers with technology, not intermediaries.
                 </p>
                 <div className="space-y-3">
-                  <a href="tel:+918328998031" className="flex items-center gap-3 text-sm text-foreground hover:text-orange-500 transition-colors group/link">
+                  <a href="tel:+918328998031" onClick={() => trackPhoneClick({ page_type: "contact", cta_location: "founder-card" })} className="flex items-center gap-3 text-sm text-foreground hover:text-orange-500 transition-colors group/link">
                     <Phone className="h-4 w-4 text-orange-500 shrink-0" />
                     <span>+91 83289 98031</span>
                   </a>
@@ -324,7 +324,7 @@ const Contact = () => {
                   Driving operations and growth to ensure LoadSaathi delivers seamless freight experiences across East India.
                 </p>
                 <div className="space-y-3">
-                  <a href="tel:+917684843985" className="flex items-center gap-3 text-sm text-foreground hover:text-blue-500 transition-colors group/link">
+                  <a href="tel:+917684843985" onClick={() => trackPhoneClick({ page_type: "contact", cta_location: "coo-card" })} className="flex items-center gap-3 text-sm text-foreground hover:text-blue-500 transition-colors group/link">
                     <Phone className="h-4 w-4 text-blue-500 shrink-0" />
                     <span>+91 76848 43985</span>
                   </a>

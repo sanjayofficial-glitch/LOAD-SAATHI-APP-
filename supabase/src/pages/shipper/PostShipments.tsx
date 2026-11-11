@@ -22,7 +22,7 @@ import ReturnLoadProbability from "@/components/ReturnLoadProbability";
 import { PricePredictor } from "@/components/PricePredictor";
 import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
-import { trackEvent } from "@/utils/analytics";
+import { trackEvent, EVENTS } from "@/utils/analytics";
 import { useDishaGuideRegistration } from "@/hooks/useDishaGuide";
 import { useT } from "@/i18n/useT";
 import { useSpeechToText } from "@/hooks/useSpeechToText";
@@ -39,9 +39,17 @@ const PostShipments = () => {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'quick' | 'full'>('quick');
   const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const formStartedRef = useRef(false);
 
   useEffect(() => {
     import('@/data/locations.json').then(mod => setLocationData(mod.default.data));
+  }, []);
+
+  // Form start — fires once per page mount (a view of the form is not a lead).
+  useEffect(() => {
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    trackEvent(EVENTS.LOAD_FORM_START);
   }, []);
 
   const {
@@ -196,6 +204,11 @@ const PostShipments = () => {
         destination_state: formData.destination_state,
         weight_tonnes: weight,
         budget_per_tonne: budget,
+      });
+      // Valid submission = an enquiry; qualification happens separately.
+      trackEvent(EVENTS.LOAD_SUBMITTED, {
+        shipment_id: shipmentData.id,
+        weight_tonnes: weight,
       });
       showSuccess(t('form.postLoad') + ' ✓');
       notifySuccess('submit');

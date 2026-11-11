@@ -519,14 +519,14 @@ export const articles: Record<string, BlogArticle> = {
   },
   "truck-transport-charges-per-km-india": {
     category: "Freight Rates",
-    title: "Truck Rate Per Km India 2026: ₹10–₹85 Chart (All Trucks)",
+    title: "Truck Transport Charges Per KM in India (2026 Guide)",
     coverImage: "/blog/og/truck-transport-cost-per-km-india-2026.svg",
     date: "August 16, 2026",
     lastUpdated: "October 7, 2026",
     readTime: "6 min read",
     author: "LoadSaathi Team",
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
-    summary: "Real truck transport rates per km in India 2026 — Tata Ace to 32ft. Rate chart, cost formula & free calculator. No agent markup, actual market rates.",
+    summary: "Understand what affects truck transport charges per kilometre in India, including route distance, vehicle type, fuel, tolls and cargo requirements.",
     content: [],
     faq: [
       { question: "What is the average truck transport cost per km in India?", answer: "There is no single reliable national average. The cost depends on vehicle class, route, cargo, distance, fuel, tolls, seasonality, loading time, and return-load availability. Use a current route-specific estimate rather than relying on a generic number." },
@@ -630,14 +630,14 @@ export const articles: Record<string, BlogArticle> = {
   },
 
   "trucker-earnings-jharkhand-2026": {
-    title: "Trucker Earnings in Jharkhand 2026: Complete Pay Guide",
+    title: "Truck Driver Earnings in Jharkhand: Routes, Loads & Costs",
     category: "Trucker Tips",
     date: "August 18, 2026",
     lastUpdated: "August 22, 2026",
     readTime: "6 min read",
     author: "Sanjaya Sahu",
     coverImage: "/blog/og/trucker-earnings-jharkhand.svg",
-    summary: "How much do truck drivers earn in Jharkhand in 2026? See salary ranges by vehicle type, round-trip P and L for major corridors (Dhanbad-Kolkata, Ranchi-Jamshedpur, Jamshedpur-Bhubaneswar), and how return loads boost net income by 40-60%.",
+    summary: "Explore the factors that affect truck driver earnings in Jharkhand, including freight rates, operating costs, return loads and vehicle utilisation.",
     content: [],
     relatedRoutes: ["ranchi-to-jamshedpur", "dhanbad-to-jamshedpur", "ranchi-to-kolkata"],
     faq: [
@@ -1179,7 +1179,7 @@ export const articles: Record<string, BlogArticle> = {
   },
 
   "what-is-load-board": {
-    title: "What Is a Load Board? Meaning + Best Free Option in India",
+    title: "What Is a Truck Load Board? Find Loads & Return Trips in India",
     category: "Trucker Tips",
     date: "September 12, 2026",
     lastUpdated: "September 25, 2026",
@@ -1187,7 +1187,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "LoadSaathi Team",
     authorBio: "LoadSaathi team explains how digital freight matching works for Indian truckers and MSME shippers, corridor by corridor.",
     coverImage: "/blog/og/digital-load-boards-india.svg",
-    summary: "Load board meaning explained simply + how Indian truckers use one to find loads without brokers. Compare paid apps vs LoadSaathi's free load board.",
+    summary: "Learn how truck load boards connect truck drivers with available goods. Understand return loads, freight matching and how transporters can find their next trip.",
     content: [],
     relatedRoutes: ["ranchi-to-kolkata", "rourkela-to-kolkata"],
     keywords: ["load board india", "what is a load board", "truck load matching platform", "freight matching india", "return loads india", "book truck online india", "empty miles trucking india", "part load matching"],
