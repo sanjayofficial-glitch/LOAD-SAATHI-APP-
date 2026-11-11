@@ -1,4 +1,4 @@
-import { useSimpleLabels } from '@/contexts/SimpleLabelsContext';
+import { useSimpleLabels } from '@/contexts/SimpleLabelsContext.hooks';
 
 interface SimpleLabelProps {
   english: string;

@@ -63,7 +63,21 @@ const VoiceLocationInput = forwardRef<HTMLInputElement, VoiceLocationInputProps>
   const [isListening, setIsListening] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const recognitionRef = useRef<any>(null);
+  type RecognitionResultEvent = { results: Array<Array<{ transcript: string }>> };
+  type SpeechRecognitionLike = {
+    continuous: boolean;
+    interimResults: boolean;
+    lang: string;
+    maxAlternatives?: number;
+    onstart: (() => void) | null;
+    onend: (() => void) | null;
+    onerror: (() => void) | null;
+    onresult: ((event: RecognitionResultEvent) => void) | null;
+    start: () => void;
+    stop: () => void;
+    abort: () => void;
+  };
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const cityIndex = useMemo(() => buildCityIndex(data || {}), [data]);
@@ -107,7 +121,7 @@ const VoiceLocationInput = forwardRef<HTMLInputElement, VoiceLocationInputProps>
 
   const startListening = () => {
     if (!SpeechRecognition) return;
-    const recognition = new (SpeechRecognition as any)();
+    const recognition = new (SpeechRecognition as unknown as new () => SpeechRecognitionLike)();
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.lang = 'en-IN';
@@ -116,8 +130,8 @@ const VoiceLocationInput = forwardRef<HTMLInputElement, VoiceLocationInputProps>
     recognition.onstart = () => setIsListening(true);
     recognition.onend = () => setIsListening(false);
     recognition.onerror = () => setIsListening(false);
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript.trim();
+    recognition.onresult = (event: RecognitionResultEvent) => {
+      const transcript = event.results[0]![0]!.transcript.trim();
       setInputValue(transcript);
       const results = searchCities(transcript, cityIndex);
       setSuggestions(results);

@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Truck, 
   Clock, 
-  TrendingUp, 
   Calendar, 
   MapPin, 
   Eye,
@@ -41,7 +40,7 @@ interface ActivityItem {
 }
 
 const statCards: { label: string; key: 'total' | 'completed' | 'pending' | 'thisMonth'; icon: LucideIcon; color: string; bg: string }[] = [
-  { label: 'Total', key: 'total', icon: TrendingUp, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/50' },
+  { label: 'Total', key: 'total', icon: Inbox, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/50' },
   { label: 'Completed', key: 'completed', icon: CheckCircle, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-950/50' },
   { label: 'Pending', key: 'pending', icon: Clock, color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-950/50' },
   { label: 'This Month', key: 'thisMonth', icon: Calendar, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/50' }
@@ -283,6 +282,7 @@ const TruckerHistory = () => {
             <EmptyState
               accent="orange"
               icon={<Inbox className="h-8 w-8 sm:h-10 sm:w-10" />}
+              image="/illustrations/history-clock.png"
               title="No activities yet"
               description="You haven't posted any trips or sent any offers yet. Get started to see your activity here."
               primaryAction={{ label: 'Post a Trip', to: '/trucker/post-trip' }}

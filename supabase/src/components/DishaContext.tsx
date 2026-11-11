@@ -1,7 +1,5 @@
 ﻿import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -15,57 +13,7 @@ import type { DishaPosition } from './DishaMascot'
 import type { GuideState, GuideStep } from './DishaGuideEngine'
 import { guideEngine } from './DishaGuideEngine'
 
-type DishaPageContext =
-  | 'public-landing'
-  | 'public-public'
-  | 'auth'
-  | 'shipper'
-  | 'trucker'
-  | 'admin'
-  | 'profile'
-  | 'shipper-post'
-  | 'trucker-post'
-  | 'unknown'
-
-interface DishaTip {
-  message: string
-  mood?: DishaMood
-  when?: 'enter' | 'idle' | 'first-interaction' | 'cta-hover' | 'success' | 'error' | 'help-open'
-}
-
-interface DishaContextValue {
-  mood: DishaMood
-  setMood: (mood: DishaMood) => void
-  minimized: boolean
-  setMinimized: (minimized: boolean) => void
-  dismissed: boolean
-  setDismissed: (dismissed: boolean) => void
-  tip: DishaTip | null
-  setTip: (tip: DishaTip | null) => void
-  pageContext: DishaPageContext
-  anchor: 'bottom-right' | 'bottom-left' | 'free'
-  position: DishaPosition
-  move: (dx: number, dy: number) => void
-  setPosition: (position: DishaPosition) => void
-  showBubble: boolean
-  setShowBubble: (show: boolean) => void
-  speak: (message: string, mood?: DishaMood) => void
-  resetForNewSession: () => void
-  reaction: { name: string; nonce: number } | null;
-  playReaction: (name: string) => void;
-  // Guide integration
-  guideState: GuideState | null
-  guideStep: GuideStep | null
-  guideTargetPosition: { x: number; y: number; side: string; targetRect: DOMRect | null } | null
-  setGuideMood: (mood: DishaMood) => void
-  triggerGuideReaction: (reaction: 'error' | 'success' | 'confused' | 'thinking' | 'idle') => void
-  triggerErrorReaction: (message: string) => void
-  triggerSuccessReaction: (message: string) => void
-  nextStep: () => void
-  dismissStep: () => void
-}
-
-const DishaContext = createContext<DishaContextValue | null>(null)
+import { DishaContext, type DishaContextValue, type DishaTip } from './DishaContext.shared'
 
 const DISMISSED_KEY = 'loadsaathi-disha-dismissed'
 
@@ -153,7 +101,7 @@ export function DishaProvider({ children }: { children: ReactNode }) {
 
   const pageContext = useMemo(
     () => detectPageContext(location, userProfile),
-    [location.pathname, userProfile],
+    [location, userProfile],
   )
 
   const move = useCallback(
@@ -256,6 +204,18 @@ export function DishaProvider({ children }: { children: ReactNode }) {
     guideEngine.dismissCurrentStep()
   }, [])
 
+  const acceptGuide = useCallback(() => {
+    return guideEngine.acceptGuide()
+  }, [])
+
+  const declineGuide = useCallback(() => {
+    return guideEngine.declineGuide()
+  }, [])
+
+  const stopGuide = useCallback(() => {
+    guideEngine.stopGuide()
+  }, [])
+
   // Subscribe to guide engine updates
   useEffect(() => {
     const unsubscribe = guideEngine.subscribe((s: GuideState) => {
@@ -296,6 +256,9 @@ export function DishaProvider({ children }: { children: ReactNode }) {
       triggerSuccessReaction,
       nextStep,
       dismissStep,
+      acceptGuide,
+      declineGuide,
+      stopGuide,
     }),
     [
       mood,
@@ -325,16 +288,13 @@ export function DishaProvider({ children }: { children: ReactNode }) {
       triggerSuccessReaction,
       nextStep,
       dismissStep,
+      acceptGuide,
+      declineGuide,
+      stopGuide,
     ],
   )
 
   return <DishaContext.Provider value={value}>{children}</DishaContext.Provider>
 }
 
-export function useDisha() {
-  const context = useContext(DishaContext)
-  if (!context) {
-    throw new Error('useDisha must be used within DishaProvider')
-  }
-  return context
-}
+

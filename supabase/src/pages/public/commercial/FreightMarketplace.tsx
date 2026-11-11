@@ -47,9 +47,9 @@ const features = [
   {
     icon: Clock,
     title: 'Fast Payments',
-    desc: 'Escrow-backed payments released within 24–48 hours of delivery. No more 30–60 day broker credit cycles.',
-    stat: '< 48hrs',
-    statLabel: 'Payment Release',
+    desc: 'Escrow-backed payments are planned. Today, payment terms are agreed directly between shipper and trucker.',
+    stat: 'Planned',
+    statLabel: 'Escrow Settlement',
   },
 ];
 
@@ -58,7 +58,7 @@ const forShippers = [
   'AI matches the best trucks for your route and budget',
   'Compare trucker ratings, prices, and transit times',
   'GPS tracking from pickup to delivery',
-  'Secure escrow payments — release on ePOD confirmation',
+  'Escrow-backed payments — planned',
   'Credit scores ensure trucker accountability',
 ];
 
@@ -82,9 +82,9 @@ const corridors = [
 
 const faqs = [
   { q: "What is a digital freight marketplace?", a: "A digital freight marketplace is an online platform connecting shippers (businesses needing to move goods) with truckers (those with available capacity). Instead of calling brokers, both sides transact directly through the platform with transparent pricing, verified identities, and secure payments." },
-  { q: "How does LoadSaathi work?", a: "Shippers post loads with origin, destination, weight, and cargo details. LoadSaathi's AI matches them with available trucks based on 7 factors: route, capacity, price, rating, timeliness, communication, and tenure. Both sides track the shipment via GPS and transact through escrow." },
-  { q: "What does LoadSaathi charge?", a: "LoadSaathi is free to join. We charge a 2–5% transaction fee per completed shipment, varying by role, volume, and credit score. No subscriptions, no hidden fees, no minimum commitments." },
-  { q: "Which corridors does LoadSaathi cover?", a: "LoadSaathi covers 25+ corridors across East India: Rourkela–Ranchi, Rourkela–Bhubaneswar, Rourkela–Kolkata, Ranchi–Jamshedpur, Bhubaneswar–Kolkata, and more across Odisha, Jharkhand, and West Bengal." },
+  { q: "How does LoadSaathi work?", a: "Shippers post loads with origin, destination, weight, and cargo details. LoadSaathi's AI matches them with available trucks based on 7 factors: route, capacity, price, rating, timeliness, communication, and tenure. Both sides track the shipment via GPS, and settlement terms are agreed directly (escrow-backed payments are planned)." },
+  { q: "What does LoadSaathi charge?", a: "LoadSaathi is free to join. A transaction fee applies on completed shipments; the final schedule will be published once confirmed. No subscriptions, no hidden fees, no minimum commitments." },
+  { q: "Which corridors does LoadSaathi cover?", a: "LoadSaathi publishes corridor pages across East India: Rourkela–Ranchi, Rourkela–Bhubaneswar, Rourkela–Kolkata, Ranchi–Jamshedpur, Bhubaneswar–Kolkata, and more across Odisha, Jharkhand, and West Bengal." },
   { q: "Is LoadSaathi a broker?", a: "No. LoadSaathi is a digital freight marketplace — not a broker. We connect shippers directly with verified truckers. Our AI handles matching, pricing, and tracking. No middlemen, no markups." },
 ];
 
@@ -102,7 +102,7 @@ export default function FreightMarketplace() {
           <ol>
             <li>Shipper posts a load (origin, destination, weight, cargo type)</li>
             <li>AI matches the best available trucks</li>
-            <li>Shipper books and pays via escrow</li>
+            <li>Shipper books; settlement terms agreed directly (escrow-backed payment planned)</li>
             <li>Trucker delivers, GPS-tracked in real time</li>
             <li>Payment released on delivery confirmation</li>
           </ol>
@@ -175,7 +175,7 @@ export default function FreightMarketplace() {
             </h1>
             <DirectAnswer
               answer="A digital freight marketplace is an online platform connecting shippers (businesses needing to move goods) with truckers (those with available capacity). Instead of calling brokers, both sides transact directly through the platform with transparent pricing, verified identities, and secure payments."
-              qualifier="LoadSaathi charges 1.5–3% per completed shipment — no subscriptions or hidden fees."
+              qualifier="LoadSaathi charges a transaction fee per completed shipment — no subscriptions or hidden fees; the final schedule will be published."
             />
             <KeyTakeaways
               items={[

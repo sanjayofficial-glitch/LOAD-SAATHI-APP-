@@ -119,11 +119,12 @@ export default async function handler(req, res) {
   }
 
   const secret = process.env.CRON_SECRET;
-  if (secret) {
-    const auth = req.headers.authorization || '';
-    if (auth !== `Bearer ${secret}`) {
-      return json(res, 401, { error: 'Unauthorized' });
-    }
+  if (!secret) {
+    return json(res, 503, { error: 'CRON_SECRET not configured' });
+  }
+  const auth = req.headers.authorization || '';
+  if (auth !== `Bearer ${secret}`) {
+    return json(res, 401, { error: 'Unauthorized' });
   }
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
@@ -138,7 +139,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         apikey: anonKey,
-        Authorization: `Bearer ${anonKey}`,
+        Authorization: `Bearer ${secret}`,
         'Content-Type': 'application/json',
       },
       signal: AbortSignal.timeout(25000),

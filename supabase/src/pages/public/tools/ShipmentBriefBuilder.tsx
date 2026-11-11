@@ -174,7 +174,7 @@ export default function ShipmentBriefBuilder() {
         </div>
       </noscript>
       <SeoMeta
-        title="Free Shipment Brief Builder India | Freight Request Template"
+        title="Shipment Brief Builder – Free Freight Request Template"
         description="Build a complete shipment brief in minutes. Enter pickup, drop-off, cargo type, weight, dimensions, ready date and loading needs — then copy or download a clean freight request to share with transporters."
         keywords="shipment brief template, freight request builder, load request format, cargo details format for transporter, shipment specification sheet India"
         canonical="/tools/shipment-brief"

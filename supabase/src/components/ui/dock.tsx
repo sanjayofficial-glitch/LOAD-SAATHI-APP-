@@ -153,10 +153,30 @@ function DockItem({ children, className }: DockItemProps) {
 
   const isHovered = useMotionValue(0);
 
-  const mouseDistance = useTransform(mouseX, (val) => {
-    const domRect = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
-    return val - domRect.x - domRect.width / 2;
-  });
+  // Measure the item's center once, then keep it fresh via ResizeObserver
+  // (coalesced, async — never a synchronous layout read in the per-frame
+  // transform). The old code called getBoundingClientRect on every mouseX
+  // change, forcing a reflow each frame. RO still tracks the animated
+  // width changes, so centers stay accurate while items magnify.
+  const centerXRef = useRef(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => {
+      const rect = el.getBoundingClientRect();
+      centerXRef.current = rect.x + rect.width / 2;
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    window.addEventListener('resize', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
+
+  const mouseDistance = useTransform(mouseX, (val) => val - centerXRef.current);
 
   const widthTransform = useTransform(
     mouseDistance,

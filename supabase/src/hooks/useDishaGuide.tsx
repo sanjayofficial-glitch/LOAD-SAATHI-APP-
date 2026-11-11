@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useDishaGuide } from '@/components/DishaGuideProvider';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDishaGuide } from '@/components/DishaGuideProvider.hooks';
 import type { GuideFlow } from '@/components/DishaGuideEngine';
 
 interface UseDishaGuideOptions {
@@ -82,10 +82,14 @@ export function useDishaGuideRegistration(options: UseDishaGuideOptions = {}) {
   }, [customFlow, engine]);
 
   useEffect(() => {
-    if (flowId && state.userPreferences.autoGuide) {
+    if (!flowId) return;
+    // Offer-first flows always present their "Can I guide you?" ask (the offer
+    // itself is the opt-in), even if auto-guide was turned off.
+    const flow = engine.getFlow(flowId);
+    if (flow?.offerFirst || state.userPreferences.autoGuide) {
       startFlow(flowId);
     }
-  }, [flowId, state.userPreferences.autoGuide, startFlow]);
+  }, [flowId, state.userPreferences.autoGuide, startFlow, engine]);
 
   const getElementRef = useCallback((key: string) => {
     return elementRefs.current[key] || { current: null };
@@ -144,26 +148,29 @@ export function createGuideRefs<T extends Record<string, React.RefObject<HTMLEle
   return refs;
 }
 
-export function withGuide<T extends React.ComponentType<any>>(
+export function withGuide<T extends React.ComponentType<P>, P = React.ComponentProps<T>>(
   Component: T,
   flowId: string,
   elementKeys: string[]
 ): T {
   const displayName = Component.displayName || Component.name || 'Component';
-  const WithGuide = (props: any) => {
+  const WithGuide = (props: P) => {
     const guide = useDishaGuideRegistration({ flowId });
-    const refs = useMemo(() => createGuideRefs<Record<string, React.RefObject<HTMLElement>>>(elementKeys), [elementKeys]);
+    const [stableElementKeys] = useState(() => elementKeys);
+    const refs = useMemo(() => createGuideRefs<Record<string, React.RefObject<HTMLElement>>>(stableElementKeys), [stableElementKeys]);
 
     useEffect(() => {
-      elementKeys.forEach(key => {
+      stableElementKeys.forEach(key => {
         const ref = refs[key];
         if (ref && ref.current) {
           guide.registerElement(key, ref);
         }
       });
-    }, [elementKeys, refs, guide]);
+    }, [stableElementKeys, refs, guide]);
 
-    return <Component {...props} {...guide} guideRefs={refs} />;
+    const guideProps = { ...guide, guideRefs: refs };
+    const Rendered = Component as React.ComponentType<P & Record<string, unknown>>;
+    return <Rendered {...props} {...guideProps} />;
   };
   WithGuide.displayName = `withGuide(${displayName})`;
   return WithGuide as T;

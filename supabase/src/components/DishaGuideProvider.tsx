@@ -1,36 +1,14 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
 import { useLocation } from 'react-router-dom';
-import { guideEngine, type GuideEngine, type GuideState, type GuideStep } from './DishaGuideEngine';
+import { guideEngine } from './DishaGuideEngine';
 
-interface DishaGuideContextValue {
-  engine: GuideEngine;
-  state: GuideState;
-  currentStep: GuideStep | null;
-  targetPosition: { x: number; y: number; side: string; targetRect: DOMRect | null } | null;
-  registerPageElements: (elements: Record<string, HTMLElement>) => void;
-  startFlow: (flowId: string) => boolean;
-  nextStep: () => void;
-  previousStep: () => void;
-  dismissStep: () => void;
-  pause: () => void;
-  resume: () => void;
-  stop: () => void;
-  setPreferences: (prefs: Partial<GuideState['userPreferences']>) => void;
-  handleFieldFocus: (selector: string) => void;
-  handleValidationError: (selector: string, isValid: boolean) => void;
-  handleSuccess: (selector: string) => void;
-  handleClick: (selector: string) => void;
-}
-
-const DishaGuideContext = createContext<DishaGuideContextValue | null>(null);
+import { DishaGuideContext, type DishaGuideContextValue } from './DishaGuideProvider.shared';
 
 export function DishaGuideProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
@@ -57,8 +35,14 @@ export function DishaGuideProvider({ children }: { children: ReactNode }) {
     };
   }, [state.isActive, state.currentStepIndex]);
 
-  const currentStep = useMemo(() => guideEngine.getCurrentStep(), [state]);
-  const targetPosition = useMemo(() => guideEngine.getCurrentTargetPosition(), [state]);
+  const currentStep = useMemo(() => {
+    void state.currentStepIndex;
+    return guideEngine.getCurrentStep();
+  }, [state.currentStepIndex]);
+  const targetPosition = useMemo(() => {
+    void state.currentStepIndex;
+    return guideEngine.getCurrentTargetPosition();
+  }, [state.currentStepIndex]);
 
   const registerPageElements = useCallback(() => {}, []);
 
@@ -70,6 +54,9 @@ export function DishaGuideProvider({ children }: { children: ReactNode }) {
       targetPosition,
       registerPageElements,
       startFlow: guideEngine.startFlow,
+      offerPending: state.offerPending,
+      acceptGuide: guideEngine.acceptGuide,
+      declineGuide: guideEngine.declineGuide,
       nextStep: guideEngine.nextStep,
       previousStep: guideEngine.previousStep,
       dismissStep: guideEngine.dismissCurrentStep,
@@ -82,7 +69,7 @@ export function DishaGuideProvider({ children }: { children: ReactNode }) {
       handleSuccess: guideEngine.handleSuccess,
       handleClick: guideEngine.handleClick,
     }),
-    [state, currentStep, targetPosition]
+    [state, currentStep, targetPosition, registerPageElements]
   );
 
   return (
@@ -92,25 +79,4 @@ export function DishaGuideProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useDishaGuide() {
-  const context = useContext(DishaGuideContext);
-  if (!context) {
-    throw new Error('useDishaGuide must be used within DishaGuideProvider');
-  }
-  return context;
-}
 
-export function useDishaGuideStep() {
-  const { currentStep, targetPosition, nextStep, previousStep, dismissStep, pause, resume, stop } = useDishaGuide();
-  return { currentStep, targetPosition, nextStep, previousStep, dismissStep, pause, resume, stop };
-}
-
-export function useDishaGuidePreferences() {
-  const { state, setPreferences } = useDishaGuide();
-  return { preferences: state.userPreferences, setPreferences };
-}
-
-export function useDishaGuideFlow() {
-  const { state, startFlow, stop } = useDishaGuide();
-  return { activeFlowId: state.activeFlowId, isActive: state.isActive, startFlow, stop };
-}

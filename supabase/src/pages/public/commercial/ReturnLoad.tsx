@@ -60,9 +60,9 @@ const benefits = [
   {
     icon: DollarSign,
     title: 'Fast Payments',
-    desc: 'Escrow-backed payments released within 24–48 hours of delivery confirmation. No more 30–60 day waits.',
-    stat: '< 48hrs',
-    statLabel: 'Payment Release',
+    desc: 'Escrow-backed payments are planned. Today, payment terms are agreed directly between you and the shipper.',
+    stat: 'Planned',
+    statLabel: 'Escrow Settlement',
   },
 ];
 
@@ -70,14 +70,14 @@ const howItWorks = [
   { step: '1', title: 'Register Your Truck', desc: 'Add your truck type, capacity, and preferred routes. Takes 2 minutes.' },
   { step: '2', title: 'Browse Return Loads', desc: 'AI matches you with available shipments on your return route. Filter by weight, destination, and payout.' },
   { step: '3', title: 'Accept & Track', desc: 'Accept a load, get shipper details, and track the pickup. GPS tracking starts automatically.' },
-  { step: '4', title: 'Deliver & Get Paid', desc: 'Complete delivery, confirm ePOD, and get paid within 24–48 hours via escrow.' },
+  { step: '4', title: 'Deliver & Get Paid', desc: 'Complete delivery, confirm ePOD, and get paid per agreed terms (escrow-based settlement is planned).' },
 ];
 
 const stats = [
-  { value: '8,500+', label: 'Truckers Onboarded' },
-  { value: '₹85Cr+', label: 'Total Trucker Earnings' },
-  { value: '35%', label: 'Avg. Income Increase' },
-  { value: '40%', label: 'Empty km Reduction' },
+  { value: 'East India', label: 'Return-Load Corridors' },
+  { value: 'AI', label: 'Route Matching' },
+  { value: 'Verified', label: 'Shipper Network' },
+  { value: 'GPS', label: 'Live Tracking' },
 ];
 
 export default function ReturnLoad() {
@@ -87,14 +87,14 @@ export default function ReturnLoad() {
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
           <h2>Find Return Loads for Your Truck — LoadSaathi</h2>
-          <p>Don't drive back empty. LoadSaathi connects truckers with available shipments on their return route, cutting empty kilometres by up to 40% and increasing earnings by 35%.</p>
+          <p>Don't drive back empty. LoadSaathi connects truckers with available shipments on their return route, helping you turn empty return trips into paid loads.</p>
           <h2>Why Find Return Loads?</h2>
           <ul>
             <li><strong>Eliminate Empty Kilometres:</strong> The Indian trucking industry averages 40% empty return trips. LoadSaathi fills those gaps with AI-matched shipments.</li>
             <li><strong>Increase Earnings:</strong> Turn wasted fuel and time into ₹15,000–40,000 extra per return trip.</li>
             <li><strong>Fair Market Rates:</strong> AI price prediction shows the going rate before you accept.</li>
             <li><strong>Verified Shippers:</strong> Every shipper is credit-scored and verified for payment reliability.</li>
-            <li><strong>Fast Payments:</strong> Escrow-backed payments released within 24–48 hours of delivery.</li>
+            <li><strong>Fast Payments:</strong> Escrow-backed payments are planned.</li>
           </ul>
           <h2>How It Works</h2>
           <ol>
@@ -111,7 +111,7 @@ export default function ReturnLoad() {
       </noscript>
       <SeoMeta
         title="Find Return Loads for Your Truck | Backhaul Freight India"
-        description="Don't drive back empty. Find return loads for your truck on LoadSaathi's AI-powered freight marketplace. Cut empty kilometres by 40%, earn ₹15,000–40,000 extra per trip across East India."
+        description="Don't drive back empty. Find return loads for your truck on LoadSaathi's AI-powered freight marketplace across East India."
         keywords="return load for truck, backhaul India, find load for truck, empty truck load, truck return load, return freight, truck load booking"
         canonical="/return-load"
         alternates={[{ hreflang: "hi", href: "/hi/return-load" }]}
@@ -202,7 +202,7 @@ export default function ReturnLoad() {
                   "Return loads fill empty return trips with paid cargo",
                   "Earn ₹15,000–40,000 extra per return trip (indicative)",
                   "AI matching finds loads on your exact return route",
-                  "Escrow-backed payments released within 24–48 hours",
+                  "Escrow-backed payments — planned",
                   "Available on all major East India corridors"
                 ]}
               />
@@ -387,7 +387,7 @@ export default function ReturnLoad() {
               { q: "How much can I earn from return loads?", a: "Earnings vary by route and truck type. On East India corridors, truckers typically earn ₹15,000–40,000 per return trip. LoadSaathi's AI price prediction shows the going rate before you accept any load." },
               { q: "How does LoadSaathi find return loads?", a: "Our AI analyzes your truck type, capacity, current location, and preferred routes. When a matching shipment is posted, you receive a real-time notification with full details — origin, destination, cargo, weight, and price." },
               { q: "Which routes have the most availability?", a: "LoadSaathi covers all major East India corridors. The busiest return load routes include Rourkela–Ranchi, Rourkela–Bhubaneswar, Rourkela–Kolkata, Ranchi–Jamshedpur, and Bhubaneswar–Kolkata." },
-              { q: "When do I get paid?", a: "Payments are released through our secure escrow system within 24–48 hours of delivery confirmation via GPS and electronic proof of delivery (ePOD)." },
+              { q: "When do I get paid?", a: "Payments are coordinated per terms agreed with the shipper. Escrow-based settlement within 24–48 hours of delivery confirmation is planned." },
             ].map((item, i) => (
               <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08]">
                 <h3 className="font-bold text-foreground mb-2">{item.q}</h3>

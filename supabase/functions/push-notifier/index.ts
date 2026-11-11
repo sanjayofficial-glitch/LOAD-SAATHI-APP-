@@ -89,6 +89,22 @@ async function handler(req: Request): Promise<Response> {
     return json({ ok: false, reason: 'bad_secret' }, 401, cors);
   }
 
+  // 1b. Envelope sanity: if the caller presents a Database-Webhook envelope,
+  // it must be a notifications INSERT (a bare row is only accepted for
+  // backwards compatibility with internal callers).
+  let payload: WebhookPayload;
+  try {
+    payload = await req.json();
+  } catch {
+    return json({ ok: false, reason: 'invalid_json' }, 400, cors);
+  }
+  if (payload?.table && payload.table !== 'notifications') {
+    return json({ ok: false, reason: 'wrong_table' }, 200, cors);
+  }
+  if (payload?.type && payload.type !== 'INSERT') {
+    return json({ ok: false, reason: 'ignored_event' }, 200, cors);
+  }
+
   const vapidPublicKey = Deno.env.get('VAPID_PUBLIC_KEY') ?? '';
   const vapidPrivateKey = Deno.env.get('VAPID_PRIVATE_KEY') ?? '';
   const vapidSubject = Deno.env.get('VAPID_SUBJECT') ?? 'mailto:ops@loadsaathi.in';
@@ -103,23 +119,26 @@ async function handler(req: Request): Promise<Response> {
     return json({ ok: false, reason: 'service_credentials_missing' }, 200, cors);
   }
 
-  let payload: WebhookPayload;
-  try {
-    payload = await req.json();
-  } catch {
-    return json({ ok: false, reason: 'invalid_json' }, 400, cors);
-  }
-
   // Accept both the Database Webhook envelope and a bare notification row.
   const record = (payload?.record ?? payload) as NotificationRow;
   if (!record?.id || !record?.user_id) {
     return json({ ok: false, reason: 'no_record' }, 400, cors);
   }
-  if (payload?.table && payload.table !== 'notifications') {
-    return json({ ok: false, reason: 'wrong_table' }, 200, cors);
+
+  // 1c. Idempotency: deduplicate replays of the same notification delivery.
+  const dedupKey = `${record.user_id}:${record.id}`;
+  const nowMs = Date.now();
+  const seen = deliveredRecently.get(dedupKey);
+  if (seen && nowMs < seen) {
+    return json({ ok: true, sent: 0, reason: 'duplicate' }, 200, cors);
   }
-  if (payload?.type && payload.type !== 'INSERT') {
-    return json({ ok: false, reason: 'ignored_event' }, 200, cors);
+  deliveredRecently.set(dedupKey, nowMs + DEDUP_WINDOW_MS);
+  if (deliveredRecently.size > DEDUP_MAP_CAP) {
+    const expired: string[] = [];
+    for (const [key, at] of deliveredRecently) {
+      if (nowMs >= at) expired.push(key);
+    }
+    for (const key of expired) deliveredRecently.delete(key);
   }
 
   const admin = createClient(supabaseUrl, serviceKey);
@@ -204,6 +223,11 @@ async function handler(req: Request): Promise<Response> {
   const sent = settled.filter((r) => r.ok).length;
   return json({ ok: true, sent, dead: deadIds.length }, 200, cors);
 }
+
+// Idempotency guard for webhook replays (in-memory, bounded).
+const DEDUP_WINDOW_MS = 5 * 60 * 1000;
+const DEDUP_MAP_CAP = 10_000;
+const deliveredRecently = new Map<string, number>();
 
 Deno.serve(async (req: Request): Promise<Response> => {
   try {

@@ -32,6 +32,7 @@ export const trackGAEvent = (eventName: string, eventParams?: Record<string, unk
 
 // Typed event names for the public acquisition funnel
 export const EVENTS = {
+  ORGANIC_LANDING: "organic_landing",
   CALCULATOR_STARTED: "calculator_started",
   ESTIMATE_GENERATED: "estimate_generated",
   ROUTE_VIEW: "route_view",
@@ -39,13 +40,16 @@ export const EVENTS = {
   QUOTE_FORM_START: "quote_form_start",
   QUOTE_FORM_SUBMIT: "quote_form_submit",
   QUOTE_FORM_SUCCESS: "quote_form_success",
+  POST_LOAD_CLICK: "post_load_click",
   POST_LOAD_START: "post_load_start",
   POST_LOAD_SUBMIT: "post_load_submit",
   POST_LOAD_SUCCESS: "post_load_success",
+  LOAD_FORM_START: "load_form_start",
+  LOAD_SUBMITTED: "load_submitted",
   TRANSPORTER_SIGNUP_START: "transporter_signup_start",
   TRANSPORTER_SIGNUP_COMPLETE: "transporter_signup_complete",
   SHIPPER_SIGNUP_COMPLETE: "shipper_signup_complete",
-  CLICK_PHONE: "click_phone",
+  CLICK_PHONE: "phone_click",
   CLICK_EMAIL: "click_email",
   VIEW_SERVICE_PAGE: "view_service_page",
   VIEW_LOCATION_PAGE: "view_location_page",
@@ -54,7 +58,7 @@ export const EVENTS = {
   VIEW_PRICING_OR_RATE_GUIDE: "view_pricing_or_rate_guide",
   INTERNAL_CTA_CLICK: "internal_cta_click",
   TOOL_COMPLETED: "tool_completed",
-  WHATSAPP_CLICKED: "whatsapp_clicked",
+  WHATSAPP_CLICKED: "whatsapp_click",
   REGISTER_STARTED: "register_started",
   ARTICLE_VIEW: "article_view",
   WHATSAPP_LEAD_STARTED: "whatsapp_lead_started",
@@ -102,6 +106,57 @@ export function trackEvent(name: string, props?: Record<string, unknown> & BaseE
 }
 
 // Convenience wrappers
+
+const ORGANIC_TRACKED_KEY = "ls_organic_landing_tracked";
+
+/**
+ * Track the first landing attributed to organic search (once per session).
+ * No PII. Uses referrer + UTM source; safe to call on every page mount.
+ */
+export function trackOrganicLanding() {
+  if (typeof window === "undefined") return;
+  try {
+    if (sessionStorage.getItem(ORGANIC_TRACKED_KEY)) return;
+    sessionStorage.setItem(ORGANIC_TRACKED_KEY, "1");
+  } catch {
+    // sessionStorage unavailable — best-effort tracking only
+  }
+  const referrer = typeof document !== "undefined" ? document.referrer : "";
+  let utmSource = "";
+  try {
+    utmSource = new URLSearchParams(window.location.search).get("utm_source") || "";
+  } catch {
+    // ignore malformed query
+  }
+  const isOrganic =
+    !referrer ||
+    /google|bing|duckduckgo|yahoo|yandex|baidu|ecosia/i.test(referrer) ||
+    utmSource.toLowerCase() === "organic" ||
+    utmSource.toLowerCase() === "google";
+  if (!isOrganic) return;
+  let referrerHost = "direct";
+  try {
+    referrerHost = referrer ? new URL(referrer).hostname : "direct";
+  } catch {
+    referrerHost = "direct";
+  }
+  trackEvent(EVENTS.ORGANIC_LANDING, { referrer: referrerHost, utm_source: utmSource });
+}
+
+/** User clicks the "Post a Load / Get a Transport Quote" CTA. No PII. */
+export function trackPostLoadClick(props: { source: string }) {
+  trackEvent(EVENTS.POST_LOAD_CLICK, props);
+}
+
+/** User starts completing the structured load form (fires once per mount). */
+export function trackLoadFormStart(props?: Record<string, unknown>) {
+  trackEvent(EVENTS.LOAD_FORM_START, props);
+}
+
+/** Valid load form submission succeeds (an enquiry, not necessarily qualified). */
+export function trackLoadSubmitted(props?: Record<string, unknown>) {
+  trackEvent(EVENTS.LOAD_SUBMITTED, props);
+}
 
 export function trackCalculatorStarted(props?: { origin?: string; destination?: string; weight?: number }) {
   trackEvent(EVENTS.CALCULATOR_STARTED, {
@@ -262,7 +317,7 @@ export function trackInternalCtaClick(props: {
 }
 
 export function trackWhatsappClicked(props: {
-  channel: "quote" | "share" | "route";
+  channel: "quote" | "share" | "route" | "owner";
   origin?: string;
   destination?: string;
   route?: string;

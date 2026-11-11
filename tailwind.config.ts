@@ -128,6 +128,14 @@ export default {
           from: { transform: "scale(1)" },
           to: { transform: "scale(0.97)" },
         },
+        "materialize-in": {
+          from: { opacity: "0", transform: "scale(0.96) translateY(2px)" },
+          to: { opacity: "1", transform: "scale(1) translateY(0)" },
+        },
+        "materialize-out": {
+          from: { opacity: "1", transform: "scale(1) translateY(0)" },
+          to: { opacity: "0", transform: "scale(0.96) translateY(2px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -139,6 +147,8 @@ export default {
         "pulse-soft": "pulse-soft 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "press-scale": "press-scale 0.1s ease-out",
+        "materialize-in": "materialize-in 180ms var(--ease-out-quint) both",
+        "materialize-out": "materialize-out 160ms var(--ease-out-quint) both",
       },
     },
   },

@@ -1,6 +1,6 @@
 import { MessageCircle, Phone } from 'lucide-react';
 import { generateOwnerWhatsAppLink, generateShareWhatsAppLink } from '@/utils/whatsapp';
-import { trackEvent } from '@/utils/analytics';
+import { trackEvent, trackWhatsappClicked } from '@/utils/analytics';
 
 
 interface FloatingWhatsAppButtonProps {
@@ -24,6 +24,7 @@ const FloatingWhatsAppButton = ({
   toOwner = false,
 }: FloatingWhatsAppButtonProps) => {
   const handleClick = async () => {
+    trackWhatsappClicked({ channel: toOwner ? "owner" : "share" });
     if (toOwner) {
       // Best-effort lead capture before navigating away.
       trackEvent('whatsapp_lead_started', {

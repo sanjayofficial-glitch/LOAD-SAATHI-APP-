@@ -68,6 +68,7 @@ export interface SearchMarketFilters {
   destination?: string;
   min_capacity_tonnes?: number;
   max_price_per_tonne?: number;
+  vehicle_type?: string;
 }
 
 export interface SearchMarketConfig {
@@ -147,6 +148,7 @@ export function validateSearchMarketParams(
     "destination",
     "min_capacity_tonnes",
     "max_price_per_tonne",
+    "vehicle_type",
   ]);
   for (const key of Object.keys(record)) {
     if (!allowed.has(key)) {
@@ -156,7 +158,7 @@ export function validateSearchMarketParams(
 
   const filters: SearchMarketFilters = {};
 
-  for (const outKey of ["origin", "destination"] as const) {
+  for (const outKey of ["origin", "destination", "vehicle_type"] as const) {
     const value = record[outKey];
     if (value === undefined || value === null) continue;
     if (typeof value !== "string") {
@@ -303,6 +305,12 @@ export function buildSearchMarketRequest(
     url.searchParams.set(
       "price_per_tonne",
       `lte.${filters.max_price_per_tonne}`,
+    );
+  }
+  if (filters.vehicle_type !== undefined) {
+    url.searchParams.set(
+      "vehicle_type",
+      `ilike.%${escapeLikePattern(filters.vehicle_type)}%`,
     );
   }
   url.searchParams.set("order", "departure_date.asc");

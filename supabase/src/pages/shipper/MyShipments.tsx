@@ -172,7 +172,7 @@ const MyShipments = () => {
           .update({ status: 'matched' })
           .eq('id', offer.shipment_id);
 
-        showSuccess('✅ Offer accepted!');
+        showSuccess('Offer accepted!');
       } else {
         showSuccess('Offer declined.');
       }
@@ -264,6 +264,7 @@ const MyShipments = () => {
             <EmptyState
               accent="blue"
               icon={<Package className="h-8 w-8 sm:h-10 sm:w-10" />}
+              image="/illustrations/delivered-boxes.png"
               title="No loads posted yet"
               description="Post a shipment to start receiving offers from truckers."
               primaryAction={{ label: 'Post Your First Load', to: '/shipper/post-shipment' }}
@@ -343,6 +344,7 @@ const MyShipments = () => {
             <EmptyState
               accent="blue"
               icon={<Send className="h-8 w-8 sm:h-10 sm:w-10" />}
+              image="/illustrations/shipping-box.png"
               title="No requests sent yet"
               description="Browse available trucks to book space for your goods."
               primaryAction={{ label: 'Find Trucks', to: '/browse-trucks' }}
@@ -389,6 +391,7 @@ const MyShipments = () => {
             <EmptyState
               accent="blue"
               icon={<Inbox className="h-8 w-8 sm:h-10 sm:w-10" />}
+              image="/illustrations/chat-bubble.png"
               title="No offers received"
               description="When truckers send offers for your loads, they'll appear here. Post a load to start receiving offers."
               primaryAction={{ label: 'Post a Load', to: '/shipper/post-shipment' }}

@@ -36,9 +36,9 @@ export default function PriceTrendChart({ origin, destination }: PriceTrendChart
       body: JSON.stringify({ originCity: origin, destinationCity: destination, allowPublic: true, daysAhead: 7 }),
     })
       .then(res => res.ok ? res.json() : Promise.reject())
-      .then((apiData: any) => {
+      .then((apiData: { forecasts?: Array<{ date: string; suggestedPricePerTonne: number }> }) => {
         const forecasts = apiData.forecasts || [];
-        const points: PricePoint[] = forecasts.slice(0, 14).map((f: any) => ({
+        const points: PricePoint[] = forecasts.slice(0, 14).map((f) => ({
           date: f.date,
           price: f.suggestedPricePerTonne,
         }));

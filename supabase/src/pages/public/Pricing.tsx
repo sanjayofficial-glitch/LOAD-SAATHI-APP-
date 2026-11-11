@@ -18,7 +18,7 @@ const plans = [
       "Real-time shipment tracking",
       "Digital documentation & e-way bill integration",
       "Access to verified transporter network",
-      "Escrow-backed payment protection",
+      "Escrow-backed payment protection (planned)",
       "Analytics dashboard & reports",
     ],
     cta: "Start Shipping",
@@ -48,10 +48,10 @@ const plans = [
 
 const transactionFee = {
   title: "Transaction Fee",
-  desc: "A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure. Funds are held in escrow until delivery confirmation.",
+  desc: "A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure. The final fee schedule will be published once confirmed.",
   items: [
-    { label: "Shippers", value: "1.5–3% of shipment value", detail: "Varies by shipment size, route complexity, and credit score" },
-    { label: "Truckers", value: "1.5–2.5% of trip value", detail: "Reduced rates for repeat performers with high credit scores" },
+    { label: "Shippers", value: "Transaction fee on completed shipments", detail: "Final schedule to be published once confirmed" },
+    { label: "Truckers", value: "Transaction fee on completed trips", detail: "Final schedule to be published once confirmed" },
   ],
 };
 
@@ -62,7 +62,7 @@ const faqItems = [
   },
   {
     q: "How are transaction fees calculated?",
-    a: "Fees are a small percentage of the total shipment value, calculated transparently before you confirm a match. You'll always see the exact fee before committing to a transaction.",
+    a: "Fees apply only on completed transactions. The fee for each transaction is shown transparently before you confirm a match; the final schedule will be published once confirmed.",
   },
   {
     q: "Are there any hidden charges?",
@@ -82,7 +82,7 @@ const pricingSchema = {
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "LoadSaathi Freight Marketplace",
-  "description": "AI-powered shared freight marketplace for PTL/LTL loads across East India. Free to join, pay 2-5% per completed transaction.",
+  "description": "AI-powered shared freight marketplace for PTL/LTL loads across East India. Free to join; a transaction fee applies on completed shipments.",
   "url": "https://loadsaathi.in/pricing",
   "brand": {
     "@type": "Organization",
@@ -94,7 +94,7 @@ const pricingSchema = {
       "name": "Shipper Plan",
       "price": "0",
       "priceCurrency": "INR",
-      "description": "Free to join. 1.5–3% transaction fee per completed shipment. Escrow-backed payments.",
+      "description": "Free to join. A transaction fee applies on completed shipments; escrow-backed payments are planned.",
       "availability": "https://schema.org/InStock",
       "seller": { "@type": "Organization", "name": "LoadSaathi" },
     },
@@ -103,7 +103,7 @@ const pricingSchema = {
       "name": "Trucker Plan",
       "price": "0",
       "priceCurrency": "INR",
-      "description": "Free to join. 1.5–2.5% transaction fee per completed trip. Reduced rates for high credit scores.",
+      "description": "Free to join. A transaction fee applies on completed trips.",
       "availability": "https://schema.org/InStock",
       "seller": { "@type": "Organization", "name": "LoadSaathi" },
     },
@@ -140,17 +140,17 @@ const Pricing = () => {
           <h2>LoadSaathi Pricing — Simple, Transparent, No Hidden Fees</h2>
           <p>LoadSaathi offers a free platform for shippers and truckers to connect. No subscription fees, no registration costs, no minimum commitments. You only pay when you complete a transaction through the platform.</p>
           <h2>For Shippers</h2>
-          <p>Free to join. Ship smarter, pay less. Includes free account registration and profile setup, AI-powered transporter matching, real-time shipment tracking, digital documentation and e-way bill integration, access to a verified transporter network, escrow-backed payment protection, and an analytics dashboard with reports.</p>
+          <p>Free to join. Ship smarter, pay less. Includes free account registration and profile setup, AI-powered transporter matching, real-time shipment tracking, digital documentation and e-way bill integration, access to a verified transporter network, escrow-backed payment protection (planned), and an analytics dashboard with reports.</p>
           <h2>For Truckers &amp; Fleet Owners</h2>
           <p>Free to join. Fill every kilometer with profit. Includes free account and fleet registration, AI-matched load discovery, route optimization and planning, live GPS tracking integration, milestone-based payment releases, digital freight credit score building, and an earnings dashboard with trip history.</p>
           <h2>Transaction Fee Breakdown</h2>
-          <p>A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure. Funds are held in escrow until delivery confirmation.</p>
+          <p>A small service fee is charged on each completed transaction to cover platform operations, payment processing, and AI matching infrastructure. The final fee schedule will be published once confirmed.</p>
           <ul>
-            <li>Shippers: 1.5-3% of shipment value, varies by shipment size, route complexity, and credit score</li>
-            <li>Truckers: 1.5-2.5% of trip value, reduced for repeat performers with high credit scores</li>
+            <li>Shippers: transaction fee on completed shipments — final schedule to be published</li>
+            <li>Truckers: transaction fee on completed trips — final schedule to be published</li>
           </ul>
           <h2>LoadSaathi vs Traditional Brokers</h2>
-          <p>LoadSaathi charges a 1.5-3% transaction fee per completed shipment, compared to 10-20% broker margins from traditional intermediaries.</p>
+          <p>LoadSaathi charges a transaction fee on completed shipments (schedule to be published), compared to 10-20% broker margins from traditional intermediaries.</p>
           <h2>Frequently Asked Questions</h2>
           <h3>Is it really free to join?</h3>
           <p>Absolutely. There are no registration fees, subscription charges, or monthly minimums. You only pay when you complete a transaction through the platform.</p>
@@ -166,8 +166,8 @@ const Pricing = () => {
       </noscript>
       <SeoMeta
         title="Pricing — Transparent Freight Rates"
-        description="LoadSaathi's transparent pricing: free registration, pay only 1.5–3% on completed shipments. No hidden fees, no subscriptions. Escrow-backed payments. Compare plans for shippers and truckers."
-        keywords="LoadSaathi pricing, freight platform fees, logistics commission rates, trucking platform pricing India, escrow freight"
+        description="LoadSaathi's transparent pricing: free registration, pay per completed shipment. No hidden fees, no subscriptions. Compare plans for shippers and truckers."
+        keywords="LoadSaathi pricing, freight platform fees, logistics commission rates, trucking platform pricing India"
         canonical="/pricing"
         jsonLd={[pricingSchema, pricingFaqSchema]}
         breadcrumbs={[{ name: "Pricing", url: "/pricing" }]}
@@ -239,9 +239,9 @@ const Pricing = () => {
                         <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
                         <span className="text-muted-foreground">
                           {feat}
-                          {feat === "Escrow-backed payment protection" && (
-                            <span className="ml-2 inline-block align-middle text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
-                              Live
+                          {feat === "Escrow-backed payment protection (planned)" && (
+                            <span className="ml-2 inline-block align-middle text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                              Planned
                             </span>
                           )}
                         </span>
@@ -301,7 +301,7 @@ const Pricing = () => {
             <p className="text-lg text-muted-foreground">See how we compare to the old way of doing logistics.</p>
           </div>
             <p className="text-sm text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
-            LoadSaathi charges a 1.5–3% transaction fee per completed shipment, compared to 10-20% broker margins from traditional intermediaries. The platform offers AI-powered matching in seconds, escrow-backed payments, live GPS tracking, and a digital credit score system — all features absent from the broker model.
+            LoadSaathi charges a transaction fee on completed shipments (schedule to be published), compared to 10–20% broker margins from traditional intermediaries. The platform offers AI-powered matching in seconds, escrow-backed payments (planned), live GPS tracking, and a digital credit score system — all features absent from the broker model.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -317,11 +317,11 @@ const Pricing = () => {
                   { feature: "Registration Cost", us: "Free", them: "Often free but hidden fees" },
                   { feature: "Pricing Transparency", us: "AI-powered fair pricing", them: "Opaque, negotiable margins" },
                   { feature: "Matching Speed", us: "AI match in seconds", them: "Hours of phone calls" },
-                  { feature: "Payment Protection", us: "Escrow-backed", them: "Cash/credit dependent" },
+                  { feature: "Payment Protection", us: "Escrow-backed (planned)", them: "Cash/credit dependent" },
                   { feature: "Real-Time Tracking", us: "Live GPS tracking", them: "Phone call updates" },
                   { feature: "Credit Scoring", us: "Digital 300-900 score", them: "No standardized system" },
                   { feature: "Reviews & Ratings", us: "Bidirectional reviews", them: "Word of mouth" },
-                   { feature: "Platform Fee", us: "1.5–3% per transaction", them: "10-20% broker margin" },
+                   { feature: "Platform Fee", us: "Transaction fee on completed shipments", them: "10-20% broker margin" },
                 ].map((row, i) => (
                   <tr key={i} className="border-b border-border/50 hover:bg-muted/30 dark:hover:bg-white/[0.02] transition-colors">
                     <td className="py-4 pr-6 text-foreground font-medium">{row.feature}</td>

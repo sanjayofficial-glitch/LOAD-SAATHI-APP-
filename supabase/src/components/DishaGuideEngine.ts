@@ -25,6 +25,13 @@ export interface GuideFlow {
   autoStart?: boolean;
   oncePerUser?: boolean;
   priority?: number;
+  /**
+   * Ask before guiding. When true, the mascot shows a small "Can I guide you?"
+   * offer bubble instead of diving straight into the walkthrough. The flow
+   * starts only after the user accepts; declining/ignoring parks the mascot
+   * back in its circle.
+   */
+  offerFirst?: boolean;
 }
 
 export interface GuideState {
@@ -32,6 +39,8 @@ export interface GuideState {
   currentStepIndex: number;
   isActive: boolean;
   isPaused: boolean;
+  /** A flow is waiting for the user to accept the guided walkthrough (offer bubble). */
+  offerPending: boolean;
   completedFlows: Set<string>;
   dismissedSteps: Set<string>;
   userPreferences: {
@@ -53,7 +62,7 @@ const GUIDE_STORAGE_KEY = 'loadsaathi-disha-guide-state';
 const defaultPreferences: GuideState['userPreferences'] = {
   autoGuide: true,
   verbosity: 'normal',
-  showSpotlight: false,
+  showSpotlight: true,
 };
 
 function saveGuideState(state: Partial<GuideState>) {
@@ -91,6 +100,7 @@ export function createGuideEngine(flows: GuideFlow[]) {
     currentStepIndex: 0,
     isActive: false,
     isPaused: false,
+    offerPending: false,
     completedFlows: new Set(),
     dismissedSteps: new Set(),
     userPreferences: defaultPreferences,
@@ -172,7 +182,7 @@ export function createGuideEngine(flows: GuideFlow[]) {
     return { x, y, side: chosen.side };
   }
 
-  function startFlow(flowId: string, startStep = 0) {
+  function startFlow(flowId: string, startStep = 0, asOffer = false) {
     const flow = flowMap.get(flowId);
     if (!flow) return false;
 
@@ -180,26 +190,95 @@ export function createGuideEngine(flows: GuideFlow[]) {
       return false;
     }
 
-    if (!currentState.userPreferences.autoGuide && flow.autoStart) {
+    // Offer-first flows always ask before guiding (explicit opt-in). They never
+    // auto-run, even if the user previously disabled auto-guide.
+    const shouldOffer = asOffer || !!flow.offerFirst;
+    if (!shouldOffer && !currentState.userPreferences.autoGuide && flow.autoStart) {
       return false;
     }
 
-    // Don't restart if already active — prevents resetting progress on page changes
-    if (currentState.activeFlowId === flowId && currentState.isActive) {
+    // Don't restart if already active or already offered — prevents resetting
+    // progress on page changes / duplicate offers.
+    if (
+      currentState.activeFlowId === flowId &&
+      (currentState.isActive || currentState.offerPending)
+    ) {
       return true;
     }
 
     currentFlow = flow;
+
+    if (shouldOffer) {
+      currentState = {
+        ...currentState,
+        activeFlowId: flowId,
+        currentStepIndex: 0,
+        isActive: false,
+        isPaused: false,
+        offerPending: true,
+      };
+      saveGuideState(currentState);
+      notify();
+      return true;
+    }
+
     currentState = {
       ...currentState,
       activeFlowId: flowId,
       currentStepIndex: startStep,
       isActive: true,
       isPaused: false,
+      offerPending: false,
     };
     saveGuideState(currentState);
     notify();
     advanceToStep(startStep);
+    return true;
+  }
+
+  /**
+   * The user accepted the offer — begin the guided walkthrough. Any steps that
+   * were dismissed in earlier sessions are cleared for this flow so an explicit
+   * "yes" always yields a full guide.
+   */
+  function acceptGuide() {
+    if (!currentState.offerPending || !currentFlow) return false;
+
+    const flow = currentFlow;
+    flow.steps.forEach((step) => {
+      currentState.dismissedSteps.delete(`${flow.id}-${step.id}`);
+    });
+
+    currentState = {
+      ...currentState,
+      offerPending: false,
+      isActive: true,
+      currentStepIndex: 0,
+      isPaused: false,
+    };
+    saveGuideState(currentState);
+    notify();
+    advanceToStep(0);
+    return true;
+  }
+
+  /**
+   * The user declined the offer — park the mascot back in its circle. The flow
+   * can still be started later via a manual tap on the mascot.
+   */
+  function declineGuide() {
+    if (!currentState.offerPending) return false;
+
+    currentState = {
+      ...currentState,
+      offerPending: false,
+      activeFlowId: null,
+      currentStepIndex: 0,
+      isActive: false,
+      isPaused: false,
+    };
+    saveGuideState(currentState);
+    notify();
     return true;
   }
 
@@ -308,6 +387,7 @@ export function createGuideEngine(flows: GuideFlow[]) {
     currentState.activeFlowId = null;
     currentState.currentStepIndex = 0;
     currentState.isActive = false;
+    currentState.offerPending = false;
     currentFlow = null;
     saveGuideState(currentState);
     notify();
@@ -329,6 +409,7 @@ export function createGuideEngine(flows: GuideFlow[]) {
       currentStepIndex: 0,
       isActive: false,
       isPaused: false,
+      offerPending: false,
     };
     saveGuideState(currentState);
     notify();
@@ -339,9 +420,12 @@ export function createGuideEngine(flows: GuideFlow[]) {
     const autoFlow = flowsForPage.find(f => f.autoStart);
 
     if (autoFlow) {
-      // If the current flow is already active on this page, just re-evaluate
-      // the current step's target (it may have moved to a new page)
-      if (currentState.activeFlowId === autoFlow.id && currentState.isActive) {
+      // If the current flow is already active (or offered) on this page, just
+      // re-evaluate the current step's target (it may have moved to a new page)
+      if (
+        currentState.activeFlowId === autoFlow.id &&
+        (currentState.isActive || currentState.offerPending)
+      ) {
         // Check if current step's target still exists; if not, skip to next
         const step = currentFlow?.steps[currentState.currentStepIndex];
         if (step) {
@@ -453,6 +537,8 @@ export function createGuideEngine(flows: GuideFlow[]) {
     subscribe,
     setPreferences,
     startFlow,
+    acceptGuide,
+    declineGuide,
     nextStep,
     previousStep,
     dismissCurrentStep,
@@ -600,6 +686,7 @@ export const guideFlows: GuideFlow[] = [
     pages: ['/shipper/post-shipment'],
     autoStart: true,
     oncePerUser: false,
+    offerFirst: true,
     priority: 10,
     steps: [
       {
@@ -664,6 +751,7 @@ export const guideFlows: GuideFlow[] = [
     pages: ['/trucker/post-trip'],
     autoStart: true,
     oncePerUser: false,
+    offerFirst: true,
     priority: 10,
     steps: [
       {

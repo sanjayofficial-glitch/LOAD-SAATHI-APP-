@@ -19,7 +19,7 @@ const tabs = [
 
 const shipperFeatures: Feature[] = [
   { icon: Package, title: 'AI-Powered Shipment Posting', desc: 'Enter load details — origin, destination, weight, timeline. AI suggests optimal pricing based on market data.', accent: 'Smart Pricing', accentClass: 'text-blue-400 bg-blue-900/20 border-blue-700/30' },
-  { icon: Search, title: 'Intelligent Truck Matching', desc: 'Find available trucks matched to your route and cargo type. View credit scores, ratings, and past performance.', accent: '98% Match Accuracy', accentClass: 'text-emerald-400 bg-emerald-900/20 border-emerald-700/30' },
+  { icon: Search, title: 'Intelligent Truck Matching', desc: 'Find available trucks matched to your route and cargo type. View credit scores, ratings, and past performance.', accent: 'AI Matching', accentClass: 'text-emerald-400 bg-emerald-900/20 border-emerald-700/30' },
   { icon: MapPin, title: 'Real-Time GPS Tracking', desc: 'Live tracking from pickup to delivery with ETA updates. No more "kahan pahuncha?" coordination calls.', accent: 'Live', accentClass: 'text-blue-400 bg-blue-900/20 border-blue-700/30' },
   { icon: Shield, title: 'Shipper Credit Score (300–900)', desc: 'Build your shipper reputation with every transaction. Higher scores attract premium truckers instantly.', accent: 'Score: 720', accentClass: 'text-orange-400 bg-orange-900/20 border-orange-700/30' },
   { icon: BarChart3, title: 'Shipment Analytics & Insights', desc: 'Track costs, transit times, and carrier performance. Data-driven decisions to optimize your logistics.', accent: '+34% Efficiency', accentClass: 'text-emerald-400 bg-emerald-900/20 border-emerald-700/30' },

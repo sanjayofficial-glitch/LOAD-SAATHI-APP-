@@ -1,13 +1,13 @@
 
 import React, { Suspense, useState, useMemo, useCallback, useEffect } from "react";
-import { DishaProvider, Disha } from "./Disha";
+import { DishaProvider } from "./Disha";
 import { DishaGuideProvider } from "./DishaGuideProvider";
 import { FreddyAvatar } from "./avatar";
 import { MascotInteractionTracker } from "@/hooks/useMascotInteractionTracker";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useSupabase } from "@/hooks/useSupabase";
-import { useProductTour } from "@/contexts/ProductTourContext";
+import { useProductTour } from "@/contexts/ProductTourContext.hooks";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { supabase as supabaseAnon } from "@/integrations/supabase/client";
@@ -23,31 +23,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   User,
-  Search,
-  Clock,
-  Truck,
   Menu,
   X,
   LogOut,
   MessageSquare,
-  History,
-  PlusCircle,
   ShieldCheck,
   Shield,
   Users,
   Home,
   LayoutDashboard,
-  Heart,
   ImageIcon,
   Phone,
   Info,
   Calculator,
   Key,
-  Trophy,
   Lock,
   FileText,
   HelpCircle,
 } from "lucide-react";
+import {
+  DashboardIcon,
+  FindGoodsIcon,
+  FindTrucksIcon,
+  ShipmentsIcon,
+  PostLoadIcon,
+  PostTripIcon,
+  ProfileIcon,
+  VerificationIcon,
+  FavoritesIcon,
+  HistoryIcon,
+} from "@/components/icons/RoleIcons";
 import LogoMark from "./LogoMark";
 import SeoMeta from "./SeoMeta";
 import { Button } from "@/components/ui/button";
@@ -63,6 +68,13 @@ import ScrollToTopFab from "./ScrollToTopFab";
 import { usePageFade } from "@/hooks/usePageFade";
 import PhoneNudgeBanner from "./PhoneNudgeBanner";
 import { DockItem, DockIcon, DockLabel } from "@/components/ui/dock";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useT } from "@/i18n/useT";
+import { I8 } from "@/components/icons/I8";
+
+// Freddy AI Chat - draggable floating trigger (works for both authenticated
+// and non-authenticated users)
+import FreddyTrigger from "./FreddyTrigger";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { socialLinks } from "@/data/socialLinks";
@@ -190,13 +202,14 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
   const pageFadeRef = usePageFade<HTMLElement>();
   const { userProfile, signOut, getSupabaseToken } = useAuth();
   const { getAuthenticatedClient } = useSupabase();
-  const { role: tourRole } = useProductTour();
+  const { role: tourRole, resetTour: resetProductTour } = useProductTour();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   const currentPath = location.pathname;
+  const t = useT();
   // for multi-page handoff (dashboard tour → form page) without doing a
   // full reload. The tour's onNextClick on the last dashboard step sets
   // the next-path localStorage flag and invokes this helper if available.
@@ -274,7 +287,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         })();
       }
     };
-  }, [userProfile?.id, getSupabaseToken]);
+  }, [userProfile?.id, getSupabaseToken, getAuthenticatedClient]);
 
   // App-wide presence: other users see a real "Online" dot in chat while this
   // tab is open. Stops when the user signs out (Layout unmounts).
@@ -301,21 +314,21 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
       ];
     }
     return userProfile?.user_type === 'trucker' ? [
-      { label: "Dashboard", path: "/trucker/dashboard", icon: <Clock className="h-4 w-4" /> },
-      { label: "Post Trip", path: "/trucker/post-trip", icon: <PlusCircle className="h-4 w-4" /> },
-      { label: "Find Goods", path: "/trucker/browse-shipments", icon: <Search className="h-4 w-4" /> },
-      { label: "My Trips", path: "/trucker/my-trips", icon: <Truck className="h-4 w-4" /> },
-      { label: "Favorites", path: "/favorites", icon: <Heart className="h-4 w-4" /> },
-      { label: "History", path: "/trucker/history", icon: <History className="h-4 w-4" /> },
+      { label: t('nav.dashboard'), path: "/trucker/dashboard", icon: <DashboardIcon className="h-4 w-4" /> },
+      { label: t('nav.postTrip'), path: "/trucker/post-trip", icon: <PostTripIcon className="h-4 w-4" /> },
+      { label: t('nav.findGoods'), path: "/trucker/browse-shipments", icon: <FindGoodsIcon className="h-4 w-4" /> },
+      { label: t('nav.myTrips'), path: "/trucker/my-trips", icon: <FindTrucksIcon className="h-4 w-4" /> },
+      { label: t('nav.favorites'), path: "/favorites", icon: <FavoritesIcon className="h-4 w-4" /> },
+      { label: t('nav.history'), path: "/trucker/history", icon: <HistoryIcon className="h-4 w-4" /> },
     ] : [
-      { label: "Dashboard", path: "/shipper/dashboard", icon: <Clock className="h-4 w-4" /> },
-      { label: "Post Load", path: "/shipper/post-shipment", icon: <PlusCircle className="h-4 w-4" /> },
-      { label: "Find Trucks", path: "/browse-trucks", icon: <Truck className="h-4 w-4" /> },
-      { label: "My Loads", path: "/shipper/my-shipments", icon: <Search className="h-4 w-4" /> },
-      { label: "Favorites", path: "/favorites", icon: <Heart className="h-4 w-4" /> },
-      { label: "History", path: "/shipper/history", icon: <History className="h-4 w-4" /> },
+      { label: t('nav.dashboard'), path: "/shipper/dashboard", icon: <DashboardIcon className="h-4 w-4" /> },
+      { label: t('nav.postLoad'), path: "/shipper/post-shipment", icon: <PostLoadIcon className="h-4 w-4" /> },
+      { label: t('nav.findTrucks'), path: "/browse-trucks", icon: <FindTrucksIcon className="h-4 w-4" /> },
+      { label: t('nav.myShipments'), path: "/shipper/my-shipments", icon: <ShipmentsIcon className="h-4 w-4" /> },
+      { label: t('nav.favorites'), path: "/favorites", icon: <FavoritesIcon className="h-4 w-4" /> },
+      { label: t('nav.history'), path: "/shipper/history", icon: <HistoryIcon className="h-4 w-4" /> },
     ];
-  }, [userProfile?.user_type]);
+  }, [userProfile?.user_type, t]);
 
   const dockNavItems = useMemo(
     () => navItems.filter((item) => item.path !== "/messages"),
@@ -347,23 +360,23 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
     }
     return [
       {
-        label: "Dashboard",
+        label: t('nav.dashboard'),
         path: isTrucker ? "/trucker/dashboard" : "/shipper/dashboard",
-        icon: <Clock className="h-5 w-5" />,
+        icon: <I8 name="home" className="h-5 w-5" />,
       },
       {
-        label: isTrucker ? "Find Goods" : "Find Trucks",
+        label: isTrucker ? t('nav.findGoods') : t('nav.findTrucks'),
         path: isTrucker ? "/trucker/browse-shipments" : "/browse-trucks",
-        icon: <Search className="h-5 w-5" />,
+        icon: <I8 name="search" className="h-5 w-5" />,
       },
       {
-        label: "Chat",
+        label: t('nav.chat'),
         path: "/messages",
         icon: (
           <span className="relative">
-            <MessageSquare className="h-5 w-5" />
+            <I8 name="chat" className="h-5 w-5" />
             {unreadCount > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-orange-600 text-[9px] font-bold text-white">
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-orange-600 text-[9px] font-bold text-white animate-badge-pop">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
@@ -371,16 +384,16 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         ),
       },
     ];
-  }, [isAdmin, isTrucker, unreadCount]);
+  }, [isAdmin, isTrucker, unreadCount, t]);
 
   const mobileCenterAction = useMemo<MobileTabItem | undefined>(() => {
     if (isAdmin) return undefined;
     return {
-      label: isTrucker ? "Post Trip" : "Post Load",
+      label: isTrucker ? t('nav.postTrip') : t('nav.postLoad'),
       path: isTrucker ? "/trucker/post-trip" : "/shipper/post-shipment",
-      icon: <PlusCircle className="h-6 w-6" />,
+      icon: isTrucker ? <I8 name="truck" className="h-6 w-6" /> : <I8 name="box" className="h-6 w-6" />,
     };
-  }, [isAdmin, isTrucker]);
+  }, [isAdmin, isTrucker, t]);
 
   const mobileMenuItems = useMemo<MobileTabItem[]>(() => {
     const bumpIcon = (node: React.ReactNode) =>
@@ -395,22 +408,21 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
       .filter((item) => !excluded.has(item.path))
       .map((item) => ({ ...item, icon: bumpIcon(item.icon) }));
     const accountItems: MobileTabItem[] = [
-      { label: "Profile", path: "/profile", icon: <User className="h-5 w-5" /> },
-      { label: "Credit Score", path: "/credit-score", icon: <Shield className="h-5 w-5" /> },
+      { label: t('nav.profile'), path: "/profile", icon: <ProfileIcon className="h-5 w-5" /> },
+      { label: t('nav.creditScore'), path: "/credit-score", icon: <VerificationIcon className="h-5 w-5" /> },
     ];
     const toolsItems: MobileTabItem[] = [
-      { label: "Contact", path: "/contact", icon: <Phone className="h-5 w-5" /> },
-      { label: "About", path: "/about", icon: <Info className="h-5 w-5" /> },
-      { label: "Fare Calculator", path: "/tools/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
-      { label: "Cricket Score", path: "/cricket-score", icon: <Trophy className="h-5 w-5" /> },
+      { label: t('nav.contact'), path: "/contact", icon: <Phone className="h-5 w-5" /> },
+      { label: t('nav.about'), path: "/about", icon: <Info className="h-5 w-5" /> },
+      { label: t('nav.fareCalculator'), path: "/tools/fare-calculator", icon: <Calculator className="h-5 w-5" /> },
     ];
     const footerItems: MobileTabItem[] = [
-      { label: "Privacy", path: "/privacy", icon: <Lock className="h-5 w-5" /> },
-      { label: "Terms", path: "/terms", icon: <FileText className="h-5 w-5" /> },
-      { label: "Safety & Trust", path: "/safety-trust", icon: <ShieldCheck className="h-5 w-5" /> },
+      { label: t('nav.privacy'), path: "/privacy", icon: <Lock className="h-5 w-5" /> },
+      { label: t('nav.terms'), path: "/terms", icon: <FileText className="h-5 w-5" /> },
+      { label: t('nav.safety'), path: "/safety-trust", icon: <ShieldCheck className="h-5 w-5" /> },
     ];
     return [...primaryItems, ...accountItems, ...toolsItems, ...footerItems];
-  }, [navItems, mobileTabs, mobileCenterAction]);
+  }, [navItems, mobileTabs, mobileCenterAction, t]);
 
   const handleSignOut = useCallback(async () => {
     await signOut();
@@ -450,12 +462,11 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="hidden sm:block">
-                <ThemeToggle />
-              </div>
+              <ThemeToggle />
+              <LanguageSwitcher compact />
               <span id="app-notifications"><NotificationBell /></span>
 
-              <Link id="layout-messages" to="/messages" aria-label="Messages">
+              <Link id="layout-messages" to="/messages" aria-label="Messages" className="hidden sm:flex">
                 <Button variant="ghost" size="icon" className="relative text-gray-600 dark:text-gray-400 h-11 w-11" aria-label="Messages">
                   <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
                   {unreadCount > 0 && (
@@ -574,22 +585,33 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         footer={
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between px-2 py-1.5">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('common.theme')}</span>
               <ThemeToggle />
             </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              onClick={() => {
+                resetProductTour();
+                navigate(dashboardPath);
+              }}
+            >
+              <HelpCircle className="mr-2 h-4 w-4" />
+              {t('nav.tour')}
+            </Button>
             <Button
               variant="ghost"
               className="w-full text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950"
               onClick={handleSignOut}
             >
               <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
+              {t('nav.signOut')}
             </Button>
           </div>
         }
       />
       <ScrollToTopFab bottomClass="bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))]" />
-      <Disha accent={isTrucker ? 'orange' : 'blue'} />
+      <FreddyTrigger />
       <MascotInteractionTracker />
       <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-lg" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4 text-center">

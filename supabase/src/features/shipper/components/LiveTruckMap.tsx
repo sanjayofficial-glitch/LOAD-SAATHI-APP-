@@ -5,7 +5,7 @@ import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { LoadSaathiMap } from '@/components/maps';
 import { useLiveDriverLocations } from '@/hooks/useLiveDriverLocations';
 import { useTripMapMarkers } from '@/hooks/useTripMapMarkers';
-import { isTruckInTransit, type TruckLocation } from '@/components/maps/TruckMarker';
+import { isTruckInTransit, type TruckLocation } from '@/components/maps/TruckMarker.utils';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Trip } from '@/types';
 import TruckDetailsPanel, {

@@ -85,8 +85,8 @@ export default function LocationPage() {
         </div>
       </noscript>
       <SeoMeta
-        title={`Freight Transport in ${data.name}, ${data.state} — LoadSaathi`}
-        description={clampMetaDescription(data.description)}
+        title={data.seoTitle ?? `Freight Transport in ${data.name}, ${data.state} — LoadSaathi`}
+        description={data.seoDescription ?? clampMetaDescription(data.description)}
         keywords={`freight ${data.name.toLowerCase()}, truck booking ${data.name.toLowerCase()}, PTL ${data.name.toLowerCase()}, logistics ${data.name.toLowerCase()} ${data.state.toLowerCase()}`}
         canonical={`/location/${canonicalSlug}`}
         jsonLd={faqSchema ? [schema, faqSchema] : schema}

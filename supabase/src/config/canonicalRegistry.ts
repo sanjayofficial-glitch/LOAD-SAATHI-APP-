@@ -217,7 +217,7 @@ export const TOTAL_PUBLIC_PAGES = ALL_PUBLIC_PATHS.length;
 export function resolveCanonical(path: string): string | undefined {
   const normalized = path.startsWith('/') ? path.slice(1) : path;
 
-  if (STATIC_ROUTES.includes(normalized as any)) {
+  if ((STATIC_ROUTES as readonly string[]).includes(normalized)) {
     return canonical(normalized === '' ? '/' : `/${normalized}`);
   }
 

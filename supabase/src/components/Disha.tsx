@@ -27,8 +27,9 @@ declare global {
 
 import { cn } from '@/lib/utils'
 import { useReducedMotion, useDishaKeyboard } from './DishaMascot'
-import { useDisha } from './DishaContext'
-import { Freddy, moodToFreddyAnimation } from './FreddyAvatar'
+import { useDisha } from './DishaContext.hooks'
+import { Freddy } from './FreddyAvatar'
+import { moodToFreddyAnimation } from './freddyAnimations'
 import DishaSpeechBubble from './DishaSpeechBubble'
 import { GlowRing } from './DishaSpotlight'
 import { useEffect, useState, useCallback, useRef, useLayoutEffect } from 'react'
@@ -37,7 +38,7 @@ import { useIdleDetection } from '@/hooks/useIdleDetection'
 import { MASCOT_BADGE_EVENT } from '@/hooks/useMascotInteractionTracker'
 import type { DishaMood } from './DishaMascot'
 import { useAuth as useClerkAuth } from '@clerk/clerk-react'
-import { Mic } from 'lucide-react'
+import { Mic, BadgeCheck, Bell } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
@@ -68,6 +69,10 @@ interface FreddyMessage {
 
 const CHAT_STORAGE_KEY = 'loadsaathi-freddy-chat'
 const MAX_CONTEXT_MESSAGES = 6
+
+// Cache key for search results — keyed by normalized message + sessionId
+const SEARCH_CACHE_KEY = 'loadsaathi-freddy-search-cache'
+const SEARCH_CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 
 export { DishaProvider } from './DishaContext'
 export { DishaCharacter } from './DishaCharacter'
@@ -101,6 +106,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     setMood,
     minimized,
     dismissed,
+    setDismissed,
     tip,
     showBubble,
     setShowBubble,
@@ -115,6 +121,9 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     reaction,
     playReaction,
     nextStep,
+    acceptGuide,
+    declineGuide,
+    stopGuide,
   } = useDisha()
 
   const isMobile = useMediaQuery('(max-width: 767px)')
@@ -132,6 +141,9 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
   const [renderedMascot, setRenderedMascot] = useState<{ x: number; y: number } | null>(null)
   const [reactionBadge, setReactionBadge] = useState<{ label: string; emoji: string; nonce: number } | null>(null)
   const reactionBadgeTimer = useRef<number | null>(null)
+  const chatPanelRef = useRef<HTMLDivElement | null>(null)
+  const chatListRef = useRef<HTMLDivElement | null>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   // ── Freddy chat state (additive — does not touch existing tip/guide flows) ──
   const { getToken } = useClerkAuth()
@@ -140,9 +152,53 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
   const [chatMessages, setChatMessages] = useState<FreddyMessage[]>([])
   const [chatInput, setChatInput] = useState('')
   const [chatLoading, setChatLoading] = useState(false)
+  const [chatError, setChatError] = useState<string | null>(null)
   const [voiceListening, setVoiceListening] = useState(false)
   const [newAlerts, setNewAlerts] = useState(0)
+  const [showHelpPanel, setShowHelpPanel] = useState(false)
+  const [isOnline, setIsOnline] = useState(true)
+  const chatMessagesRef = useRef(chatMessages)
   const speechRef = useRef<SpeechRecognition | null>(null)
+
+  // Keep ref in sync with state for stable access inside callbacks
+  useEffect(() => { chatMessagesRef.current = chatMessages }, [chatMessages])
+
+  // Read cached search results (if any) for a given message
+  const getCachedResult = useCallback((message: string, sessionId: string) => {
+    try {
+      const raw = localStorage.getItem(SEARCH_CACHE_KEY)
+      if (!raw) return null
+      const cache = JSON.parse(raw) as Record<string, { timestamp: number; result: unknown }>
+      const key = `${sessionId}:${message.trim().toLowerCase()}`
+      const entry = cache[key]
+      if (entry && Date.now() - entry.timestamp < SEARCH_CACHE_TTL_MS) {
+        return entry.result
+      }
+    } catch {
+      // ignore corrupt cache
+    }
+    return null
+  }, [])
+
+  // Store search result in cache
+  const setCachedResult = useCallback((message: string, sessionId: string, result: unknown) => {
+    try {
+      const raw = localStorage.getItem(SEARCH_CACHE_KEY)
+      const cache = raw ? (JSON.parse(raw) as Record<string, { timestamp: number; result: unknown }>) : {}
+      const key = `${sessionId}:${message.trim().toLowerCase()}`
+      cache[key] = { timestamp: Date.now(), result }
+      // Cap cache size to 50 entries
+      const keys = Object.keys(cache)
+      if (keys.length > 50) {
+        const oldest = keys.sort((a, b) => (cache[a]?.timestamp ?? 0) - (cache[b]?.timestamp ?? 0))
+        const oldestKey = oldest[0]
+        if (oldestKey) delete cache[oldestKey]
+      }
+      localStorage.setItem(SEARCH_CACHE_KEY, JSON.stringify(cache))
+    } catch {
+      // ignore
+    }
+  }, [])
 
   // Load conversation history from localStorage on mount.
   useEffect(() => {
@@ -156,6 +212,9 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
             ...prev,
             ...parsed.messages.slice(-20),
           ])
+        }
+        if (typeof parsed.newAlerts === 'number' && parsed.newAlerts > 0) {
+          setNewAlerts(parsed.newAlerts)
         }
       }
     } catch {
@@ -174,15 +233,103 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       try {
         localStorage.setItem(
           CHAT_STORAGE_KEY,
-          JSON.stringify({ sessionId, messages: chatMessages.slice(-20) }),
+          JSON.stringify({ sessionId, messages: chatMessages.slice(-20), newAlerts }),
         )
       } catch {
         // ignore
       }
     }
-  }, [sessionId, chatMessages])
+  }, [sessionId, chatMessages, newAlerts])
 
-  const sendFreddyMessage = useCallback(async (text: string) => {
+  // ── Chat dialog: autofocus + focus trap while open ──
+  useEffect(() => {
+    if (!chatMode || !showBubble) return
+    const panel = chatPanelRef.current
+    if (!panel) return
+
+    const getFocusables = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'button, input, textarea, select, [href], [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => !el.hasAttribute('disabled'))
+
+    getFocusables()[0]?.focus()
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return
+      const els = getFocusables()
+      if (els.length === 0) return
+      const firstEl = els[0]!
+      const lastEl = els[els.length - 1]!
+      const active = document.activeElement
+      if (!panel.contains(active)) {
+        e.preventDefault()
+        firstEl.focus()
+        return
+      }
+      if (e.shiftKey && active === firstEl) {
+        e.preventDefault()
+        lastEl.focus()
+      } else if (!e.shiftKey && active === lastEl) {
+        e.preventDefault()
+        firstEl.focus()
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [chatMode, showBubble])
+
+  // Re-focus the composer after a response lands (input is disabled while loading).
+  useEffect(() => {
+    if (chatMode && showBubble && !chatLoading) {
+      chatPanelRef.current?.querySelector<HTMLInputElement>('input')?.focus()
+    }
+  }, [chatMode, showBubble, chatLoading])
+
+  // Auto-scroll the transcript to the newest message.
+  useEffect(() => {
+    const el = chatListRef.current
+    if (!el) return
+    el.scrollTop = el.scrollHeight
+  }, [chatMessages, chatLoading])
+
+  // Invalidate cache when a new message is added (context changed)
+  useEffect(() => {
+    if (chatMessages.length > 0) {
+      try {
+        const raw = localStorage.getItem(SEARCH_CACHE_KEY)
+        if (raw) localStorage.removeItem(SEARCH_CACHE_KEY)
+      } catch {
+        // ignore
+      }
+    }
+  }, [chatMessages])
+
+  // Quick reply suggestions shown when chat is empty
+  const quickReplies = [
+    { label: 'Find trucks', message: 'Find trucks from Rourkela to Ranchi for 5 tonnes under 4000 per tonne' },
+    { label: 'My credit score', message: 'What is my credit score' },
+    { label: 'Get help', message: 'Get help' },
+  ]
+
+  // Online/offline detection
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true)
+    const handleOffline = () => setIsOnline(false)
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+    setIsOnline(navigator.onLine)
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
+
+  const sendFreddyMessageRef = useRef<((text: string, retryCount?: number) => Promise<void>) | null>(null)
+
+  const sendFreddyMessage = useCallback(async (text: string, retryCount: number = 0) => {
     if (!text.trim() || chatLoading) return
     const userMsg: FreddyMessage = { id: Date.now(), role: 'user', content: text }
     setChatMessages((prev) => [...prev, userMsg])
@@ -191,15 +338,54 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     setMood('thinking')
     setTip({ message: "Thinking…", mood: 'thinking' })
     setShowBubble(true)
+    setChatError(null)
 
     try {
+      if (!isOnline) {
+        throw new Error('You appear to be offline. Check your connection and try again.')
+      }
+
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
       if (!supabaseUrl) throw new Error('Service unavailable')
+
+      // Check cache for previous result
+      const cached = getCachedResult(text, sessionId || '')
+      if (cached && typeof cached === 'object' && 'ok' in cached) {
+        const cachedResult = cached as {
+          summary?: string;
+          detail?: string;
+          loads?: FreddyLoad[];
+          tool?: string;
+          strengths?: string[];
+          improvements?: string[];
+          tips?: string[];
+          projection?: string;
+        };
+        setChatMessages((prev) => [...prev, {
+          id: Date.now() + 1,
+          role: 'freddy',
+          content: cachedResult.summary || cachedResult.detail || 'Here are the results.',
+          ...(cachedResult.loads !== undefined ? (cachedResult.loads as unknown as Record<string, unknown>) : {}),
+          ...(cachedResult.tool ? { tool: cachedResult.tool } : {}),
+          ...(cachedResult.strengths ? { strengths: cachedResult.strengths } : {}),
+          ...(cachedResult.improvements ? { improvements: cachedResult.improvements } : {}),
+          ...(cachedResult.tips ? { tips: cachedResult.tips } : {}),
+          ...(cachedResult.projection ? { projection: cachedResult.projection } : {}),
+        }])
+        setMood('celebrate')
+        setTip({ message: cachedResult.summary || 'Here you go!', mood: 'celebrate' })
+        setChatLoading(false)
+        if (cachedResult.loads && cachedResult.loads.length > 0) {
+          setNewAlerts((prev) => prev + 1)
+        }
+        return
+      }
 
       const token = await getToken({ template: 'supabase' })
       if (!token) throw new Error('Authentication required')
 
-      // Build history from recent messages (exclude the just-added user msg).
+      // Build history from recent messages. Note: when server-side memory is
+      // enabled the backend ignores client-sent history and uses the server store.
       const history = chatMessages.slice(-MAX_CONTEXT_MESSAGES).map((m) => ({
         role: m.role,
         content: m.content,
@@ -221,19 +407,56 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
 
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
-        throw new Error(errData.detail || `Freddy error (${res.status})`)
+        throw new Error(errData.detail || errData.error || `Freddy error (${res.status})`)
       }
 
       const data = await res.json()
 
       if (!data.ok) {
-        throw new Error(data.detail || 'Freddy returned no results')
+        throw new Error(data.detail || data.error || 'Freddy returned no results')
+      }
+
+      // Kill switch / disabled state: backend reports enabled:false.
+      if (data.enabled === false) {
+        const freddyMsg: FreddyMessage = {
+          id: Date.now() + 1,
+          role: 'freddy',
+          content: 'Freddy is temporarily unavailable. Please try again later, or use the browse filters on the search page.',
+        }
+        setChatMessages((prev) => [...prev, freddyMsg])
+        setMood('idle')
+        setTip({ message: 'Freddy is temporarily unavailable.', mood: 'idle' })
+        setChatLoading(false)
+        return
+      }
+
+      // No tool executed (e.g. no usable filters extracted).
+      if (!data.tool && data.detail) {
+        const freddyMsg: FreddyMessage = {
+          id: Date.now() + 1,
+          role: 'freddy',
+          content: data.detail,
+        }
+        setChatMessages((prev) => [...prev, freddyMsg])
+
+        // Show help panel for help queries
+        if (text.toLowerCase().includes('get help') || text.toLowerCase().includes('i need help') ||
+            text.toLowerCase().includes('help me') || text.toLowerCase().includes('how does this work')) {
+          setShowHelpPanel(true)
+          setMood('helpful')
+          setTip({ message: 'Here to help!', mood: 'helpful' })
+        } else {
+          setMood('idle')
+          setTip({ message: data.detail, mood: 'idle' })
+        }
+        setChatLoading(false)
+        return
       }
 
       const freddyMsg: FreddyMessage = {
         id: Date.now() + 1,
         role: 'freddy',
-        content: data.summary || 'Here are the matching trucks:',
+        content: data.summary || (data.tool === 'credit-insights' ? 'Here are your credit insights.' : 'Here are the matching trucks:'),
         loads: data.loads,
         tool: data.tool,
         strengths: data.strengths,
@@ -242,6 +465,11 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
         projection: data.projection,
       }
       setChatMessages((prev) => [...prev, freddyMsg])
+
+      // Cache the result for future identical queries (search only, not credit-insights)
+      if (data.tool !== 'credit-insights' && sessionId) {
+        setCachedResult(text, sessionId, data)
+      }
 
       if (data.tool === 'credit-insights') {
         setMood('celebrate')
@@ -263,16 +491,26 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       }
     } catch (err: unknown) {
       const errMsg = err instanceof Error ? err.message : 'Something went wrong'
-      setChatMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 1, role: 'freddy', content: `Sorry, ${errMsg}. Try again or use the filters on the browse page.` },
-      ])
+      setChatError(errMsg)
       setMood('confused')
       setTip({ message: `Sorry, ${errMsg}.`, mood: 'confused' })
+
+      // Retry once on network errors (not on auth/service errors)
+      if (retryCount < 1 && (errMsg.includes('fetch') || errMsg.includes('network') ||
+          errMsg.includes('timeout') || errMsg.includes('offline'))) {
+        await sendFreddyMessageRef.current?.(text, retryCount + 1)
+      } else {
+        setChatMessages((prev) => [
+          ...prev,
+          { id: Date.now() + 1, role: 'freddy', content: `Sorry, ${errMsg}. Try again or use the filters on the browse page.` },
+        ])
+      }
     } finally {
       setChatLoading(false)
     }
-  }, [chatLoading, chatMessages, getToken, sessionId, setMood, setTip, setShowBubble])
+  }, [chatLoading, getToken, sessionId, chatMessages, getCachedResult, setCachedResult, setChatError, setMood, setTip, setShowBubble, isOnline, sendFreddyMessageRef])
+
+  sendFreddyMessageRef.current = sendFreddyMessage
 
   // ── Voice input (Web Speech API) ──
   useEffect(() => {
@@ -287,7 +525,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     recognition.lang = 'en-IN'
 
     recognition.onresult = (event: Event) => {
-      const transcript = (event as any).results[0][0].transcript
+      const transcript = (event as unknown as { results: Array<Array<{ transcript: string }>> }).results[0]![0]!.transcript
       setChatInput(transcript)
     }
 
@@ -401,6 +639,14 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     }
   }, [guideStep, guideState?.isActive, setGuideMood, setShowBubble])
 
+  // Surface the "Can I guide you?" offer bubble when a flow is waiting for opt-in.
+  useEffect(() => {
+    if (guideState?.offerPending) {
+      setGuideMood('playful')
+      setShowBubble(true)
+    }
+  }, [guideState?.offerPending, setGuideMood, setShowBubble])
+
   useEffect(() => {
     if (dismissed) {
       setShowBubble(false)
@@ -417,10 +663,10 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       }
     }, 5000)
     return () => clearTimeout(timer)
-  }, [minimized, dismissed, mood, guideState, guideStep, setGuideMood])
+  }, [minimized, dismissed, mood, guideState, guideStep, setGuideMood, setMood])
 
   useEffect(() => {
-    if (dismissed || minimized || guideState?.isActive || chatMode) return
+    if (dismissed || minimized || guideState?.isActive || guideState?.offerPending || chatMode) return
 
     const idleMessages: Array<{ message: string; mood: DishaMood }> =
       pageContextMessages[pageContext] ??
@@ -443,7 +689,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     }, 30000)
 
     return () => clearInterval(interval)
-  }, [dismissed, minimized, guideState?.isActive, chatMode, idle, setTip, setShowBubble, setMood])
+  }, [dismissed, minimized, guideState?.isActive, guideState?.offerPending, chatMode, idle, pageContext, setTip, setShowBubble, setMood])
 
   useEffect(() => {
     if (reaction && reaction.name) {
@@ -509,7 +755,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       clearTimeout(timeout)
       window.removeEventListener('scroll', checkOverlap)
     }
-  }, [dismissed, minimized, guideState?.isActive, move, mascotSize])
+  }, [dismissed, minimized, guideState?.isActive, move, mascotSize, setMood])
 
   // Transient reaction badge emitted by the global interaction tracker
   // (and by any page via emitMascotReaction). Rendered next to the mascot.
@@ -530,7 +776,13 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
 
   useDishaKeyboard({
     disabled: dismissed || minimized,
-    onEscape: () => setShowBubble(false),
+    onEscape: () => {
+      if (chatMode && showBubble) {
+        handleCloseChat()
+      } else {
+        setShowBubble(false)
+      }
+    },
   })
 
   const handlePointerDown = useCallback((
@@ -571,10 +823,16 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerup', onUp)
     }
-  }, [dismissed, minimized, isDragging, move])
+  }, [dismissed, minimized, isDragging, move, setAnchorSafe])
 
   const handleClick = useCallback(() => {
     if (dismissed) return;
+    // While an offer is pending, tapping the mascot toggles the offer bubble
+    // (it never opens the chat or starts guiding on its own).
+    if (guideState?.offerPending) {
+      setShowBubble(!showBubble);
+      return;
+    }
     if (guideState?.isActive) {
       if (showBubble) {
         setShowBubble(false);
@@ -591,6 +849,9 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     }
     // Enter Freddy chat mode (non-guide path). Chat is additive — existing
     // tip/guide flows are untouched.
+    if (!chatMode && document.activeElement instanceof HTMLElement) {
+      previousFocusRef.current = document.activeElement
+    }
     setChatMode(true)
     if (!showBubble) {
       setMood('listening')
@@ -598,11 +859,21 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     } else {
       setShowBubble(false)
     }
-  }, [dismissed, showBubble, setMood, setTip, setShowBubble, guideState?.isActive, guideStep])
+  }, [dismissed, showBubble, chatMode, setMood, setTip, setShowBubble, guideState?.isActive, guideState?.offerPending, guideStep])
 
   const handleCloseBubble = useCallback(() => {
     setShowBubble(false)
   }, [setShowBubble])
+
+  const handleCloseChat = useCallback(() => {
+    setChatMode(false)
+    setShowBubble(false)
+    const prev = previousFocusRef.current
+    if (prev && document.contains(prev)) {
+      prev.focus()
+    }
+    previousFocusRef.current = null
+  }, [setChatMode, setShowBubble])
 
   const handleNextStep = useCallback(() => {
     if (guideState?.isActive) {
@@ -610,7 +881,24 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
     }
   }, [guideState?.isActive, nextStep])
 
-  if (dismissed || isProfilePage) return null
+  if (isProfilePage) return null
+
+  // If Freddy was previously dismissed, keep a small restore chip visible so the
+  // mascot can always be brought back (the persisted dismissal must never be a
+  // permanent soft-lock with no recovery path).
+  if (dismissed) {
+    return (
+      <button
+        type="button"
+        onClick={() => setDismissed(false)}
+        className="fixed bottom-24 left-6 z-[100] inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/95 px-4 py-2 text-xs font-semibold text-orange-700 shadow-lg backdrop-blur transition-colors hover:bg-orange-50 dark:border-orange-900/40 dark:bg-gray-900/95 dark:text-orange-300 dark:hover:bg-gray-800"
+        aria-label="Show Freddy the LoadSaathi assistant"
+        data-disha-restore
+      >
+        <span aria-hidden>🐻</span> Show Freddy
+      </button>
+    )
+  }
 
   // Bubble is now rendered inside the mascot container so it moves together with 10px gap
 
@@ -640,7 +928,14 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
         onPointerDown={handlePointerDown}
         onClick={handleClick}
         data-disha-mascot
-        aria-label={`Freddy the LoadSaathi assistant, mood ${mood}${minimized ? ', minimized' : ''}${dismissed ? ', dismissed' : ''}`}
+        aria-label={`Freddy the LoadSaathi assistant, mood ${mood}${minimized ? ', minimized' : ''}${dismissed ? ', dismissed' : ''}`}                        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            handleClick()
+          }
+        }}
         initial={reducedMotion ? {} : { opacity: 0, scale: 0.8 }}
         animate={
           reducedMotion
@@ -696,20 +991,50 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
               transition={{ duration: 0.2 }}
             >
               {chatMode ? (
-                <DishaSpeechBubble open={!minimized && !dismissed && showBubble} side={bubbleSide} gap={3} mascotX={renderedMascot?.x} mascotY={renderedMascot?.y} mascotSize={mascotSize}>
-                  <div className="flex flex-col gap-2 w-[300px] max-w-[calc(100vw-4rem)]">
+                <DishaSpeechBubble open={!minimized && !dismissed && showBubble} side={bubbleSide} gap={3} mascotX={renderedMascot?.x} mascotY={renderedMascot?.y} mascotSize={mascotSize} asDialog={chatMode}>
+                  <div ref={chatPanelRef} className="flex flex-col gap-2 w-[300px] max-w-[calc(100vw-4rem)] pointer-events-auto">
                     <div className="flex items-center gap-2">
                       <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white text-[11px] font-bold mt-0.5">
                         F
                       </span>
                       <div className="flex flex-col gap-0">
-                        <p className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
+                        <p id="freddy-chat-title" className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400">Chat</p>
                       </div>
+                      {showHelpPanel && (
+                        <button
+                          type="button"
+                          onClick={() => setShowHelpPanel(false)}
+                          className="text-[10px] font-medium text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300"
+                          title="Close help"
+                        >
+                          ✕
+                        </button>
+                      )}
                     </div>
 
+                    {/* Get Help panel */}
+                    {showHelpPanel && (
+                      <div className="mb-2 p-2 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200/50 dark:border-orange-900/30 text-xs space-y-1.5">
+                        <p className="font-semibold text-orange-800 dark:text-orange-200">How Freddy can help:</p>
+                        <ul className="text-gray-700 dark:text-gray-200 space-y-0.5 text-[10px]">
+                          <li>• Type a route like "Find trucks from Rourkela to Ranchi"</li>
+                          <li>• Add capacity & price: "for 5 tonnes under 4000 per tonne"</li>
+                          <li>• Ask "What is my credit score" for insights</li>
+                          <li>• Say "Get help" anytime for this guide</li>
+                        </ul>
+                        <button
+                          type="button"
+                          onClick={() => setShowHelpPanel(false)}
+                          className="text-[9px] text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300 font-medium mt-1"
+                        >
+                          Got it
+                        </button>
+                      </div>
+                    )}
+
                     {/* Message list */}
-                    <div className="flex-1 min-h-[120px] max-h-[200px] overflow-y-auto pr-2 space-y-2 scroll-smooth">
+                    <div ref={chatListRef} aria-label="Chat history" className="flex-1 min-h-[120px] max-h-[200px] overflow-y-auto pr-2 space-y-2 scroll-smooth">
                       {chatMessages.map((msg) => (
                         <div
                           key={msg.id}
@@ -765,7 +1090,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                                     <span className="ml-1">· {load.available_capacity_tonnes}t</span>
                                   )}
                                   {load.trucker?.is_verified && (
-                                    <span className="ml-1 text-orange-500">✓</span>
+                                    <BadgeCheck className="ml-1 h-3.5 w-3.5 text-orange-500 inline" />
                                   )}
                                 </div>
                               ))}
@@ -783,13 +1108,35 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                           Freddy is searching…
                         </div>
                       )}
+                      {chatError && !chatLoading && (
+                        <div className="mr-auto bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-tl-none rounded-lg p-2 text-xs border border-red-200 dark:border-red-900/30">
+                          <div>⚠️ {chatError}</div>
+                          {chatMessages.length > 0 && chatMessages[chatMessages.length - 1]?.role === 'freddy' && chatMessages[chatMessages.length - 1]?.content.includes(chatError) ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const lastMsg = chatMessages[chatMessages.length - 1]
+                                if (lastMsg) {
+                                  setChatMessages((prev) => prev.filter((m) => m.id !== lastMsg.id))
+                                  setChatError(null)
+                                  sendFreddyMessage(lastMsg.content)
+                                }
+                              }}
+                              className="text-[9px] text-orange-600 hover:text-orange-800 dark:text-orange-400 dark:hover:text-orange-300 mt-0.5"
+                            >
+                              Tap to retry
+                            </button>
+                          ) : null}
+                        </div>
+                      )}
                     </div>
 
                     {/* Alert badge */}
                     {newAlerts > 0 && (
                       <div className="mb-1 flex items-center justify-between px-2">
                         <span className="text-[10px] font-semibold text-orange-600 dark:text-orange-400">
-                          🔔 {newAlerts} new match alert{newAlerts > 1 ? 's' : ''}
+                          <Bell className="h-3 w-3 inline mr-1 -mt-0.5" />
+                          {newAlerts} new match alert{newAlerts > 1 ? 's' : ''}
                         </span>
                         <button
                           type="button"
@@ -798,6 +1145,22 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                         >
                           Clear
                         </button>
+                      </div>
+                    )}
+
+                    {/* Quick replies when chat is empty */}
+                    {chatMessages.length === 0 && !chatLoading && (
+                      <div className="flex flex-wrap gap-1 mb-1">
+                        {quickReplies.map((q) => (
+                          <button
+                            key={q.label}
+                            type="button"
+                            onClick={() => sendFreddyMessage(q.message)}
+                            className="text-[10px] px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-900/40 hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors"
+                          >
+                            {q.label}
+                          </button>
+                        ))}
                       </div>
                     )}
 
@@ -812,6 +1175,8 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                           }
                         }}
                         placeholder="Ask me to find trucks…"
+                        aria-label="Message Freddy"
+                        maxLength={2000}
                         className="h-8 text-xs px-3 flex-1"
                         disabled={chatLoading}
                       />
@@ -841,10 +1206,7 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                       <button
                         type="button"
                         className="text-[10px] font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
-                        onClick={() => {
-                          setChatMode(false)
-                          setShowBubble(false)
-                        }}
+                        onClick={handleCloseChat}
                       >
                         Close chat
                       </button>
@@ -862,41 +1224,87 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                 </DishaSpeechBubble>
               ) : (
                 <>
-                  {!minimized && !dismissed && (tip || guideStep) && (
-                    <div className="flex flex-row items-start gap-2 w-[280px] max-w-[calc(100vw-4rem)]">
+                  {!minimized && !dismissed && (tip || guideStep || guideState?.offerPending) && (
+                    <div className="flex flex-row items-start gap-2 w-[300px] max-w-[calc(100vw-4rem)]">
                       <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-white text-[11px] font-bold mt-0.5">
                         F
                       </span>
                       <div className="flex flex-col gap-0.5">
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
-                          {guideStep?.example && (
-                            <p className="text-[11px] text-orange-600 dark:text-orange-400 font-mono">
-                              {guideStep.example}
+                        {guideState?.offerPending ? (
+                          <>
+                            <p className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug break-normal">
+                              {pageContext === 'trucker-post'
+                                ? 'Want me to guide you through posting your trip? I\'ll point out each field.'
+                                : 'Want me to guide you through posting your load? I\'ll point out each field.'}
                             </p>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug break-normal">
-                          {guideStep?.message || tip?.message}
-                        </p>
-                        <div className="flex gap-3 items-center mt-1">
-                          <button
-                            type="button"
-                            className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
-                            onClick={handleCloseBubble}
-                          >
-                            Dismiss
-                          </button>
-                          {guideState?.isActive && guideStep && (
-                            <button
-                              type="button"
-                              className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
-                              onClick={handleNextStep}
-                            >
-                              Next
-                            </button>
-                          )}
-                        </div>
+                            <div className="flex gap-2 items-center mt-1.5">
+                              <button
+                                type="button"
+                                className="rounded-full bg-orange-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-orange-700 pointer-events-auto"
+                                onClick={() => {
+                                  acceptGuide()
+                                }}
+                              >
+                                Yes, guide me
+                              </button>
+                              <button
+                                type="button"
+                                className="rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 pointer-events-auto dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                                onClick={() => {
+                                  declineGuide()
+                                  setShowBubble(false)
+                                }}
+                              >
+                                No thanks
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-2">
+                              <p className="text-xs font-semibold text-gray-900 dark:text-white">Freddy</p>
+                              {guideStep?.example && (
+                                <p className="text-[11px] text-orange-600 dark:text-orange-400 font-mono">
+                                  {guideStep.example}
+                                </p>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug break-normal">
+                              {guideStep?.message || tip?.message}
+                            </p>
+                            <div className="flex gap-3 items-center mt-1">
+                              <button
+                                type="button"
+                                className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
+                                onClick={handleCloseBubble}
+                              >
+                                Dismiss
+                              </button>
+                              {guideState?.isActive && guideStep && (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="text-xs font-medium text-muted-foreground hover:text-foreground pointer-events-auto transition-colors"
+                                    onClick={handleNextStep}
+                                  >
+                                    Next
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="text-xs font-medium text-muted-foreground hover:text-red-600 pointer-events-auto transition-colors"
+                                    onClick={() => {
+                                      stopGuide()
+                                      setShowBubble(false)
+                                    }}
+                                  >
+                                    Stop
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   )}

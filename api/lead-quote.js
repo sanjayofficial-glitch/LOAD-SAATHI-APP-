@@ -27,7 +27,7 @@ const PHONE_DISPLAY = '+91-83289-98031';
 const PHONE_E164 = '+918328998031';
 const OFFICE = 'FTBI, NIT Rourkela, Sector 1, Rourkela, Odisha 769008';
 const FROM = `${BRAND} Quotes <quotes@mail.loadsaathi.in>`;
-const SHIPPER_FEE = '1.5–3%';
+const SHIPPER_FEE = 'a transaction fee on completed shipments — see the pricing page for the published schedule';
 
 function esc(value) {
   return String(value ?? '')
@@ -101,7 +101,7 @@ function buildLeadHtml(lead) {
           </p>
           <p style="margin:0 0 6px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:#3c4043;">
             1️⃣ Within business hours our team matches your load against verified trucks on the lane and confirms live rates.<br>
-            2️⃣ LoadSaathi's platform fee is ${esc(SHIPPER_FEE)} of the freight rate — no hidden charges.<br>
+            2️⃣ LoadSaathi's platform fee: ${esc(SHIPPER_FEE)} — no hidden charges.<br>
             3️⃣ Once you confirm a truck, you get live GPS tracking until delivery.
           </p>
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px 0 6px;">
@@ -125,7 +125,7 @@ function buildLeadHtml(lead) {
       <tr>
         <td style="padding:18px 24px 24px;border-top:1px solid #eef1f4;">
           <p style="margin:0;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:#9aa0a6;">
-            ${esc(BRAND)} Technologies Pvt. Ltd. · ${esc(OFFICE)}<br>
+            ${esc(BRAND)} · ${esc(OFFICE)}<br>
             You received this because you requested a freight quote at ${esc(SITE_URL.replace('https://', ''))} with this email address.
             Not you? <a href="mailto:${SUPPORT_EMAIL}?subject=Remove%20me%20from%20lead%20emails" style="color:#9aa0a6;">Tell us and we'll remove it</a>.
           </p>
@@ -151,7 +151,7 @@ function buildLeadText(lead) {
     lead.page_path ? `- Page: ${lead.page_path}` : '',
     '',
     'Next: our team matches your load against verified trucks on the lane and',
-    `confirms live rates. Platform fee: ${SHIPPER_FEE} of the freight rate.`,
+    `confirms live rates. Platform fee: ${SHIPPER_FEE}.`,
     '',
     `Chat on WhatsApp: https://wa.me/${PHONE_E164.replace('+', '')}`,
     `Call: ${PHONE_DISPLAY}`,

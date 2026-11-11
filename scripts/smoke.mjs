@@ -259,6 +259,41 @@ function main() {
       }
     }
     console.log(`  ℹ ${canonicalOk}/${canonicalPages.length} prerendered pages have correct canonical tags`);
+
+    // 6a. Exactly one H1 + minimum visible text on high-value pages. A
+    // missing H1 or near-empty body is an SEO defect that must fail the build.
+    const h1Pages = [
+      "/",
+      "/return-load",
+      "/ltl-transport",
+      "/transport-cost-calculator",
+      "/tools/freight-rate-calculator",
+    ];
+    let h1Ok = 0;
+    for (const route of h1Pages) {
+      const pagePath = route === "/"
+        ? path.join(DIST, "index.html")
+        : path.join(DIST, route, "index.html");
+      if (!fs.existsSync(pagePath)) continue;
+      const content = fs.readFileSync(pagePath, "utf-8");
+      const h1s = content.match(/<h1[\s>]/g) || [];
+      if (h1s.length === 1) {
+        h1Ok++;
+      } else {
+        console.error(`  ✗ Expected exactly one <h1> in ${route}, found ${h1s.length}`);
+        failures++;
+      }
+      const text = content
+        .replace(/<script[\s\S]*?<\/script>/gi, " ")
+        .replace(/<style[\s\S]*?<\/style>/gi, " ")
+        .replace(/<[^>]+>/g, " ");
+      const words = text.split(/\s+/).filter(Boolean).length;
+      if (words < 300) {
+        console.error(`  ✗ Thin visible text in ${route}: ${words} words (min 300)`);
+        failures++;
+      }
+    }
+    console.log(`  ℹ ${h1Ok}/${h1Pages.length} high-value pages have exactly one H1`);
   }
 
   // 7. Title/meta SEO rules for the priority pages (Phase 2/3 CTR work).

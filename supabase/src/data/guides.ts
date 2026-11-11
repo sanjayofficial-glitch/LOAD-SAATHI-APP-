@@ -16,8 +16,8 @@ export const guideData: Record<string, {
   rateTable?: { caption: string; headers: string[]; rows: string[][]; footnote?: string };
 }> = {
   "ptl-vs-ftl": {
-    title: "FTL & PTL Full Form: Difference, Rates & Which Is Cheaper",
-    summary: "FTL = Full Truck Load, PTL = Part Truck Load. See the difference, 2026 rates per kg & km, and which saves money. Free PTL vs FTL calculator inside.",
+    title: "Part Load vs Full Truck Load: Meaning, Cost & Differences",
+    summary: "Understand the difference between part-load and full-truck transport. Compare when to book shared truck space and when a dedicated vehicle makes more sense.",
     author: "LoadSaathi Team",
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
     readTime: "6 min read",

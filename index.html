@@ -39,7 +39,7 @@
     <link rel="manifest" href="/manifest.json" />
     <!-- No maximum-scale/user-scalable restrictions: pinch-zoom must stay
          enabled for accessibility (WCAG 1.4.4 / Lighthouse best practice). -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ea580c" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@
     <noscript>
       <div style="max-width:800px;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif;line-height:1.6">
         <h2>LoadSaathi - India's AI-Powered Freight Marketplace</h2>
-        <p>LoadSaathi connects shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%.</p>
+        <p>LoadSaathi connects shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, and digital credit scores, with escrow-backed payments planned, to help reduce empty return trips and lower freight costs through shared capacity.</p>
         <h2>Who It's For</h2>
         <ul>
           <li><strong>Shippers:</strong> SMEs and enterprises in Odisha, Jharkhand, and West Bengal who need to move goods on the Rourkela-Ranchi-Burdwan corridor and beyond.</li>
@@ -270,11 +270,11 @@
           <li>Real-Time GPS Tracking: Live location sharing with ETAs, route visualization, and geofence alerts.</li>
           <li>Digital Freight Credit Score: 300-900 score for every participant.</li>
           <li>AI Price Prediction: Market-aligned pricing suggestions.</li>
-          <li>Escrow Payments: Secure milestone-based payment releases.</li>
+          <li>Escrow Payments (planned): Secure milestone-based payment releases on the roadmap.</li>
           <li>Bidirectional Reviews: Both shippers and truckers rate each other.</li>
         </ul>
         <h2>Pricing</h2>
-        <p>Free to join. Transaction fee: 1.5–3% per completed shipment for shippers, 1.5–2.5% for truckers. No subscriptions, no hidden fees.</p>
+        <p>Free to join. A transaction fee applies on completed shipments; the final schedule will be published. No subscriptions, no hidden fees.</p>
         <h2>Cities Served</h2>
         <p>Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal.</p>
         <h2>Key Pages</h2>
@@ -307,9 +307,33 @@
            injected block is hidden with the fallback the first inline script
            hides, and it replaces this card so the page keeps exactly one h1
            (the one in the injected block). JS clients never see it. -->
-      <div id="ssr-fallback" style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif">
-        <div id="ssr-fallback-content" style="text-align:center;padding:2rem">
-          <p style="color:#6b7280;margin:0;font-size:1.125rem">LoadSaathi — India's AI-Powered Freight Marketplace</p>
+      <div id="ssr-fallback" style="min-height:100vh;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#ffffff">
+        <div id="ssr-fallback-content" style="max-width:860px;margin:0 auto;padding:2rem 1.25rem 3rem;line-height:1.65;color:#1f2937;text-align:left">
+          <div id="ssr-home-fallback">
+          <h1 style="font-size:2rem;line-height:1.2;margin:0 0 1rem;color:#111827">Move Goods Smarter with Shared Freight</h1>
+          <p style="margin:0 0 1rem">LoadSaathi is a shared freight marketplace that connects shippers, MSMEs and businesses that need to move goods with truck owners and transporters who have truck space. Matching part-load and full-load cargo across trips helps shippers find suitable transport faster and helps transporters reduce empty return journeys — starting from Rourkela and growing across Odisha, Jharkhand and East India corridors.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">For shippers and businesses</h2>
+          <p style="margin:0 0 1rem">If you are an MSME, trader or manufacturer moving steel, cement, FMCG, agro or engineering goods, post your shipment on LoadSaathi. Your load is matched against trucks whose route, capacity and date fit, and you can book part-load (PTL/LTL) or full-truck movement with live tracking.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">For truck owners and transporters</h2>
+          <p style="margin:0 0 1rem">If you operate a truck or fleet, list your trip once. LoadSaathi matches your available truck space against open loads on the same corridor — including return-load opportunities — so both legs of a journey earn instead of running empty.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">Part load (PTL) and LTL explained</h2>
+          <p style="margin:0 0 1rem">Part Truckload (PTL) and Less-Than-Truckload (LTL) let several shippers share one vehicle when cargo does not fill it. Shippers pay for the space they use rather than a whole truck, and transporters earn more per trip by filling otherwise-empty capacity.</p>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">How to start with LoadSaathi</h2>
+          <ul style="margin:0 0 1rem;padding-left:1.5rem">
+            <li style="margin:0 0 0.35rem">Post what you need — a load (shipper) or a trip (transporter)</li>
+            <li style="margin:0 0 0.35rem">Get matched on route, capacity, date and price alignment</li>
+            <li style="margin:0 0 0.35rem">Confirm the booking, share live tracking, and settle payments on milestones</li>
+          </ul>
+          <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">Related pages</h2>
+          <ul style="margin:0;padding-left:1.5rem">
+            <li style="margin:0 0 0.35rem"><a href="/solutions/shippers">LoadSaathi for shippers</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/solutions/truckers">LoadSaathi for truckers</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/return-load">Return loads for truckers</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/routes">Freight routes</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/tools">Free freight tools</a></li>
+            <li style="margin:0 0 0.35rem"><a href="/blog">Logistics blog</a></li>
+          </ul>
+          </div>
         </div>
       </div>
       <!-- Inline boot loader: visible instantly, replaced by React on mount (hidden when SSR fallback present, shown via JS) -->
@@ -329,8 +353,10 @@
 
     <!-- Third-party scripts: deferred to after first paint.
          Single load path (no duplicate gtag.js) with a conditional shim.
-         Clarity is loaded by the GTM container (ref=gtm) — a second inline
-         Clarity tracker created a double-instance race that threw
+         Clarity is now loaded directly below (project xwwzzsvxj0), replacing
+         the previous GTM-managed Clarity tag (xv8eh2c0e3). The GTM container
+         must have its old Clarity tag removed — two Clarity trackers caused a
+         double-instance race that threw
          "Cannot read properties of undefined (reading 'unshift')".
 
          GA4 + GTM + Clarity are held back until the first user interaction
@@ -403,12 +429,16 @@
           document.getElementsByTagName('head')[0].appendChild(ga);
           window.gtag('js', new Date());
           window.gtag('config', 'G-GEFWPQNHT6');
-          // GTM — container also manages Clarity (xv8eh2c0e3) and other tags
+          // GTM — remove the old Clarity tag (xv8eh2c0e3) from this container;
+          // Clarity now loads directly below with project xwwzzsvxj0.
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
           })(window,document,'script','dataLayer','GTM-WTBG3QKC');
+          // Clarity (session replay) — direct loader for project xwwzzsvxj0,
+          // replaces the previous GTM-managed Clarity tag (xv8eh2c0e3).
+          (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xwwzzsvxj0");
         }
         // Real users always interact within a few seconds — analytics stays timely.
         ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (ev) {

@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -25,14 +23,7 @@ import {
   type TourSpec,
 } from '@/hooks/useProductTour';
 
-interface ProductTourContextType {
-  startTour: (spec: TourSpec) => void;
-  isTourActive: boolean;
-  tourCompleted: boolean;
-  resetTour: () => void;
-}
-
-const ProductTourContext = createContext<ProductTourContextType | undefined>(undefined);
+import { ProductTourContext, type ProductTourContextType } from './ProductTourContext.shared';
 
 interface ProductTourProviderProps {
   children: ReactNode;
@@ -185,37 +176,4 @@ export function ProductTourProvider({ children }: ProductTourProviderProps) {
   return <ProductTourContext.Provider value={value}>{children}</ProductTourContext.Provider>;
 }
 
-export function useProductTourContext() {
-  const ctx = useContext(ProductTourContext);
-  if (ctx === undefined) {
-    throw new Error('useProductTourContext must be used within a ProductTourProvider');
-  }
-  return ctx;
-}
 
-export function useProductTour() {
-  const { userProfile } = useAuth();
-  const ctx = useProductTourContext();
-  const rawRole = userProfile?.user_type;
-  const role = rawRole === 'trucker' || rawRole === 'shipper' ? rawRole : undefined;
-  const userId = userProfile?.id;
-
-  return useMemo(
-    () => ({
-      ...ctx,
-      role,
-      userId,
-      tryConsumeAutoStartFlag: () => {
-        if (!userId) return false;
-        return consumeTourEntryFlag(userId);
-      },
-      markDone: () => {
-        if (!userId) return;
-      },
-      setStartFlag: () => {
-        if (!userId) return;
-      },
-    }),
-    [ctx, userId, role],
-  );
-}

@@ -8,7 +8,7 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/comp
 const BANNER_DISMISSED_KEY = 'loadsaathi-location-banner-dismissed';
 
 export const LocationPermissionBanner = React.memo(function LocationPermissionBanner() {
-  const { locationPermission, requestLocationPermission } = useLocation();
+  const { locationPermission, requestLocationPermission, refreshLocationPermission } = useLocation();
   const { userProfile } = useAuth();
   const [dismissed, setDismissed] = useState(false);
 
@@ -41,9 +41,26 @@ export const LocationPermissionBanner = React.memo(function LocationPermissionBa
     }
   }, []);
 
+  // Recompute the live permission state when the banner is shown so a stale
+  // cached 'granted' can never keep a denied/prompt state hidden on iPad.
+  useEffect(() => {
+    try {
+      refreshLocationPermission();
+    } catch {
+      // ignore
+    }
+  }, [refreshLocationPermission]);
+
   const handleEnable = useCallback(async () => {
     await requestLocationPermission();
-  }, [requestLocationPermission]);
+    // After the attempt, refresh from the live permission state / geolocation
+    // outcome so the banner responds to the real result.
+    try {
+      refreshLocationPermission();
+    } catch {
+      // ignore
+    }
+  }, [requestLocationPermission, refreshLocationPermission]);
 
   if (userProfile?.user_type === 'admin') return null;
   if (locationPermission === 'granted') return null;

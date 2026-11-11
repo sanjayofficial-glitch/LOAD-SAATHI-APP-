@@ -5,6 +5,7 @@ Allow: /
 Disallow: /login
 Disallow: /register
 Disallow: /choose-role
+Disallow: /onboarding
 Disallow: /forgot-password
 Disallow: /auth-sync
 

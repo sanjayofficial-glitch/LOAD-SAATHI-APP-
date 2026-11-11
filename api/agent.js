@@ -237,7 +237,7 @@ const ROUTE_DATA = {
     distanceKm: 30,
     transitTime: "1",
     dataStatus: "needs_review",
-    description: "Quick part load, PTL and LTL freight from Bhubaneswar to Cuttack — Odisha's twin cities corridor. LoadSaathi's local trucker network ensures fast, affordable intrastate shipping.",
+    description: "Bhubaneswar and Cuttack are Odisha's twin cities, about 30 km apart, with some of the densest short-haul truck movement in the state. Textiles, food grains and trading goods shuttle between them daily, so small part loads can usually be matched to a local vehicle the same day.",
     keywords: "part load Bhubaneswar to Cuttack, PTL freight Bhubaneswar to Cuttack, LTL transport Bhubaneswar Cuttack, Odisha intrastate freight, truck booking Cuttack",
   },
   "bhubaneswar-to-jamshedpur": {
@@ -248,7 +248,7 @@ const ROUTE_DATA = {
     distanceKm: 347,
     transitTime: "7",
     dataStatus: "corrected",
-    description: "Book part load, PTL and LTL freight from Bhubaneswar to Jamshedpur on the NH-16 / NH-220 corridor. Move goods from Odisha's capital to Jharkhand's steel city with AI-matched trucks and live GPS tracking.",
+    description: "About 347 km via NH-16 and NH-220 connects Odisha's capital with Jharkhand's steel city, Jamshedpur. Consumer goods, FMCG and agricultural produce move east while finished steel and automobile parts return west, keeping this cross-state lane active in both directions.",
     keywords: "part load Bhubaneswar to Jamshedpur, PTL freight Bhubaneswar to Jamshedpur, LTL transport Bhubaneswar Jamshedpur, truck booking Jamshedpur, Odisha Jharkhand freight, steel city transport",
   },
   "bhubaneswar-to-kolkata": {
@@ -281,7 +281,7 @@ const ROUTE_DATA = {
     distanceKm: 340,
     transitTime: "7",
     dataStatus: "needs_review",
-    description: "Book part load, PTL and LTL freight from Bhubaneswar to Rourkela — the return leg into Odisha's steel capital. LoadSaathi's AI matching finds trucks heading west across the state with transparent pricing and live GPS tracking.",
+    description: "Bhubaneswar to Rourkela is the reverse leg of Odisha's principal freight corridor, about 340 km across the state. Cargo returning west includes consumer goods, FMCG and building materials, while steel and industrial output load eastbound — so matching a truck in either direction is usually possible on this lane.",
     keywords: "part load Bhubaneswar to Rourkela, PTL freight Bhubaneswar to Rourkela, LTL transport Bhubaneswar Rourkela, truck booking Rourkela, Odisha freight, return load Bhubaneswar Rourkela",
   },
   "bhubaneswar-to-sambalpur": {
@@ -292,7 +292,7 @@ const ROUTE_DATA = {
     distanceKm: 350,
     transitTime: "7",
     dataStatus: "needs_review",
-    description: "Book part load, PTL and LTL freight from Bhubaneswar to Sambalpur — from the state capital into western Odisha's industrial belt. AI-matched trucks and fair pricing on LoadSaathi.",
+    description: "From the state capital into western Odisha's aluminium, paper and handloom belt, this lane runs about 350 km to Sambalpur. Aluminium products, paper and paddy move to coastal markets while consumer goods travel back west, giving shippers matching options in both directions.",
     keywords: "part load Bhubaneswar to Sambalpur, PTL freight Bhubaneswar to Sambalpur, LTL transport Bhubaneswar Sambalpur, truck booking Sambalpur, Odisha freight, intra-Odisha logistics",
   },
   "bhubaneswar-to-vizag": {
@@ -303,7 +303,7 @@ const ROUTE_DATA = {
     distanceKm: 445,
     transitTime: "7",
     dataStatus: "corrected",
-    description: "Coastal corridor PTL and LTL freight from Bhubaneswar to Visakhapatnam (Vizag). LoadSaathi's AI platform streamlines cross-state shipping along the East Coast with real-time tracking and fair pricing.",
+    description: "This coastal corridor runs about 445 km along NH-16 between Bhubaneswar and Visakhapatnam (Vizag), a major eastern-seaboard port. Steel, minerals and port-bound cargo move south from Odisha, while general merchandise and packaging return north — a steady lane for part-load and full-truck freight.",
     keywords: "part load Bhubaneswar to Visakhapatnam, PTL freight Bhubaneswar to Visakhapatnam, LTL transport Bhubaneswar Vizag, Odisha Andhra Pradesh freight, truck booking Vizag, coastal corridor logistics",
   },
   "burdwan-to-bhubaneswar": {
@@ -457,7 +457,7 @@ const ROUTE_DATA = {
     distanceKm: 198,
     transitTime: "4.5",
     dataStatus: "corrected",
-    description: "Find efficient PTL and LTL freight from Jamshedpur to Rourkela. Leverage LoadSaathi's returning trucks and AI matching for cost-effective shipping on this key industrial corridor.",
+    description: "Jamshedpur to Rourkela runs about 198 km on NH-220 between two major steel cities. Finished steel, automobile components, machinery and chemicals move west while coiled steel and engineering goods load eastbound, so trucks rarely need to complete this lane empty.",
     keywords: "part load Jamshedpur to Rourkela, PTL freight Jamshedpur to Rourkela, LTL transport Jamshedpur Rourkela, truck booking Jharkhand Odisha, Jamshedpur Rourkela load, return load Jamshedpur Rourkela",
   },
   "jharsuguda-to-sambalpur": {
@@ -578,7 +578,7 @@ const ROUTE_DATA = {
     distanceKm: 180,
     transitTime: "4",
     dataStatus: "needs_review",
-    description: "Ship goods from the capital of Jharkhand to the steel hub of Odisha. Find returning trucks and competitive rates on the Ranchi–Rourkela route with LoadSaathi's real-time matching and transparent pricing.",
+    description: "Ranchi and Rourkela sit at the heart of the Jharkhand–Odisha industrial corridor, about 180 km apart. Coal, heavy machinery and agricultural produce move out of Ranchi while steel and cement load from Rourkela, which keeps return freight flowing on both legs of this lane.",
     keywords: "part load Ranchi to Rourkela, PTL freight Ranchi to Rourkela, LTL transport Ranchi Rourkela, truck booking Jharkhand Odisha, return load Ranchi Rourkela, freight transport Ranchi",
   },
   "rourkela-to-bhubaneswar": {
@@ -589,7 +589,7 @@ const ROUTE_DATA = {
     distanceKm: 340,
     transitTime: "7",
     dataStatus: "needs_review",
-    description: "Reliable PTL and LTL freight from Rourkela to Bhubaneswar — the capital of Odisha. LoadSaathi connects these key Odisha cities with AI-optimized truck matching and live GPS tracking.",
+    description: "This is Odisha's main west–east freight artery: about 340 km from the steel city of Rourkela to the state capital, Bhubaneswar, and onward to coastal markets. Steel, metals and engineering goods travel east while consumer goods and construction material move west, giving trucks cargo on both legs.",
     keywords: "part load Rourkela to Bhubaneswar, PTL freight Rourkela to Bhubaneswar, LTL transport Rourkela Bhubaneswar, Odisha freight, truck booking Rourkela Bhubaneswar, part load Bhubaneswar",
   },
   "rourkela-to-burdwan": {
@@ -622,7 +622,7 @@ const ROUTE_DATA = {
     distanceKm: 198,
     transitTime: "4.5",
     dataStatus: "corrected",
-    description: "Move freight between two of India's largest steel cities. LoadSaathi connects Rourkela and Jamshedpur with AI-matched PTL and LTL trucks, real-time tracking, and competitive rates.",
+    description: "About 198 km on NH-220 connects two of India's largest steel cities, Rourkela and Jamshedpur. Hot-rolled steel, iron ore, machinery and automobile parts dominate the flow in both directions, which makes this one of the most consistent industrial corridors for PTL and LTL loads.",
     keywords: "part load Rourkela to Jamshedpur, PTL freight Rourkela to Jamshedpur, LTL transport Rourkela Jamshedpur, truck booking Rourkela Jharkhand, steel corridor freight, Rourkela Jamshedpur load",
   },
   "rourkela-to-kolkata": {
@@ -633,7 +633,7 @@ const ROUTE_DATA = {
     distanceKm: 420,
     transitTime: "8.8",
     dataStatus: "corrected",
-    description: "Ship PTL and LTL loads from Rourkela to Kolkata — the commercial capital of East India. LoadSaathi offers AI-matched trucks, real-time tracking, and competitive rates on this busy corridor.",
+    description: "About 420 km separates Rourkela from Kolkata, East India's commercial capital and port city. Steel, minerals and machinery head east to West Bengal while consumer goods, FMCG and project material return west, keeping this one of the busiest cross-state lanes LoadSaathi serves.",
     keywords: "part load Rourkela to Kolkata, PTL freight Rourkela to Kolkata, LTL transport Rourkela Kolkata, truck booking Kolkata, Odisha West Bengal logistics, Kolkata freight corridor",
   },
   "rourkela-to-ranchi": {
@@ -644,7 +644,7 @@ const ROUTE_DATA = {
     distanceKm: 180,
     transitTime: "4",
     dataStatus: "needs_review",
-    description: "Connect the steel city of Odisha with the capital of Jharkhand via LoadSaathi's AI-powered freight marketplace. Book PTL and LTL truck loads on the Rourkela–Ranchi corridor with GPS tracking, transparent pricing, and digital credit scores.",
+    description: "Rourkela and Ranchi anchor the Odisha–Jharkhand industrial belt about 180 km apart. Steel, cement and engineering cargo from Rourkela meets coal, machinery and consumer goods moving out of Ranchi, so trucks run full in both directions and part-load space is regularly available on this lane.",
     keywords: "part load Rourkela to Ranchi, PTL freight Rourkela to Ranchi, LTL transport Rourkela Ranchi, truck booking Rourkela Jharkhand, shared freight Odisha Jharkhand, LoadSaathi Rourkela Ranchi",
   },
   "rourkela-to-sambalpur": {
@@ -726,18 +726,18 @@ const STATIC_PAGE_DATA = {
   },
   "/pricing": {
     title: "LoadSaathi Pricing - Transparent Freight Rates",
-    metaDescription: "View LoadSaathi's transparent pricing. Shipper: 1.5-3% platform fee. Trucker: 1.5-2.5% commission. No hidden charges.",
+    metaDescription: "View LoadSaathi's transparent pricing. Free to join; a transaction fee applies on completed shipments. No hidden charges.",
     keywords: ["loadsaathi pricing", "freight rates india", "trucking platform fees", "transparent freight pricing"],
-    summary: "LoadSaathi charges transparent fees: 1.5-3% for shippers, 1.5-2.5% for truckers with no hidden charges."
+    summary: "LoadSaathi charges a transaction fee on completed shipments with no hidden charges; the final schedule will be published."
   },
   "/tools": {
-    title: "Freight Tools - Fare Calculator, Distance Finder | LoadSaathi",
+    title: "Logistics Tools & Calculators for Indian Truckers & Shippers",
     metaDescription: "Use free freight tools: fare calculator, distance finder, EMI calculator, and weight converter. Plan your shipments with confidence.",
     keywords: ["freight calculator", "fare estimator", "distance calculator india", "truck emi calculator", "weight converter"],
     summary: "Free freight tools: fare calculator, distance finder, EMI calculator, and weight converter for planning shipments."
   },
   "/features": {
-    title: "LoadSaathi Features - AI Matching, Real-Time GPS Tracking, Smart Pricing",
+    title: "Features — AI-Powered Freight Platform",
     metaDescription: "Discover LoadSaathi features: AI-powered matching, real-time GPS tracking, instant quotes, secure payments, and digital credit scores.",
     keywords: ["loadsaathi features", "ai freight matching", "gps tracking trucks", "instant freight quotes"],
     summary: "LoadSaathi offers AI-powered matching, real-time GPS tracking, instant quotes, secure payments, and digital credit scores."
@@ -816,7 +816,7 @@ const STATIC_PAGE_DATA = {
     summary: "Create your free LoadSaathi account as shipper or trucker."
   },
   "/blog": {
-    title: "Logistics Blog - Trucking Tips & Freight Guides | LoadSaathi",
+    title: "Blog — Freight & Logistics Insights",
     metaDescription: "Practical guides on trucking, return loads, PTL vs FTL shipping, freight pricing, and Indian logistics trends from the LoadSaathi team.",
     keywords: ["trucking blog india", "freight logistics articles", "loadsaathi blog", "truck driver tips"],
     summary: "Articles and guides covering trucking business advice, freight market trends, and shipping best practices in India."
@@ -843,19 +843,19 @@ const STATIC_PAGE_DATA = {
     title: "LoadSaathi vs TruckSuvidha 2026: Cost, Loads & Features",
     metaDescription: "Compare LoadSaathi vs TruckSuvidha: upfront subscription fees vs 100% free load board. See which truck load platform works best for Indian transporters.",
     keywords: ["loadsaathi vs trucksuvidha", "trucksuvidha review", "freight app comparison india", "truck booking app comparison"],
-    summary: "Head-to-head comparison of LoadSaathi's free zero-commission load board against TruckSuvidha's subscription directory model."
+    summary: "Head-to-head comparison of LoadSaathi's free-to-join load board against TruckSuvidha's subscription directory model."
   },
   "/compare/loadsaathi-vs-blackbuck": {
     title: "LoadSaathi vs BlackBuck 2026: Broker Margin vs Free Board",
-    metaDescription: "LoadSaathi vs BlackBuck comparison: managed freight rates vs zero-commission direct load matching. See which platform is right for your trucking business.",
+    metaDescription: "LoadSaathi vs BlackBuck comparison: managed freight rates vs direct load matching without broker margins. See which platform is right for your trucking business.",
     keywords: ["loadsaathi vs blackbuck", "blackbuck app review", "load board comparison india", "fleet owner app comparison"],
-    summary: "LoadSaathi's zero-commission board vs BlackBuck's managed-margin model: commission, settlement speed, tracking and coverage compared."
+    summary: "LoadSaathi's board vs BlackBuck's managed-margin model: fee structure, settlement speed, tracking and coverage compared."
   },
   "/safety-trust": {
     title: "Safety & Trust - Verified Truckers | LoadSaathi",
-    metaDescription: "How LoadSaathi keeps freight safe: trucker KYC verification, GPS tracking, escrow-backed payments, and dispute resolution for shippers.",
+    metaDescription: "How LoadSaathi keeps freight safe: trucker KYC verification, GPS tracking, planned escrow-backed payments, and dispute resolution for shippers.",
     keywords: ["verified truckers india", "freight safety", "safe truck booking", "loadsaathi trust"],
-    summary: "LoadSaathi's safety features: verified truckers, live GPS tracking, escrow payments, and dispute support."
+    summary: "LoadSaathi's safety features: verified truckers, live GPS tracking, planned escrow payments, and dispute support."
   },
   "/gallery": {
     title: "App Screenshots & Demo - LoadSaathi Freight Platform",
@@ -930,8 +930,8 @@ const STATIC_PAGE_DATA = {
     summary: "Find trucks near your location: compare capacity, market rates and verified trucker credit scores, then book with live GPS tracking."
   },
   "/fare-calculator": {
-    title: "Truck Fare Calculator – Free Bhada Calculator India",
-    metaDescription: "Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps.",
+    title: "Truck Bhada Calculator India – Estimate Transport Cost | LoadSaathi",
+    metaDescription: "Calculate estimated truck transport charges for your route. Enter pickup, delivery and vehicle details to get a freight cost estimate before planning your shipment.",
     keywords: ["truck fare calculator", "freight cost calculator india", "truck rate per km", "transport charge calculator"],
     summary: "Free calculator that estimates truck freight charges by distance, weight, and route."
   },
@@ -942,8 +942,8 @@ const STATIC_PAGE_DATA = {
     summary: "Per-kilometre transport cost calculator covering fuel, tolls, and load type."
   },
   "/truck-load-calculator": {
-    title: "Truck Load Calculator India – Free, Instant Fare & Rate",
-    metaDescription: "Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators.",
+    title: "Truck Load Calculator – Check Cargo Weight & Capacity | LoadSaathi",
+    metaDescription: "Check whether your goods fit a truck's available carrying capacity. Estimate load requirements and plan the right vehicle for your shipment.",
     keywords: ["truck load calculator", "truck capacity calculator", "which truck for my load", "cargo volume calculator"],
     summary: "Calculates cargo weight and volume and suggests the right Indian truck type."
   },
@@ -966,14 +966,14 @@ const STATIC_PAGE_DATA = {
     summary: "Shows the cost of empty return runs and savings from filling them with backhaul loads."
   },
   "/tools/fare-calculator": {
-    title: "Truck Fare Calculator – Free Bhada Calculator India",
-    metaDescription: "Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps.",
+    title: "Truck Bhada Calculator India – Estimate Transport Cost | LoadSaathi",
+    metaDescription: "Calculate estimated truck transport charges for your route. Enter pickup, delivery and vehicle details to get a freight cost estimate before planning your shipment.",
     keywords: ["truck fare calculator", "freight cost calculator india", "truck rate per km", "transport charge calculator"],
     summary: "Free calculator that estimates truck freight charges by distance, weight, and route."
   },
   "/tools/truck-load-calculator": {
-    title: "Truck Load Calculator India – Free, Instant Fare & Rate",
-    metaDescription: "Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators.",
+    title: "Truck Load Calculator – Check Cargo Weight & Capacity | LoadSaathi",
+    metaDescription: "Check whether your goods fit a truck's available carrying capacity. Estimate load requirements and plan the right vehicle for your shipment.",
     keywords: ["truck load calculator", "truck capacity calculator", "which truck for my load", "cargo volume calculator"],
     summary: "Calculates cargo weight and volume and suggests the right Indian truck type."
   },
@@ -996,31 +996,31 @@ const STATIC_PAGE_DATA = {
     summary: "Shows the cost of empty return runs and savings from filling them with backhaul loads."
   },
   "/tools/shipment-brief": {
-    title: "Free Shipment Brief Builder India | Freight Request Template | LoadSaathi",
+    title: "Shipment Brief Builder – Free Freight Request Template",
     metaDescription: "Build a complete shipment brief in minutes. Enter pickup, drop-off, cargo type, weight, dimensions, ready date and loading needs — then copy or download a clean freight request to share with transporters.",
     keywords: ["shipment brief template", "freight request builder", "load request format", "cargo details format for transporter", "shipment specification sheet India"],
     summary: "Build a complete shipment brief in minutes — pickup, drop-off, cargo type, weight, dimensions, ready date and loading needs — and share a clean freight request with transporters."
   },
   "/tools/waiting-time-cost": {
-    title: "Truck Waiting Time Cost Calculator India | Detention Cost Estimate | LoadSaathi",
+    title: "Truck Waiting Time Cost Calculator – Detention Cost",
     metaDescription: "Estimate the cost of truck waiting time at loading and unloading points in India. Enter wait hours, truck and driver costs, and missed-trip costs to see a transparent estimate with assumptions shown.",
     keywords: ["truck waiting time calculator", "detention cost calculator India", "truck demurrage charges", "loading waiting charges calculator", "truck delay cost estimate"],
     summary: "Estimate detention costs: enter wait hours, truck and driver costs and missed-trip costs for a transparent waiting-time estimate with assumptions shown."
   },
   "/tools/freight-quote-comparison": {
-    title: "Freight Quote Comparison Worksheet India | Compare Transport Rates | LoadSaathi",
+    title: "Freight Quote Comparison Worksheet – Compare Truck Rates",
     metaDescription: "Compare up to three freight quotes side by side — base freight, fuel surcharge, tolls, loading, waiting, taxes and insurance — and get an all-in total with transit time and payment terms.",
     keywords: ["freight quote comparison", "transport rate comparison India", "compare truck quotes", "lorry rate comparison worksheet", "all-in freight cost calculator"],
     summary: "Compare up to three freight quotes side by side across base freight, fuel surcharge, tolls, loading, waiting, taxes and insurance for an all-in total."
   },
   "/tools/cargo-volume-planner": {
-    title: "PTL Cargo Volume & Space Planner India | Part Load Size Calculator | LoadSaathi",
+    title: "PTL Cargo Volume Planner – Part Load Size Calculator",
     metaDescription: "Plan your part-load shipment: enter package dimensions, quantity and weight to get total volume (cbm and cu ft), weight, density and a basic space estimate for PTL cargo.",
     keywords: ["cargo volume calculator", "cbm calculator for transport", "part load volume calculator", "PTL space planner", "shipment volume calculator India", "cubic meter calculator freight"],
     summary: "Plan a part-load shipment: enter package dimensions, quantity and weight to get total volume in cbm and cu ft, density and a basic space estimate."
   },
   "/tools/load-securing-checklist": {
-    title: "Load Securing & Dispatch Checklist Builder India | Cargo Preparation | LoadSaathi",
+    title: "Load Securing Checklist Builder – Cargo Preparation",
     metaDescription: "Build a free packing, loading and dispatch checklist for your cargo. Choose cargo category and handling needs to get practical load-securing steps before your truck leaves.",
     keywords: ["load securing checklist", "cargo loading checklist India", "truck loading procedure checklist", "dispatch checklist logistics", "lashing and securing cargo guide"],
     summary: "Build a packing, loading and dispatch checklist for your cargo — choose the cargo category and handling needs for practical load-securing steps before dispatch."
@@ -1236,7 +1236,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-06-15"
   },
   "indian-logistics-eway-bill-gst-2026": {
-    "title": "e-Way Bill Rules 2026: New GST Compliance Changes Every Indian Business Must Know | LoadSaathi",
+    "title": "e-Way Bill Rules 2026: GST Compliance Guide for Logistics",
     "keywords": [
       "e way bill rules 2026 new gst compliance changes every indian business must know",
       "indian logistics eway bill gst 2026",
@@ -1273,7 +1273,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-14"
   },
   "rourkela-to-ranchi-trucking-rates": {
-    "title": "Trucking Rates from Rourkela to Ranchi: Complete Pricing Guide 2026 | LoadSaathi",
+    "title": "Rourkela to Ranchi Trucking Rates: 2026 Pricing Guide",
     "keywords": [
       "trucking rates from rourkela to ranchi complete pricing guide 2026",
       "rourkela to ranchi trucking rates",
@@ -1320,7 +1320,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "seafood-transport-odisha": {
-    "title": "Cold Chain Transport: Shipping Seafood from Odisha Ports | LoadSaathi",
+    "title": "Shipping Seafood from Odisha: Cold Chain Guide for Ports",
     "keywords": [
       "cold chain transport shipping seafood from odisha ports",
       "seafood transport odisha",
@@ -1368,7 +1368,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "monsoon-logistics-tips": {
-    "title": "Monsoon Logistics: Shipping During India's Rainy Season | LoadSaathi",
+    "title": "Monsoon Logistics Tips: Shipping Safely During Indian Rain",
     "keywords": [
       "monsoon logistics shipping during india s rainy season",
       "monsoon logistics tips",
@@ -1406,7 +1406,7 @@ const BLOG_DATA = {
       "digital payments for truckers",
       "product updates"
     ],
-    "summary": "LoadSaathi processes payments through escrow-backed settlement: shippers pay into escrow at booking, funds are released to truckers within 24-48 hours of delivery confirmation. Digital payments eliminate the traditional 30-45 day payment cycles that truckers face in broker-mediated models.",
+    "summary": "LoadSaathi plans escrow-backed settlement — funds held at booking and released after delivery confirmation — to replace the traditional 30-45 day payment cycles truckers face in broker-mediated models.",
     "author": "Priya Sharma",
     "authorBio": "Priya Sharma is the Product Lead at LoadSaathi, specializing in trust and reputation systems for marketplace platforms.",
     "date": "2026-06-28",
@@ -1496,7 +1496,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "east-india-freight-corridors": {
-    "title": "East India Freight Corridors: Routes, Industries, Rates, and Return Loads | LoadSaathi",
+    "title": "East India Freight Corridors: Routes, Industries and Rates",
     "keywords": [
       "east india freight corridors routes industries rates and return loads",
       "east india freight corridors",
@@ -1535,7 +1535,7 @@ const BLOG_DATA = {
       "shipper tips lower freight cost",
       "shipper guide"
     ],
-    "summary": "Reduce freight costs by up to 40% with these 10 strategies: use PTL for small loads, book return-load trucks, use AI price predictions, consolidate shipments, negotiate annual contracts, optimize packaging, avoid peak seasons, use digital platforms, maintain good credit scores, and plan routes efficiently.",
+    "summary": "Lower freight costs with these 10 practical strategies: use PTL for small loads, book return-load trucks, use AI price predictions, consolidate shipments, negotiate annual contracts, optimize packaging, avoid peak seasons, use digital platforms, maintain good credit scores, and plan routes efficiently.",
     "author": "Amit Verma",
     "authorBio": "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
     "date": "2026-06-08",
@@ -1561,7 +1561,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "gst-advisory-668-eway-bill-ship-to-gstin-hold-msme-logistics-2026": {
-    "title": "GST Advisory 668: E-Way Bill Rule Enhancements Put On Hold — What Indian MSMEs & Transporters Must Do Now | LoadSaathi",
+    "title": "GST Advisory 668: E-Way Bill Rule Changes Put on Hold",
     "keywords": [
       "gst advisory 668 e way bill rule enhancements put on hold what indian msmes transporters must do now",
       "gst advisory 668 eway bill ship to gstin hold msme logistics 2026",
@@ -1593,13 +1593,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "truck-transport-charges-per-km-india": {
-    "title": "Truck Rate Per Km India 2026: ₹10–₹85 Chart (All Trucks)",
+    "title": "Truck Transport Charges Per KM in India (2026 Guide)",
     "keywords": [
       "truck rate per km india 2026",
       "truck transport charges per km india",
       "freight rates"
     ],
-    "summary": "Real truck transport rates per km in India 2026 — Tata Ace to 32ft. Rate chart, cost formula & free calculator. No agent markup, actual market rates.",
+    "summary": "Understand what affects truck transport charges per kilometre in India, including route distance, vehicle type, fuel, tolls and cargo requirements.",
     "author": "LoadSaathi Team",
     "authorBio": "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
     "date": "2026-08-16",
@@ -1626,7 +1626,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-16"
   },
   "how-to-find-return-loads-india": {
-    "title": "How to Find Return Loads in India: A Practical Backhaul Guide for Truckers | LoadSaathi",
+    "title": "How to Find Return Loads in India: Backhaul Guide for Truckers",
     "keywords": [
       "how to find return loads in india a practical backhaul guide for truckers",
       "how to find return loads india",
@@ -1692,7 +1692,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-16"
   },
   "ptl-freight-rates-india": {
-    "title": "PTL Freight Rates in India: How Part-Load Shipping Costs Are Calculated | LoadSaathi",
+    "title": "PTL Freight Rates in India: How Part-Load Costs Work",
     "keywords": [
       "ptl freight rates in india how part load shipping costs are calculated",
       "ptl freight rates india",
@@ -1740,7 +1740,7 @@ const BLOG_DATA = {
     "category": "Route Guide"
   },
   "kolkata-to-rourkela-freight-rates": {
-    "title": "Kolkata to Rourkela Freight Rates 2026: Complete Cost Guide | LoadSaathi",
+    "title": "Kolkata to Rourkela Freight Rates 2026: Cost Guide",
     "keywords": [
       "kolkata to rourkela freight rates 2026 complete cost guide",
       "kolkata to rourkela freight rates",
@@ -1771,7 +1771,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "steel-transport-india-guide": {
-    "title": "Steel Transport in India: Complete Guide to Safe & Cost-Effective Shipping | LoadSaathi",
+    "title": "Steel Transport in India: Complete Shipping Guide for Manufacturers",
     "keywords": [
       "steel transport in india complete guide to safe cost effective shipping",
       "steel transport india guide",
@@ -1787,7 +1787,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "msme-freight-saving-guide": {
-    "title": "MSME Freight Saving Guide: Cut Logistics Costs by 30% in 2026 | LoadSaathi",
+    "title": "MSME Freight Saving Guide: Cut Logistics Costs in 2026",
     "keywords": [
       "msme freight saving guide cut logistics costs by 30 in 2026",
       "msme freight saving guide",
@@ -1845,11 +1845,11 @@ const BLOG_DATA = {
       },
       {
         "question": "How does LoadSaathi help truckers find return loads?",
-        "answer": "LoadSaathi's AI-powered matching connects truckers with return loads based on route, capacity, and vehicle type — often while the truck is still unloading. Escrow payments are released within 24 hours of delivery confirmation, and verified shipper credit scores reduce payment risk."
+        "answer": "LoadSaathi's AI-powered matching connects truckers with return loads based on route, capacity, and vehicle type — often while the truck is still unloading. Escrow-backed payments are planned, and verified shipper credit scores reduce payment risk."
       },
       {
         "question": "What is the payment cycle for return loads on LoadSaathi?",
-        "answer": "LoadSaathi's escrow payment system holds the shipper's payment until delivery is confirmed via GPS verification. Payments are released within 24 hours, eliminating the 30-60 day payment cycles common in traditional freight."
+        "answer": "Planned escrow settlement will hold the shipper's payment until delivery is confirmed via GPS, replacing the 30-60 day payment cycles common in traditional freight."
       }
     ],
     "category": "Trucker Tips",
@@ -1882,7 +1882,7 @@ const BLOG_DATA = {
       },
       {
         "question": "How do I book PTL transport online?",
-        "answer": "Enter your shipment details on LoadSaathi — origin, destination, weight, and departure date. The AI matches you with verified carriers within minutes. Compare offers, book, track via GPS, and pay through escrow."
+        "answer": "Enter your shipment details on LoadSaathi — origin, destination, weight, and departure date. The AI matches you with verified carriers within minutes. Compare offers, book, and track via GPS; escrow-backed payment is planned."
       },
       {
         "question": "What is the minimum weight for PTL shipping?",
@@ -1918,13 +1918,13 @@ const BLOG_DATA = {
       },
       {
         "question": "How does LoadSaathi help steel shippers?",
-        "answer": "LoadSaathi connects steel shippers with verified carriers experienced in steel transport. The platform matches by vehicle type, capacity, and corridor. Escrow payments ensure carriers get paid on delivery, and GPS tracking provides real-time visibility."
+        "answer": "LoadSaathi connects steel shippers with verified carriers experienced in steel transport. The platform matches by vehicle type, capacity, and corridor. Planned escrow-backed payments aim to ensure carriers get paid on delivery, and GPS tracking provides real-time visibility."
       }
     ],
     "category": "Industry Guide"
   },
   "trucker-earnings-odisha-2026": {
-    "title": "Trucker Salary and Earnings in Odisha 2026: Complete Pay Breakdown | LoadSaathi",
+    "title": "Trucker Earnings in Odisha 2026: Complete Pay Guide",
     "keywords": [
       "trucker salary and earnings in odisha 2026 complete pay breakdown",
       "trucker earnings odisha 2026",
@@ -1966,7 +1966,7 @@ const BLOG_DATA = {
       "hidden cost empty miles msme logistics",
       "freight strategy"
     ],
-    "summary": "40% of Indian trucks run empty on return trips, inflating logistics costs for MSMEs. Learn how AI-powered PTL matching eliminates empty miles and saves MSMEs 25-35% on freight.",
+    "summary": "40% of Indian trucks run empty on return trips, inflating logistics costs for MSMEs. Learn how AI-powered PTL matching helps fill empty miles and reduce freight spend.",
     "author": "Sanjaya Sahu",
     "date": "2026-08-10",
     "readTime": "5 min",
@@ -1985,14 +1985,14 @@ const BLOG_DATA = {
       },
       {
         "question": "How much can MSMEs save by switching to shared freight?",
-        "answer": "MSMEs switching from FTL to PTL for partial cargo typically save 25-35% on freight costs. When combined with AI-matched return loads that reduce deadheading, total logistics costs can drop by up to 40%."
+        "answer": "MSMEs switching from FTL to PTL for partial cargo typically pay only for the space they use. Combined with AI-matched return loads that reduce deadheading, this lowers logistics spend."
       }
     ],
     "category": "Freight Strategy",
     "lastUpdated": "2026-08-22"
   },
   "return-loads-kolkata": {
-    "title": "Finding Return Loads from Kolkata: A Trucker's Complete Guide | LoadSaathi",
+    "title": "Finding Return Loads from Kolkata: Trucker's Complete Guide",
     "keywords": [
       "finding return loads from kolkata a trucker s complete guide",
       "return loads kolkata",
@@ -2020,13 +2020,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "trucker-earnings-jharkhand-2026": {
-    "title": "Trucker Salary and Earnings in Jharkhand 2026: Complete Pay Breakdown | LoadSaathi",
+    "title": "Truck Driver Earnings in Jharkhand: Routes, Loads & Costs",
     "keywords": [
       "trucker salary and earnings in jharkhand 2026 complete pay breakdown",
       "trucker earnings jharkhand 2026",
       "trucker tips"
     ],
-    "summary": "How much do truck drivers earn in Jharkhand in 2026? See salary ranges by vehicle type, round-trip P and L for major corridors (Dhanbad-Kolkata, Ranchi-Jamshedpur, Jamshedpur-Bhubaneswar), and how return loads boost net income by 40-60%.",
+    "summary": "Explore the factors that affect truck driver earnings in Jharkhand, including freight rates, operating costs, return loads and vehicle utilisation.",
     "author": "Sanjaya Sahu",
     "date": "2026-08-18",
     "readTime": "6 min",
@@ -2065,15 +2065,15 @@ const BLOG_DATA = {
     "faq": [
       {
         "question": "How much do freight brokers charge in India?",
-        "answer": "Traditional freight brokers in India typically add 15-25% markup between the shipper payment and the trucker rate. On a 35,000 rupee shipment, the broker may take 5,000-8,000 as commission. LoadSaathi charges 2-5% per completed transaction with full rate transparency."
+        "answer": "Traditional freight brokers in India typically add 15-25% markup between the shipper payment and the trucker rate. On a 35,000 rupee shipment, the broker may take 5,000-8,000 as commission. LoadSaathi charges a transaction fee on completed shipments with full rate transparency; the final schedule will be published."
       },
       {
         "question": "How is LoadSaathi different from a broker?",
-        "answer": "LoadSaathi is a digital freight marketplace, not a broker. It connects shippers directly with verified truckers using AI matching. The shipper sees the trucker actual rate, credit score, and reviews. Payments are held in escrow and released within 24 hours of delivery. There are no hidden markups."
+        "answer": "LoadSaathi is a digital freight marketplace, not a broker. It connects shippers directly with verified truckers using AI matching. The shipper sees the trucker actual rate, credit score, and reviews. Escrow-backed payments are planned. There are no hidden markups."
       },
       {
         "question": "Is LoadSaathi safe for cargo?",
-        "answer": "LoadSaathi verifies every trucker with document validation, vehicle RC checks, and a digital freight credit score (300-900). Real-time GPS tracking provides visibility from pickup to delivery. Escrow payments ensure the trucker is paid only after successful delivery confirmation."
+        "answer": "LoadSaathi verifies every trucker with document validation, vehicle RC checks, and a digital freight credit score (300-900). Real-time GPS tracking provides visibility from pickup to delivery. Planned escrow-backed payments aim to ensure the trucker is paid only after successful delivery confirmation."
       },
       {
         "question": "Can I still use my broker and LoadSaathi?",
@@ -2116,7 +2116,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-22"
   },
   "cargo-insurance-guide-india": {
-    "title": "Cargo Insurance in India: What Truckers and Shippers Must Know | LoadSaathi",
+    "title": "Cargo Insurance in India: Practical Guide for Shippers",
     "keywords": [
       "cargo insurance in india what truckers and shippers must know",
       "cargo insurance guide india",
@@ -2234,7 +2234,7 @@ const BLOG_DATA = {
     "lastUpdated": "2026-08-23"
   },
   "ranchi-to-kolkata-freight-rates": {
-    "title": "Ranchi to Kolkata Truck Rate 2026: Fare, Distance & Booking",
+    "title": "Ranchi to Kolkata Truck Rates 2026: Fare & Distance Guide",
     "keywords": [
       "ranchi to kolkata truck rate 2026",
       "ranchi to kolkata freight rates",
@@ -2878,13 +2878,13 @@ const BLOG_DATA = {
     "lastUpdated": "2026-09-25"
   },
   "what-is-load-board": {
-    "title": "What Is a Load Board? Meaning + Best Free Option in India",
+    "title": "What Is a Truck Load Board? Find Loads & Return Trips in India",
     "keywords": [
       "load board for trucks india",
       "what is load board",
       "trucker tips"
     ],
-    "summary": "Load board meaning explained simply + how Indian truckers use one to find loads without brokers. Compare paid apps vs LoadSaathi's free load board.",
+    "summary": "Learn how truck load boards connect truck drivers with available goods. Understand return loads, freight matching and how transporters can find their next trip.",
     "author": "LoadSaathi Team",
     "authorBio": "LoadSaathi team explains how digital freight matching works for Indian truckers and MSME shippers, corridor by corridor.",
     "date": "2026-09-12",
@@ -2924,11 +2924,11 @@ const BLOG_DATA = {
     lastUpdated: "2026-10-18",
     readTime: "10 min read",
     faq: [
-      { question: "Which is the best free load board app in India?", answer: "LoadSaathi is the only major platform in this list that is fully free for truckers with zero commission on freight. Most other platforms are freemium: free to browse, with paid plans, badges, or margin built into managed load rates." },
+      { question: "Which is the best free load board app in India?", answer: "LoadSaathi is free to join for truckers, with fees only on completed shipments. Most other platforms are freemium: free to browse, with paid plans, badges, or margin built into managed load rates." },
       { question: "Are load board apps free for truckers in India?", answer: "It depends on the model. Some charge a monthly subscription, some take a commission per completed load, some are free for carriers and monetise shipper-side features, and some build margin into managed rates. Always confirm the true cost per load before you commit — a free browse tier can still carry per-booking charges." },
       { question: "Which load app is best for East India corridors?", answer: "For Jharkhand, Odisha, and West Bengal corridors such as Ranchi–Kolkata, Rourkela–Kolkata, and Jamshedpur–Kolkata, LoadSaathi concentrates its network and adds AI matching plus return-load discovery. For pan-India coverage, add a national platform like Vahak or BlackBuck alongside it." },
       { question: "How do load boards help reduce empty kilometres?", answer: "They make the return leg visible before the truck commits to the outbound trip. With over 35% of commercial truck-kilometres in India running empty, seeing who needs a truck on your way back turns a dead leg into a booked one. Return-load matching is a free core feature on LoadSaathi." },
-      { question: "Can I use more than one load board app?", answer: "Yes, and most successful truckers do. A common pattern is a free, zero-commission board for regular home corridors and return loads, plus one national discovery app for weeks when local lanes run thin. Just keep your postings consistent across platforms to avoid double-booking." },
+      { question: "Can I use more than one load board app?", answer: "Yes, and most successful truckers do. A common pattern is a free-to-join board for regular home corridors and return loads, plus one national discovery app for weeks when local lanes run thin. Just keep your postings consistent across platforms to avoid double-booking." },
     ],
     category: "Industry Insights",
   },
@@ -3158,9 +3158,9 @@ const BLOG_DATA = {
 // ── Guide SEO metadata (3 guides) ─────────────────────────────────────────────
 const GUIDE_DATA = {
   "ptl-vs-ftl": {
-    title: "FTL & PTL Full Form: Difference, Rates & Which Is Cheaper",
+    title: "Part Load vs Full Truck Load: Meaning, Cost & Differences",
     keywords: ["ptl vs ftl", "part truck load", "full truck load", "shipping comparison india"],
-    summary: "FTL = Full Truck Load, PTL = Part Truck Load. See the difference, 2026 rates per kg & km, and which saves money. Free PTL vs FTL calculator inside.",
+    summary: "Understand the difference between part-load and full-truck transport. Compare when to book shared truck space and when a dedicated vehicle makes more sense.",
     author: "LoadSaathi Team",
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
     readTime: "6 min read",
@@ -3186,7 +3186,7 @@ const GUIDE_DATA = {
     }
   },
   "freight-rates-east-india": {
-    title: "Freight Rates in East India: Complete Guide 2026 | LoadSaathi",
+    title: "Freight Rates in East India: Complete Guide 2026",
     keywords: ["east india freight rates", "freight rates odisha", "west bengal freight", "jharkhand shipping rates"],
     summary: "Freight rates across East India corridors vary by distance, cargo type, and vehicle availability. The Rourkela–Ranchi corridor averages ₹1,800-2,500/tonne for PTL, while longer routes like Rourkela–Kolkata range from ₹2,500-3,500/tonne.",
     author: "Amit Verma",
@@ -3212,7 +3212,7 @@ const GUIDE_DATA = {
     }
   },
   "shipping-steel": {
-    title: "How to Ship Steel in India: A Complete Guide for Manufacturers | LoadSaathi",
+    title: "How to Ship Steel in India: A Complete Guide for Manufacturers",
     keywords: ["shipping steel india", "steel transport", "steel logistics", "heavy cargo shipping"],
     summary: "Shipping steel requires specialized handling: covered trucks to prevent rust, proper load distribution, and secure tie-downs. Major corridors include Rourkela–Jamshedpur, Jamshedpur–Kolkata, and Bhubaneswar–Vizag.",
     author: "Rajesh Kumar",
@@ -3233,7 +3233,7 @@ const GUIDE_DATA = {
 const TRANSPORT_SERVICE_DATA = {
   "ranchi": {
     "cityName": "Ranchi",
-    "title": "Part Load Transport in Ranchi - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Ranchi Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport ranchi",
       "PTL booking ranchi",
@@ -3262,7 +3262,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "bhubaneswar": {
     "cityName": "Bhubaneswar",
-    "title": "Part Load Transport in Bhubaneswar - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Bhubaneswar Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport bhubaneswar",
       "PTL booking bhubaneswar",
@@ -3291,7 +3291,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "rourkela": {
     "cityName": "Rourkela",
-    "title": "Part Load Transport in Rourkela - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Rourkela Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport rourkela",
       "PTL booking rourkela",
@@ -3320,7 +3320,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "jamshedpur": {
     "cityName": "Jamshedpur",
-    "title": "Part Load Transport in Jamshedpur - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Jamshedpur Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport jamshedpur",
       "PTL booking jamshedpur",
@@ -3349,7 +3349,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "balasore": {
     "cityName": "Balasore",
-    "title": "Part Load Transport in Balasore - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Balasore Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport balasore",
       "PTL booking balasore",
@@ -3378,7 +3378,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "berhampur": {
     "cityName": "Berhampur",
-    "title": "Part Load Transport in Berhampur - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Berhampur Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport berhampur",
       "PTL booking berhampur",
@@ -3407,7 +3407,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "kolkata": {
     "cityName": "Kolkata",
-    "title": "Part Load Transport in Kolkata - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Kolkata Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport kolkata",
       "PTL booking kolkata",
@@ -3436,7 +3436,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "durgapur": {
     "cityName": "Durgapur",
-    "title": "Part Load Transport in Durgapur - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Durgapur Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport durgapur",
       "PTL booking durgapur",
@@ -3465,7 +3465,7 @@ const TRANSPORT_SERVICE_DATA = {
   },
   "burdwan": {
     "cityName": "Burdwan",
-    "title": "Part Load Transport in Burdwan - PTL & FTL Truck Booking | LoadSaathi",
+    "title": "Burdwan Part Load & FTL Truck Booking | PTL/LTL",
     "keywords": [
       "part load transport burdwan",
       "PTL booking burdwan",
@@ -3536,10 +3536,11 @@ function laneSeoMeta(r) {
   const bands = laneRates(r.distanceKm);
   const statusPart =
     r.dataStatus === 'needs_review'
-      ? `${r.distanceKm} km, ~${r.transitTime} hrs (distance pending re-verification)`
+      ? `Est. ${r.distanceKm} km, ~${r.transitTime} hrs driving (indicative — confirm at booking)`
       : `Verified ${r.distanceKm} km, ~${r.transitTime} hrs`;
+  const baseTitle = `${r.from} to ${r.to} Truck Freight | PTL/LTL`;
   return {
-    seoTitle: `Part Load Transport ${r.from} to ${r.to} | PTL & LTL Truck Booking | LoadSaathi`,
+    seoTitle: baseTitle.length + 15 <= 60 ? `${baseTitle} | LoadSaathi` : baseTitle,
     metaDescription: `${statusPart}. Book part load, PTL & LTL trucks ${r.from} to ${r.to}. Rates from ₹${inr(bands.perTonneMin)}/tonne. Updated ${RATES_UPDATED_LABEL}.`,
   };
 }
@@ -3619,11 +3620,15 @@ function getSeoMeta(path) {
     const summary = data && data.description
       ? data.description
       : `Freight services and trucking in ${cityTitle}.`;
+    const seoTitle = data && data.seoTitle
+      ? data.seoTitle
+      : (state ? `${cityTitle}, ${stateTitle} Freight | LoadSaathi` : `${cityTitle} Freight | LoadSaathi`);
+    const metaDescription = data && data.metaDescription
+      ? data.metaDescription
+      : clampMetaDescription(summary);
     return {
-      seoTitle: state ? `${cityTitle}, ${stateTitle} Freight | LoadSaathi` : `${cityTitle} Freight | LoadSaathi`,
-      // clampMetaDescription keeps the React and server-rendered descriptions
-      // byte-identical; LocationPage uses the same helper on the same string.
-      metaDescription: clampMetaDescription(summary),
+      seoTitle,
+      metaDescription,
       keywords: [`freight ${dataName}`, `trucking ${dataName}`, `${dataName} logistics`, `PTL ${dataName}`, `FTL ${dataName}`],
       summary,
       author: 'LoadSaathi Team',
@@ -3735,6 +3740,8 @@ const LOCATION_DATA = {
   "ranchi": {
     "name": "Ranchi",
     "state": "Jharkhand",
+    "seoTitle": "Goods Transport in Ranchi – Find Trucks & Freight Loads | LoadSaathi",
+    "metaDescription": "Looking to move goods from Ranchi or find freight for your truck? Explore LoadSaathi's freight marketplace and available transport opportunities across East India.",
     "description": "Ranchi, the capital of Jharkhand, is a growing logistics hub at the crossroads of multiple state highways. It handles coal, heavy machinery, and consumer goods distribution for the Chota Nagpur Plateau region. The city's freight volume grows 12–15% annually.",
     "industries": [
       "Coal & Mining",
@@ -4679,7 +4686,7 @@ function routeFaq(seoMeta) {
     },
     {
       q: `What does it cost to use LoadSaathi on this lane?`,
-      a: `Joining is free for both sides. A completed shipment carries a ${FEES.shipper} transaction fee for shippers and ${FEES.trucker} for truckers, with no subscription and no listing fee.`,
+      a: `Joining is free for both sides. A completed shipment carries a transaction fee for shippers and truckers (final schedule to be published), with no subscription and no listing fee.`,
     },
   ];
 }
@@ -4715,7 +4722,7 @@ function genericBlogFaq(entry) {
     },
     {
       q: 'Do shippers and truckers both pay to use the platform?',
-      a: `Joining is free. LoadSaathi charges a transaction fee on completed shipments — ${FEES.shipper} for shippers and ${FEES.trucker} for truckers — with no subscription and no listing fee. Every party is scored on the same 300 to 900 freight credit scale, so a completed trip improves your standing for the next one.`,
+      a: `Joining is free. LoadSaathi charges a transaction fee on completed shipments — the final schedule will be published — with no subscription and no listing fee. Every party is scored on the same 300 to 900 freight credit scale, so a completed trip improves your standing for the next one.`,
     },
   ];
 }
@@ -4728,7 +4735,139 @@ function titleCase(slug) {
     .join(' ');
 }
 
+/** Service links for calculator pages — contextual to each tool's intent. */
+const TOOL_SERVICE_LINKS = {
+  '/tools/fare-calculator': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Truck load booking', href: '/truck-load-booking' },
+    { label: 'All freight routes', href: '/routes' },
+    { label: 'Return loads', href: '/return-load' },
+  ],
+  '/tools/freight-rate-calculator': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+    { label: 'Contact the LoadSaathi team', href: '/contact' },
+  ],
+  '/tools/return-load-calculator': [
+    { label: 'Transporter solutions', href: '/solutions/truckers' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/ptl-vs-ftl-calculator': [
+    { label: 'Part load guide (PTL vs FTL)', href: '/guide/ptl-vs-ftl' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/truck-load-calculator': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/toll-fuel': [
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Route optimizer', href: '/tools/route-optimizer' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/gst-calculator': [
+    { label: 'E-way bill & GST guide', href: '/blog/indian-logistics-eway-bill-gst-2026' },
+    { label: 'Document checklist', href: '/tools/document-checklist' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/route-optimizer': [
+    { label: 'Toll and fuel calculator', href: '/tools/toll-fuel' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/shipment-brief': [
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools/freight-quote-comparison': [
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+};
+
 /** Contextual internal links shown under every injected content block. */
+const COMMERCIAL_LINKS = {
+  '/return-load': [
+    { label: 'Return load calculator', href: '/tools/return-load-calculator' },
+    { label: 'Transporter solutions', href: '/solutions/truckers' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'How to find return loads in India', href: '/blog/how-to-find-return-loads-india' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/ptl-transport': [
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'Part load guide (PTL vs FTL)', href: '/guide/ptl-vs-ftl' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/ltl-transport': [
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/truck-load-booking': [
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Truck load calculator', href: '/tools/truck-load-calculator' },
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/freight-marketplace': [
+    { label: 'Shipper solutions', href: '/solutions/shippers' },
+    { label: 'Transporter solutions', href: '/solutions/truckers' },
+    { label: 'Truck load booking', href: '/truck-load-booking' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/truck-near-me': [
+    { label: 'All freight routes', href: '/routes' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+  ],
+  '/solutions/shippers': [
+    { label: 'Post a shipment for free', href: '/register?type=shipper' },
+    { label: 'Truck load booking', href: '/truck-load-booking' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/solutions/truckers': [
+    { label: 'Register as a transporter for free', href: '/register?type=trucker' },
+    { label: 'Return loads', href: '/return-load' },
+    { label: 'Return load calculator', href: '/tools/return-load-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/tools': [
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator' },
+    { label: 'Return load calculator', href: '/tools/return-load-calculator' },
+    { label: 'PTL vs FTL calculator', href: '/tools/ptl-vs-ftl-calculator' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+  '/routes': [
+    { label: 'Rourkela to Ranchi', href: '/routes/rourkela-to-ranchi' },
+    { label: 'Rourkela to Bhubaneswar', href: '/routes/rourkela-to-bhubaneswar' },
+    { label: 'Bhubaneswar to Cuttack', href: '/routes/bhubaneswar-to-cuttack' },
+    { label: 'Truck fare calculator', href: '/tools/fare-calculator' },
+    { label: 'Rourkela location page', href: '/location/rourkela' },
+  ],
+  '/blog': [
+    { label: 'What is a load board?', href: '/blog/what-is-load-board' },
+    { label: 'Truck transport charges per km', href: '/blog/truck-transport-charges-per-km-india' },
+    { label: 'How to find return loads', href: '/blog/how-to-find-return-loads-india' },
+    { label: 'Freight rates in India', href: '/blog/india-truck-freight-rates-2026' },
+    { label: 'All freight routes', href: '/routes' },
+  ],
+};
+
 function relatedLinksFor(path, seoMeta) {
   if (seoMeta.type === 'route') {
     const links = [{ label: 'All freight routes', href: '/routes' }];
@@ -4782,6 +4921,26 @@ function relatedLinksFor(path, seoMeta) {
     links.push({ label: 'All freight routes', href: '/routes' });
     return links;
   }
+  if (path === '/') {
+    // Homepage crawl-visible pathways → commercial destinations.
+    return [
+      { label: 'Shipper solutions', href: '/solutions/shippers' },
+      { label: 'Transporter solutions', href: '/solutions/truckers' },
+      { label: 'Truck load booking', href: '/truck-load-booking' },
+      { label: 'Return loads', href: '/return-load' },
+      { label: 'Freight tools', href: '/tools' },
+      { label: 'All freight routes', href: '/routes' },
+    ];
+  }
+  if (COMMERCIAL_LINKS[path]) return COMMERCIAL_LINKS[path];
+  // Calculator pages get contextually relevant service links (alias-aware).
+  if (path.startsWith('/tools/') || TOOL_ALIASES[path]) {
+    return (
+      TOOL_SERVICE_LINKS[path] ||
+      TOOL_SERVICE_LINKS[TOOL_ALIASES[path]] ||
+      COMMERCIAL_LINKS['/tools']
+    );
+  }
   return [
     { label: 'All freight routes', href: '/routes' },
     { label: 'Logistics blog', href: '/blog' },
@@ -4793,7 +4952,7 @@ const PLATFORM_CAPABILITIES = [
   'AI matching that scores every open load against available trips on capacity, proximity, route overlap and price',
   'Live GPS tracking from pickup to delivery, with expected arrival times and delivery confirmation',
   'A digital freight credit score from 300 to 900 built from completion rate, on-time delivery, communication, reviews and account tenure',
-  'Escrow-backed payments released on milestones, with GST invoice inputs taken straight from the booking',
+  'Escrow-backed payments planned, released on milestones, with GST invoice inputs taken straight from the booking',
   'Bidirectional reviews, so shippers rate truckers and truckers rate shippers after every trip',
 ];
 
@@ -4938,6 +5097,105 @@ const TOOL_DETAILS = {
   },
 };
 
+/**
+ * Tool extras: a worked example and a plain-language interpretation for every
+ * calculator, plus complete input/method/limit details for the five tools that
+ * predated TOOL_DETAILS. "Example" figures are illustrative, not quoted rates.
+ */
+const TOOL_EXTRAS = {
+  '/tools/fare-calculator': {
+    example: 'Illustrative: a 1.5-tonne consignment from Rourkela to Bhubaneswar (~340 km) returns a per-kilometre band for the part-load vehicle and a per-kilogram charge on top. Multiply the per-kilogram figure by 1,500 kg to see the cargo share, then add the vehicle component.',
+    interpret: 'A result near the floor of the band usually means good truck availability on your date; near the ceiling, check whether loading, unloading and waiting are included, because those are the line items most likely to move a quote inside the band.',
+  },
+  '/tools/freight-rate-calculator': {
+    example: 'Illustrative: a 2-tonne PTL shipment on Rourkela–Ranchi (180 km) returns a low and high figure per kilogram; multiply each by 2,000 kg to get the total range for the consignment.',
+    interpret: 'Compare the range directly against carrier quotes for the same lane and weight. If a quote sits outside the band, the difference is usually vehicle availability at your loading hour or an inclusion the quote does not state.',
+  },
+  '/tools/ptl-vs-ftl-calculator': {
+    example: 'Illustrative: at 2 tonnes the shared-vehicle curve normally sits below the dedicated-vehicle curve; at 8 tonnes it usually crosses above it. The weight where the curves cross is your switch point.',
+    interpret: 'If your date cannot move, the time value of a dedicated vehicle can outweigh the price difference even below the crossover — treat the crossover as the starting point, not the final answer.',
+  },
+  '/tools/truck-load-calculator': {
+    example: 'Illustrative: 1.5 tonnes of light packaging might fill 80% of a 20-foot body’s volume but only 25% of its payload — the tool reports both percentages so the binding constraint is visible.',
+    interpret: 'Book based on whichever percentage is higher. A truck is full by the measure that matters first, and the correct vehicle is the one where neither percentage is stretched past 100%.',
+  },
+  '/tools/return-load-calculator': {
+    example: 'Illustrative: an empty 340 km return leg is priced at its fuel, driver and toll cost with no revenue, and the same leg with a backhaul load is priced against it — the difference is what the return load is worth to you.',
+    interpret: 'The empty-running figure is a cost, not a loss. Accepting a lower outbound rate to secure a return load pays only if the loaded return beats running empty to the next pickup.',
+  },
+  '/tools/route-optimizer': {
+    example: 'Illustrative: with an origin and four stops, the tool compares the recommended order’s road distance and driving time against the sequence you entered, so backtracking is visible as extra kilometres.',
+    interpret: 'A shorter distance does not always mean a faster trip — check the driving time too, and factor in loading windows at each stop before locking an order.',
+  },
+  '/tools/empty-km-savings': {
+    example: 'Illustrative: a lane where 120 of 340 km would otherwise run empty shows the cost of those 120 km as a per-trip figure, and what booking return loads against that distance is worth.',
+    interpret: 'The saving is only realised if a load is actually available and accepted on the return, so treat the figure as the ceiling of what a return posting is worth to you.',
+  },
+  '/tools/trip-profit': {
+    example: 'Illustrative: a ₹30,000 freight invoice minus diesel, tolls, driver pay, food and lodging, a maintenance reserve and the load-finding commission leaves the figure that actually reaches your account.',
+    interpret: 'If the result is thin, work backwards: each line is visible, so the number shows which cost is consuming the margin rather than only confirming there is none.',
+  },
+  '/tools/shared-savings': {
+    example: 'Illustrative: the same 2-tonne consignment priced alone in a dedicated vehicle and again sharing space with other consignments shows the money and the fuel and carbon difference between the two.',
+    interpret: 'Consolidation adds handling and transit time, so read the saving against your delivery deadline — if the date cannot move, the time cost usually outweighs the saving.',
+  },
+  '/tools/document-checklist': {
+    example: 'Illustrative: selecting an inter-state route, an open truck and a steel commodity generates the registration, permit, fitness, insurance, e-way bill and driver-paper list for that combination.',
+    interpret: 'Use the list as a pre-departure checklist — a missing document found at the office costs minutes; the same gap found at a check post can cost a day.',
+  },
+  '/tools/carbon-savings': {
+    example: 'Illustrative: a 340 km lane with a half-empty vehicle and an empty return leg shows the CO2 of the current pattern, and what consolidation and a filled return would save in kilograms.',
+    interpret: 'Emission factors are class and fuel averages, not measurements of your truck — read the absolute number as an order of magnitude and trust the comparison more than the total.',
+  },
+  '/tools/toll-fuel': {
+    example: 'Illustrative: a 340 km lane with a 16-tonne truck returns a per-kilometre fuel figure and a toll estimate for that vehicle class, broken out separately.',
+    interpret: 'These are the two line items that move between quotes without the cargo changing. If a quote differs from your estimate, ask the carrier which tolls and fuel assumption are inside it.',
+  },
+  '/tools/gst-calculator': {
+    example: 'Illustrative: a ₹20,000 transport invoice between two states returns the IGST split; the same invoice within one state returns the CGST plus SGST split.',
+    interpret: 'This splits a transport invoice only — it does not compute the e-way bill or decide whether your specific supply is inter-state, so confirm the classification with your accountant for large consignments.',
+  },
+  '/tools/payload-utilization': {
+    example: 'Illustrative: 2 tonnes in a 9-tonne truck reads as 22% by weight while a bulky load may read 70% by volume — both numbers are shown against the vehicle’s rated capacity.',
+    interpret: 'The higher percentage is the binding one. Utilisation above the rated figure is overloading whatever the body looks like, so size the vehicle to the lower of the two margins.',
+  },
+  '/tools/shipment-brief': {
+    inputs: 'origin, destination, cargo type, weight, volume, packaging and the loading window',
+    method: 'It compiles the same fields a booking needs into one standard brief, so the load can be posted or quoted consistently across carriers.',
+    limits: 'The brief describes what you are moving; it does not price it. Rates still depend on live availability on the date.',
+    example: 'Illustrative: a 1.2-tonne steel-coil brief from Rourkela to Ranchi with a next-day loading window produces a one-page summary ready to post.',
+    interpret: 'A complete brief gets better matches than a partial one — missing volume or packaging data forces the matcher to guess the vehicle size.',
+  },
+  '/tools/waiting-time-cost': {
+    inputs: 'the truck’s daily or hourly rate and the expected waiting hours at loading or unloading',
+    method: 'It converts expected detention into a monetary figure using the rate you enter, so waiting time becomes a line item rather than an invisible cost.',
+    limits: 'It covers the truck’s time at your entered rate; it does not include contractual demurrage, gate fees or penalties unless you add them to the rate.',
+    example: 'Illustrative: a truck billed at ₹8,000/day waiting 4 hours beyond allowance shows the detention cost of those 4 hours.',
+    interpret: 'Compare the figure against the cost of scheduling a firm loading slot — if waiting is predictable, a slot is usually cheaper than paying detention.',
+  },
+  '/tools/freight-quote-comparison': {
+    inputs: 'two quotes with their rate, vehicle type, transit time and what each includes',
+    method: 'It normalises both quotes to an all-in comparison so differences in inclusions become visible rather than hidden in the headline number.',
+    limits: 'The comparison is only as complete as the inclusions you enter — a quote that omits loading or waiting will look cheaper than it is.',
+    example: 'Illustrative: two quotes for the same 2-tonne lane, one per kilogram and one per vehicle, are converted to a common basis and compared line by line.',
+    interpret: 'The cheaper headline rate is not always the cheaper total — the tool shows which quote covers loading, unloading and waiting, which is usually where the difference sits.',
+  },
+  '/tools/cargo-volume-planner': {
+    inputs: 'the number of pieces and the length, width and height of each',
+    method: 'It computes the total cubic volume and suggests how the pieces pack into standard truck bodies, so the volume side of the vehicle decision is made before asking for a quote.',
+    limits: 'It assumes regular, stackable pieces. Irregular shapes, pallets and weight limits are not captured, so treat the volume as a planning figure.',
+    example: 'Illustrative: 40 cartons of 0.5 m × 0.4 m × 0.4 m produce a total cube the tool compares against standard body sizes.',
+    interpret: 'If the cube nearly fills a body, the load is volume-bound — expect the vehicle to be full before payload, and quote on that basis.',
+  },
+  '/tools/load-securing-checklist': {
+    inputs: 'the cargo category the consignment falls under',
+    method: 'It generates a securing checklist for that category — lashing, dunnage, edge protection and cover — matched to the cargo’s movement and fragility profile.',
+    limits: 'It is a general checklist, not a substitute for a site-specific lashing plan for hazardous or unusually shaped cargo.',
+    example: 'Illustrative: selecting steel coils returns a checklist covering coil orientation, chocking and lashing points on the deck.',
+    interpret: 'Use it to brief the loader before the vehicle arrives, so securing decisions are made before loading rather than improvised after it.',
+  },
+};
+
 const TOOL_LINKS = [
   { label: 'Truck fare calculator', href: '/tools/fare-calculator', note: 'per-km and per-kg freight estimates for any Indian corridor' },
   { label: 'Freight rate calculator', href: '/tools/freight-rate-calculator', note: 'PTL, LTL and FTL rate ranges with a recommended truck type' },
@@ -4973,25 +5231,25 @@ const GENERIC_GUIDE_NOTE = 'Before a vehicle is committed, the cost of the movem
 
 const STATIC_FAQ = {
   '/': [
-    { q: "What is LoadSaathi and who uses it?", a: "LoadSaathi is a road freight marketplace for East India. Shippers post loads and truckers post trips, and a matching engine pairs the two. Joining is free for both sides; a completed shipment carries a transaction fee of 1.5-3% for shippers and 1.5-2.5% for truckers." },
-    { q: "How much does it cost to ship with LoadSaathi?", a: "There is no listing fee, no subscription and no charge for a booking that is never completed. Shippers pay 1.5-3% of the shipment value on a completed shipment and truckers pay 1.5-2.5%. The fee covers matching, live tracking, the freight credit score, escrow-backed payment and support." },
+    { q: "What is LoadSaathi and who uses it?", a: "LoadSaathi is a road freight marketplace for East India. Shippers post loads and truckers post trips, and a matching engine pairs the two. Joining is free for both sides; a completed shipment carries a transaction fee (final schedule to be published)." },
+    { q: "How much does it cost to ship with LoadSaathi?", a: "There is no listing fee, no subscription and no charge for a booking that is never completed. Shippers and truckers pay a transaction fee on a completed shipment; the final schedule will be published. The fee covers matching, live tracking, the freight credit score, planned escrow-backed payment and support." },
     { q: "Which cities and corridors are covered?", a: "Coverage today is concentrated on the industrial belt of Odisha, Jharkhand, West Bengal and coastal Andhra Pradesh: Rourkela, Bhubaneswar, Cuttack, Sambalpur, Angul, Balasore, Berhampur, Paradip, Ranchi, Dhanbad, Jamshedpur, Kolkata, Burdwan and Visakhapatnam, with published corridor pages between them." },
     { q: "Can I track my truck once the booking is confirmed?", a: "Yes. GPS tracking runs from pickup to delivery on every confirmed booking, with an expected arrival time and a delivery confirmation step. The counterparty sees the live location for the duration of the trip; it is not published." },
   ],
   '/features': [
     { q: "What does the freight credit score actually measure?", a: "A score from 300 to 900, weighted across completion rate, on-time delivery, communication quality, review ratings and account tenure. A high score is earned by finishing trips well rather than by volume, and it is public, so both sides can see what they are dealing with before they commit." },
     { q: "How does matching decide which truck fits my load?", a: "Every open load is scored against available trips on capacity fit, proximity, route overlap, price alignment, date and counterparty rating, then ranked. The score is shown with the shortlist, so you can see why a vehicle was surfaced rather than taking the ranking on trust." },
-    { q: "Are payments held until delivery?", a: "Yes. Payment sits in escrow and is released against agreed milestones rather than to either party on delivery day. The booking also captures the cargo, weight and shipper details that the GST e-way bill needs, so the paperwork comes from the same record as the movement." },
+    { q: "Are payments held until delivery?", a: "Escrow-backed release against agreed milestones is planned. Today, settlement terms are agreed directly between the parties. The booking also captures the cargo, weight and shipper details that the GST e-way bill needs, so the paperwork comes from the same record as the movement." },
     { q: "Can both sides rate each other?", a: "Reviews run in both directions after every trip. That is deliberate: a marketplace where one side always reviews the other gives the reviewed side no reason to protect the counterparty." },
   ],
   '/how-it-works': [
     { q: "How do I post a load as a shipper?", a: "You enter weight, volume, origin, destination, cargo description and the loading window. Matching then scores the load against available trips and returns a ranked shortlist with the reason for each match, and you accept the vehicle that suits the consignment." },
     { q: "How do I post a trip as a trucker?", a: "You enter vehicle type, available capacity, origin, destination and departure date. Loads that fit your lane and capacity surface against the trip, ranked on route overlap, timing, capacity fit and the shipper’s credit standing, so the return leg is visible before you load." },
-    { q: "What happens after a booking is confirmed?", a: "Live tracking starts at pickup, payment is held in escrow and released on milestones, and both sides review each other at the end. The same flow applies to a part load and a full truck; only the vehicle and rate differ." },
+    { q: "What happens after a booking is confirmed?", a: "Live tracking starts at pickup, settlement is agreed per terms (escrow-backed release is planned), and both sides review each other at the end. The same flow applies to a part load and a full truck; only the vehicle and rate differ." },
   ],
   '/pricing': [
-    { q: "Is there a subscription or listing fee?", a: "No. Joining is free, there is no listing fee and there is no charge for a booking that is never completed. The only charge is a transaction fee on a completed shipment: 1.5-3% for shippers and 1.5-2.5% for truckers." },
-    { q: "What does the transaction fee cover?", a: "Matching, live GPS tracking, the digital freight credit score, escrow-backed payments and support. There is no separate charge for the calculators, the credit score, or contacting a counterparty." },
+    { q: "Is there a subscription or listing fee?", a: "No. Joining is free, there is no listing fee and there is no charge for a booking that is never completed. The only charge is a transaction fee on a completed shipment; the final schedule will be published." },
+    { q: "What does the transaction fee cover?", a: "Matching, live GPS tracking, the digital freight credit score, planned escrow-backed payments and support. There is no separate charge for the calculators, the credit score, or contacting a counterparty." },
     { q: "Do you offer volume rates?", a: "Regular shippers and fleet operators can ask the team for a rate card. Published percentages are the default; a negotiated rate applies to the volume, not to individual bookings." },
     { q: "How do I get a GST invoice?", a: "The booking captures cargo description, weight and shipper details, which are the same inputs the e-way bill needs. The transport invoice is raised against the completed shipment, and the GST calculator on the site will show you the IGST or CGST plus SGST split for a given origin and destination." },
   ],
@@ -5006,19 +5264,19 @@ const STATIC_FAQ = {
     { q: "How often are the articles reviewed?", a: "Rate and compliance articles carry a last-updated date and are revised when the underlying numbers or rules change. Platform articles are updated when the product changes how a booking works." },
   ],
   '/faq': [
-    { q: "When is payment released to the trucker?", a: "Payment sits in escrow from booking and is released against agreed milestones rather than on a single delivery-day settlement, so a trucker is not carrying the whole float of a trip. The release points are set on the booking." },
+    { q: "When is payment released to the trucker?", a: "Escrow-backed milestone release is planned so a trucker does not carry the whole float of a trip. Until then, payment timing is agreed on the booking." },
     { q: "What happens if a trucker cancels?", a: "The booking is reopened for matching and the cancellation is recorded against the trucker’s credit standing, which weighs completion rate and on-time delivery. A repeated pattern shows up in the score that shippers see before they accept a bid." },
     { q: "Which documents must a vehicle carry?", a: "Registration certificate, permit, fitness certificate, insurance and the driver’s papers travel with the vehicle, and the e-way bill must match the invoice. The document checklist tool generates the list for a specific route, vehicle type and commodity." },
     { q: "How is a trucker verified?", a: "KYC is completed before a trucker can bid, covering licence and vehicle documents. Alongside that, every trip feeds the freight credit score, so verification is a starting position rather than the whole reputation." },
   ],
   '/safety-trust': [
     { q: "What stops a truck from being unverified?", a: "KYC must be completed before a trucker can bid, covering licence and vehicle documents. Reviews and the credit score then keep the standing honest after that, because both are updated by the trips that actually happen." },
-    { q: "How is a payment held?", a: "Escrow-backed payments release only against agreed milestones, so neither side can walk away from a completed leg without the other being exposed. A dispute holds the balance rather than letting either side withdraw it." },
+    { q: "How is a payment held?", a: "Planned escrow-backed payments will release only against agreed milestones, so neither side can walk away from a completed leg without the other being exposed. A dispute would hold the balance rather than letting either side withdraw it." },
     { q: "Who can see the live location of my truck?", a: "The counterparty on the booking, for the duration of the trip. It is not published and not exposed as a public feed." },
   ],
   '/compare': [
     { q: "How is LoadSaathi different from Vahak, BlackBuck, Trukky or Porter?", a: "Mostly in network shape and settlement. Enterprise load boards optimise for large shippers with dedicated fleets. LoadSaathi is built for MSMEs, first-time shippers and owner-driver truckers on East India corridors, with free joining, a per-transaction fee and a public credit score that works for an operator running a single vehicle." },
-    { q: "Does LoadSaathi charge a commission per truck?", a: "No. The published fee is a percentage on a completed shipment — 1.5-3% for shippers and 1.5-2.5% for truckers — and there is no listing fee or subscription on either side." },
+    { q: "Does LoadSaathi charge a commission per truck?", a: "No. The published fee is a transaction fee on a completed shipment — the final schedule will be published — and there is no listing fee or subscription on either side." },
     { q: "Can I still work with a broker?", a: "Yes. A lot of the value on an unmanaged lane is visibility: what is moving out of the destination, and what is running empty in the opposite direction. Use the marketplace for the lane you cannot cover and a broker for the rest." },
   ],
   '/compare/loadsaathi-vs-trucksuvidha': [
@@ -5027,19 +5285,35 @@ const STATIC_FAQ = {
     { q: "Which is better for small truck owners?", a: "If you own 1–5 trucks and want instant load leads without paying thousands of rupees in upfront fees, LoadSaathi is built for you." },
   ],
   '/compare/loadsaathi-vs-blackbuck': [
-    { q: "Is BlackBuck commission-free like LoadSaathi?", a: "No. BlackBuck monetises transactions via a commission on freight and financing margins on its truck cards and fuel cards. LoadSaathi charges ₹0 commission on freight — permanently." },
+    { q: "Is BlackBuck commission-free like LoadSaathi?", a: "No. BlackBuck monetises transactions via a commission on freight and financing margins on its truck cards and fuel cards. LoadSaathi charges a transaction fee on completed shipments rather than a per-load broker commission." },
     { q: "Which is better for fleet owners with 10+ trucks?", a: "For multi-truck fleet owners who mostly find loads through their own networks and want a free board plus fuel and tyre savings, LoadSaathi is the better fit. BlackBuck suits fleet owners who want managed GPS tracking and prefer app-based truck card payments." },
     { q: "Does BlackBuck offer return loads?", a: "BlackBuck's core strength is outbound truck discovery and tracking. Return load discovery is limited compared to LoadSaathi, where return-load matching and AI load planning are free core features for every trucker." },
   ],
   '/for-msmes': [
     { q: "What changes freight cost for a small business?", a: "Three things move the number more than rate negotiation does: shipping small consignments as part loads instead of booking whole vehicles, comparing more than one rate on the same morning rather than accepting the first quote, and filling the return leg so the lane costs less per kilometre in both directions." },
     { q: "Do the calculators need an account?", a: "No. The freight rate, toll and fuel, and GST calculators are all free to use without signing in." },
-    { q: "Is escrow-backed payment workable for a small shipper?", a: "Yes, and it is usually the reason small shippers are cautious about paying a stranger online. The balance is held and released on milestones rather than paid up front to an unverified counterparty." },
+    { q: "Is escrow-backed payment workable for a small shipper?", a: "Yes, once escrow launches. It is usually the reason small shippers are cautious about paying a stranger online — holding the balance and releasing it on milestones avoids paying up front to an unverified counterparty." },
   ],
   '/tools': [
     { q: "Can I use the calculators without an account?", a: "Yes. Every calculator on this page is free and needs no sign-in. Each one returns an estimate from the inputs you provide rather than a live carrier quote, and the same input values can be used to post a load or a trip for real quotes." },
     { q: "Which calculator should I start with?", a: "The fare calculator for a lane you already know, then the truck load calculator to check whether the volume fits the vehicle you had in mind. The PTL versus FTL calculator settles the load-type question once you have a weight, and the toll and fuel calculator explains the gap between two quotes for the same cargo." },
     { q: "Can I use these estimates in a budget?", a: "Yes, as a planning range. The calculators separate the components — distance, fuel, tolls, and the cargo charge — so you can see which part of a quote is moving and defend the number with arithmetic rather than assertion." },
+  ],
+  '/tools/fare-calculator': [
+    { q: "Is the fare calculator result a final quote?", a: "No. It returns a planning range built from distance, fuel, tolls and a per-kilogram cargo charge, and it is only as accurate as the inputs. Use it to sanity-check a rate you have been quoted, then confirm the inclusions with the carrier." },
+    { q: "What inputs give the most accurate result?", a: "Use the real weight from your packing list rather than a rounded figure, name both cities precisely, and pick the date you actually need the truck — availability on the date is one of the inputs that moves the result." },
+  ],
+  '/tools/freight-rate-calculator': [
+    { q: "Why does the calculator return a range instead of one number?", a: "Because the same movement prices differently depending on vehicle availability at the loading hour and how many trucks are already committed to that lane on the date. Treat the range as the band a reasonable quote should sit inside." },
+    { q: "Can I compare this against a carrier quote?", a: "Yes — that is the main use. Enter the same lane, weight and load type the carrier quoted, and compare the low and high figures directly. A quote outside the band usually differs on vehicle availability or an unstated inclusion." },
+  ],
+  '/tools/return-load-calculator': [
+    { q: "What is an empty return leg actually costing me?", a: "Fuel, driver time and tolls for a vehicle with nothing in the body. The calculator prices that leg as it would really be run, then shows what a backhaul load would add against it — which is the number that tells you whether a lower outbound rate is worth accepting." },
+    { q: "When is a return load worth taking?", a: "When it covers more than the cost of running empty to the next pickup. The calculator makes both figures visible, so the decision is arithmetic rather than guesswork." },
+  ],
+  '/tools/ptl-vs-ftl-calculator': [
+    { q: "At what weight should I switch from part load to a full truck?", a: "The calculator plots both curves against your weight; the point where they cross is your starting switch point. Below roughly three tonnes sharing normally wins on cost; above roughly seven tonnes, or when the date cannot move, a dedicated vehicle wins on cost and time." },
+    { q: "Does the crossover ever move?", a: "Yes. Peak-season lanes, remote pickups and consignments that cannot share a vehicle all push the crossover higher, so treat the calculator's figure as a baseline and adjust for your specific conditions." },
   ],
   '/data': [
     { q: "Where do these figures come from?", a: "The numbers are corridor-level and derived from road routing for distance and duration, published rate bands for the pricing side, and the operating conditions of each city. They are not national averages, because national averages hide the variation that actually moves a rate." },
@@ -5052,24 +5326,24 @@ const STATIC_FAQ = {
     { q: "Can I try the platform before creating an account?", a: "Yes. The calculators on the free tools pages run without signing in, so you can price a lane and check the cost of a booking before deciding whether to register. Registering is free on both sides, and no fee applies until a shipment actually completes." },
   ],
   '/terms': [
-    { q: "Is LoadSaathi a lender or a financial intermediary?", a: "No. LoadSaathi is a road freight marketplace. It connects shippers and truckers, and escrow-backed payment holds a balance against agreed milestones; it is not a lender, a broker of credit, or a financial services provider." },
+    { q: "Is LoadSaathi a lender or a financial intermediary?", a: "No. LoadSaathi is a road freight marketplace. It connects shippers and truckers, and planned escrow-backed payment would hold a balance against agreed milestones; it is not a lender, a broker of credit, or a financial services provider." },
     { q: "Who is allowed to use the platform?", a: "Any shipper with a consignment to move and any trucker with a vehicle and a licence to present. Truckers complete KYC before they can bid, and both sides carry a public credit score from the trips they complete." },
     { q: "What happens in a dispute?", a: "The balance is held rather than released, and the dispute is worked through with both parties. Repeated disputes and cancellations feed the credit score that the other side sees before accepting a bid." },
   ],
   '/freight-marketplace': [
-    { q: "Is LoadSaathi a broker?", a: "No, and that is the whole structure of the fee. There is no agent taking a cut in the middle: the published fee is 1.5-3% for shippers and 1.5-2.5% for truckers on a completed shipment, paid to the platform rather than extracted as a margin on the rate." },
+    { q: "Is LoadSaathi a broker?", a: "No, and that is the whole structure of the fee. There is no agent taking a cut in the middle: a transaction fee is paid to the platform on a completed shipment rather than extracted as a margin on the rate. The final schedule will be published." },
     { q: "How do I find a carrier for a one-off shipment?", a: "Post the load and browse the other side’s open postings. You can filter by lane, capacity and date and sort on credit standing before you commit, so a first-time shipper is not forced to take the first quote offered." },
     { q: "How does a trucker find work without waiting at a gate?", a: "Post the trip first. Loads that fit the lane and available capacity surface against it, ranked on route overlap, timing, capacity fit and the shipper’s credit standing — which is what makes the return leg visible before the truck commits to the outbound leg." },
   ],
   '/solutions/shippers': [
-    { q: "What does a shipper get that a broker does not give?", a: "The rate you agree is the rate you pay; the only addition is the 1.5-3% transaction fee. You also get to compare several verified truckers on rate, vehicle type, credit score and rating rather than accepting a single quote, and you see the live vehicle location until delivery." },
+    { q: "What does a shipper get that a broker does not give?", a: "The rate you agree is the rate you pay; the only addition is a transaction fee on the completed shipment (schedule to be published). You also get to compare several verified truckers on rate, vehicle type, credit score and rating rather than accepting a single quote, and you see the live vehicle location until delivery." },
     { q: "How does the booking help with GST paperwork?", a: "Cargo description, weight and shipper details are captured at booking, which are the same inputs the e-way bill needs. The transport invoice is raised against the completed shipment rather than reconstructed afterwards." },
     { q: "Can a first-time shipper see who they are dealing with?", a: "Yes. The freight credit score from 300 to 900 and the review history are public before you accept, so the standing of the counterparty is visible at the point of decision." },
   ],
   '/solutions/truckers': [
     { q: "What stops an owner-driver from running empty?", a: "Posting the trip before loading. The matcher then looks for loads that fit the lane, capacity and date, which puts the return leg on screen while the outbound decision is still open rather than after the truck is already empty." },
-    { q: "When do I get paid?", a: "On milestones rather than on delivery day, so cash flow is not tied to a single delivery window. The balance is held in escrow from booking and released as agreed steps are met." },
-    { q: "Do I need my own sales team?", a: "No. Counterparties filter on credit score and rating, both of which are maintained by completed trips, so a good record does the work that a relationship would otherwise do. Joining is free and the transaction fee is 1.5-2.5% on a completed shipment." },
+    { q: "When do I get paid?", a: "Escrow-backed milestone release is planned, so cash flow is not tied to a single delivery window. Until it launches, timing is agreed directly on the booking." },
+    { q: "Do I need my own sales team?", a: "No. Counterparties filter on credit score and rating, both of which are maintained by completed trips, so a good record does the work that a relationship would otherwise do. Joining is free and a transaction fee applies on a completed shipment." },
   ],
   '/ltl-transport': [
     { q: "How is LTL different from part load?", a: "Less-than-truckload is the structured version of part load. Consignments are consolidated into one vehicle and each is charged for the space it occupies rather than for the whole truck, with the consolidation point and drop sequence set before loading so the extra handling is planned rather than improvised." },
@@ -5104,19 +5378,87 @@ const STATIC_FAQ = {
   ],
   '/hi': [
     { q: "LoadSaathi पर भुगतान कैसे होता है?", a: "भुगतान एस्क्रो में रुका रहता है और तय किए गए माइलेस्टोन पर जारी होता है, इसलिए डिलीवरी के दिन एक ही बड़ी रकम किसी एक को देना नहीं पड़ता। बुकिंग में माल का विवरण, वज़न और शिपर की जानकारी दर्ज होती है, जो GST e-way bill के लिए भी यही इनपुट होते हैं।" },
-    { q: "क्या शिपर और ट्रकर दोनों को फ़ीस देनी होती है?", a: "जुड़ना दोनों के लिए फ्री है — कोई सदस्यता या लिस्टिंग फ़ीस नहीं। सिर्फ़ पूरा होने वाली शिपमेंट पर लेनदेन शुल्क लागू होता है: शिपर के लिए 1.5–3% और ट्रकर के लिए 1.5–2.5%।" },
+    { q: "क्या शिपर और ट्रकर दोनों को फ़ीस देनी होती है?", a: "जुड़ना दोनों के लिए फ्री है — कोई सदस्यता या लिस्टिंग फ़ीस नहीं। सिर्फ़ पूरा होने वाली शिपमेंट पर लेनदेन शुल्क लागू होता है — अंतिम दर प्रकाशित होगी।" },
     { q: "ट्रक का लाइव लोकेशन कौन देख सकता है?", a: "बुकिंग पर लगे दूसरे पक्ष को — यानी शिपर या ट्रकर, और वह ट्रिप चलने तक के लिए। लोकेशन सार्वजनिक नहीं होता।" },
     { q: "क्रेडिट स्कोर कैसे बनता है?", a: "300 से 900 के बीच का स्कोर ट्रिप पूरी करने की दर, समय पर डिलीवरी, संवाद, रिव्यू और खाते की अवधि से बनता है। यह सार्वजनिक है, इसलिए बुकिंग से पहले ही दूसरे पक्ष की स्थिति दिख जाती है।" },
   ],
 };
 
+/** Next-step conversion blocks for commercial landing pages (crawl-visible). */
+const COMMERCIAL_CTA = {
+  '/return-load': {
+    h2: 'Next step: post or match a return load',
+    links: [
+      { label: 'Register as a transporter (free)', href: '/register?type=trucker' },
+      { label: 'Explore transporter solutions', href: '/solutions/truckers' },
+      { label: 'Estimate your return-leg saving', href: '/tools/return-load-calculator' },
+    ],
+  },
+  '/ptl-transport': {
+    h2: 'Next step: book a part load',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Compare PTL vs FTL cost', href: '/tools/ptl-vs-ftl-calculator' },
+      { label: 'Browse freight routes', href: '/routes' },
+    ],
+  },
+  '/ltl-transport': {
+    h2: 'Next step: ship as LTL',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Estimate your freight rate', href: '/tools/freight-rate-calculator' },
+      { label: 'Browse freight routes', href: '/routes' },
+    ],
+  },
+  '/truck-load-booking': {
+    h2: 'Next step: book a full truck',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Estimate truck fare', href: '/tools/fare-calculator' },
+      { label: 'Compare truck types', href: '/tools/truck-load-calculator' },
+    ],
+  },
+  '/freight-marketplace': {
+    h2: 'Next step: join the marketplace',
+    links: [
+      { label: 'Join as a shipper (free)', href: '/register?type=shipper' },
+      { label: 'Join as a transporter (free)', href: '/register?type=trucker' },
+      { label: 'Browse freight routes', href: '/routes' },
+    ],
+  },
+  '/truck-near-me': {
+    h2: 'Next step: find trucks near you',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Search freight routes', href: '/routes' },
+      { label: 'Estimate truck fare', href: '/tools/fare-calculator' },
+    ],
+  },
+  '/solutions/shippers': {
+    h2: 'Next step: start shipping with LoadSaathi',
+    links: [
+      { label: 'Post a shipment for free', href: '/register?type=shipper' },
+      { label: 'Book a truck load', href: '/truck-load-booking' },
+      { label: 'Estimate your freight rate', href: '/tools/freight-rate-calculator' },
+    ],
+  },
+  '/solutions/truckers': {
+    h2: 'Next step: start finding loads',
+    links: [
+      { label: 'Register as a transporter (free)', href: '/register?type=trucker' },
+      { label: 'Explore return loads', href: '/return-load' },
+      { label: 'Estimate trip profit', href: '/tools/trip-profit' },
+    ],
+  },
+};
+
 const STATIC_CONTENT_NOTES = {
-  '/': `LoadSaathi is a two-sided freight marketplace: shippers post loads, truckers post trips, and the matching engine pairs them. Coverage today is ${COVERAGE.freightRoutes} published freight corridors across Odisha, Jharkhand, West Bengal and Andhra Pradesh, ${COVERAGE.cityPages} city pages, and ${COVERAGE.sitemapUrls} indexable pages in total. Joining is free for both sides; a completed shipment carries a ${FEES.shipper} transaction fee for shippers and ${FEES.trucker} for truckers.`,
+  '/': `LoadSaathi is a two-sided freight marketplace: shippers post loads, truckers post trips, and the matching engine pairs them. Coverage today is ${COVERAGE.freightRoutes} published freight corridors across Odisha, Jharkhand, West Bengal and Andhra Pradesh, ${COVERAGE.cityPages} city pages, and ${COVERAGE.sitemapUrls} indexable pages in total. Joining is free for both sides; a completed shipment carries a transaction fee (final schedule to be published).`,
   '/about': `LoadSaathi was founded at NIT Rourkela out of the Foundation for Technology and Business Incubation, with the working assumption that most of the cost of moving goods in East India is paid twice — once for the truck that arrives loaded, and again for the same truck returning empty. The registered office is ${ADDRESS.street}, ${ADDRESS.city}, ${ADDRESS.region} ${ADDRESS.postalCode}. Support runs on ${EMAIL} and ${PHONE_DISPLAY}.`,
-  '/pricing': `The economics are deliberately flat: joining LoadSaathi is free, there is no listing fee, no subscription, and no charge for a booking that is never completed. Shippers pay a ${FEES.shipper} platform fee on completed shipments and truckers pay ${FEES.trucker}. That fee covers matching, live tracking, the digital freight credit score, escrow-backed payments and support. Volume discounts apply to regular shippers and fleet operators — ask the team for a rate card.`,
+  '/pricing': `The economics are deliberately flat: joining LoadSaathi is free, there is no listing fee, no subscription, and no charge for a booking that is never completed. Shippers and truckers pay a transaction fee on completed shipments; the final schedule will be published. That fee covers matching, live tracking, the digital freight credit score, planned escrow-backed payments and support. Volume discounts apply to regular shippers and fleet operators — ask the team for a rate card.`,
   '/how-it-works': `A booking runs the same way on both sides. A shipper posts weight, volume, origin, destination and loading window; a trucker posts the vehicle, available capacity and the lane it is running. The matching engine scores every open pair on capacity fit, proximity, route overlap, price alignment, date and counterparty rating, then surfaces the ranked shortlist. After a booking is confirmed the shipment is tracked live, payment is released on milestones, and both sides review each other.`,
   '/features': `Every participant is scored on the same 300 to 900 freight credit scale, weighted across completion rate, on-time delivery, communication quality, review ratings and account tenure — so a high score is earned by finishing trips well rather than by volume alone. Reviews run in both directions, which is what keeps the incentives honest on a marketplace where one side holds the cargo and the other holds the vehicle.`,
-  '/safety-trust': `Trust on this platform is enforced at four points: trucker KYC before a trucker can bid, live GPS on every confirmed booking so both sides always know where the vehicle is, escrow-backed payments that release only on agreed milestones, and a dispute process that holds the balance rather than letting either side walk. High-value consignments can be booked with an insurance option noted in the booking itself.`,
+  '/safety-trust': `Trust on this platform is enforced at four points: trucker KYC before a trucker can bid, live GPS on every confirmed booking so both sides always know where the vehicle is, planned escrow-backed payments that would release only on agreed milestones, and a dispute process that holds the balance rather than letting either side walk. High-value consignments can be booked with an insurance option noted in the booking itself.`,
   '/faq': `The questions shippers ask most are about payment release, GST invoices and what happens if a trucker cancels. The questions truckers ask most are about how fast they get paid, whether returning empty is avoidable, and how the credit score moves. Both sets are answered on this page, along with the platform fees and the documents a vehicle must carry on an Indian goods route.`,
   '/compare': `The honest comparison with Vahak, BlackBuck, Trukky and Porter comes down to network shape and settlement. Enterprise load boards optimise for large shippers with dedicated fleets; LoadSaathi optimises for MSMEs, first-time shippers and owner-driver truckers on East India corridors, with a free joining model, per-transaction fees and a public credit score that works for an operator running a single vehicle.`,
   '/for-msmes': `MSMEs are the group LoadSaathi is built for. The three changes that move the number are shipping small consignments as part loads instead of booking whole vehicles, comparing more than one rate on the same morning rather than accepting the first quote, and filling the return leg so the lane costs less per kilometre in both directions. Freight rate calculator, toll and fuel calculator, and the GST calculator are all free to use without an account.`,
@@ -5126,7 +5468,7 @@ const STATIC_CONTENT_NOTES = {
   '/blog': `The blog covers freight strategy, corridor rates, compliance and platform changes. Trucker tips sit alongside shipper guides and industry analysis because a marketplace only works when both sides can see the same numbers. Every article is written or reviewed by the LoadSaathi team, dated, and linked to the route, city and calculator pages where you can act on it.`,
   '/contact': `Support answers on booking status, payments, documents and partnerships. Email reaches ${EMAIL}; the phone line is ${PHONE_DISPLAY}. The registered office is ${ADDRESS.street}, ${ADDRESS.city}, ${ADDRESS.region} ${ADDRESS.postalCode}. For a route or rate question it is fastest to send origin, destination, cargo weight and the date you need the truck, because that is exactly what the platform needs to quote it.`,
   '/privacy': `LoadSaathi collects the account details a booking requires — name, email, phone, company, and for truckers the KYC documents needed to verify a licence and vehicle — plus the operational data a shipment generates: pickup and drop addresses, cargo description and weight, vehicle location while a trip is live, and the reviews and credit inputs a participant produces. Live GPS is shown to the counterparty on the booking for the duration of the trip and is not exposed publicly.`,
-  '/terms': `The marketplace terms cover who may use the platform, what a shipper must provide for a load to be bookable, what a trucker must provide for a vehicle to be listed, how escrow-backed payment is released, how cancellations and disputes are handled, and how the freight credit score may be used. Freight services on LoadSaathi are a road transport marketplace — LoadSaathi is not a lender, broker of credit, or financial services provider.`,
+  '/terms': `The marketplace terms cover who may use the platform, what a shipper must provide for a load to be bookable, what a trucker must provide for a vehicle to be listed, how escrow-backed payment (planned) would be released, how cancellations and disputes are handled, and how the freight credit score may be used. Freight services on LoadSaathi are a road transport marketplace — LoadSaathi is not a lender, broker of credit, or financial services provider.`,
   '/tools': `All ${TOOL_LINKS.length} tools are free and need no account. They cover the decisions that have to be made before a booking: what a lane costs, whether part load or a full truck is cheaper, which truck fits the cargo, what the tolls and diesel will run to, what GST applies to the invoice, and what documents the vehicle has to carry. Each returns an estimate from the inputs you provide, not a live carrier quote.`,
   '/return-load': `A truck that finishes a delivery empty has already paid for its fuel, its driver's time and its tolls. Finding a posted load for that same return leg turns a fixed cost into revenue, and it is the single largest lever in an owner-driver's cost per kilometre. LoadSaathi posts loads ahead of the vehicle reaching the destination, filters them by lane and date, and scores matches on the truck's available capacity and the shipper's credit standing.`,
   '/ptl-transport': `Part load means booking space in a truck someone else is already paying for. The consignment travels with one to four other cargoes, so the diesel, toll and driver cost is shared across all of them — typically 30 to 40% below hiring the same vehicle outright. It suits consignments up to about three tonnes. The trade is transit time: consolidation at origin and multiple drops add hours, which is why urgent cargo is better served by a full truck.`,
@@ -5136,7 +5478,7 @@ const STATIC_CONTENT_NOTES = {
   '/truck-near-me': 'Finding a truck locally is a filtering problem rather than a search problem: capacity against your cargo, available space against your date, and the counterparty’s credit standing. LoadSaathi exposes all three as filters, so a shortlist can be built for a specific lane and a specific morning. Trucks running empty out of your city on a return leg are often the cheapest option available, and they are listed first when you filter by date.',
   '/gallery': `The app screens below show what shippers and truckers actually use day to day: the role-based dashboard with live shipment counts and earnings, the matching screen with confidence scores and trucker profiles, the shipment chat with read receipts, the 300 to 900 freight credit score with its factor breakdown, and the bidirectional review flow. The web app and the Android build share the same data.`,
   '/sitemap': `Every indexable page on LoadSaathi, grouped by section: ${COVERAGE.freightRoutes} freight corridor pages, ${COVERAGE.cityPages} city pages, transport services by city, practical guides, ${TOOL_LINKS.length} free freight calculators, the logistics blog, and the legal pages — ${COVERAGE.sitemapUrls} URLs in total. The same list is available as XML at ${SITE_URL}/sitemap.xml, and a plain-text summary for AI agents at ${SITE_URL}/llms.txt. If a page you need is not listed here, it is not published: the sitemap is generated from the same data the app routes from, so it cannot list a page that 404s.`,
-  '/solutions/shippers': `For a shipper, the platform removes the broker from the middle of the loop. Post once, compare several verified truckers on rate, vehicle type, credit score and rating, then track the vehicle live until delivery and release payment on milestones. The rate you agree is the rate you pay — the only addition is the ${FEES.shipper} transaction fee, and the inputs for the GST e-way bill come straight out of the booking.`,
+  '/solutions/shippers': `For a shipper, the platform removes the broker from the middle of the loop. Post once, compare several verified truckers on rate, vehicle type, credit score and rating, then track the vehicle live until delivery and agree settlement on completion. The rate you agree is the rate you pay — the only addition is a transaction fee on the completed shipment (final schedule to be published), and the inputs for the GST e-way bill come straight out of the booking.`,
   '/solutions/truckers': `For a trucker, the platform fills the leg you are about to run and the leg you were about to run empty. Post the trip with the vehicle type, available capacity and lane, and matching loads surface against it — ranked on route overlap, timing, capacity fit and the shipper's credit standing. Settlement is on milestones rather than on delivery day, so cash flow is not tied to the delivery window.`,
   '/transport-cost-calculator': 'Transport cost per kilometre is the number every rate conversation turns on. The estimate here builds up from distance, load type, tolls and a diesel reference, so you can see which part of a quote is fuel, which part is the road, and which part is the truck. Use it to check a rate you have been quoted, or to sanity-check a budget before you go to market.',
   '/fare-calculator': 'A fare estimate needs the same four inputs a booking does: origin, destination, weight and date. The calculator turns those into a per-kilometre and per-kilogram range for part load and full truck, with a toll and diesel allowance, so two quotes for the same movement can be compared on equal terms.',
@@ -5284,22 +5626,74 @@ function contentFor(path, seoMeta) {
     if (faq.length) blocks.push({ h2: `${seoMeta.cityName} transport questions`, dl: faq });
     blocks.push({ h2: 'Free freight tools', ul: TOOL_LINKS.map((t) => ({ ...t, plain: true })) });
   } else {
-    // Static page.
-    heading = title;
-    blocks.push({ p: seoMeta.summary || seoMeta.metaDescription });
+    // Static page. `heading` is declared at the top of contentFor and is
+    // overridden below for the homepage.
+
+    // Homepage: purpose-built crawl-visible block (exactly one H1 + pathways).
+    if (path === '/') {
+      heading = 'Move Goods Smarter with Shared Freight';
+      blocks.push({
+        p: 'LoadSaathi is a shared freight marketplace that connects shippers, MSMEs and businesses that need to move goods with truck owners and transporters who have truck space. Matching part-load and full-load cargo across trips helps shippers find suitable transport faster and helps transporters reduce empty return journeys — starting from Rourkela and growing across Odisha, Jharkhand and East India corridors.'
+      });
+      blocks.push({ h2: 'For shippers and businesses' });
+      blocks.push({
+        p: 'If you are an MSME, trader or manufacturer moving steel, cement, FMCG, agro or engineering goods, post your shipment on LoadSaathi. Your load is matched against trucks whose route, capacity and date fit, and you can book part-load (PTL/LTL) or full-truck movement with live tracking.'
+      });
+      blocks.push({ h2: 'For truck owners and transporters' });
+      blocks.push({
+        p: 'If you operate a truck or fleet, list your trip once. LoadSaathi matches your available truck space against open loads on the same corridor — including return-load opportunities — so both legs of a journey earn instead of running empty.'
+      });
+      blocks.push({ h2: 'Part load (PTL) and LTL explained' });
+      blocks.push({
+        p: 'Part Truckload (PTL) and Less-Than-Truckload (LTL) let several shippers share one vehicle when cargo does not fill it. Shippers pay for the space they use rather than a whole truck, and transporters earn more per trip by filling otherwise-empty capacity.'
+      });
+      blocks.push({ h2: 'How to start with LoadSaathi' });
+      blocks.push({
+        ul: [
+          'Post what you need — a load (shipper) or a trip (transporter)',
+          'Get matched on route, capacity, date and price alignment',
+          'Confirm the booking, share live tracking, and settle payments on milestones'
+        ]
+      });
+    } else {
+      blocks.push({ p: seoMeta.summary || seoMeta.metaDescription });
+      // Guide hub: make /guide a genuine index of the published guides rather
+      // than a thin static page. Grows automatically as GUIDE_DATA grows.
+      if (path === '/guide') {
+        const guideLinks = Object.entries(GUIDE_DATA).map(([slug, g]) => ({
+          label: g.title || slug,
+          href: `/guide/${slug}`,
+        }));
+        blocks.push({
+          h2: 'Browse the guides',
+          ul: guideLinks,
+        });
+        blocks.push({
+          p: 'Each guide explains one freight decision in practical terms — what actually changes the cost, how to ask for the right quote, and where LoadSaathi fits in. For the full set of corridors and cities, see the routes index.',
+        });
+      }
+    }
     // Tool pages live under /tools/*, but their notes are keyed by the bare
     // slug (/carbon-savings) because that is the name the tools index uses.
     const noteKey = path.startsWith('/tools/') ? path.slice('/tools'.length) : path;
     const note = STATIC_CONTENT_NOTES[path] || STATIC_CONTENT_NOTES[noteKey];
     if (note) blocks.push({ p: note });
     const detail = TOOL_DETAILS[path] || TOOL_DETAILS[TOOL_ALIASES[path]];
-    if (detail) {
-      blocks.push({
-        h2: 'What this calculator asks for',
-        p: `Enter ${detail.inputs}. The estimate is only as good as those inputs, so use the weight from your packing list rather than a rounded figure.`,
-      });
-      blocks.push({ h2: 'How the estimate is built', p: detail.method });
-      blocks.push({ h2: 'Where this number stops being reliable', p: detail.limits });
+    const extras = TOOL_EXTRAS[path] || TOOL_EXTRAS[TOOL_ALIASES[path]] || {};
+    const inputs = extras.inputs || (detail && detail.inputs);
+    const method = extras.method || (detail && detail.method);
+    const limits = extras.limits || (detail && detail.limits);
+    if (inputs || method || limits || extras.example) {
+      if (inputs) {
+        blocks.push({
+          h2: 'What this calculator asks for',
+          p: `Enter ${inputs}. The estimate is only as good as those inputs, so use the weight from your packing list rather than a rounded figure.`,
+        });
+      }
+      if (method) blocks.push({ h2: 'How the estimate is built', p: method });
+      if (extras.example) blocks.push({ h2: 'Worked example', p: extras.example });
+      if (extras.interpret) blocks.push({ h2: 'How to read your result', p: extras.interpret });
+      if (limits) blocks.push({ h2: 'Where this number stops being reliable', p: limits });
       blocks.push({
         h2: 'Next step after the estimate',
         p: `Once you have a figure to test, post the load on LoadSaathi or publish the trip for the return leg. Matching scores every open pair on capacity, proximity, route overlap, price alignment, date and credit standing, so real quotes come back against the same numbers you just used here. Joining is free for both sides, and ${FEES.shipper} applies to shippers on a completed shipment while truckers pay ${FEES.trucker}.`,
@@ -5328,6 +5722,11 @@ function contentFor(path, seoMeta) {
     const staticFaq = normaliseFaq(STATIC_FAQ[path]);
     if (staticFaq.length) {
       blocks.push({ h2: isHindi ? 'अक्सर पूछे जाने वाले सवाल' : 'Questions on this page', dl: staticFaq });
+    }
+    const cta = COMMERCIAL_CTA[path];
+    if (cta && !isHindi) {
+      blocks.push({ h2: cta.h2 });
+      blocks.push({ ul: cta.links });
     }
   }
 
@@ -5424,6 +5823,14 @@ function buildContentBlock(path, seoMeta, headingTag = 'h1') {
  * get the block inserted right after `<body>`.
  */
 function injectContentBlock(html, path, seoMeta) {
+  // The static shell carries a full homepage fallback (H1 + crawl content) so
+  // `/` is strong even if it is ever served without the edge engine. On any
+  // other page that fallback must be removed first, otherwise the injected
+  // block would sit next to a stray homepage H1 and the page would lose its
+  // own H1 (hasOwnH1 would see the stale one and downgrade the block to h2).
+  if (path !== '/') {
+    html = html.replace(/<div id="ssr-home-fallback"[\s\S]*?<\/div>/, '');
+  }
   const block = buildContentBlock(path, seoMeta, hasOwnH1(html) ? 'h2' : 'h1');
   const slotRe = /(<div id="ssr-fallback-content"[^>]*>)([\s\S]*?)(<\/div>\s*<\/div>)/;
   if (slotRe.test(html)) {
@@ -5541,6 +5948,7 @@ function buildJsonLd(path, seoMeta) {
       "headline": schemaTitle,
       "description": schemaDesc,
       "url": canonicalUrl,
+      "image": `${baseUrl}/og-image.png`,
       "author": { "@type": "Person", "name": seoMeta.author || "LoadSaathi Team", ...(seoMeta.authorBio ? { "description": seoMeta.authorBio } : {}) },
       "publisher": { "@type": "Organization", "name": "LoadSaathi", "url": baseUrl, "logo": { "@type": "ImageObject", "url": `${baseUrl}/logo-512.png` } },
       "datePublished": seoMeta.date || new Date().toISOString().slice(0, 10),
@@ -5836,7 +6244,7 @@ The page \`${rawPath}\` does not exist on LoadSaathi.
 
 ## LoadSaathi
 
-LoadSaathi is India's AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%.
+LoadSaathi is India's AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, and digital credit scores, with escrow-backed payments planned, to help reduce empty return trips.
 
 ## Available Pages
 
@@ -5970,6 +6378,7 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
       } else {
         // Known route with no SEO entry (app/auth/share/admin paths): keep it out of the index.
         html = html
+          .replace(/<div id="ssr-home-fallback"[\s\S]*?<\/div>/, '')
           .replace(/<meta\s+name="robots"[^>]*>/, '<meta name="robots" content="noindex, follow" />')
           .replace(/<link rel="canonical"[^>]*>/, "")
           .replace(/<meta\s+property="og:url"[^>]*>/, "");

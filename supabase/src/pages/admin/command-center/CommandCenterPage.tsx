@@ -7,8 +7,8 @@ import { showSuccess, showError } from '@/utils/toast';
 import { useLiveDriverLocations } from '@/hooks/useLiveDriverLocations';
 import { useLiveLoadLocations } from '@/hooks/useLiveLoadLocations';
 import { useRealtimeInvalidate } from '@/hooks/useRealtimeInvalidate';
-import { isTruckInTransit } from '@/components/maps/TruckMarker';
-import type { TruckLocation } from '@/components/maps/TruckMarker';
+import { isTruckInTransit } from '@/components/maps/TruckMarker.utils';
+import type { TruckLocation } from '@/components/maps/TruckMarker.utils';
 import type { LoadLocation } from '@/components/maps/LoadMarker';
 import { Button } from '@/components/ui/button';
 import {
@@ -424,7 +424,9 @@ export default function CommandCenterPage() {
         tripsRes,
         shipmentsRes,
         requestsRes,
-        usersRes,
+        usersCountRes,
+        truckersRes,
+        shippersRes,
         completedTodayRes,
         unmatchedRes,
         topCorridorsRes,
@@ -439,7 +441,9 @@ export default function CommandCenterPage() {
           .from('requests')
           .select('id, status, weight_tonnes, trip:trips(price_per_tonne)')
           .eq('status', REQUEST_STATUS.pending),
-        supabase.from('users').select('id, user_type'),
+        supabase.from('users').select('id', { count: 'exact', head: true }),
+        supabase.from('users').select('id', { count: 'exact', head: true }).eq('user_type', 'trucker'),
+        supabase.from('users').select('id', { count: 'exact', head: true }).eq('user_type', 'shipper'),
         supabase
           .from('trips')
           .select('id, created_at')
@@ -482,9 +486,9 @@ export default function CommandCenterPage() {
         activeTrips: tripsRes.data?.length ?? 0,
         activeLoads: shipmentsRes.data?.length ?? 0,
         pendingRequests: requestsRes.data?.length ?? 0,
-        totalUsers: usersRes.data?.length ?? 0,
-        truckers: usersRes.data?.filter((u) => u.user_type === 'trucker').length ?? 0,
-        shippers: usersRes.data?.filter((u) => u.user_type === 'shipper').length ?? 0,
+        totalUsers: usersCountRes.count ?? 0,
+        truckers: truckersRes.count ?? 0,
+        shippers: shippersRes.count ?? 0,
         completedToday: completedTodayRes.data?.length ?? 0,
         unmatchedShipments: unmatchedRes.data?.length ?? 0,
         // Loads that found a match today = accepted requests created today.
@@ -1024,11 +1028,12 @@ export default function CommandCenterPage() {
     {
       key: 'revenueToday',
       icon: <IndianRupee className="h-3.5 w-3.5" />,
-      label: 'Today',
+      label: 'GMV Today',
       value: `₹${((stats?.todayRevenue ?? 0) / 1000).toFixed(1)}K`,
       trend: trends.revenue,
       color: 'emerald',
       tone: 'good',
+      hint: 'estimated',
       loading: statsLoading,
       section: 'revenue',
       delta: wowDelta(trends.revenue, trends.prev.revenue),
@@ -1036,17 +1041,18 @@ export default function CommandCenterPage() {
     {
       key: 'revenueTotal',
       icon: <CircleDollarSign className="h-3.5 w-3.5" />,
-      label: 'Total Revenue',
+      label: 'Total GMV',
       value: `₹${((financials?.totalRevenue ?? 0) / 1000).toFixed(1)}K`,
       color: 'green',
       tone: 'good',
+      hint: 'estimated',
       loading: !financials,
       section: 'revenue',
     },
     {
       key: 'pendingValue',
       icon: <Receipt className="h-3.5 w-3.5" />,
-      label: 'Pending Value',
+      label: 'Pending GMV',
       value: `₹${((financials?.pendingRevenue ?? 0) / 1000).toFixed(1)}K`,
       color: 'amber',
       tone: 'warn',

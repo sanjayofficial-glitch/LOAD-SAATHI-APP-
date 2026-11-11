@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import EmptyState from '@/components/EmptyState';
+import { useT } from '@/i18n/useT';
 import ErrorState from '@/components/ErrorState';
 import {
   Select,
@@ -35,6 +36,7 @@ import {
   ArrowUpDown,
   Map,
   List,
+  Star,
 } from 'lucide-react';
 
 import VerificationBadge from '@/components/VerificationBadge';
@@ -57,6 +59,7 @@ const TripList = () => {
   const { userProfile } = useAuth();
   const { getSupabaseToken } = useAuth();
   const navigate = useNavigate();
+  const t = useT();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
@@ -305,7 +308,7 @@ const TripList = () => {
              <div id="browse-trips-search" className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input
-                placeholder="Search by city, trucker name..."
+                placeholder={t('browse.searchPh')}
                 className="pl-10 border-orange-100 dark:border-orange-800"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -315,13 +318,19 @@ const TripList = () => {
             <div className="flex flex-wrap gap-2 items-center">
               <div className="flex border rounded-md">
                 <button
+                  type="button"
                   onClick={() => setViewMode('list')}
+                  aria-label="List view"
+                  aria-pressed={viewMode === 'list'}
                   className={`px-2 py-1 text-xs ${viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
                 >
                   <List className="h-3.5 w-3.5" />
                 </button>
                 <button
+                  type="button"
                   onClick={() => setViewMode('map')}
+                  aria-label="Map view"
+                  aria-pressed={viewMode === 'map'}
                   className={`px-2 py-1 text-xs ${viewMode === 'map' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
                 >
                   <Map className="h-3.5 w-3.5" />
@@ -330,10 +339,10 @@ const TripList = () => {
               <Select value={sortBy} onValueChange={(value: 'match' | 'price_asc' | 'price_desc' | 'date' | 'distance') => setSortBy(value)}>
                 <SelectTrigger className="flex-1 min-w-[140px] sm:flex-none sm:w-[160px] border-gray-200 dark:border-gray-700">
                   <ArrowUpDown className="h-4 w-4 mr-2 text-gray-400" />
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue placeholder={t('browse.sortBy')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="match">Best Match</SelectItem>
+                  <SelectItem value="match">{t('browse.bestMatch')}</SelectItem>
                   <SelectItem value="price_asc">Price: Low to High</SelectItem>
                   <SelectItem value="price_desc">Price: High to Low</SelectItem>
                   <SelectItem value="date">Departure Date</SelectItem>
@@ -357,7 +366,7 @@ const TripList = () => {
                 className={`${hasActiveFilters ? 'border-orange-200 dark:border-orange-700 text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950' : 'border-gray-200 dark:border-gray-700'}`}
               >
                 <Filter className="h-4 w-4 mr-2" />
-                Filters {hasActiveFilters ? 'Applied' : ''}
+                {t('browse.filters')} {hasActiveFilters ? t('browse.filtersApplied') : ''}
               </Button>
             </div>
           </div>
@@ -366,7 +375,7 @@ const TripList = () => {
           {showFilters && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Origin</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.origin')}</Label>
                 <Input
                   placeholder="e.g. Mumbai"
                   value={filters.origin}
@@ -375,7 +384,7 @@ const TripList = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Destination</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.destination')}</Label>
                 <Input
                   placeholder="e.g. Delhi"
                   value={filters.destination}
@@ -384,7 +393,7 @@ const TripList = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Min Capacity</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.minWeight')}</Label>
                 <Input
                   type="number"
                   placeholder="e.g. 5"
@@ -394,7 +403,7 @@ const TripList = () => {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Max Price</Label>
+                <Label className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('browse.maxBudget')}</Label>
                 <Input
                   type="number"
                   placeholder="e.g. 2000"
@@ -423,10 +432,11 @@ const TripList = () => {
           <EmptyState
             accent="blue"
             icon={<Search className="h-8 w-8 sm:h-10 sm:w-10" />}
+            image="/illustrations/search-noresults.png"
             title="No trucks found"
             description="Try adjusting your search or filters, or post your load and let truckers come to you."
             primaryAction={{
-              label: 'Clear All Filters',
+              label: t('browse.clearFilters'),
               onClick: () => setFilters({ origin: '', destination: '', minCapacity: '', maxPrice: '', vehicle_type: '' }),
             }}
             secondaryAction={{ label: 'Post Your Load', to: '/shipper/post-shipment' }}
@@ -576,7 +586,12 @@ const TripList = () => {
                         </span>
                         <VerificationBadge isVerified={trip.trucker?.is_verified} />
                         <span className="text-xs text-gray-400 dark:text-gray-500 ml-2">
-                          {trip.trucker?.rating ? `⭐ ${trip.trucker.rating.toFixed(1)}` : 'New'}
+                          {trip.trucker?.rating ? (
+                            <span className="inline-flex items-center gap-1">
+                              <Star className="h-3 w-3 fill-current text-yellow-500" />
+                              {trip.trucker.rating.toFixed(1)}
+                            </span>
+                          ) : 'New'}
                         </span>
                       </div>
                     </div>
@@ -590,7 +605,7 @@ const TripList = () => {
                           navigate(`/trips/${trip.id}`);
                         }}
                       >
-                        View Details
+                        {t('hub.view')} Details
                       </Button>
                     </div>
                   </div>

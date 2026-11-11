@@ -60,6 +60,10 @@ describe('Security: vercel.json headers', () => {
     // Auth
     expect(csp).toContain('https://*.clerk.com');
     expect(csp).toContain('https://*.clerk.accounts.dev');
+    // CAPTCHA (Clerk bot protection uses Cloudflare Turnstile)
+    expect(csp).toContain('https://challenges.cloudflare.com');
+    // Freddy avatar engine loads via Blob URL + dynamic import()
+    expect(csp).toContain("script-src 'self' 'unsafe-inline' blob:");
     // Realtime + REST, both the https and wss transports
     expect(csp).toContain('https://*.supabase.co');
     expect(csp).toContain('wss://*.supabase.co');

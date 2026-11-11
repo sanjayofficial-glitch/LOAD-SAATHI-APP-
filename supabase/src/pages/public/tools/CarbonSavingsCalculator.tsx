@@ -217,7 +217,7 @@ export default function CarbonSavingsCalculator() {
                   <Link to="/register" className="flex-1">
                     <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold">Ship Green Freight</Button>
                   </Link>
-                  <Link to="/shared-savings" className="flex-1">
+                  <Link to="/tools/shared-savings" className="flex-1">
                     <Button variant="outline" className="w-full font-bold">Shared Savings Calculator</Button>
                   </Link>
                 </div>

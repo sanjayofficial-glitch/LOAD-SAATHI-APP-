@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useVoiceGuide } from '@/contexts/AudioGuideContext';
+import { useVoiceGuide } from '@/contexts/AudioGuideContext.hooks';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX } from 'lucide-react';
 

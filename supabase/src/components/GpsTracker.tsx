@@ -104,16 +104,21 @@ export default function GpsTracker({
     [onPositionUpdate, persistLocation]
   );
 
-  const handleError = useCallback((err: GeolocationPositionError) => {
-    const messages: Record<number, string> = {
-      1: 'Location permission denied. Please enable location access in your browser settings.',
-      2: 'Location unavailable. Check your device GPS or try again.',
-      3: 'Location request timed out. Please try again.',
-    };
-    setError(messages[err.code] || 'Unknown location error');
-    setIsTracking(false);
-    clearTracking();
-  }, [clearTracking]);
+  const handleError = useCallback(
+    (err: GeolocationPositionError) => {
+      const messages: Record<number, string> = {
+        1: 'Location permission denied. Please enable location access in your browser settings.',
+        2: 'Location unavailable. Check your device GPS or try again.',
+        3: 'Location request timed out. Please try again.',
+      };
+      setError(messages[err.code] || 'Unknown location error');
+      setIsTracking(false);
+      // On timeout the browser is still watching — clear the watch so
+      // Start Tracking can be clicked again immediately (GH-??).
+      clearTracking();
+    },
+    [clearTracking],
+  );
 
   const startTracking = useCallback(async () => {
     if (!navigator.geolocation) {
@@ -135,9 +140,12 @@ export default function GpsTracker({
       handleError,
       {
         enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 5000,
-      }
+        // 30s gives a moving device time to lock GPS on spotty networks far
+        // longer than the default 10s, which is what triggers the
+        // "Location request timed out" banner on slow connections.
+        timeout: 30000,
+        maximumAge: 10000,
+      },
     );
 
     setIsTracking(true);

@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SeoMeta from "@/components/SeoMeta";
-import RateBenchmarks2026, { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026";
+import RateBenchmarks2026 from "@/components/RateBenchmarks2026";
+import { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026.data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface TruckRecommendation {
@@ -55,8 +56,8 @@ export default function TruckLoadCalculator() {
   return (
     <>
       <SeoMeta
-        title="Truck Load Calculator India – Free, Instant Fare & Rate"
-        description="Calculate truck fare instantly — any route, any truck type. Free forever, no login, no calls from agents. More accurate than generic rate calculators."
+        title="Truck Load Calculator – Check Cargo Weight & Capacity"
+        description="Check whether your goods fit a truck's available carrying capacity. Estimate load requirements and plan the right vehicle for your shipment."
         keywords="truck load calculator, which truck for cargo, truck capacity calculator, cargo weight to truck, truck size guide"
         canonical="/tools/truck-load-calculator"
         breadcrumbs={[{ name: "Truck Load Calculator", url: "/tools/truck-load-calculator" }]}

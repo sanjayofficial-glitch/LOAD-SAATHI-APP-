@@ -9,10 +9,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SeoMeta from "@/components/SeoMeta";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import QuoteLeadCard from "@/components/QuoteLeadCard";
-import VehicleRateCard, { VEHICLE_RATES } from "@/components/VehicleRateCard";
+import VehicleRateCard from "@/components/VehicleRateCard";
+import { VEHICLE_RATES } from "@/components/VehicleRateCard.data";
 import { trackCalculatorStarted, trackEstimateGenerated, trackEvent } from "@/utils/analytics";
 import PriceTrendChart from "@/components/PriceTrendChart";
-import RateBenchmarks2026, { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026";
+import RateBenchmarks2026 from "@/components/RateBenchmarks2026";
+import { rateBenchmarkFaqJsonLd } from "@/components/RateBenchmarks2026.data";
 import { routes } from "@/data/routes";
 import distancesData from "@/data/distances.json";
 import { revealStyle } from "@/lib/motion";
@@ -97,7 +99,7 @@ function buildStaticFallback(
   };
 }
 
-function useCountUp(target: number, duration = 600, deps: unknown[] = []) {
+function useCountUp(target: number, duration = 600) {
   const [value, setValue] = useState(target);
   useEffect(() => {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -112,7 +114,7 @@ function useCountUp(target: number, duration = 600, deps: unknown[] = []) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, duration, ...deps]);
+  }, [target, duration]);
   return value;
 }
 
@@ -325,8 +327,8 @@ export default function FareCalculator() {
         </div>
       </noscript>
       <SeoMeta
-        title="Truck Fare Calculator – Free Bhada Calculator India"
-        description="Free truck bhada calculator: enter route & truck type, get fare in seconds. Works for all India. No signup — unlike other freight calculator apps."
+        title="Truck Bhada Calculator India – Estimate Transport Cost"
+        description="Calculate estimated truck transport charges for your route. Enter pickup, delivery and vehicle details to get a freight cost estimate before planning your shipment."
         keywords="freight fare calculator India, PTL LTL rate calculator, truck freight cost estimation, vehicle rate card"
         canonical="/tools/fare-calculator"
         breadcrumbs={[{ name: "Fare Calculator", url: "/tools/fare-calculator" }]}
@@ -476,9 +478,13 @@ export default function FareCalculator() {
                   Shipment Mode
                 </Label>
                 <Tabs value={shipmentMode} onValueChange={(v) => setShipmentMode(v as "ftl" | "ptl")} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 h-12">
-                    <TabsTrigger value="ftl" className="text-base font-bold">Full Truckload (FTL)</TabsTrigger>
-                    <TabsTrigger value="ptl" className="text-base font-bold">Partial Truckload (PTL)</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 min-h-12 h-auto gap-1 p-1">
+                    <TabsTrigger value="ftl" className="min-w-0 text-sm sm:text-base font-bold leading-tight py-2 px-2">
+                      Full Truckload (FTL)
+                    </TabsTrigger>
+                    <TabsTrigger value="ptl" className="min-w-0 text-sm sm:text-base font-bold leading-tight py-2 px-2">
+                      Partial Truckload (PTL)
+                    </TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
@@ -506,6 +512,21 @@ export default function FareCalculator() {
               )}
             </CardContent>
           </Card>
+
+          {!result && (
+            <div className="mt-6 text-center">
+              <img
+                src="/illustrations/route-map.png"
+                alt=""
+                draggable={false}
+                loading="lazy"
+                className="h-32 w-32 object-contain mx-auto mb-2 animate-float"
+              />
+              <p className="text-sm text-gray-400 dark:text-gray-500">
+                भरें और एस्टीमेट पाएं — fill the details above to see the estimate
+              </p>
+            </div>
+          )}
 
           {result && (
             <>

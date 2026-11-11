@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Truck, MapPin, Calendar, IndianRupee, ArrowLeft, ArrowRight,
   Edit, Package, Check, X, Loader2, User, Star,
-  CheckCircle, Clock, XCircle, Users, Flag
+  CheckCircle, XCircle, Users, Flag, Inbox
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -274,7 +274,7 @@ const TruckerTripDetail = () => {
       if (status === 'accepted') {
         // Shipper is notified by trg_request_decided_notify in the same
         // transaction as the status write.
-        showSuccess('✅ Request accepted! Shipper has been notified.');
+        showSuccess('Request accepted! Shipper has been notified.');
       } else {
         showSuccess('Request declined. Shipper has been notified.');
       }
@@ -497,7 +497,7 @@ const TruckerTripDetail = () => {
             return (
               <TabsContent key={tab} value={tab} className="mt-4">
                 {filtered.length === 0 ? (                   <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700">
-                    <Clock className="h-10 w-10 text-gray-300 mx-auto mb-3 dark:text-gray-600" />
+                    <Inbox className="h-10 w-10 text-gray-300 mx-auto mb-3 dark:text-gray-600" />
                     <p className="text-gray-500 dark:text-gray-400">No {tab} requests</p>
                   </div>
                 ) : (

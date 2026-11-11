@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useT } from '@/i18n/useT';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,8 +18,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Package, MapPin, Calendar, IndianRupee, ArrowLeft, Loader2,
-  Clock, Edit, Send, Star, Truck, MapPin as MapPinIcon, CheckCircle2,
-  CheckCircle
+  Clock, Edit, Send, Star, Truck, CheckCircle2, CheckCircle,
+  MessageCircle, Inbox
 } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
@@ -34,6 +35,7 @@ const ShipmentDetail = () => {
   const { userProfile } = useAuth();
   const { getToken } = useClerkAuth();
   const navigate = useNavigate();
+  const t = useT();
 
   const [shipment, setShipment] = useState<Shipment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -274,7 +276,7 @@ const ShipmentDetail = () => {
         weight_tonnes: shipment.weight_tonnes,
         has_message: Boolean(offerMessage.trim()),
       });
-      showSuccess('✅ Offer sent! The shipper has been notified.');
+      showSuccess('Offer sent! The shipper has been notified.');
       setOfferOpen(false);
       setProposedPrice('');
       setOfferMessage('');
@@ -318,7 +320,7 @@ const ShipmentDetail = () => {
               className="bg-yellow-500 hover:bg-yellow-600 text-white"
               onClick={() => setReviewOpen(true)}
             >
-              <Star className="mr-2 h-4 w-4" /> Rate Trucker
+              <Star className="mr-2 h-4 w-4" /> {t('detail.reviewTrucker')}
             </Button>
           )}
           {isTrucker && !isCompleted && (
@@ -326,7 +328,7 @@ const ShipmentDetail = () => {
               className="bg-orange-600 hover:bg-orange-700"
               onClick={() => setOfferOpen(true)}
             >
-              <Send className="mr-2 h-4 w-4" /> Send Offer
+              <Send className="mr-2 h-4 w-4" /> {t('detail.sendOffer')}
             </Button>
           )}
         </div>
@@ -407,7 +409,7 @@ const ShipmentDetail = () => {
                   <div className="space-y-1">
                     <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold">Offers Received</p>
                     <div className="flex items-center font-bold text-orange-600 dark:text-orange-400">
-                      <Truck className="h-4 w-4 mr-2" />
+                      <Inbox className="h-4 w-4 mr-2" />
                       {offerCount} offer{offerCount !== 1 ? 's' : ''}
                     </div>
                   </div>
@@ -472,7 +474,7 @@ const ShipmentDetail = () => {
                     className="w-full bg-orange-600 hover:bg-orange-700"
                     onClick={() => setOfferOpen(true)}
                   >
-                    <Send className="h-4 w-4 mr-2" /> Send Offer
+                    <Send className="h-4 w-4 mr-2" /> {t('detail.sendOffer')}
                   </Button>
                 )}
               </CardContent>
@@ -508,7 +510,7 @@ const ShipmentDetail = () => {
                   rel="noopener noreferrer"
                 >
                   <Button className="bg-green-600 hover:bg-green-700 w-full">
-                    💬 Chat on WhatsApp
+                    <MessageCircle className="h-4 w-4 mr-2" /> Chat on WhatsApp
                   </Button>
                 </a>
               </CardContent>
@@ -524,7 +526,7 @@ const ShipmentDetail = () => {
                     <div className="bg-green-100 dark:bg-green-900/30 p-3 rounded-full">
                       <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
                     </div>
-                    <p className="font-bold text-gray-900 dark:text-white">Trip Completed!</p>
+                    <p className="font-bold text-gray-900 dark:text-white">{t('detail.tripFinished')}!</p>
                     <p>This shipment has been successfully delivered.</p>
                     {!hasReview && (
                       <Button 
@@ -544,7 +546,7 @@ const ShipmentDetail = () => {
                         </div>
                         <p className="font-bold text-blue-700 dark:text-blue-300">In Transit</p>
                         <div className="flex items-center gap-2 text-sm">
-                          <MapPinIcon className="h-4 w-4 text-orange-500" />
+                          <MapPin className="h-4 w-4 text-orange-500" />
                           <span>{acceptedTrucker ? `${acceptedTrucker.full_name} is on the way from ${shipment.origin_city} → ${shipment.destination_city}` : 'Trucker is en route'}</span>
                         </div>
                       </div>
@@ -661,7 +663,7 @@ const ShipmentDetail = () => {
               className="bg-orange-600 hover:bg-orange-700"
               disabled={sendingOffer || !proposedPrice}
             >
-              {sendingOffer ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Send Offer'}
+              {sendingOffer ? <Loader2 className="h-4 w-4 animate-spin" /> : t('detail.sendOffer')}
             </Button>
           </DialogFooter>
         </DialogContent>

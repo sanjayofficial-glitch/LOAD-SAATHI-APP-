@@ -31,18 +31,29 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const targetUrl = (event.notification.data && event.notification.data.url) || '/';
 
+  const ALLOWED_ORIGINS = ['loadsaathi.in', 'www.loadsaathi.in', 'localhost'];
+  let safeUrl = '/';
+  try {
+    const u = new URL(targetUrl, self.location.origin);
+    if ((u.protocol === 'http:' || u.protocol === 'https:') && ALLOWED_ORIGINS.includes(u.hostname)) {
+      safeUrl = u.href;
+    }
+  } catch (_) {
+    safeUrl = '/';
+  }
+
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
       // Focus an already-open tab and take it to the right page.
       for (const client of windowClients) {
         if ('focus' in client) {
           client.focus();
-          if ('navigate' in client) return client.navigate(targetUrl);
+          if ('navigate' in client) return client.navigate(safeUrl);
           return undefined;
         }
       }
       // Nothing open — open a new window.
-      return self.clients.openWindow(targetUrl);
+      return self.clients.openWindow(safeUrl);
     })
   );
 });

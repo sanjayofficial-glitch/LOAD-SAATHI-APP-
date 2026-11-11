@@ -97,7 +97,7 @@ export default function CargoVolumePlanner() {
         </div>
       </noscript>
       <SeoMeta
-        title="PTL Cargo Volume & Space Planner India | Part Load Size Calculator"
+        title="PTL Cargo Volume Planner – Part Load Size Calculator"
         description="Plan your part-load shipment: enter package dimensions, quantity and weight to get total volume (cbm and cu ft), weight, density and a basic space estimate for PTL cargo."
         keywords="cargo volume calculator, cbm calculator for transport, part load volume calculator, PTL space planner, shipment volume calculator India, cubic meter calculator freight"
         canonical="/tools/cargo-volume-planner"

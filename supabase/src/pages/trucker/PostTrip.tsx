@@ -24,6 +24,8 @@ import SaveAsTemplate from "@/components/SaveAsTemplate";
 import VehicleSelect from "@/components/VehicleSelect";
 import { trackEvent } from "@/utils/analytics";
 import { useDishaGuideRegistration } from "@/hooks/useDishaGuide";
+import { useT } from "@/i18n/useT";
+import { useDraft, clearDraft as wipeDraft } from "@/lib/offlineDraft";
 
 type LocationData = Record<string, Record<string, string[]>>;
 
@@ -31,6 +33,7 @@ const PostTrip = () => {
   const { userProfile } = useAuth();
   const { getAuthenticatedClient } = useSupabase();
   const { isOnline } = useNetworkStatus();
+  const t = useT();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'quick' | 'full'>('quick');
@@ -80,6 +83,28 @@ const PostTrip = () => {
     mode: 'onBlur',
   });
   const formData = form.watch();
+  const [draft, setDraft] = useDraft<Partial<TripFormValues>>('post-trip');
+
+  // Restore a saved draft after a refresh/accidental navigation.
+  useEffect(() => {
+    if (!draft) return;
+    let touched = false;
+    (Object.keys(draft) as (keyof TripFormValues)[]).forEach((key) => {
+      const v = draft[key];
+      if (v) {
+        form.setValue(key, v as never);
+        touched = true;
+      }
+    });
+    if (touched) showSuccess(t('draft.restored'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Debounced draft save — only when the user has actually typed something.
+  useEffect(() => {
+    const hasContent = Object.values(formData).some((v) => typeof v === 'string' && v.trim());
+    if (hasContent) setDraft({ ...formData });
+  }, [formData, setDraft]);
 
   const handleLocationChange = (field: 'origin' | 'destination', value: { state: string; district: string; city: string }) => {
     form.setValue(`${field}_city`, value.city);
@@ -174,8 +199,9 @@ const PostTrip = () => {
         price_per_tonne: price,
         vehicle_type: formData.vehicle_type,
       });
-      showSuccess('Trip posted successfully!');
+      showSuccess(t('form.postTrip') + ' ✓');
       notifySuccess('submit');
+      wipeDraft('post-trip');
       navigate('/trucker/my-trips');
     } catch (err) {
       console.error('[PostTrip] Error:', err);
@@ -189,13 +215,13 @@ const PostTrip = () => {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 max-w-2xl">
       <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back
+        <ArrowLeft className="mr-2 h-4 w-4" /> {t('common.back')}
       </Button>
 
       {!isOnline && (
         <div className="mb-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl px-4 py-3 flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-300">
           <WifiOff className="h-4 w-4 shrink-0" />
-          <span>You are offline. You cannot post trips until reconnected.</span>
+          <span>{t('form.offlineBanner')}</span>
         </div>
       )}
 
@@ -209,7 +235,7 @@ const PostTrip = () => {
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
-          Quick Post
+          {t('form.quickPost')}
         </button>
         <button
           type="button"
@@ -220,19 +246,19 @@ const PostTrip = () => {
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
-          Full Details
+          {t('form.fullDetails')}
         </button>
       </div>
       {mode === 'quick' && (
         <p className="-mt-3 mb-4 text-sm text-gray-500 dark:text-gray-400">
-          Only the essentials needed — you can add vehicle number and more later.
+          {t('form.quickHint')}
         </p>
       )}
 
       <Card data-avoid-disha className="border-orange-100 dark:border-orange-800 shadow-lg">
         <CardHeader id="post-trip-header" className="bg-orange-50/50 dark:bg-orange-950/30 border-b border-orange-100 dark:border-orange-800 px-4 sm:px-6">
           <CardTitle className="flex items-center text-orange-900 dark:text-orange-100 text-lg sm:text-xl">
-            <Truck className="mr-2 text-orange-600 dark:text-orange-400 h-5 w-5 sm:h-6 sm:w-6" /> Post a New Trip
+            <Truck className="mr-2 text-orange-600 dark:text-orange-400 h-5 w-5 sm:h-6 sm:w-6" /> {t('form.postTripTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6 px-4 sm:px-6">
@@ -255,10 +281,10 @@ const PostTrip = () => {
               />
             )}
             <div id="post-trip-origin" ref={originRef} data-guide="origin-city" className="space-y-2">
-              <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
+              <Label className="text-gray-700 dark:text-gray-200 font-medium">{t('form.origin')}</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
-                  label="From"
+                  label={t('form.from')}
                   data={locationData}
                    value={{ state: formData.origin_state || '', district: '', city: formData.origin_city }}
                   onChange={(value) => handleLocationChange('origin', value)}
@@ -266,7 +292,7 @@ const PostTrip = () => {
                 />
               ) : (
                 <LocationSelector
-                  label="Origin"
+                  label={t('form.origin')}
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('origin', value)}
                 />
@@ -274,10 +300,10 @@ const PostTrip = () => {
             </div>
 
             <div id="post-trip-destination" ref={destRef} data-guide="dest-city" className="space-y-2">
-              <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
+              <Label className="text-gray-700 dark:text-gray-200 font-medium">{t('form.destination')}</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
-                  label="To"
+                  label={t('form.to')}
                   data={locationData}
                    value={{ state: formData.destination_state || '', district: '', city: formData.destination_city }}
                   onChange={(value) => handleLocationChange('destination', value)}
@@ -285,7 +311,7 @@ const PostTrip = () => {
                 />
               ) : (
                 <LocationSelector
-                  label="Destination"
+                  label={t('form.destination')}
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('destination', value)}
                 />
@@ -298,7 +324,7 @@ const PostTrip = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
-                <Label htmlFor="date">Departure Date</Label>
+                <Label htmlFor="date">{t('form.departureDate')}</Label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
@@ -306,7 +332,7 @@ const PostTrip = () => {
                     ref={dateInputRef}
                     data-guide="departure-date"
                     type="date"
-                    className="pl-10"
+                    className="pl-10 h-12"
                     min={new Date().toISOString().split('T')[0]}
                     value={formData.departure_date}
                     onChange={(e) => form.setValue('departure_date', e.target.value)}
@@ -320,13 +346,14 @@ const PostTrip = () => {
                 )}
               </div>
                <div className="space-y-2" ref={capacityRef} data-guide="capacity">
-                <Label htmlFor="capacity">Available Capacity (Tonnes)</Label>
+                <Label htmlFor="capacity">{t('form.capacity')}</Label>
                 <Input
                   id="capacity"
                   data-guide="capacity"
                   type="number"
                   step="0.1"
                   placeholder="e.g. 5.0"
+                  className="h-12"
                   value={formData.available_capacity_tonnes}
                   onChange={(e) => form.setValue('available_capacity_tonnes', e.target.value)}
                   onFocus={() => notifyFieldFocus('capacity')}
@@ -340,7 +367,7 @@ const PostTrip = () => {
             </div>
 
               <div className="space-y-2" ref={priceRef} data-guide="price">
-                <Label htmlFor="price">Price per Tonne (₹)</Label>
+                <Label htmlFor="price">{t('form.pricePerTonne')}</Label>
                 <div className="relative">
                   <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                   <Input
@@ -348,7 +375,7 @@ const PostTrip = () => {
                     data-guide="price"
                     type="number"
                     placeholder="e.g. 1500"
-                    className="pl-10"
+                    className="pl-10 h-12"
                     value={formData.price_per_tonne}
                     onChange={(e) => form.setValue('price_per_tonne', e.target.value)}
                     onFocus={() => notifyFieldFocus('price')}
@@ -371,7 +398,7 @@ const PostTrip = () => {
                 {formData.available_capacity_tonnes && formData.price_per_tonne && (
                   <div className="mt-2 p-2.5 rounded-lg bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800">
                     <p className="text-sm text-orange-700 dark:text-orange-300">
-                      Estimated total: <span className="font-bold">₹{((parseFloat(formData.available_capacity_tonnes) || 0) * (parseFloat(formData.price_per_tonne) || 0)).toLocaleString('en-IN')}</span>
+                      {t('form.estimatedTotal')} <span className="font-bold">₹{((parseFloat(formData.available_capacity_tonnes) || 0) * (parseFloat(formData.price_per_tonne) || 0)).toLocaleString('en-IN')}</span>
                     </p>
                   </div>
                 )}
@@ -380,7 +407,7 @@ const PostTrip = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
 <div className="space-y-2" ref={vehicleTypeRef} data-guide="vehicle-type">
                 <Label htmlFor="vehicleType">
-                  Vehicle Type <span className="text-red-500">*</span>
+                  {t('form.vehicleType')} <span className="text-red-500">*</span>
                 </Label>
                 <VehicleSelect
                   id="vehicleType"
@@ -395,10 +422,11 @@ const PostTrip = () => {
               </div>
               {mode === 'full' && (
                 <div className="space-y-2">
-                  <Label htmlFor="vehicleNumber">Vehicle Number</Label>
+                  <Label htmlFor="vehicleNumber">{t('form.vehicleNumber')}</Label>
                   <Input
                     id="vehicleNumber"
                     placeholder="e.g. RJ 14 GB 1234"
+                    className="h-12"
                     value={formData.vehicle_number}
                     onChange={(e) => form.setValue('vehicle_number', e.target.value)}
                     aria-invalid={!!form.formState.errors.vehicle_number}
@@ -413,11 +441,11 @@ const PostTrip = () => {
             {!isOnline && (
               <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl px-4 py-3 flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-300">
                 <WifiOff className="h-4 w-4 shrink-0" />
-                <span>Posting trips is unavailable while offline.</span>
+                <span>{t('form.offlinePosting')}</span>
               </div>
             )}
 
-            <div className="flex items-center justify-between gap-3">
+            <div className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] z-10 -mx-3 mt-8 flex items-center justify-between gap-3 rounded-2xl bg-white/95 px-3 py-2.5 shadow-lg shadow-black/5 ring-1 ring-gray-100 dark:bg-gray-900/95 dark:ring-gray-800 backdrop-blur-md md:static md:z-auto md:mx-0 md:mt-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:ring-0 md:backdrop-blur-none">
               {userProfile?.id && (
                 <SaveAsTemplate
                   userId={userProfile.id}
@@ -431,15 +459,15 @@ const PostTrip = () => {
                 ref={submitRef}
                 data-guide="submit"
                 type="submit"
-                className="flex-1 bg-orange-600 hover:bg-orange-700 h-12 text-base sm:text-lg font-bold"
+                className="flex-1 bg-orange-600 hover:bg-orange-700 h-14 text-base sm:text-lg font-bold"
                 disabled={loading || !isOnline || form.formState.isSubmitting}
               >
                 {loading ? (
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 ) : !isOnline ? (
-                  <><WifiOff className="mr-2 h-5 w-5" /> Offline</>
+                  <><WifiOff className="mr-2 h-5 w-5" /> {t('common.offline')}</>
                 ) : (
-                  'Post Trip'
+                  t('form.postTrip')
                 )}
               </Button>
             </div>

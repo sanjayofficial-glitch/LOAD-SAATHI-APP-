@@ -16,8 +16,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import type { TruckLocation } from '@/components/maps/TruckMarker';
-import { isTruckInTransit, formatTimeAgo } from '@/components/maps/TruckMarker';
+import type { TruckLocation } from '@/components/maps/TruckMarker.utils';
+import { isTruckInTransit, formatTimeAgo } from '@/components/maps/TruckMarker.utils';
 
 export interface TripWithTrucker {
   id: string;
@@ -164,7 +164,15 @@ export default React.memo(function TruckDetailsPanel({
                 : 'bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30',
             )}
           >
-            {inTransit ? '🚛 In Transit' : '📍 Standing / Available'}
+            {inTransit ? (
+              <span className="inline-flex items-center gap-1">
+                <Truck className="h-3 w-3" /> In Transit
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                <MapPin className="h-3 w-3" /> Standing / Available
+              </span>
+            )}
           </Badge>
           <Badge variant="outline" className="text-[11px] px-2.5 py-0.5 text-muted-foreground">
             <Truck className="h-3 w-3 mr-1" />

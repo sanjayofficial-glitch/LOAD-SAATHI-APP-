@@ -43,7 +43,10 @@ export default function GstCalculator() {
     }
 
     const total = Math.round((igst + cgst + sgst) * 100) / 100;
-    const inputCredit = isInterstate ? true : true;
+    // GST law generally allows input tax credit on freight for registered
+    // recipients, but actual eligibility depends on the buyer's GST
+    // registration — hence the disclaimer shown below.
+    const inputCredit = true;
 
     setResult({
       igst: Math.round(igst * 100) / 100,

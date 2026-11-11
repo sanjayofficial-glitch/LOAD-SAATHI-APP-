@@ -3,12 +3,14 @@ import { MapContainer, TileLayer, useMap, useMapEvents, Marker, Circle, Popup } 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import TruckMarker, { type TruckLocation } from './TruckMarker';
+import TruckMarker from './TruckMarker';
+import type { TruckLocation } from './TruckMarker.utils';
 import LoadMarker, { type LoadLocation } from './LoadMarker';
 import RoutePolyline from './RoutePolyline';
 import MapLegend from './MapLegend';
 import ZoomControls, { fitPositionsToBounds } from './ZoomControls';
-import TileLayerSwitcher, { type TileLayerId, getTileLayer } from './TileLayerSwitcher';
+import TileLayerSwitcher from './TileLayerSwitcher';
+import { type TileLayerId, getTileLayer } from './TileLayerSwitcher.data';
 import { useMapUserInteraction } from './useMapUserInteraction';
 import MapSizeHandler from './MapSizeHandler';
 import MapErrorBoundary from '@/components/MapErrorBoundary';
@@ -192,6 +194,7 @@ export default React.memo(function LoadSaathiMap({
         scrollWheelZoom
         touchZoom
         zoomControl={false}
+        preferCanvas
       >
         <MapSizeHandler />
         <MapClickHandler onClick={onMapClick} />

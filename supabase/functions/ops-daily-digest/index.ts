@@ -33,7 +33,20 @@ const json = (data: unknown, status = 200): Response =>
     headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 
-async function handler(_req: Request): Promise<Response> {
+async function handler(req: Request): Promise<Response> {
+  // Fail-closed caller authorization: only the Vercel cron (which holds
+  // CRON_SECRET) may request the ops snapshot.
+  const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+  if (!cronSecret) {
+    return json({ error: "CRON_SECRET not configured" }, 503);
+  }
+  {
+    const auth = req.headers.get("authorization") ?? "";
+    if (auth !== `Bearer ${cronSecret}`) {
+      return json({ error: "Unauthorized" }, 401);
+    }
+  }
+
   const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
   const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
   if (!supabaseUrl || !supabaseKey) {
@@ -92,6 +105,23 @@ async function handler(_req: Request): Promise<Response> {
     bySource[k] = (bySource[k] || 0) + 1;
   }
 
+  // Redact contact PII before it leaves the function (the Telegram formatter
+  // masks anyway, but the API response must never expose raw phone/email).
+  const maskContact = (value: unknown): string => {
+    if (typeof value !== "string" || value.length === 0) return "";
+    if (/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value)) {
+      const [local, domain] = value.split("@");
+      return `${local.slice(0, 2)}…@${domain}`;
+    }
+    const digits = value.replace(/\D/g, "");
+    return digits.length >= 4 ? `…${digits.slice(-4)}` : "…";
+  };
+  const redactedLeads = leadRows.map((r) => ({
+    ...r,
+    phone: maskContact(r.phone),
+    email: maskContact(r.email),
+  }));
+
   const snapshot: Snapshot = {
     since,
     leads: {
@@ -100,7 +130,7 @@ async function handler(_req: Request): Promise<Response> {
       // within-window and the formatter labels them "24h" regardless.
       withEmail: leadRows.filter((r) => r.email).length,
       bySource,
-      rows: leadRows,
+      rows: redactedLeads,
     },
     trips: { total: tripRows.length, rows: tripRows },
     shipments: { total: shipmentRows.length, rows: shipmentRows },

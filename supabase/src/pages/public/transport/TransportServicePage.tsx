@@ -41,7 +41,7 @@ export default function TransportServicePage() {
 
   const slug = (city || "").toLowerCase();
   const canonicalUrl = `/transport-service/${slug}`;
-  const title = `Part Load Transport in ${data.name} - PTL & FTL Truck Booking | LoadSaathi`;
+  const title = `${data.name} Part Load & FTL Truck Booking | PTL/LTL`;
   const description = clampMetaDescription(data.answer);
 
   const cityRoutes = routes.filter(

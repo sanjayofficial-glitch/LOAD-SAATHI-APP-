@@ -1,5 +1,6 @@
 import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MotionConfig } from "framer-motion";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LocationProvider } from "@/contexts/LocationContext";
 import { ProductTourProvider } from "@/contexts/ProductTourContext";
@@ -11,8 +12,10 @@ import ScrollToTop from "./components/ScrollToTop";
 import { ThemeProvider, useTheme } from "@/theme/theme";
 import { PostHogProvider } from "./components/PostHogProvider";
 import { GoogleAnalyticsTracker } from "./components/GoogleAnalytics";
+import { trackOrganicLanding } from "@/utils/analytics";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SimpleLabelsProvider } from "@/contexts/SimpleLabelsContext";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 import { Suspense, useState, useEffect, type ReactNode } from "react";
 import { AppRoutes } from "./routes";
 import "@/styles/product-tour.css";
@@ -69,6 +72,11 @@ function App() {
   const [isRetrying, setIsRetrying] = useState(false);
 
   useEffect(() => {
+    // Session-level acquisition attribution (fires once per session).
+    trackOrganicLanding();
+  }, []);
+
+  useEffect(() => {
     // Listen for Clerk errors and handle them gracefully
     const handleError = (event: ErrorEvent) => {
       if (event.message?.includes('clerk') || event.message?.includes('Clerk')) {
@@ -113,13 +121,15 @@ function App() {
   }
 
   return (
-    <ErrorBoundary>
-      <PostHogProvider>
+    <MotionConfig reducedMotion="user">
+      <ErrorBoundary>
+        <PostHogProvider>
         <BrowserRouter>
           <ClerkProviderWithRouter>
             <QueryClientProvider client={queryClient}>
               <TooltipProvider>
                 <ThemeProvider>
+                  <LanguageProvider>
                     <AuthProvider>
                       <SimpleLabelsProvider value={{}}>
                         <ProductTourProvider>
@@ -134,13 +144,15 @@ function App() {
                       </ProductTourProvider>
                     </SimpleLabelsProvider>
                   </AuthProvider>
+                  </LanguageProvider>
                 </ThemeProvider>
               </TooltipProvider>
             </QueryClientProvider>
           </ClerkProviderWithRouter>
         </BrowserRouter>
       </PostHogProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </MotionConfig>
   );
 }
 

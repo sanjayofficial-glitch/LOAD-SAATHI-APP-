@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Package, Search, MapPin, Shield, TrendingUp, Clock, BarChart3, Users, ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SeoMeta from "@/components/SeoMeta";
+import { trackPostLoadClick } from '@/utils/analytics';
 
 const problems = [
   {
@@ -59,16 +60,16 @@ const features = [
     icon: Shield,
     title: 'Trust Network',
     desc: 'Verified trucker profiles with credit scores, completion rates, and peer reviews. Every carrier is rated before they haul your freight.',
-    stat: '98%',
-    statLabel: 'On-Time Delivery',
+    stat: 'KYC',
+    statLabel: 'Verified Transporters',
   },
 ];
 
 const stats = [
-  { value: '10,000+', label: 'Shipments Completed' },
-  { value: '15,000+', label: 'Verified Truckers' },
-  { value: '35%', label: 'Cost Reduction' },
-  { value: '4.8/5', label: 'Shipper Satisfaction' },
+  { value: 'East India', label: 'Freight Corridors' },
+  { value: 'Verified', label: 'Trucker Network' },
+  { value: 'PTL/LTL', label: 'Shared Load Options' },
+  { value: 'Real-time', label: 'GPS Tracking' },
 ];
 
 export default function ShipperSolution() {
@@ -84,9 +85,9 @@ export default function ShipperSolution() {
             <li><strong>2-Minute Instant Quotes:</strong> AI-powered pricing with no negotiation delays.</li>
             <li><strong>Verified Transporters:</strong> KYC-verified with credit scores and performance history.</li>
             <li><strong>Real-Time Tracking:</strong> Live GPS location, ETA, and route visualization.</li>
-            <li><strong>100% Payment Protection:</strong> Escrow-backed secure transactions.</li>
-            <li><strong>AI Match Accuracy:</strong> 98.5% perfect shipment-vehicle matches.</li>
-            <li><strong>Pan-India Network:</strong> 50+ verified routes across 14 states.</li>
+            <li><strong>Payment Protection:</strong> Escrow-backed payment protection is planned.</li>
+            <li><strong>AI Match Scoring:</strong> Multi-factor scoring on route, capacity, price, and timing.</li>
+            <li><strong>East-India Network:</strong> Routes across Odisha, Jharkhand, and West Bengal.</li>
           </ul>
           <h2>LoadSaathi Shipper Dashboard</h2>
           <ul>
@@ -118,7 +119,7 @@ export default function ShipperSolution() {
       </noscript>
       <SeoMeta
         title="For Shippers — Smarter Freight Shipping"
-        description="LoadSaathi helps shippers save up to 40% on freight costs. AI-matched trucks, real-time tracking, escrow payments, and zero middlemen on East India corridors."
+        description="LoadSaathi connects shippers with verified transporters for PTL/LTL and return loads across East India. AI-matched trucks, real-time tracking, and transparent pricing."
         keywords="freight shipping India, PTL LTL shipper, book truck online, reduce logistics cost East India"
         canonical="/solutions/shippers"
         breadcrumbs={[{ name: "For Shippers", url: "/solutions/shippers" }]}
@@ -180,7 +181,7 @@ export default function ShipperSolution() {
                 Stop chasing brokers and start shipping smarter. LoadSaathi connects you directly with the right truckers, at fair prices, with full visibility from pickup to delivery.
               </p>
               <div className="flex items-center gap-4 pt-4">
-                <Link to="/register?type=shipper">
+                <Link to="/register?type=shipper" onClick={() => trackPostLoadClick({ source: "shipper-solution-hero" })}>
                   <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-6 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.4)] group">
                     Start Shipping
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -377,7 +378,7 @@ export default function ShipperSolution() {
               { q: "How do I post a shipment on LoadSaathi?", a: "Register as a shipper, go to your dashboard, and click 'Post Shipment'. Enter origin, destination, cargo type, weight, and preferred pickup window. Our AI will start matching immediately — the process takes under 3 minutes." },
               { q: "How is pricing determined for my shipment?", a: "Our AI Price Predictor analyzes market rates, fuel costs, route distance, and demand to suggest fair pricing. You set your budget, and transporters bid within that range — creating a transparent, competitive marketplace." },
               { q: "Can I track my shipment in real time?", a: "Yes. Every shipment includes live GPS tracking with ETAs, route visualization, and geofence alerts. You'll see your shipment's location on a map and receive notifications at every milestone." },
-              { q: "What if there's a dispute with a trucker?", a: "Our support team reviews GPS data, timestamps, photos, and communication history. We aim to resolve disputes within 48 hours with fair outcomes for both parties. Escrow-backed payments protect your funds." },
+              { q: "What if there's a dispute with a trucker?", a: "Our support team reviews GPS data, timestamps, photos, and communication history. We aim to resolve disputes within 48 hours with fair outcomes for both parties. Escrow-backed payment protection is planned and will add further safeguards." },
             ].map((item, i) => (
               <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08]">
                 <h3 className="font-bold text-foreground mb-2">{item.q}</h3>
@@ -399,7 +400,7 @@ export default function ShipperSolution() {
             <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-4">Stop Managing Freight.<br />Start Optimizing It.</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md mx-auto">Join thousands of Indian businesses that have cut costs, eliminated broker friction, and gained full control over their supply chain.</p>
             <div className="space-y-3">
-              <Link to="/register?type=shipper">
+              <Link to="/register?type=shipper" onClick={() => trackPostLoadClick({ source: "shipper-solution-cta" })}>
                 <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-6 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] group">
                   Register as Shipper <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>

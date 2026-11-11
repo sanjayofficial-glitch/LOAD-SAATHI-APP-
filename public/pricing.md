@@ -18,7 +18,7 @@ LoadSaathi uses transparent, pay-per-transaction pricing. Free to join, pay only
 ## For Shippers
 
 - **Price**: Free to join
-- **Transaction Fee**: 1.5–3% of shipment value
+- **Transaction Fee**: A fee applies on completed shipments; the final schedule will be published
 - **What's Included**:
   - Free account registration and profile setup
   - AI-powered transporter matching
@@ -32,7 +32,7 @@ LoadSaathi uses transparent, pay-per-transaction pricing. Free to join, pay only
 ## For Truckers & Fleet Owners
 
 - **Price**: Free to join
-- **Transaction Fee**: 1.5–2.5% of trip value
+- **Transaction Fee**: A fee applies on completed trips; the final schedule will be published
 - **What's Included**:
   - Free account and fleet registration
   - AI-matched load discovery
@@ -81,4 +81,4 @@ LoadSaathi uses transparent, pay-per-transaction pricing. Free to join, pay only
 | Matching Speed | AI match in seconds | Hours of phone calls |
 | Payment Protection | Escrow-backed | Cash/credit dependent |
 | Real-Time Tracking | Live GPS tracking | Phone call updates |
-| Platform Fee | 1.5–3% per transaction | 10–20% broker margin |
+| Platform Fee | Transaction fee on completed shipments | 10–20% broker margin |

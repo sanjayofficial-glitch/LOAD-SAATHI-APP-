@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { MessageSquare, ArrowRight, Phone, CheckCircle, Clock } from "lucide-react";
+import { MessageSquare, ArrowRight, Phone, CheckCircle, Clock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -150,7 +150,8 @@ export default function QuoteLeadCard({ origin, destination, weight, avgPrice, p
         </p>
         {email && (
           <p className="text-sm text-muted-foreground mb-1 flex items-center justify-center gap-1.5">
-            ✉️ Written quote on its way to <strong>{email}</strong>.
+            <Mail className="h-4 w-4 inline text-green-600 dark:text-green-400" />
+            Written quote on its way to <strong>{email}</strong>.
           </p>
         )}
         <p className="text-xs text-muted-foreground mb-4">

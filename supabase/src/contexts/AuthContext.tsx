@@ -11,7 +11,7 @@ interface AuthContextType {
   userProfile: User | null;
   loading: boolean;
   signOut: () => Promise<void>;
-  refreshProfile: () => Promise<void>;
+  refreshProfile: () => Promise<User | null>;
   setProfile: (profile: User) => void;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   isLoaded: boolean;
@@ -73,11 +73,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       const { createClerkSupabaseClient } = await loadSupabaseClient();
       const supabaseClient = createClerkSupabaseClient(supabaseToken);
-      const { data, error } = await supabaseClient
-        .from('users')
-        .select('id, user_type, full_name, phone, company_name, rating, total_trips, is_verified, created_at, avatar_url, verification_status, verification_note, kyc_submitted_at, verified_at')
-        .eq('id', user.id)
-        .maybeSingle();
+      const { data, error } = await (
+        supabaseClient.rpc('get_own_profile') as unknown as {
+          maybeSingle: () => Promise<{
+            data: {
+              id: string;
+              user_type?: string | null;
+              full_name?: string | null;
+              phone?: string | null;
+              company_name?: string | null;
+              rating?: number | null;
+              total_trips?: number | null;
+              is_verified?: boolean | null;
+              created_at?: string | null;
+              avatar_url?: string | null;
+              verification_status?: string | null;
+              verification_note?: string | null;
+              kyc_submitted_at?: string | null;
+              verified_at?: string | null;
+            } | null;
+            error: { message: string } | null;
+          }>;
+        }
+      ).maybeSingle();
 
       if (error) {
         console.error('[AuthContext] Error fetching profile:', error);
@@ -100,7 +118,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (!profileJustSetRef.current) {
           const profile: User = {
             id: data.id,
-            user_type: data.user_type || null,
+            user_type: (data.user_type || null) as User['user_type'],
             full_name: data.full_name || '',
             phone: data.phone || '',
             company_name: data.company_name || undefined,
@@ -109,7 +127,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             is_verified: data.is_verified || false,
             created_at: data.created_at || new Date().toISOString(),
             avatar_url: data.avatar_url || null,
-            verification_status: data.verification_status || 'none',
+            verification_status: (data.verification_status || 'none') as User['verification_status'],
             verification_note: data.verification_note || null,
             kyc_submitted_at: data.kyc_submitted_at || null,
             verified_at: data.verified_at || null,
@@ -177,7 +195,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshProfile = useCallback(async () => {
     setLoading(true);
-    await fetchProfile();
+    const profile = await fetchProfile();
+    return profile;
   }, [fetchProfile]);
 
   const setProfile = useCallback((profile: User) => {

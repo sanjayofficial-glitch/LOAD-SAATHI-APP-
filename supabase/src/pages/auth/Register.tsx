@@ -4,10 +4,10 @@ import { useSignUp, useUser } from "@clerk/clerk-react";
 import { Capacitor } from "@capacitor/core";
 import LogoMark from "@/components/LogoMark";
 import SeoMeta from "@/components/SeoMeta";
-import { Loader2, Eye, EyeOff, ArrowLeft, Package, Truck, CheckCircle2 } from "lucide-react";
+import { Loader2, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDisha } from "@/components/DishaContext";
-import { useDishaGuide } from "@/components/DishaGuideProvider";
+import { useDisha } from "@/components/DishaContext.hooks";
+import { useDishaGuide } from "@/components/DishaGuideProvider.hooks";
 import { useMascotFormWatcher } from "@/hooks/useMascotFormWatcher";
 import { trackRegisterStarted } from "@/utils/analytics";
 
@@ -20,8 +20,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const roleType = searchParams.get("type");
-  const [step, setStep] = useState<"role" | "sign">("role");
-  const [selectedRole, setSelectedRole] = useState<"trucker" | "shipper" | null>(roleType as "trucker" | "shipper" | null);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -66,29 +65,16 @@ const Register = () => {
     else navigate("/choose-role", { replace: true });
   }, [isLoaded, isSignedIn, userProfile, navigate]);
 
-  useEffect(() => {
-    if (roleType && step === "role") {
-      setSelectedRole(roleType as "trucker" | "shipper");
-      setStep("sign");
-    }
-  }, [roleType]);
-
   // Track register page view
   useEffect(() => {
     const source = searchParams.get("source") || "direct";
     trackRegisterStarted({ source, role: roleType as "shipper" | "trucker" | undefined });
-  }, []);
+  }, [roleType, searchParams]);
 
-  const handleRoleSelect = (role: "trucker" | "shipper") => {
-    guideHandleClick('[data-guide="role-shipper"], [data-guide="role-trucker"]');
-    setSelectedRole(role);
-    setStep("sign");
-  };
-
-  const handleBack = () => {
-    setStep("role");
-    setError("");
-  };
+  // Where to send a brand-new user after their account exists but no role is
+  // saved yet. The role picked on the page that linked here (via ?type=) is
+  // carried forward so /choose-role can pre-select it — no duplicate step.
+  const rolePath = () => `/choose-role${roleType ? `?type=${encodeURIComponent(roleType)}` : ""}`;
 
   const handleGoogleSignUp = async () => {
     if (!isLoaded) return;
@@ -101,8 +87,8 @@ const Register = () => {
         : window.location.origin;
       await signUp.authenticateWithRedirect({
         strategy: "oauth_google",
-        redirectUrl: `${redirectBase}/choose-role`,
-        redirectUrlComplete: `${redirectBase}/choose-role`,
+        redirectUrl: `${redirectBase}${rolePath()}`,
+        redirectUrlComplete: `${redirectBase}${rolePath()}`,
       });
     } catch (err) {
       console.error("Google sign-up error:", err);
@@ -147,7 +133,7 @@ const Register = () => {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         triggerSuccessReaction("Account created! Let's choose your role.");
-        navigate("/choose-role", { replace: true });
+        navigate(rolePath(), { replace: true });
       } else {
         setError("Invalid verification code.");
         triggerErrorReaction("Invalid verification code.");
@@ -157,6 +143,24 @@ const Register = () => {
       const verifyErr = err as { errors?: { message?: string }[] } | undefined;
       setError(verifyErr?.errors?.[0]?.message || "Verification failed.");
       triggerErrorReaction(verifyErr?.errors?.[0]?.message || "Verification failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendCode = async () => {
+    if (!isLoaded) return;
+    setLoading(true);
+    setError("");
+    try {
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      triggerSuccessReaction("We've sent a new code to your email.");
+    } catch (err) {
+      console.error("Resend code error:", err);
+      const resendErr = err as { errors?: { message?: string }[] } | undefined;
+      const msg = resendErr?.errors?.[0]?.message || "Couldn't resend the code. Please try again.";
+      setError(msg);
+      triggerErrorReaction(msg);
     } finally {
       setLoading(false);
     }
@@ -173,86 +177,7 @@ const Register = () => {
       </div>
       <div className="flex-1 flex items-start justify-center" data-avoid-disha>
         <div className="w-full max-w-sm animate-scale-in overflow-y-auto" data-avoid-disha>
-          {step === "role" ? (
-            <div className="space-y-6">
-              <div className="text-center">
-                <LogoMark size="h-14 w-14" className="mx-auto mb-4" />
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Choose your role</h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Select how you want to use LoadSaathi</p>
-              </div>
-              <button
-                 onClick={() => handleRoleSelect("shipper")}
-                 data-guide="role-shipper"
-                 className="w-full text-left bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:border-orange-500 dark:hover:border-orange-500 transition-all hover:shadow-lg group"
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
-                    <Package className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
-                      Shipper
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">I need to move goods</p>
-                  </div>
-                </div>
-                <ul className="space-y-1.5 text-sm text-gray-600 dark:text-gray-300">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                    Post loads and find trucks instantly
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                    Compare verified transporters
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                    Track shipments in real time
-                  </li>
-                </ul>
-              </button>
-              <button
-                 onClick={() => handleRoleSelect("trucker")}
-                 data-guide="role-trucker"
-                 className="w-full text-left bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:border-orange-500 dark:hover:border-orange-500 transition-all hover:shadow-lg group"
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="bg-orange-50 dark:bg-orange-900/30 p-3 rounded-xl group-hover:bg-orange-100 dark:group-hover:bg-orange-900/50 transition-colors">
-                    <Truck className="h-7 w-7 text-orange-600 dark:text-orange-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
-                      Trucker
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">I have trucks to offer</p>
-                  </div>
-                </div>
-                <ul className="space-y-1.5 text-sm text-gray-600 dark:text-gray-300">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                    Find loads on your route
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                    Get paid for every trip
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                    Grow with a verified rating
-                  </li>
-                </ul>
-              </button>
-
-              <div className="text-center pt-2">
-                <p className="text-xs text-gray-400 dark:text-gray-500">
-                  Already have an account?{" "}
-                  <Link to="/login" className="text-orange-600 dark:text-orange-400 font-semibold hover:underline">
-                    Sign in
-                  </Link>
-                </p>
-              </div>
-            </div>
-          ) : verifying ? (
+          {verifying ? (
             <div className="space-y-4">
               <div className="text-center">
                 <LogoMark size="h-14 w-14" className="mx-auto mb-4" />
@@ -288,6 +213,14 @@ const Register = () => {
               </form>
 
               <button
+                onClick={handleResendCode}
+                disabled={loading}
+                className="w-full text-sm text-gray-500 hover:text-orange-600 font-medium flex items-center justify-center gap-1 disabled:opacity-50"
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Didn't get it? Resend code"}
+              </button>
+
+              <button
                 onClick={() => { setVerifying(false); setError(""); }}
                 className="w-full text-sm text-gray-500 hover:text-orange-600 font-medium flex items-center justify-center gap-1"
               >
@@ -296,15 +229,17 @@ const Register = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              <button onClick={handleBack} className="text-sm text-gray-500 hover:text-orange-600 font-medium flex items-center gap-1 mb-2">
-                ← Change role
-              </button>
               <div className="text-center">
                 <LogoMark size="h-14 w-14" className="mx-auto mb-4" />
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {selectedRole === "trucker" ? "🚛" : "📦"} Join as {selectedRole === "trucker" ? "Trucker" : "Shipper"}
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Create your account to get started</p>
+                <img
+                  src="/illustrations/handshake.png"
+                  alt=""
+                  draggable={false}
+                  loading="lazy"
+                  className="h-24 w-24 object-contain mx-auto mb-2 animate-float"
+                />
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Create your account</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Join LoadSaathi as a shipper or trucker</p>
               </div>
 
               {error && (
@@ -343,16 +278,16 @@ const Register = () => {
 
               <form onSubmit={handleEmailSignUp} className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
-                   <input
-                     type="text"
-                     placeholder="First name"
-                     value={firstName}
-                     onChange={(e) => setFirstName(e.target.value)}
-                     required
-                     name="fullName"
-                     data-guide="full-name"
-                     className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
-                   />
+                  <input
+                    type="text"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    name="fullName"
+                    data-guide="full-name"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-orange-500 focus:ring-0 outline-none transition-colors"
+                  />
                   <input
                     type="text"
                     placeholder="Last name"
@@ -390,9 +325,10 @@ const Register = () => {
                   </button>
                 </div>
                 <button
-                   type="submit"
-                   data-guide="submit"
-                   disabled={loading || !isLoaded || !firstName || !email || !password}
+                  type="submit"
+                  data-guide="submit"
+                  onClick={() => guideHandleClick('[data-guide="submit"]')}
+                  disabled={loading || !isLoaded || !firstName || !email || !password}
                   className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50"
                 >
                   {loading ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : "Create Account"}

@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useMemo } from "react";
 
 interface BreadcrumbItem {
   name: string;
@@ -127,35 +127,42 @@ export default function SeoMeta({
       : BASE_URL;
   const isDefaultImage = image === DEFAULT_IMAGE;
 
-  const filteredCrumbs = breadcrumbs
-    ? breadcrumbs.filter(
-        (item) => item.name !== "Home" && item.url !== "/"
-      )
-    : [];
+  const filteredCrumbs = useMemo(
+    () =>
+      breadcrumbs
+        ? breadcrumbs.filter(
+            (item) => item.name !== "Home" && item.url !== "/"
+          )
+        : [],
+    [breadcrumbs],
+  );
 
-  const breadcrumbSchema =
-    filteredCrumbs.length > 0
-      ? {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            {
-              "@type": "ListItem",
-              position: 1,
-              name: "Home",
-              item: BASE_URL,
-            },
-            ...filteredCrumbs.map((item, i) => ({
-              "@type": "ListItem",
-              position: i + 2,
-              name: item.name,
-              item: item.url.startsWith("http")
-                ? item.url
-                : `${BASE_URL}${item.url}`,
-            })),
-          ],
-        }
-      : null;
+  const breadcrumbSchema = useMemo(
+    () =>
+      filteredCrumbs.length > 0
+        ? {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: BASE_URL,
+              },
+              ...filteredCrumbs.map((item, i) => ({
+                "@type": "ListItem",
+                position: i + 2,
+                name: item.name,
+                item: item.url.startsWith("http")
+                  ? item.url
+                  : `${BASE_URL}${item.url}`,
+              })),
+            ],
+          }
+        : null,
+    [filteredCrumbs],
+  );
 
   // Write the <head> tags imperatively (no react-helmet-async). The old
   // Helmet v3 React-19 path rendered React-managed <title>/<meta>/<link>
@@ -208,7 +215,7 @@ export default function SeoMeta({
     if (breadcrumbSchema) appendManaged("script", { type: "application/ld+json" }, JSON.stringify(breadcrumbSchema));
 
     return () => clearManagedTags();
-  }, [fullTitle, url, description, keywords, robots, hreflang, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage, alternates]);
+  }, [title, fullTitle, url, description, keywords, robots, hreflang, image, type, publishedTime, dateModified, author, jsonLd, breadcrumbSchema, isDefaultImage, alternates]);
 
   return null;
 }

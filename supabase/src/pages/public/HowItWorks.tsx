@@ -11,7 +11,7 @@ const shipperSteps = [
   { icon: ClipboardList, step: "02", title: "Post Your Shipment", desc: "Enter shipment details — origin, destination, cargo type, weight, preferred pickup time. Our intelligent form auto-suggests optimal parameters." },
   { icon: Search, step: "03", title: "Get AI Matched", desc: "Our matching engine scans thousands of active trucks and ranks the best matches by route compatibility, pricing, and reliability score — all in seconds." },
   { icon: MapPin, step: "04", title: "Track in Real Time", desc: "Follow your shipment live on the map with accurate ETAs. Get notified at every milestone — pickup, transit, and delivery confirmation." },
-  { icon: CheckCircle, step: "05", title: "Complete & Review", desc: "Confirm delivery, release payment securely through our escrow system, and rate the transporter. Build your network of trusted carriers." },
+  { icon: CheckCircle, step: "05", title: "Complete & Review", desc: "Confirm delivery, release payment per agreed terms (escrow-backed release is planned), and rate the transporter. Build your network of trusted carriers." },
 ];
 
 const truckerSteps = [
@@ -19,7 +19,7 @@ const truckerSteps = [
   { icon: ClipboardList, step: "02", title: "Post Your Trip", desc: "Declare your upcoming trips — starting point, destination, available capacity, and preferred load type. Let the AI find matching shipments." },
   { icon: Search, step: "03", title: "Find Profitable Loads", desc: "Browse AI-matched shipments that align with your route and capacity. View fair market prices, distance, and shipper ratings at a glance." },
   { icon: Route, step: "04", title: "Haul & Track", desc: "Navigate optimized routes with live GPS tracking. Update shipment status at each milestone to keep shippers informed and build your reliability score." },
-  { icon: DollarSign, step: "05", title: "Get Paid Securely", desc: "Receive payments promptly after successful delivery. Our escrow system protects both parties. Build your credit score with every completed trip." },
+  { icon: DollarSign, step: "05", title: "Get Paid Securely", desc: "Receive payment per agreed terms after successful delivery. Escrow-backed protection is planned. Build your credit score with every completed trip." },
 ];
 
 const HowItWorks = () => {
@@ -59,11 +59,11 @@ const HowItWorks = () => {
           <p>Accept loads, use navigation for route optimization, complete deliveries, and receive payment after confirmed delivery.</p>
           <h2>Core Features</h2>
           <ul>
-            <li><strong>Smart AI Matching:</strong> 98%+ accuracy considering route, capacity, pricing, and history.</li>
+            <li><strong>Smart AI Matching:</strong> Multi-factor scoring on route, capacity, pricing, and history.</li>
             <li><strong>Real-Time GPS Tracking:</strong> Live location, ETA, and route deviation alerts.</li>
             <li><strong>Freight Credit Score:</strong> 300-900 scoring for trust and eligibility.</li>
             <li><strong>AI Price Predictor:</strong> Fair market pricing with confidence levels.</li>
-            <li><strong>Secure Payments:</strong> Milestone-based escrow for safety.</li>
+            <li><strong>Secure Payments:</strong> Milestone-based escrow for safety — planned.</li>
             <li><strong>Verified Network:</strong> KYC-verified transporters only.</li>
           </ul>
         </div>
@@ -101,7 +101,7 @@ const HowItWorks = () => {
                 name: "What happens if there is a dispute?",
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: "LoadSaathi provides a dispute resolution system with support teams and secure payment escrow for fair handling.",
+                  text: "LoadSaathi provides a dispute resolution system with support teams, and secure payment escrow (planned) for fair handling.",
                 },
               },
             ],

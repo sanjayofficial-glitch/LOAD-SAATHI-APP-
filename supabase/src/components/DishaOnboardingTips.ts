@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react'
-import { useDisha } from './DishaContext'
+import { useDisha } from './DishaContext.hooks'
 import type { DishaMood } from './DishaMascot'
 
 const ONBOARDED_KEY = 'loadsaathi-disha-onboarded'

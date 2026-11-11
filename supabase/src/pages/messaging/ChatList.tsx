@@ -116,7 +116,7 @@ const ChatList = () => {
     } finally {
       setLoading(false);
     }
-  }, [getToken, userProfile]);
+  }, [userProfile, getAuthenticatedClient]);
 
   useEffect(() => {
     fetchConversations();
@@ -219,6 +219,7 @@ const ChatList = () => {
         <EmptyState
           accent="orange"
           icon={<MessageSquare className="h-8 w-8 sm:h-10 sm:w-10" />}
+          image="/illustrations/chat-bubble.png"
           title="No conversations yet"
           description="Start a conversation by booking a trip or accepting a request."
           primaryAction={{

@@ -78,7 +78,7 @@ function okJsonResponse(body: unknown, status = 200): Response {
 function authEnv(): Record<string, string> {
   return {
     FREDDY_ENABLED: "true",
-    SUPABASE_JWT_SECRET: TEST_SECRET,
+    FREDDY_JWT_SECRET: TEST_SECRET,
     FREDDY_EXPECTED_ISSUER: TEST_ISSUER,
     FREDDY_EXPECTED_AUDIENCE: TEST_AUDIENCE,
     SUPABASE_URL: TEST_SUPABASE_URL,
@@ -349,7 +349,7 @@ Deno.test("missing auth configuration fails closed with a sanitized 500", async 
   const capture: FetchCapture = { request: null, callCount: 0 };
   const token = await mintToken();
   for (const missing of [
-    "SUPABASE_JWT_SECRET",
+    "FREDDY_JWT_SECRET",
     "FREDDY_EXPECTED_ISSUER",
     "FREDDY_EXPECTED_AUDIENCE",
   ] as const) {
@@ -665,4 +665,35 @@ Deno.test("upstream database failures surface as sanitized 502s (no body or secr
   const errorShape = assertErrorResponseSize(await resShape.json(), "shape");
   assert(errorShape.includes("row array"), "payload-shape reason expected");
   assert(!errorShape.includes("rows"), "payload keys must not leak");
+});
+
+Deno.test("optional lang=hi is accepted and localizes the no-tool detail", async () => {
+  const capture: FetchCapture = { request: null, callCount: 0 };
+  const token = await mintToken();
+  const res = await handleAgentRouter(
+    makeRequest({ body: { message: "who am i talking to", lang: "hi" }, token }),
+    {
+      env: envOf(),
+      fetchImpl: injectFetch(capture, () => okJsonResponse([ROW])),
+      checkRateLimitImpl: () => true,
+    },
+  );
+  assert(res.status === 200, `expected 200, got ${res.status}`);
+  const body = await res.json() as Record<string, unknown>;
+  assert(body.ok === true, "no-tool response must be ok:true");
+  assert(typeof body.detail === "string", "detail must be a string");
+  assert(
+    /[\u0900-\u097F]/.test(body.detail as string),
+    "detail must be in Hindi when lang=hi",
+  );
+  assert(capture.callCount === 0, "no database access without tool arguments");
+});
+
+Deno.test("invalid lang value is rejected (400)", async () => {
+  const token = await mintToken();
+  const res = await handleAgentRouter(
+    makeRequest({ body: { message: "hi", lang: "fr" }, token }),
+    { env: envOf(), checkRateLimitImpl: () => true },
+  );
+  assert(res.status === 400, `expected 400, got ${res.status}`);
 });

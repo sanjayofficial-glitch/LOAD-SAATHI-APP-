@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import { showSuccess, showError } from "@/utils/toast";
-import { Package, Calendar, IndianRupee, Loader2, ArrowLeft, WifiOff } from "lucide-react";
+import { Package, Calendar, IndianRupee, Loader2, ArrowLeft, WifiOff, Mic } from "lucide-react";
 import LocationSelector from "@/components/LocationSelector";
 import VoiceLocationInput from "@/components/VoiceLocationInput";
 import { geocodeCity } from "@/utils/geocode";
@@ -22,8 +22,11 @@ import ReturnLoadProbability from "@/components/ReturnLoadProbability";
 import { PricePredictor } from "@/components/PricePredictor";
 import TemplateSelector from "@/components/TemplateSelector";
 import SaveAsTemplate from "@/components/SaveAsTemplate";
-import { trackEvent } from "@/utils/analytics";
+import { trackEvent, EVENTS } from "@/utils/analytics";
 import { useDishaGuideRegistration } from "@/hooks/useDishaGuide";
+import { useT } from "@/i18n/useT";
+import { useSpeechToText } from "@/hooks/useSpeechToText";
+import { useDraft, clearDraft as wipeDraft } from "@/lib/offlineDraft";
 
 type LocationData = Record<string, Record<string, string[]>>;
 
@@ -31,13 +34,22 @@ const PostShipments = () => {
   const { userProfile } = useAuth();
   const { getAuthenticatedClient } = useSupabase();
   const { isOnline } = useNetworkStatus();
+  const t = useT();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'quick' | 'full'>('quick');
   const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const formStartedRef = useRef(false);
 
   useEffect(() => {
     import('@/data/locations.json').then(mod => setLocationData(mod.default.data));
+  }, []);
+
+  // Form start — fires once per page mount (a view of the form is not a lead).
+  useEffect(() => {
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    trackEvent(EVENTS.LOAD_FORM_START);
   }, []);
 
   const {
@@ -74,6 +86,29 @@ const PostShipments = () => {
     mode: 'onBlur',
   });
   const formData = form.watch();
+  const { supported: speechSupported, isListening, start: startSpeech } = useSpeechToText();
+  const [draft, setDraft] = useDraft<Partial<ShipmentFormValues>>('post-shipment');
+
+  // Restore a saved draft after a refresh/accidental navigation.
+  useEffect(() => {
+    if (!draft) return;
+    let touched = false;
+    (Object.keys(draft) as (keyof ShipmentFormValues)[]).forEach((key) => {
+      const v = draft[key];
+      if (v) {
+        form.setValue(key, v as never);
+        touched = true;
+      }
+    });
+    if (touched) showSuccess(t('draft.restored'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Debounced draft save — only when the user has actually typed something.
+  useEffect(() => {
+    const hasContent = Object.values(formData).some((v) => typeof v === 'string' && v.trim());
+    if (hasContent) setDraft({ ...formData });
+  }, [formData, setDraft]);
 
   const handleLocationChange = (field: 'origin' | 'destination', value: { state: string; district: string; city: string }) => {
     form.setValue(`${field}_city`, value.city);
@@ -170,8 +205,14 @@ const PostShipments = () => {
         weight_tonnes: weight,
         budget_per_tonne: budget,
       });
-      showSuccess('Shipment posted successfully!');
+      // Valid submission = an enquiry; qualification happens separately.
+      trackEvent(EVENTS.LOAD_SUBMITTED, {
+        shipment_id: shipmentData.id,
+        weight_tonnes: weight,
+      });
+      showSuccess(t('form.postLoad') + ' ✓');
       notifySuccess('submit');
+      wipeDraft('post-shipment');
       navigate('/shipper/dashboard');
     } catch (err: unknown) {
       import("@/utils/posthog").then(({ posthog }) => posthog.captureException(err, { flow: 'post_shipment' })).catch(() => {});
@@ -184,13 +225,13 @@ const PostShipments = () => {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8 max-w-2xl">
       <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back
+        <ArrowLeft className="mr-2 h-4 w-4" /> {t('common.back')}
       </Button>
 
       {!isOnline && (
         <div className="mb-4 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-xl px-4 py-3 flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-200">
           <WifiOff className="h-4 w-4 shrink-0" />
-          <span>You are offline. You cannot post shipments until reconnected.</span>
+          <span>{t('form.offlineBanner')}</span>
         </div>
       )}
 
@@ -204,7 +245,7 @@ const PostShipments = () => {
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
-          Quick Post
+          {t('form.quickPost')}
         </button>
         <button
           type="button"
@@ -215,7 +256,7 @@ const PostShipments = () => {
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
-          Full Details
+          {t('form.fullDetails')}
         </button>
       </div>
       {mode === 'quick' && (
@@ -228,7 +269,7 @@ const PostShipments = () => {
 <CardHeader id="post-shipment-header" className="bg-blue-50/50 dark:bg-blue-950/50 border-b border-blue-100 dark:border-blue-800 px-4 sm:px-6">
           <CardTitle className="flex items-center text-blue-900 dark:text-blue-100 text-lg sm:text-xl">
             <Package className="mr-2 text-blue-600 dark:text-blue-400 h-5 w-5 sm:h-6 sm:w-6" />
-            Post a New Shipment
+            {t('form.postLoadTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6 px-4 sm:px-6">
@@ -252,10 +293,10 @@ const PostShipments = () => {
               />
             )}
   <div id="post-shipment-origin" ref={originRef} data-guide="origin-city" className="space-y-2">
-              <Label className="text-gray-700 dark:text-gray-200 font-medium">Origin Location</Label>
+              <Label className="text-gray-700 dark:text-gray-200 font-medium">{t('form.origin')}</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
-                  label="From"
+                  label={t('form.from')}
                   data={locationData}
                   value={{ state: formData.origin_state || '', district: '', city: formData.origin_city }}
                   onChange={(value) => handleLocationChange('origin', value)}
@@ -263,7 +304,7 @@ const PostShipments = () => {
                 />
               ) : (
                 <LocationSelector
-                  label="Origin"
+                  label={t('form.origin')}
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('origin', value)}
                 />
@@ -272,10 +313,10 @@ const PostShipments = () => {
             </div>
 
             <div id="post-shipment-destination" ref={destRef} data-guide="dest-city" className="space-y-2">
-              <Label className="text-gray-700 dark:text-gray-200 font-medium">Destination Location</Label>
+              <Label className="text-gray-700 dark:text-gray-200 font-medium">{t('form.destination')}</Label>
               {mode === 'quick' && locationData ? (
                 <VoiceLocationInput
-                  label="To"
+                  label={t('form.to')}
                   data={locationData}
                   value={{ state: formData.destination_state || '', district: '', city: formData.destination_city }}
                   onChange={(value) => handleLocationChange('destination', value)}
@@ -283,7 +324,7 @@ const PostShipments = () => {
                 />
               ) : (
                 <LocationSelector
-                  label="Destination"
+                  label={t('form.destination')}
                   data={locationData || {}}
                   onChange={(value) => handleLocationChange('destination', value)}
                 />
@@ -297,7 +338,7 @@ const PostShipments = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
-                <Label htmlFor="date">Ready Date</Label>
+                <Label htmlFor="date">{t('form.readyDate')}</Label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
                    <Input
@@ -305,7 +346,7 @@ const PostShipments = () => {
                      ref={dateRef}
                      data-guide="date"
                      type="date"
-                     className="pl-10"
+                     className="pl-10 h-12"
                      min={new Date().toISOString().split('T')[0]}
                      value={formData.departure_date}
                      onChange={(e) => form.setValue('departure_date', e.target.value)}
@@ -317,7 +358,7 @@ const PostShipments = () => {
                 {form.formState.errors.departure_date?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.departure_date.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weight">Weight (Tonnes)</Label>
+                <Label htmlFor="weight">{t('form.weight')}</Label>
  <Input
    id="weight"
    ref={weightRef}
@@ -336,10 +377,27 @@ const PostShipments = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="goods">Goods Description</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="goods">{t('form.goodsDesc')}</Label>
+                {speechSupported && (
+                  <button
+                    type="button"
+                    onClick={() => startSpeech((transcript) => form.setValue('goods_description', transcript))}
+                    className={`press flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
+                      isListening
+                        ? 'bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400 animate-pulse'
+                        : 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300'
+                    }`}
+                    aria-label={t('voice.mic')}
+                  >
+                    <Mic className="h-3.5 w-3.5" />
+                    {isListening ? t('voice.listen') : t('voice.mic')}
+                  </button>
+                )}
+              </div>
               <Textarea
                 id="goods"
-                placeholder="What are you shipping? (e.g. 100 bags of rice)"
+                placeholder={t('voice.speakGoods')}
                 value={formData.goods_description}
                 onChange={(e) => form.setValue('goods_description', e.target.value)}
                 aria-invalid={!!form.formState.errors.goods_description}
@@ -349,7 +407,7 @@ const PostShipments = () => {
             </div>
 
               <div className="space-y-2">
-                <Label htmlFor="budget">Budget per Tonne (₹)</Label>
+                <Label htmlFor="budget">{t('form.budgetPerTonne')}</Label>
                 <div className="relative">
                   <IndianRupee className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
 <Input
@@ -378,7 +436,7 @@ const PostShipments = () => {
                 {formData.weight_tonnes && formData.budget_per_tonne && (
                   <div className="mt-2 p-2.5 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
                     <p className="text-sm text-blue-700 dark:text-blue-300">
-                      Estimated total: <span className="font-bold">₹{((parseFloat(formData.weight_tonnes) || 0) * (parseFloat(formData.budget_per_tonne) || 0)).toLocaleString('en-IN')}</span>
+                      {t('form.estimatedTotal')} <span className="font-bold">₹{((parseFloat(formData.weight_tonnes) || 0) * (parseFloat(formData.budget_per_tonne) || 0)).toLocaleString('en-IN')}</span>
                     </p>
                   </div>
                 )}
@@ -387,7 +445,7 @@ const PostShipments = () => {
             {mode === 'full' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="pickup">Pickup Address</Label>
+                  <Label htmlFor="pickup">{t('form.pickupAddress')}</Label>
                   <Input
                     id="pickup"
                     placeholder="Full pickup address"
@@ -399,7 +457,7 @@ const PostShipments = () => {
                   {form.formState.errors.pickup_address?.message && <p className="text-sm text-destructive mt-1">{form.formState.errors.pickup_address.message}</p>}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="delivery">Delivery Address</Label>
+                  <Label htmlFor="delivery">{t('form.deliveryAddress')}</Label>
                   <Input
                     id="delivery"
                     placeholder="Full delivery address"
@@ -416,11 +474,11 @@ const PostShipments = () => {
             {!isOnline && (
               <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-xl px-4 py-3 flex items-center gap-2 text-sm text-yellow-800 dark:text-yellow-200">
                 <WifiOff className="h-4 w-4 shrink-0" />
-                <span>Posting shipments is unavailable while offline.</span>
+                <span>{t('form.offlinePosting')}</span>
               </div>
             )}
 
-            <div className="flex items-center justify-between gap-3">
+            <div className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] z-10 -mx-3 mt-8 flex items-center justify-between gap-3 rounded-2xl bg-white/95 px-3 py-2.5 shadow-lg shadow-black/5 ring-1 ring-gray-100 dark:bg-gray-900/95 dark:ring-gray-800 backdrop-blur-md md:static md:z-auto md:mx-0 md:mt-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:ring-0 md:backdrop-blur-none">
               {userProfile?.id && (
                 <SaveAsTemplate
                   userId={userProfile.id}
@@ -434,17 +492,17 @@ const PostShipments = () => {
   ref={submitRef}
   data-guide="submit"
   type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 h-12 text-base sm:text-lg font-bold shadow-md transition-all hover:shadow-lg"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 h-14 text-base sm:text-lg font-bold shadow-md transition-all hover:shadow-lg"
                 disabled={loading || !isOnline || form.formState.isSubmitting}
               >
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Posting Shipment...
+                    {t('form.postLoad')}...
                   </>
                 ) : !isOnline ? (
-                  <><WifiOff className="mr-2 h-5 w-5" /> Offline</>
-                ) : 'Post Shipment'}
+                  <><WifiOff className="mr-2 h-5 w-5" /> {t('common.offline')}</>
+                ) : t('form.postLoad')}
               </Button>
             </div>
           </form>

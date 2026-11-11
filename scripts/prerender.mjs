@@ -341,11 +341,11 @@ async function renderRoute(debugPort, url) {
       await new Promise((r) => setTimeout(r, READY_POLL_MS));
       const m = await send("Runtime.evaluate", {
         expression:
-          "({seo: !!document.querySelector('[data-ls-seo]'), h1: !!document.querySelector('h1'), done: document.readyState === 'complete'})",
+          "(() => { const prose = document.querySelector('.prose'); const proseOk = !prose || (prose.textContent || '').trim().length > 200; return {seo: !!document.querySelector('[data-ls-seo]'), h1: !!document.querySelector('h1'), done: document.readyState === 'complete', proseOk}; })()",
         returnByValue: true,
       });
       const v = m.result?.result?.value;
-      if (v && v.seo && v.h1 && v.done) break;
+      if (v && v.seo && v.h1 && v.done && v.proseOk) break;
       if (Date.now() > deadline) return null; // fail-soft: skip this route
     }
     const m = await send("Runtime.evaluate", {

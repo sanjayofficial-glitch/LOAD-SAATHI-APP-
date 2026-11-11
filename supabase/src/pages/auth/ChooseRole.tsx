@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useUser, useSession } from '@clerk/clerk-react';
-import { Loader2, User, Truck, CheckCircle2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { showSuccess, showError } from '@/utils/toast';
 import { extractErrorMessage } from '@/utils/errorMessage';
 import { useAuth } from '@/contexts/AuthContext';
 import { User as UserType } from '@/types';
-import { useDishaGuide } from '@/components/DishaGuideProvider';
+import { useDishaGuide } from '@/components/DishaGuideProvider.hooks';
 import LogoMark from '@/components/LogoMark';
 import SeoMeta from '@/components/SeoMeta';
 
@@ -130,7 +130,10 @@ const handleRoleSelection = async (role: 'shipper' | 'trucker') => {
 
       navigate('/onboarding', { replace: true });
     } catch (err: unknown) {
-      const msg = extractErrorMessage(err, 'Failed to set role');
+      const code = (err as { code?: string })?.code;
+      const msg = code === '23505'
+        ? 'This email is already linked to an existing LoadSaathi account. Please sign in with that account.'
+        : extractErrorMessage(err, 'Failed to set role');
       console.error('[ChooseRole] Error:', err);
       setError(msg);
       showError(msg);
@@ -179,8 +182,14 @@ const handleRoleSelection = async (role: 'shipper' | 'trucker') => {
               suggestedRole === 'shipper' ? 'ring-2 ring-blue-500/50 shadow-lg shadow-blue-500/10' : ''
             }`}
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <User className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 overflow-hidden">
+              <img
+                src="/illustrations/shipping-box.png"
+                alt="Shipper"
+                draggable={false}
+                loading="lazy"
+                className="h-14 w-14 object-contain"
+              />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">I am a Shipper</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
@@ -199,8 +208,14 @@ const handleRoleSelection = async (role: 'shipper' | 'trucker') => {
               suggestedRole === 'trucker' ? 'ring-2 ring-orange-500/50 shadow-lg shadow-orange-500/10' : ''
             }`}
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Truck className="h-10 w-10 text-orange-600 dark:text-orange-400" />
+            <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/50 dark:to-orange-800/50 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 overflow-hidden">
+              <img
+                src="/illustrations/truck-delivery.png"
+                alt="Trucker"
+                draggable={false}
+                loading="lazy"
+                className="h-14 w-14 object-contain"
+              />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">I am a Trucker</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">

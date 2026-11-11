@@ -20,12 +20,12 @@ const truckerFeatures = [
   { icon: Route, title: "Route Optimization", desc: "Intelligent route planning that considers load pickups, drop-offs, fuel stops, rest periods, and toll costs to maximize your operational efficiency." },
   { icon: Bell, title: "Smart Match Alerts", desc: "Receive real-time notifications when new loads match your truck's capacity, current location, and preferred routes. Never miss a lucrative opportunity." },
   { icon: TrendingUp, title: "Earnings Dashboard", desc: "Track your income, completed trips, kilometers driven, and utilization rates. Get insights on how to optimize your operations for higher profitability." },
-  { icon: Shield, title: "Payment Protection", desc: "Secure payment processing with milestone-based releases. Get paid promptly for completed deliveries with our escrow-backed payment system.", comingSoon: true },
+  { icon: Shield, title: "Payment Protection", desc: "Milestone-based escrow-backed payment protection is planned. Secure settlement to be launched with escrow.", comingSoon: true },
   { icon: Clock, title: "Trip History & Reports", desc: "Detailed logs of all completed trips including routes, times, earnings, and customer reviews. Build your reputation with a verified performance history." },
 ];
 
 const aiFeatures = [
-  { icon: Brain, title: "AI Match Scoring", desc: "Our proprietary algorithm evaluates thousands of data points — route compatibility, pricing history, on-time performance, cargo type — to deliver match scores that predict successful partnerships with 98%+ accuracy." },
+  { icon: Brain, title: "AI Match Scoring", desc: "Our proprietary algorithm evaluates route compatibility, pricing history, on-time performance, and cargo type to deliver match scores that help pair shippers with suitable transporters." },
   { icon: TrendingUp, title: "Price Prediction Engine", desc: "Real-time fair pricing based on current market rates, fuel costs, demand fluctuations, and seasonal trends. Eliminate guesswork and ensure competitive, profitable pricing for every load." },
   { icon: Shield, title: "Digital Freight Credit Scoring", desc: "Comprehensive 300-900 credit score for every participant on the network, factoring in completion rates, on-time performance, customer feedback, and financial reliability." },
 ];
@@ -53,12 +53,12 @@ const Features = () => {
             <li><strong>Route Optimization:</strong> Intelligent route planning considering pickups, drop-offs, fuel, and tolls.</li>
             <li><strong>Smart Match Alerts:</strong> Real-time notifications for loads matching your capacity and routes.</li>
             <li><strong>Earnings Dashboard:</strong> Track income, completed trips, kilometers, and utilization rates.</li>
-            <li><strong>Payment Protection:</strong> Secure milestone-based payments with escrow backing.</li>
+            <li><strong>Payment Protection:</strong> Secure milestone-based escrow-backed payments — planned.</li>
             <li><strong>Trip History:</strong> Detailed logs of all completed trips including routes, times, and reviews.</li>
           </ul>
           <h2>AI Command Center</h2>
           <ul>
-            <li><strong>AI Match Scoring:</strong> Proprietary algorithm evaluating route compatibility, pricing, performance with 98%+ accuracy.</li>
+            <li><strong>AI Match Scoring:</strong> Proprietary algorithm evaluating route compatibility, pricing, and performance.</li>
             <li><strong>Price Prediction Engine:</strong> Real-time fair pricing based on market rates, fuel costs, and demand.</li>
             <li><strong>Digital Freight Credit Scoring:</strong> 300-900 score for every participant factoring completion, performance, and feedback.</li>
           </ul>

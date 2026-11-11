@@ -12,6 +12,8 @@ interface EmptyStateAction {
 
 interface EmptyStateProps {
   icon: ReactNode;
+  /** Optional illustration image (e.g. an icons8 illustration) that replaces the icon circle. */
+  image?: string;
   title: string;
   description: string;
   primaryAction?: EmptyStateAction;
@@ -35,6 +37,7 @@ const ACCENTS = {
 
 const EmptyState = ({
   icon,
+  image,
   title,
   description,
   primaryAction,
@@ -52,9 +55,19 @@ const EmptyState = ({
         className
       )}
     >
-      <div className={cn('animate-float bg-gradient-to-br w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6', styles.iconBg)}>
-        <span className={cn('h-8 w-8 sm:h-10 sm:w-10', styles.iconColor)}>{icon}</span>
-      </div>
+      {image ? (
+        <img
+          src={image}
+          alt=""
+          draggable={false}
+          loading="lazy"
+          className="h-36 w-36 sm:h-44 sm:w-44 object-contain mx-auto mb-4 sm:mb-6 animate-float"
+        />
+      ) : (
+        <div className={cn('animate-float bg-gradient-to-br w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6', styles.iconBg)}>
+          <span className={cn('h-8 w-8 sm:h-10 sm:w-10', styles.iconColor)}>{icon}</span>
+        </div>
+      )}
       <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
       <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-2 max-w-md mx-auto">{description}</p>
       {showActions && (

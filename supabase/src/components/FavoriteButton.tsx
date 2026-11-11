@@ -89,8 +89,11 @@ export default function FavoriteButton({ entityType, entityId, userId, className
 
   return (
     <button
+      type="button"
       onClick={toggle}
       disabled={toggleMutation.isPending}
+      aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+      aria-pressed={isFavorited}
       className={cn(
         "p-1.5 rounded-full transition-all hover:bg-gray-100 dark:hover:bg-gray-800",
         isFavorited && "text-red-500",

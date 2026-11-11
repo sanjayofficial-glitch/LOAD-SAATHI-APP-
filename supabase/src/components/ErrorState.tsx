@@ -10,6 +10,8 @@ interface ErrorStateProps {
   retry?: () => void;
   retryLabel?: string;
   icon?: ReactNode;
+  /** Optional illustration that replaces the icon circle (e.g. an offline graphic). */
+  image?: string;
   className?: string;
 }
 
@@ -19,6 +21,7 @@ const ErrorState = ({
   retry,
   retryLabel = 'Try Again',
   icon = <AlertTriangle className="h-8 w-8 sm:h-10 sm:w-10 text-red-500 dark:text-red-400" />,
+  image,
   className,
 }: ErrorStateProps) => {
   return (
@@ -28,9 +31,19 @@ const ErrorState = ({
         className
       )}
     >
-      <div className="bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/30 dark:to-red-800/30 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-        {icon}
-      </div>
+      {image ? (
+        <img
+          src={image}
+          alt=""
+          draggable={false}
+          loading="lazy"
+          className="h-36 w-36 sm:h-44 sm:w-44 object-contain mx-auto mb-4 sm:mb-6 animate-float"
+        />
+      ) : (
+        <div className="bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/30 dark:to-red-800/30 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+          {icon}
+        </div>
+      )}
       <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
       <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-2 max-w-md mx-auto">{description}</p>
       {retry && (
