@@ -27,15 +27,15 @@ const benefits = [
     icon: Truck,
     title: 'Shared Truck Network',
     desc: 'Your goods travel on verified trucks heading the same direction. AI matches cargo by route, timing, and truck type.',
-    stat: '95%',
-    statLabel: 'Route Match Accuracy',
+    stat: 'AI',
+    statLabel: 'Route Matching',
   },
   {
     icon: Shield,
     title: 'Full Cargo Protection',
-    desc: 'GPS tracking, ePOD, and escrow-backed payments. Your cargo is protected from pickup to delivery.',
-    stat: '₹5L',
-    statLabel: 'Cargo Insurance',
+    desc: 'GPS tracking and ePOD from pickup to delivery. Escrow-backed payments are planned.',
+    stat: 'Verified',
+    statLabel: 'Trucker Network',
   },
 ];
 
@@ -51,7 +51,7 @@ const howItWorks = [
   { step: '1', title: 'Post Your Shipment', desc: 'Enter origin, destination, weight, cargo type. Takes 2 minutes.' },
   { step: '2', title: 'AI Matches Trucks', desc: 'Our engine finds available PTL trucks on your route and recommends the best option.' },
   { step: '3', title: 'Compare & Confirm', desc: 'Review matched truckers, ratings, and estimated delivery times. Book instantly.' },
-  { step: '4', title: 'Track & Get Paid', desc: 'GPS tracking from pickup to delivery. Pay securely via escrow on delivery confirmation.' },
+  { step: '4', title: 'Track & Get Paid', desc: 'GPS tracking from pickup to delivery. Pay per agreed terms (escrow-backed payment is planned).' },
 ];
 
 const faqs = [
@@ -59,7 +59,7 @@ const faqs = [
   { q: "When should I use PTL instead of FTL?", a: "Use PTL when your shipment is under 3 tonnes and you have 1–2 extra days of delivery buffer. PTL saves 30–40% compared to FTL. Use FTL for shipments over 7 tonnes, urgent deliveries, or when you need exclusive use of the truck." },
   { q: "How is PTL different from LTL?", a: "PTL (Partial Truckload) and LTL (Less Than Truckload) are often used interchangeably in India. PTL typically refers to shipments 0.5–3 tonnes that share truck space, while LTL can include smaller parcel-level shipments. On LoadSaathi, we use PTL for the 0.5–3 tonne range." },
   { q: "What is the cost of PTL shipping?", a: "PTL rates on East India corridors range from ₹1,800–3,500 per tonne depending on route, cargo type, and season. Use LoadSaathi's fare calculator for an instant estimate on your specific route." },
-  { q: "Which routes support PTL?", a: "LoadSaathi covers all major East India corridors for PTL: Rourkela–Ranchi, Rourkela–Bhubaneswar, Rourkela–Kolkata, Ranchi–Jamshedpur, Bhubaneswar–Kolkata, and 20+ more routes across Odisha, Jharkhand, and West Bengal." },
+  { q: "Which routes support PTL?", a: "LoadSaathi covers the major East India corridors for PTL: Rourkela–Ranchi, Rourkela–Bhubaneswar, Rourkela–Kolkata, Ranchi–Jamshedpur, Bhubaneswar–Kolkata, and more routes across Odisha, Jharkhand, and West Bengal." },
 ];
 
 export default function PtlTransport() {
@@ -152,7 +152,7 @@ export default function PtlTransport() {
                   "Costs 30–40% less than booking a full truck (FTL)",
                   "Transit time is 1–2 days longer than FTL due to consolidation",
                   "Available on all major East India corridors",
-                  "GPS tracking and escrow payments included"
+                  "GPS tracking included; escrow-backed payments planned"
                 ]}
               />
               <p className="text-lg sm:text-xl text-muted-foreground max-w-xl leading-relaxed">

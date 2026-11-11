@@ -28,7 +28,7 @@ const comparisonData = [
   },
   {
     feature: 'Empty Kilometer Reduction',
-    loadsaathi: { value: 'Return-load matching saves up to 40%', available: true },
+    loadsaathi: { value: 'Return-load matching fills empty trips', available: true },
     brokers: { value: 'No systematic return-load solution', available: false },
   },
   {
@@ -107,7 +107,7 @@ const platformComparisonData = [
   },
   {
     feature: 'Fees',
-    loadsaathi: 'Free to join; 1.5–3% fee only on completed bookings',
+    loadsaathi: 'Free to join; a transaction fee applies only on completed bookings',
     vahak: 'Free booking, no commission stated by Vahak',
     blackbuck: 'Paid shipper plans for load posting (per BlackBuck)',
     trukky: 'Pay at booking, balance on loading/unloading (per Trukky)',
@@ -152,7 +152,7 @@ const jsonLd = [
     "@type": "ItemList",
     name: "Online truck booking platforms compared with LoadSaathi (September 2026)",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "LoadSaathi", description: "East India freight marketplace covering Odisha, Jharkhand and West Bengal with AI load matching, a 300-900 freight credit score, per-trip CO2 tracking and free registration; 1.5-3% platform fee only on completed bookings." },
+      { "@type": "ListItem", position: 1, name: "LoadSaathi", description: "East India freight marketplace covering Odisha, Jharkhand and West Bengal with AI load matching, a 300-900 freight credit score, per-trip CO2 tracking and free registration; a transaction fee applies only on completed bookings." },
       { "@type": "ListItem", position: 2, name: "Vahak", description: "Free load and lorry marketplace with bidding, Aadhaar and GST verification as stated by Vahak, live tracking and a pan-India network." },
       { "@type": "ListItem", position: 3, name: "BlackBuck", description: "Truck marketplace and freight brokerage with load bidding, verified transporters, ratings, FASTag and fleet services across 300+ locations." },
       { "@type": "ListItem", position: 4, name: "Trukky", description: "Online truck booking platform offering full truckload and part load with instant pricing, live tracking and transit insurance across 100+ cities as stated by Trukky." },
@@ -179,7 +179,7 @@ export default function Comparison() {
       <noscript>
         <div style={{maxWidth:800,margin:'0 auto',padding:'32px',fontFamily:'system-ui'}}>
           <h2>LoadSaathi vs Traditional Freight Brokers</h2>
-          <p>LoadSaathi is an AI-powered freight marketplace that connects shippers directly with verified truckers. Compared to traditional brokers, LoadSaathi offers transparent AI-calculated pricing, real-time GPS tracking, a 300-900 credit score system, multi-factor AI matching (7 weighted criteria), return-load matching that reduces empty kilometers by up to 40%, in-app chat with dispute protection, digital documentation, and carbon emissions tracking.</p>
+          <p>LoadSaathi is an AI-powered freight marketplace that connects shippers directly with verified truckers. Compared to traditional brokers, LoadSaathi offers transparent AI-calculated pricing, real-time GPS tracking, a 300-900 credit score system, multi-factor AI matching (7 weighted criteria), return-load matching that helps reduce empty kilometers, in-app chat with dispute protection, digital documentation, and carbon emissions tracking.</p>
           <h2>Key Advantages</h2>
           <ul>
             <li>40% lower empty kilometers through return-load matching</li>
@@ -192,7 +192,7 @@ export default function Comparison() {
           </ul>
           <p><strong>Traditional brokers</strong> rely on phone-based negotiation, opaque margins, manual check-in calls, no standardized trust metrics, paper-based records, and no systematic return-load solutions.</p>
           <h2>LoadSaathi vs Vahak vs BlackBuck vs Trukky</h2>
-          <p>Compared as of September 2026 from each company's own website and app listings. Vahak runs a free load and lorry marketplace with bidding and states Aadhaar and GST verification for transporters. BlackBuck operates a truck marketplace and freight brokerage with load bidding, verified transporters, FASTag and fleet services across 300+ locations. Trukky offers instant-priced full truckload and part load booking with live tracking and transit insurance, covering 100+ cities. LoadSaathi is built for East India lanes (Odisha, Jharkhand, West Bengal, 25+ corridors) with AI load matching on 7 weighted factors, a 300-900 freight credit score, per-trip CO2 tracking and free registration; a 1.5-3% platform fee applies only when a booking completes.</p>
+          <p>Compared as of September 2026 from each company's own website and app listings. Vahak runs a free load and lorry marketplace with bidding and states Aadhaar and GST verification for transporters. BlackBuck operates a truck marketplace and freight brokerage with load bidding, verified transporters, FASTag and fleet services across 300+ locations. Trukky offers instant-priced full truckload and part load booking with live tracking and transit insurance, covering 100+ cities. LoadSaathi is built for East India lanes (Odisha, Jharkhand, West Bengal, published corridors) with AI load matching on 7 weighted factors, a 300-900 freight credit score, per-trip CO2 tracking and free registration; a transaction fee applies only when a booking completes.</p>
           <h2>Learn More</h2>
           <p>Visit <a href="https://loadsaathi.in/features">Features</a>, <a href="https://loadsaathi.in/pricing">Pricing</a>, or <a href="https://loadsaathi.in/about">About</a> for more details.</p>
         </div>
@@ -267,7 +267,7 @@ export default function Comparison() {
               </div>
             </div>
             <p className="text-base text-muted-foreground mt-8 max-w-3xl mx-auto text-center">
-              <strong className="text-foreground">Where LoadSaathi fits:</strong> it is built for East India lanes — Odisha, Jharkhand and West Bengal across 25+ corridors — with a 300–900 freight credit score, AI matching on 7 weighted factors and per-trip CO2 tracking. Registration is free and the 1.5–3% platform fee applies only when a booking completes. For wider pan-India networks, Vahak, BlackBuck and Trukky all publish nationwide coverage.
+              <strong className="text-foreground">Where LoadSaathi fits:</strong> it is built for East India lanes — Odisha, Jharkhand and West Bengal across published corridors — with a 300–900 freight credit score, AI matching on 7 weighted factors and per-trip CO2 tracking. Registration is free and a transaction fee applies only when a booking completes. For wider pan-India networks, Vahak, BlackBuck and Trukky all publish nationwide coverage.
             </p>
           </div>
         </section>

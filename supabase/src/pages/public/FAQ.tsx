@@ -48,7 +48,7 @@ const faqData = [
       },
       {
         q: "When and how do I get paid?",
-        a: "Payments are released through our secure escrow system. Upon delivery confirmation by the shipper, funds are released to your account within 24-48 hours. You can track your earnings, payment history, and pending settlements from your earnings dashboard.",
+        a: "Escrow-based settlement is planned. Until it launches, payment terms are agreed directly between you and the shipper. You can track your earnings, payment history, and pending settlements from your dashboard.",
       },
       {
         q: "Can I choose which loads to accept?",
@@ -65,8 +65,8 @@ const faqData = [
     icon: Check,
     items: [
       {
-        q: "How does the escrow payment system work?",
-        a: "When a shipper and trucker agree on a load, the shipper transfers the payment amount to our secure escrow account. The funds are held safely until the shipment is completed and confirmed by both parties. This protects both parties — the shipper knows funds are available, and the trucker knows they'll be paid upon delivery.",
+        q: "How will the escrow payment system work?",
+        a: "Escrow-backed payments are planned. Once launched, the shipper's payment will be held securely until the shipment is completed and confirmed by both parties — protecting both sides. Until then, payment terms are agreed directly between shipper and trucker.",
       },
       {
         q: "What payment methods are accepted?",
@@ -74,7 +74,7 @@ const faqData = [
       },
       {
         q: "Are there any fees for using the platform?",
-        a: "Registration is completely free. We charge a small transaction fee (2-5% of shipment value) only on successfully completed shipments. This fee covers AI matching, payment processing, dispute resolution, and platform operations. There are no hidden charges or subscription fees.",
+        a: "Registration is completely free. A transaction fee applies only on successfully completed shipments; the final schedule will be published once confirmed. The fee covers AI matching, payment processing, dispute resolution, and platform operations. There are no hidden charges or subscription fees.",
       },
       {
         q: "How are disputes resolved?",
@@ -100,7 +100,7 @@ const faqData = [
       },
       {
         q: "How do you prevent fraud on the platform?",
-        a: "We employ multiple layers of fraud prevention: identity verification, GPS-tracked trips with geofencing, document validation, behavioral analytics, and our escrow payment system. Our AI monitors for suspicious patterns and flags anomalies for review by our trust and safety team.",
+        a: "We employ multiple layers of fraud prevention: identity verification, GPS-tracked trips, document validation, behavioral analytics, and planned escrow-backed payments. Our AI monitors for suspicious patterns and flags anomalies for review by our trust and safety team.",
       },
       {
         q: "Is my data safe with LoadSaathi?",
@@ -187,7 +187,7 @@ const FAQ = () => {
           <h3>Are there hidden fees?</h3>
           <p>No. Pricing is transparent. Basic services are free. Pay only for premium features like advanced analytics, ePOD verification, or credit monitoring.</p>
           <h3>How does payment protection work?</h3>
-          <p>Payments are held in escrow and released after shipment delivery is confirmed via GPS tracking and ePOD verification. Both parties receive instant notifications.</p>
+          <p>Escrow-backed payments are planned. Once launched, funds will be held and released after delivery is confirmed, with notifications to both parties.</p>
           <h2>Operations</h2>
           <h3>How do I post a shipment?</h3>
           <p>Log in, click Post Shipment, enter pickup/destination addresses, select vehicle type, enter cargo details, and set your budget or let the AI suggest a price.</p>

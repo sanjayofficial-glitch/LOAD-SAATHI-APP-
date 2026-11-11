@@ -50,7 +50,7 @@ const truckTypes = [
 const howItWorks = [
   { step: '1', title: 'Post Your Load', desc: 'Enter origin, destination, weight, cargo type, and pickup window. Takes 2 minutes.' },
   { step: '2', title: 'AI Matches Trucks', desc: 'Our algorithm evaluates hundreds of truckers and recommends the best match.' },
-  { step: '3', title: 'Book & Pay', desc: 'Confirm the match, pay securely via escrow. No cash, no broker.' },
+  { step: '3', title: 'Book & Pay', desc: 'Confirm the match. Payment terms are agreed directly (escrow-backed payment is planned). No cash, no broker.' },
   { step: '4', title: 'Track & Receive', desc: 'GPS tracking from pickup to delivery. Confirm ePOD and release payment.' },
 ];
 
@@ -58,7 +58,7 @@ const faqs = [
   { q: "How do I book a truck on LoadSaathi?", a: "Register as a shipper, post your load with origin, destination, weight, and cargo details. Our AI instantly matches you with available trucks. Review options, compare prices, and book in minutes." },
   { q: "What truck types are available?", a: "LoadSaathi offers Tata Ace (0.5T), Intra pickups (1–2T), Tata 407/Eicher (2–5T), containers (5–10T), and tractor-trailers (15–25T). AI recommends the right truck for your cargo." },
   { q: "How is pricing determined?", a: "Our AI price predictor analyzes distance, weight, route demand, fuel costs, and truck availability to recommend fair market rates. You see the estimate before booking — no hidden fees." },
-  { q: "Is payment secure?", a: "Yes. LoadSaathi uses escrow-backed payments. Funds are held securely and released to the trucker only after delivery confirmation via GPS and electronic proof of delivery (ePOD)." },
+  { q: "Is payment secure?", a: "Escrow-backed payments are planned. Once launched, funds will be held securely and released to the trucker only after delivery confirmation via GPS and electronic proof of delivery (ePOD). Until then, payment terms are agreed directly between you and the trucker." },
   { q: "Can I track my shipment?", a: "Absolutely. Every LoadSaathi shipment includes real-time GPS tracking. You get location updates, ETA predictions, and milestone notifications from pickup to delivery." },
 ];
 
@@ -144,8 +144,8 @@ export default function TruckLoadBooking() {
                 <span className="bg-gradient-to-r from-orange-500 to-green-400 bg-clip-text text-transparent">Ship Anywhere.</span>
               </h1>
               <DirectAnswer
-                answer="Booking a truck online means posting your load with origin, destination, weight, and cargo type, then receiving AI-matched truck options with transparent pricing. LoadSaathi matches you with verified truckers in seconds — from 50 kg to 25 tonnes — with GPS tracking and escrow-backed payments."
-                qualifier="Free to join — 1.5–3% transaction fee per completed shipment."
+                answer="Booking a truck online means posting your load with origin, destination, weight, and cargo type, then receiving AI-matched truck options with transparent pricing. LoadSaathi matches you with verified truckers in seconds — from 50 kg to 25 tonnes — with GPS tracking, and escrow-backed payments are planned."
+                qualifier="Free to join — a transaction fee applies on completed shipments; the final schedule will be published."
               />
               <KeyTakeaways
                 items={[
@@ -153,7 +153,7 @@ export default function TruckLoadBooking() {
                   "AI matches you with verified truckers in seconds",
                   "Transparent pricing — no hidden fees or broker markups",
                   "GPS tracking from pickup to delivery",
-                  "Escrow-backed payments released on delivery confirmation"
+                  "Escrow-backed payments — planned"
                 ]}
               />
               <p className="text-lg sm:text-xl text-muted-foreground max-w-xl leading-relaxed">

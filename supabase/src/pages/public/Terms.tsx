@@ -41,7 +41,7 @@ const sections = [
     content: [
       "All transactions facilitated through LoadSaathi are governed by a separate agreement between the shipper and transporter.",
       "LoadSaathi charges a service fee for each completed transaction, which will be clearly disclosed before transaction confirmation.",
-      "Payments are processed through our secure escrow system. Funds are released to the transporter upon successful delivery confirmation by the shipper.",
+      "Escrow-backed payments are planned. Once launched, funds will be released to the transporter upon successful delivery confirmation by the shipper. Until then, settlement terms are agreed directly between shipper and transporter.",
       "In case of disputes, LoadSaathi may hold funds in escrow until the dispute is resolved through our dispute resolution process.",
       "Users are responsible for all applicable taxes, duties, and levies associated with their transactions.",
     ],
@@ -58,7 +58,7 @@ const sections = [
   },
   {
     title: "Intellectual Property",
-    content: "All content, features, and functionality of the Platform — including but not limited to text, graphics, logos, icons, images, audio clips, digital downloads, data compilations, and software — are the exclusive property of LoadSaathi Technologies Pvt. Ltd. or its licensors and are protected by Indian and international copyright, trademark, and other intellectual property laws.",
+    content: "All content, features, and functionality of the Platform — including but not limited to text, graphics, logos, icons, images, audio clips, digital downloads, data compilations, and software — are the exclusive property of LoadSaathi or its licensors and are protected by Indian and international copyright, trademark, and other intellectual property laws.",
   },
   {
     title: "Limitation of Liability",
@@ -88,7 +88,7 @@ const sections = [
   },
   {
     title: "Contact Information",
-    content: "For questions about these Terms, please contact us at legal@loadsaathi.in or write to us at LoadSaathi Technologies Pvt. Ltd., Bengaluru, Karnataka, India.",
+    content: "For questions about these Terms, please contact us at legal@loadsaathi.in or write to us at LoadSaathi, FTBI, NIT Rourkela, Sector 1, Rourkela, Odisha 769008, India.",
   },
 ];
 
@@ -128,7 +128,7 @@ const Terms = () => {
               name: "How does LoadSaathi's payment escrow work?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Payments are processed through our secure escrow system. Funds are released to the transporter upon successful delivery confirmation by the shipper."
+                text: "Escrow-backed payments are planned. Once launched, funds will be released to the transporter upon successful delivery confirmation by the shipper."
               }
             },
             {

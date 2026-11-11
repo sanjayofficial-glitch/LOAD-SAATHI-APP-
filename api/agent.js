@@ -726,9 +726,9 @@ const STATIC_PAGE_DATA = {
   },
   "/pricing": {
     title: "LoadSaathi Pricing - Transparent Freight Rates",
-    metaDescription: "View LoadSaathi's transparent pricing. Shipper: 1.5-3% platform fee. Trucker: 1.5-2.5% commission. No hidden charges.",
+    metaDescription: "View LoadSaathi's transparent pricing. Free to join; a transaction fee applies on completed shipments. No hidden charges.",
     keywords: ["loadsaathi pricing", "freight rates india", "trucking platform fees", "transparent freight pricing"],
-    summary: "LoadSaathi charges transparent fees: 1.5-3% for shippers, 1.5-2.5% for truckers with no hidden charges."
+    summary: "LoadSaathi charges a transaction fee on completed shipments with no hidden charges; the final schedule will be published."
   },
   "/tools": {
     title: "Logistics Tools & Calculators for Indian Truckers & Shippers",
@@ -843,19 +843,19 @@ const STATIC_PAGE_DATA = {
     title: "LoadSaathi vs TruckSuvidha 2026: Cost, Loads & Features",
     metaDescription: "Compare LoadSaathi vs TruckSuvidha: upfront subscription fees vs 100% free load board. See which truck load platform works best for Indian transporters.",
     keywords: ["loadsaathi vs trucksuvidha", "trucksuvidha review", "freight app comparison india", "truck booking app comparison"],
-    summary: "Head-to-head comparison of LoadSaathi's free zero-commission load board against TruckSuvidha's subscription directory model."
+    summary: "Head-to-head comparison of LoadSaathi's free-to-join load board against TruckSuvidha's subscription directory model."
   },
   "/compare/loadsaathi-vs-blackbuck": {
     title: "LoadSaathi vs BlackBuck 2026: Broker Margin vs Free Board",
-    metaDescription: "LoadSaathi vs BlackBuck comparison: managed freight rates vs zero-commission direct load matching. See which platform is right for your trucking business.",
+    metaDescription: "LoadSaathi vs BlackBuck comparison: managed freight rates vs direct load matching without broker margins. See which platform is right for your trucking business.",
     keywords: ["loadsaathi vs blackbuck", "blackbuck app review", "load board comparison india", "fleet owner app comparison"],
-    summary: "LoadSaathi's zero-commission board vs BlackBuck's managed-margin model: commission, settlement speed, tracking and coverage compared."
+    summary: "LoadSaathi's board vs BlackBuck's managed-margin model: fee structure, settlement speed, tracking and coverage compared."
   },
   "/safety-trust": {
     title: "Safety & Trust - Verified Truckers | LoadSaathi",
-    metaDescription: "How LoadSaathi keeps freight safe: trucker KYC verification, GPS tracking, escrow-backed payments, and dispute resolution for shippers.",
+    metaDescription: "How LoadSaathi keeps freight safe: trucker KYC verification, GPS tracking, planned escrow-backed payments, and dispute resolution for shippers.",
     keywords: ["verified truckers india", "freight safety", "safe truck booking", "loadsaathi trust"],
-    summary: "LoadSaathi's safety features: verified truckers, live GPS tracking, escrow payments, and dispute support."
+    summary: "LoadSaathi's safety features: verified truckers, live GPS tracking, planned escrow payments, and dispute support."
   },
   "/gallery": {
     title: "App Screenshots & Demo - LoadSaathi Freight Platform",
@@ -1406,7 +1406,7 @@ const BLOG_DATA = {
       "digital payments for truckers",
       "product updates"
     ],
-    "summary": "LoadSaathi processes payments through escrow-backed settlement: shippers pay into escrow at booking, funds are released to truckers within 24-48 hours of delivery confirmation. Digital payments eliminate the traditional 30-45 day payment cycles that truckers face in broker-mediated models.",
+    "summary": "LoadSaathi plans escrow-backed settlement — funds held at booking and released after delivery confirmation — to replace the traditional 30-45 day payment cycles truckers face in broker-mediated models.",
     "author": "Priya Sharma",
     "authorBio": "Priya Sharma is the Product Lead at LoadSaathi, specializing in trust and reputation systems for marketplace platforms.",
     "date": "2026-06-28",
@@ -1535,7 +1535,7 @@ const BLOG_DATA = {
       "shipper tips lower freight cost",
       "shipper guide"
     ],
-    "summary": "Reduce freight costs by up to 40% with these 10 strategies: use PTL for small loads, book return-load trucks, use AI price predictions, consolidate shipments, negotiate annual contracts, optimize packaging, avoid peak seasons, use digital platforms, maintain good credit scores, and plan routes efficiently.",
+    "summary": "Lower freight costs with these 10 practical strategies: use PTL for small loads, book return-load trucks, use AI price predictions, consolidate shipments, negotiate annual contracts, optimize packaging, avoid peak seasons, use digital platforms, maintain good credit scores, and plan routes efficiently.",
     "author": "Amit Verma",
     "authorBio": "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
     "date": "2026-06-08",
@@ -1845,11 +1845,11 @@ const BLOG_DATA = {
       },
       {
         "question": "How does LoadSaathi help truckers find return loads?",
-        "answer": "LoadSaathi's AI-powered matching connects truckers with return loads based on route, capacity, and vehicle type — often while the truck is still unloading. Escrow payments are released within 24 hours of delivery confirmation, and verified shipper credit scores reduce payment risk."
+        "answer": "LoadSaathi's AI-powered matching connects truckers with return loads based on route, capacity, and vehicle type — often while the truck is still unloading. Escrow-backed payments are planned, and verified shipper credit scores reduce payment risk."
       },
       {
         "question": "What is the payment cycle for return loads on LoadSaathi?",
-        "answer": "LoadSaathi's escrow payment system holds the shipper's payment until delivery is confirmed via GPS verification. Payments are released within 24 hours, eliminating the 30-60 day payment cycles common in traditional freight."
+        "answer": "Planned escrow settlement will hold the shipper's payment until delivery is confirmed via GPS, replacing the 30-60 day payment cycles common in traditional freight."
       }
     ],
     "category": "Trucker Tips",
@@ -1882,7 +1882,7 @@ const BLOG_DATA = {
       },
       {
         "question": "How do I book PTL transport online?",
-        "answer": "Enter your shipment details on LoadSaathi — origin, destination, weight, and departure date. The AI matches you with verified carriers within minutes. Compare offers, book, track via GPS, and pay through escrow."
+        "answer": "Enter your shipment details on LoadSaathi — origin, destination, weight, and departure date. The AI matches you with verified carriers within minutes. Compare offers, book, and track via GPS; escrow-backed payment is planned."
       },
       {
         "question": "What is the minimum weight for PTL shipping?",
@@ -1918,7 +1918,7 @@ const BLOG_DATA = {
       },
       {
         "question": "How does LoadSaathi help steel shippers?",
-        "answer": "LoadSaathi connects steel shippers with verified carriers experienced in steel transport. The platform matches by vehicle type, capacity, and corridor. Escrow payments ensure carriers get paid on delivery, and GPS tracking provides real-time visibility."
+        "answer": "LoadSaathi connects steel shippers with verified carriers experienced in steel transport. The platform matches by vehicle type, capacity, and corridor. Planned escrow-backed payments aim to ensure carriers get paid on delivery, and GPS tracking provides real-time visibility."
       }
     ],
     "category": "Industry Guide"
@@ -1966,7 +1966,7 @@ const BLOG_DATA = {
       "hidden cost empty miles msme logistics",
       "freight strategy"
     ],
-    "summary": "40% of Indian trucks run empty on return trips, inflating logistics costs for MSMEs. Learn how AI-powered PTL matching eliminates empty miles and saves MSMEs 25-35% on freight.",
+    "summary": "40% of Indian trucks run empty on return trips, inflating logistics costs for MSMEs. Learn how AI-powered PTL matching helps fill empty miles and reduce freight spend.",
     "author": "Sanjaya Sahu",
     "date": "2026-08-10",
     "readTime": "5 min",
@@ -1985,7 +1985,7 @@ const BLOG_DATA = {
       },
       {
         "question": "How much can MSMEs save by switching to shared freight?",
-        "answer": "MSMEs switching from FTL to PTL for partial cargo typically save 25-35% on freight costs. When combined with AI-matched return loads that reduce deadheading, total logistics costs can drop by up to 40%."
+        "answer": "MSMEs switching from FTL to PTL for partial cargo typically pay only for the space they use. Combined with AI-matched return loads that reduce deadheading, this lowers logistics spend."
       }
     ],
     "category": "Freight Strategy",
@@ -2065,15 +2065,15 @@ const BLOG_DATA = {
     "faq": [
       {
         "question": "How much do freight brokers charge in India?",
-        "answer": "Traditional freight brokers in India typically add 15-25% markup between the shipper payment and the trucker rate. On a 35,000 rupee shipment, the broker may take 5,000-8,000 as commission. LoadSaathi charges 2-5% per completed transaction with full rate transparency."
+        "answer": "Traditional freight brokers in India typically add 15-25% markup between the shipper payment and the trucker rate. On a 35,000 rupee shipment, the broker may take 5,000-8,000 as commission. LoadSaathi charges a transaction fee on completed shipments with full rate transparency; the final schedule will be published."
       },
       {
         "question": "How is LoadSaathi different from a broker?",
-        "answer": "LoadSaathi is a digital freight marketplace, not a broker. It connects shippers directly with verified truckers using AI matching. The shipper sees the trucker actual rate, credit score, and reviews. Payments are held in escrow and released within 24 hours of delivery. There are no hidden markups."
+        "answer": "LoadSaathi is a digital freight marketplace, not a broker. It connects shippers directly with verified truckers using AI matching. The shipper sees the trucker actual rate, credit score, and reviews. Escrow-backed payments are planned. There are no hidden markups."
       },
       {
         "question": "Is LoadSaathi safe for cargo?",
-        "answer": "LoadSaathi verifies every trucker with document validation, vehicle RC checks, and a digital freight credit score (300-900). Real-time GPS tracking provides visibility from pickup to delivery. Escrow payments ensure the trucker is paid only after successful delivery confirmation."
+        "answer": "LoadSaathi verifies every trucker with document validation, vehicle RC checks, and a digital freight credit score (300-900). Real-time GPS tracking provides visibility from pickup to delivery. Planned escrow-backed payments aim to ensure the trucker is paid only after successful delivery confirmation."
       },
       {
         "question": "Can I still use my broker and LoadSaathi?",
@@ -2924,11 +2924,11 @@ const BLOG_DATA = {
     lastUpdated: "2026-10-18",
     readTime: "10 min read",
     faq: [
-      { question: "Which is the best free load board app in India?", answer: "LoadSaathi is the only major platform in this list that is fully free for truckers with zero commission on freight. Most other platforms are freemium: free to browse, with paid plans, badges, or margin built into managed load rates." },
+      { question: "Which is the best free load board app in India?", answer: "LoadSaathi is free to join for truckers, with fees only on completed shipments. Most other platforms are freemium: free to browse, with paid plans, badges, or margin built into managed load rates." },
       { question: "Are load board apps free for truckers in India?", answer: "It depends on the model. Some charge a monthly subscription, some take a commission per completed load, some are free for carriers and monetise shipper-side features, and some build margin into managed rates. Always confirm the true cost per load before you commit — a free browse tier can still carry per-booking charges." },
       { question: "Which load app is best for East India corridors?", answer: "For Jharkhand, Odisha, and West Bengal corridors such as Ranchi–Kolkata, Rourkela–Kolkata, and Jamshedpur–Kolkata, LoadSaathi concentrates its network and adds AI matching plus return-load discovery. For pan-India coverage, add a national platform like Vahak or BlackBuck alongside it." },
       { question: "How do load boards help reduce empty kilometres?", answer: "They make the return leg visible before the truck commits to the outbound trip. With over 35% of commercial truck-kilometres in India running empty, seeing who needs a truck on your way back turns a dead leg into a booked one. Return-load matching is a free core feature on LoadSaathi." },
-      { question: "Can I use more than one load board app?", answer: "Yes, and most successful truckers do. A common pattern is a free, zero-commission board for regular home corridors and return loads, plus one national discovery app for weeks when local lanes run thin. Just keep your postings consistent across platforms to avoid double-booking." },
+      { question: "Can I use more than one load board app?", answer: "Yes, and most successful truckers do. A common pattern is a free-to-join board for regular home corridors and return loads, plus one national discovery app for weeks when local lanes run thin. Just keep your postings consistent across platforms to avoid double-booking." },
     ],
     category: "Industry Insights",
   },
@@ -4680,7 +4680,7 @@ function routeFaq(seoMeta) {
     },
     {
       q: `What does it cost to use LoadSaathi on this lane?`,
-      a: `Joining is free for both sides. A completed shipment carries a ${FEES.shipper} transaction fee for shippers and ${FEES.trucker} for truckers, with no subscription and no listing fee.`,
+      a: `Joining is free for both sides. A completed shipment carries a transaction fee for shippers and truckers (final schedule to be published), with no subscription and no listing fee.`,
     },
   ];
 }
@@ -4716,7 +4716,7 @@ function genericBlogFaq(entry) {
     },
     {
       q: 'Do shippers and truckers both pay to use the platform?',
-      a: `Joining is free. LoadSaathi charges a transaction fee on completed shipments — ${FEES.shipper} for shippers and ${FEES.trucker} for truckers — with no subscription and no listing fee. Every party is scored on the same 300 to 900 freight credit scale, so a completed trip improves your standing for the next one.`,
+      a: `Joining is free. LoadSaathi charges a transaction fee on completed shipments — the final schedule will be published — with no subscription and no listing fee. Every party is scored on the same 300 to 900 freight credit scale, so a completed trip improves your standing for the next one.`,
     },
   ];
 }
@@ -4946,7 +4946,7 @@ const PLATFORM_CAPABILITIES = [
   'AI matching that scores every open load against available trips on capacity, proximity, route overlap and price',
   'Live GPS tracking from pickup to delivery, with expected arrival times and delivery confirmation',
   'A digital freight credit score from 300 to 900 built from completion rate, on-time delivery, communication, reviews and account tenure',
-  'Escrow-backed payments released on milestones, with GST invoice inputs taken straight from the booking',
+  'Escrow-backed payments planned, released on milestones, with GST invoice inputs taken straight from the booking',
   'Bidirectional reviews, so shippers rate truckers and truckers rate shippers after every trip',
 ];
 
@@ -5225,25 +5225,25 @@ const GENERIC_GUIDE_NOTE = 'Before a vehicle is committed, the cost of the movem
 
 const STATIC_FAQ = {
   '/': [
-    { q: "What is LoadSaathi and who uses it?", a: "LoadSaathi is a road freight marketplace for East India. Shippers post loads and truckers post trips, and a matching engine pairs the two. Joining is free for both sides; a completed shipment carries a transaction fee of 1.5-3% for shippers and 1.5-2.5% for truckers." },
-    { q: "How much does it cost to ship with LoadSaathi?", a: "There is no listing fee, no subscription and no charge for a booking that is never completed. Shippers pay 1.5-3% of the shipment value on a completed shipment and truckers pay 1.5-2.5%. The fee covers matching, live tracking, the freight credit score, escrow-backed payment and support." },
+    { q: "What is LoadSaathi and who uses it?", a: "LoadSaathi is a road freight marketplace for East India. Shippers post loads and truckers post trips, and a matching engine pairs the two. Joining is free for both sides; a completed shipment carries a transaction fee (final schedule to be published)." },
+    { q: "How much does it cost to ship with LoadSaathi?", a: "There is no listing fee, no subscription and no charge for a booking that is never completed. Shippers and truckers pay a transaction fee on a completed shipment; the final schedule will be published. The fee covers matching, live tracking, the freight credit score, planned escrow-backed payment and support." },
     { q: "Which cities and corridors are covered?", a: "Coverage today is concentrated on the industrial belt of Odisha, Jharkhand, West Bengal and coastal Andhra Pradesh: Rourkela, Bhubaneswar, Cuttack, Sambalpur, Angul, Balasore, Berhampur, Paradip, Ranchi, Dhanbad, Jamshedpur, Kolkata, Burdwan and Visakhapatnam, with published corridor pages between them." },
     { q: "Can I track my truck once the booking is confirmed?", a: "Yes. GPS tracking runs from pickup to delivery on every confirmed booking, with an expected arrival time and a delivery confirmation step. The counterparty sees the live location for the duration of the trip; it is not published." },
   ],
   '/features': [
     { q: "What does the freight credit score actually measure?", a: "A score from 300 to 900, weighted across completion rate, on-time delivery, communication quality, review ratings and account tenure. A high score is earned by finishing trips well rather than by volume, and it is public, so both sides can see what they are dealing with before they commit." },
     { q: "How does matching decide which truck fits my load?", a: "Every open load is scored against available trips on capacity fit, proximity, route overlap, price alignment, date and counterparty rating, then ranked. The score is shown with the shortlist, so you can see why a vehicle was surfaced rather than taking the ranking on trust." },
-    { q: "Are payments held until delivery?", a: "Yes. Payment sits in escrow and is released against agreed milestones rather than to either party on delivery day. The booking also captures the cargo, weight and shipper details that the GST e-way bill needs, so the paperwork comes from the same record as the movement." },
+    { q: "Are payments held until delivery?", a: "Escrow-backed release against agreed milestones is planned. Today, settlement terms are agreed directly between the parties. The booking also captures the cargo, weight and shipper details that the GST e-way bill needs, so the paperwork comes from the same record as the movement." },
     { q: "Can both sides rate each other?", a: "Reviews run in both directions after every trip. That is deliberate: a marketplace where one side always reviews the other gives the reviewed side no reason to protect the counterparty." },
   ],
   '/how-it-works': [
     { q: "How do I post a load as a shipper?", a: "You enter weight, volume, origin, destination, cargo description and the loading window. Matching then scores the load against available trips and returns a ranked shortlist with the reason for each match, and you accept the vehicle that suits the consignment." },
     { q: "How do I post a trip as a trucker?", a: "You enter vehicle type, available capacity, origin, destination and departure date. Loads that fit your lane and capacity surface against the trip, ranked on route overlap, timing, capacity fit and the shipper’s credit standing, so the return leg is visible before you load." },
-    { q: "What happens after a booking is confirmed?", a: "Live tracking starts at pickup, payment is held in escrow and released on milestones, and both sides review each other at the end. The same flow applies to a part load and a full truck; only the vehicle and rate differ." },
+    { q: "What happens after a booking is confirmed?", a: "Live tracking starts at pickup, settlement is agreed per terms (escrow-backed release is planned), and both sides review each other at the end. The same flow applies to a part load and a full truck; only the vehicle and rate differ." },
   ],
   '/pricing': [
-    { q: "Is there a subscription or listing fee?", a: "No. Joining is free, there is no listing fee and there is no charge for a booking that is never completed. The only charge is a transaction fee on a completed shipment: 1.5-3% for shippers and 1.5-2.5% for truckers." },
-    { q: "What does the transaction fee cover?", a: "Matching, live GPS tracking, the digital freight credit score, escrow-backed payments and support. There is no separate charge for the calculators, the credit score, or contacting a counterparty." },
+    { q: "Is there a subscription or listing fee?", a: "No. Joining is free, there is no listing fee and there is no charge for a booking that is never completed. The only charge is a transaction fee on a completed shipment; the final schedule will be published." },
+    { q: "What does the transaction fee cover?", a: "Matching, live GPS tracking, the digital freight credit score, planned escrow-backed payments and support. There is no separate charge for the calculators, the credit score, or contacting a counterparty." },
     { q: "Do you offer volume rates?", a: "Regular shippers and fleet operators can ask the team for a rate card. Published percentages are the default; a negotiated rate applies to the volume, not to individual bookings." },
     { q: "How do I get a GST invoice?", a: "The booking captures cargo description, weight and shipper details, which are the same inputs the e-way bill needs. The transport invoice is raised against the completed shipment, and the GST calculator on the site will show you the IGST or CGST plus SGST split for a given origin and destination." },
   ],
@@ -5258,19 +5258,19 @@ const STATIC_FAQ = {
     { q: "How often are the articles reviewed?", a: "Rate and compliance articles carry a last-updated date and are revised when the underlying numbers or rules change. Platform articles are updated when the product changes how a booking works." },
   ],
   '/faq': [
-    { q: "When is payment released to the trucker?", a: "Payment sits in escrow from booking and is released against agreed milestones rather than on a single delivery-day settlement, so a trucker is not carrying the whole float of a trip. The release points are set on the booking." },
+    { q: "When is payment released to the trucker?", a: "Escrow-backed milestone release is planned so a trucker does not carry the whole float of a trip. Until then, payment timing is agreed on the booking." },
     { q: "What happens if a trucker cancels?", a: "The booking is reopened for matching and the cancellation is recorded against the trucker’s credit standing, which weighs completion rate and on-time delivery. A repeated pattern shows up in the score that shippers see before they accept a bid." },
     { q: "Which documents must a vehicle carry?", a: "Registration certificate, permit, fitness certificate, insurance and the driver’s papers travel with the vehicle, and the e-way bill must match the invoice. The document checklist tool generates the list for a specific route, vehicle type and commodity." },
     { q: "How is a trucker verified?", a: "KYC is completed before a trucker can bid, covering licence and vehicle documents. Alongside that, every trip feeds the freight credit score, so verification is a starting position rather than the whole reputation." },
   ],
   '/safety-trust': [
     { q: "What stops a truck from being unverified?", a: "KYC must be completed before a trucker can bid, covering licence and vehicle documents. Reviews and the credit score then keep the standing honest after that, because both are updated by the trips that actually happen." },
-    { q: "How is a payment held?", a: "Escrow-backed payments release only against agreed milestones, so neither side can walk away from a completed leg without the other being exposed. A dispute holds the balance rather than letting either side withdraw it." },
+    { q: "How is a payment held?", a: "Planned escrow-backed payments will release only against agreed milestones, so neither side can walk away from a completed leg without the other being exposed. A dispute would hold the balance rather than letting either side withdraw it." },
     { q: "Who can see the live location of my truck?", a: "The counterparty on the booking, for the duration of the trip. It is not published and not exposed as a public feed." },
   ],
   '/compare': [
     { q: "How is LoadSaathi different from Vahak, BlackBuck, Trukky or Porter?", a: "Mostly in network shape and settlement. Enterprise load boards optimise for large shippers with dedicated fleets. LoadSaathi is built for MSMEs, first-time shippers and owner-driver truckers on East India corridors, with free joining, a per-transaction fee and a public credit score that works for an operator running a single vehicle." },
-    { q: "Does LoadSaathi charge a commission per truck?", a: "No. The published fee is a percentage on a completed shipment — 1.5-3% for shippers and 1.5-2.5% for truckers — and there is no listing fee or subscription on either side." },
+    { q: "Does LoadSaathi charge a commission per truck?", a: "No. The published fee is a transaction fee on a completed shipment — the final schedule will be published — and there is no listing fee or subscription on either side." },
     { q: "Can I still work with a broker?", a: "Yes. A lot of the value on an unmanaged lane is visibility: what is moving out of the destination, and what is running empty in the opposite direction. Use the marketplace for the lane you cannot cover and a broker for the rest." },
   ],
   '/compare/loadsaathi-vs-trucksuvidha': [
@@ -5279,14 +5279,14 @@ const STATIC_FAQ = {
     { q: "Which is better for small truck owners?", a: "If you own 1–5 trucks and want instant load leads without paying thousands of rupees in upfront fees, LoadSaathi is built for you." },
   ],
   '/compare/loadsaathi-vs-blackbuck': [
-    { q: "Is BlackBuck commission-free like LoadSaathi?", a: "No. BlackBuck monetises transactions via a commission on freight and financing margins on its truck cards and fuel cards. LoadSaathi charges ₹0 commission on freight — permanently." },
+    { q: "Is BlackBuck commission-free like LoadSaathi?", a: "No. BlackBuck monetises transactions via a commission on freight and financing margins on its truck cards and fuel cards. LoadSaathi charges a transaction fee on completed shipments rather than a per-load broker commission." },
     { q: "Which is better for fleet owners with 10+ trucks?", a: "For multi-truck fleet owners who mostly find loads through their own networks and want a free board plus fuel and tyre savings, LoadSaathi is the better fit. BlackBuck suits fleet owners who want managed GPS tracking and prefer app-based truck card payments." },
     { q: "Does BlackBuck offer return loads?", a: "BlackBuck's core strength is outbound truck discovery and tracking. Return load discovery is limited compared to LoadSaathi, where return-load matching and AI load planning are free core features for every trucker." },
   ],
   '/for-msmes': [
     { q: "What changes freight cost for a small business?", a: "Three things move the number more than rate negotiation does: shipping small consignments as part loads instead of booking whole vehicles, comparing more than one rate on the same morning rather than accepting the first quote, and filling the return leg so the lane costs less per kilometre in both directions." },
     { q: "Do the calculators need an account?", a: "No. The freight rate, toll and fuel, and GST calculators are all free to use without signing in." },
-    { q: "Is escrow-backed payment workable for a small shipper?", a: "Yes, and it is usually the reason small shippers are cautious about paying a stranger online. The balance is held and released on milestones rather than paid up front to an unverified counterparty." },
+    { q: "Is escrow-backed payment workable for a small shipper?", a: "Yes, once escrow launches. It is usually the reason small shippers are cautious about paying a stranger online — holding the balance and releasing it on milestones avoids paying up front to an unverified counterparty." },
   ],
   '/tools': [
     { q: "Can I use the calculators without an account?", a: "Yes. Every calculator on this page is free and needs no sign-in. Each one returns an estimate from the inputs you provide rather than a live carrier quote, and the same input values can be used to post a load or a trip for real quotes." },
@@ -5320,24 +5320,24 @@ const STATIC_FAQ = {
     { q: "Can I try the platform before creating an account?", a: "Yes. The calculators on the free tools pages run without signing in, so you can price a lane and check the cost of a booking before deciding whether to register. Registering is free on both sides, and no fee applies until a shipment actually completes." },
   ],
   '/terms': [
-    { q: "Is LoadSaathi a lender or a financial intermediary?", a: "No. LoadSaathi is a road freight marketplace. It connects shippers and truckers, and escrow-backed payment holds a balance against agreed milestones; it is not a lender, a broker of credit, or a financial services provider." },
+    { q: "Is LoadSaathi a lender or a financial intermediary?", a: "No. LoadSaathi is a road freight marketplace. It connects shippers and truckers, and planned escrow-backed payment would hold a balance against agreed milestones; it is not a lender, a broker of credit, or a financial services provider." },
     { q: "Who is allowed to use the platform?", a: "Any shipper with a consignment to move and any trucker with a vehicle and a licence to present. Truckers complete KYC before they can bid, and both sides carry a public credit score from the trips they complete." },
     { q: "What happens in a dispute?", a: "The balance is held rather than released, and the dispute is worked through with both parties. Repeated disputes and cancellations feed the credit score that the other side sees before accepting a bid." },
   ],
   '/freight-marketplace': [
-    { q: "Is LoadSaathi a broker?", a: "No, and that is the whole structure of the fee. There is no agent taking a cut in the middle: the published fee is 1.5-3% for shippers and 1.5-2.5% for truckers on a completed shipment, paid to the platform rather than extracted as a margin on the rate." },
+    { q: "Is LoadSaathi a broker?", a: "No, and that is the whole structure of the fee. There is no agent taking a cut in the middle: a transaction fee is paid to the platform on a completed shipment rather than extracted as a margin on the rate. The final schedule will be published." },
     { q: "How do I find a carrier for a one-off shipment?", a: "Post the load and browse the other side’s open postings. You can filter by lane, capacity and date and sort on credit standing before you commit, so a first-time shipper is not forced to take the first quote offered." },
     { q: "How does a trucker find work without waiting at a gate?", a: "Post the trip first. Loads that fit the lane and available capacity surface against it, ranked on route overlap, timing, capacity fit and the shipper’s credit standing — which is what makes the return leg visible before the truck commits to the outbound leg." },
   ],
   '/solutions/shippers': [
-    { q: "What does a shipper get that a broker does not give?", a: "The rate you agree is the rate you pay; the only addition is the 1.5-3% transaction fee. You also get to compare several verified truckers on rate, vehicle type, credit score and rating rather than accepting a single quote, and you see the live vehicle location until delivery." },
+    { q: "What does a shipper get that a broker does not give?", a: "The rate you agree is the rate you pay; the only addition is a transaction fee on the completed shipment (schedule to be published). You also get to compare several verified truckers on rate, vehicle type, credit score and rating rather than accepting a single quote, and you see the live vehicle location until delivery." },
     { q: "How does the booking help with GST paperwork?", a: "Cargo description, weight and shipper details are captured at booking, which are the same inputs the e-way bill needs. The transport invoice is raised against the completed shipment rather than reconstructed afterwards." },
     { q: "Can a first-time shipper see who they are dealing with?", a: "Yes. The freight credit score from 300 to 900 and the review history are public before you accept, so the standing of the counterparty is visible at the point of decision." },
   ],
   '/solutions/truckers': [
     { q: "What stops an owner-driver from running empty?", a: "Posting the trip before loading. The matcher then looks for loads that fit the lane, capacity and date, which puts the return leg on screen while the outbound decision is still open rather than after the truck is already empty." },
-    { q: "When do I get paid?", a: "On milestones rather than on delivery day, so cash flow is not tied to a single delivery window. The balance is held in escrow from booking and released as agreed steps are met." },
-    { q: "Do I need my own sales team?", a: "No. Counterparties filter on credit score and rating, both of which are maintained by completed trips, so a good record does the work that a relationship would otherwise do. Joining is free and the transaction fee is 1.5-2.5% on a completed shipment." },
+    { q: "When do I get paid?", a: "Escrow-backed milestone release is planned, so cash flow is not tied to a single delivery window. Until it launches, timing is agreed directly on the booking." },
+    { q: "Do I need my own sales team?", a: "No. Counterparties filter on credit score and rating, both of which are maintained by completed trips, so a good record does the work that a relationship would otherwise do. Joining is free and a transaction fee applies on a completed shipment." },
   ],
   '/ltl-transport': [
     { q: "How is LTL different from part load?", a: "Less-than-truckload is the structured version of part load. Consignments are consolidated into one vehicle and each is charged for the space it occupies rather than for the whole truck, with the consolidation point and drop sequence set before loading so the extra handling is planned rather than improvised." },
@@ -5372,7 +5372,7 @@ const STATIC_FAQ = {
   ],
   '/hi': [
     { q: "LoadSaathi पर भुगतान कैसे होता है?", a: "भुगतान एस्क्रो में रुका रहता है और तय किए गए माइलेस्टोन पर जारी होता है, इसलिए डिलीवरी के दिन एक ही बड़ी रकम किसी एक को देना नहीं पड़ता। बुकिंग में माल का विवरण, वज़न और शिपर की जानकारी दर्ज होती है, जो GST e-way bill के लिए भी यही इनपुट होते हैं।" },
-    { q: "क्या शिपर और ट्रकर दोनों को फ़ीस देनी होती है?", a: "जुड़ना दोनों के लिए फ्री है — कोई सदस्यता या लिस्टिंग फ़ीस नहीं। सिर्फ़ पूरा होने वाली शिपमेंट पर लेनदेन शुल्क लागू होता है: शिपर के लिए 1.5–3% और ट्रकर के लिए 1.5–2.5%।" },
+    { q: "क्या शिपर और ट्रकर दोनों को फ़ीस देनी होती है?", a: "जुड़ना दोनों के लिए फ्री है — कोई सदस्यता या लिस्टिंग फ़ीस नहीं। सिर्फ़ पूरा होने वाली शिपमेंट पर लेनदेन शुल्क लागू होता है — अंतिम दर प्रकाशित होगी।" },
     { q: "ट्रक का लाइव लोकेशन कौन देख सकता है?", a: "बुकिंग पर लगे दूसरे पक्ष को — यानी शिपर या ट्रकर, और वह ट्रिप चलने तक के लिए। लोकेशन सार्वजनिक नहीं होता।" },
     { q: "क्रेडिट स्कोर कैसे बनता है?", a: "300 से 900 के बीच का स्कोर ट्रिप पूरी करने की दर, समय पर डिलीवरी, संवाद, रिव्यू और खाते की अवधि से बनता है। यह सार्वजनिक है, इसलिए बुकिंग से पहले ही दूसरे पक्ष की स्थिति दिख जाती है।" },
   ],
@@ -5447,12 +5447,12 @@ const COMMERCIAL_CTA = {
 };
 
 const STATIC_CONTENT_NOTES = {
-  '/': `LoadSaathi is a two-sided freight marketplace: shippers post loads, truckers post trips, and the matching engine pairs them. Coverage today is ${COVERAGE.freightRoutes} published freight corridors across Odisha, Jharkhand, West Bengal and Andhra Pradesh, ${COVERAGE.cityPages} city pages, and ${COVERAGE.sitemapUrls} indexable pages in total. Joining is free for both sides; a completed shipment carries a ${FEES.shipper} transaction fee for shippers and ${FEES.trucker} for truckers.`,
+  '/': `LoadSaathi is a two-sided freight marketplace: shippers post loads, truckers post trips, and the matching engine pairs them. Coverage today is ${COVERAGE.freightRoutes} published freight corridors across Odisha, Jharkhand, West Bengal and Andhra Pradesh, ${COVERAGE.cityPages} city pages, and ${COVERAGE.sitemapUrls} indexable pages in total. Joining is free for both sides; a completed shipment carries a transaction fee (final schedule to be published).`,
   '/about': `LoadSaathi was founded at NIT Rourkela out of the Foundation for Technology and Business Incubation, with the working assumption that most of the cost of moving goods in East India is paid twice — once for the truck that arrives loaded, and again for the same truck returning empty. The registered office is ${ADDRESS.street}, ${ADDRESS.city}, ${ADDRESS.region} ${ADDRESS.postalCode}. Support runs on ${EMAIL} and ${PHONE_DISPLAY}.`,
-  '/pricing': `The economics are deliberately flat: joining LoadSaathi is free, there is no listing fee, no subscription, and no charge for a booking that is never completed. Shippers pay a ${FEES.shipper} platform fee on completed shipments and truckers pay ${FEES.trucker}. That fee covers matching, live tracking, the digital freight credit score, escrow-backed payments and support. Volume discounts apply to regular shippers and fleet operators — ask the team for a rate card.`,
+  '/pricing': `The economics are deliberately flat: joining LoadSaathi is free, there is no listing fee, no subscription, and no charge for a booking that is never completed. Shippers and truckers pay a transaction fee on completed shipments; the final schedule will be published. That fee covers matching, live tracking, the digital freight credit score, planned escrow-backed payments and support. Volume discounts apply to regular shippers and fleet operators — ask the team for a rate card.`,
   '/how-it-works': `A booking runs the same way on both sides. A shipper posts weight, volume, origin, destination and loading window; a trucker posts the vehicle, available capacity and the lane it is running. The matching engine scores every open pair on capacity fit, proximity, route overlap, price alignment, date and counterparty rating, then surfaces the ranked shortlist. After a booking is confirmed the shipment is tracked live, payment is released on milestones, and both sides review each other.`,
   '/features': `Every participant is scored on the same 300 to 900 freight credit scale, weighted across completion rate, on-time delivery, communication quality, review ratings and account tenure — so a high score is earned by finishing trips well rather than by volume alone. Reviews run in both directions, which is what keeps the incentives honest on a marketplace where one side holds the cargo and the other holds the vehicle.`,
-  '/safety-trust': `Trust on this platform is enforced at four points: trucker KYC before a trucker can bid, live GPS on every confirmed booking so both sides always know where the vehicle is, escrow-backed payments that release only on agreed milestones, and a dispute process that holds the balance rather than letting either side walk. High-value consignments can be booked with an insurance option noted in the booking itself.`,
+  '/safety-trust': `Trust on this platform is enforced at four points: trucker KYC before a trucker can bid, live GPS on every confirmed booking so both sides always know where the vehicle is, planned escrow-backed payments that would release only on agreed milestones, and a dispute process that holds the balance rather than letting either side walk. High-value consignments can be booked with an insurance option noted in the booking itself.`,
   '/faq': `The questions shippers ask most are about payment release, GST invoices and what happens if a trucker cancels. The questions truckers ask most are about how fast they get paid, whether returning empty is avoidable, and how the credit score moves. Both sets are answered on this page, along with the platform fees and the documents a vehicle must carry on an Indian goods route.`,
   '/compare': `The honest comparison with Vahak, BlackBuck, Trukky and Porter comes down to network shape and settlement. Enterprise load boards optimise for large shippers with dedicated fleets; LoadSaathi optimises for MSMEs, first-time shippers and owner-driver truckers on East India corridors, with a free joining model, per-transaction fees and a public credit score that works for an operator running a single vehicle.`,
   '/for-msmes': `MSMEs are the group LoadSaathi is built for. The three changes that move the number are shipping small consignments as part loads instead of booking whole vehicles, comparing more than one rate on the same morning rather than accepting the first quote, and filling the return leg so the lane costs less per kilometre in both directions. Freight rate calculator, toll and fuel calculator, and the GST calculator are all free to use without an account.`,
@@ -5462,7 +5462,7 @@ const STATIC_CONTENT_NOTES = {
   '/blog': `The blog covers freight strategy, corridor rates, compliance and platform changes. Trucker tips sit alongside shipper guides and industry analysis because a marketplace only works when both sides can see the same numbers. Every article is written or reviewed by the LoadSaathi team, dated, and linked to the route, city and calculator pages where you can act on it.`,
   '/contact': `Support answers on booking status, payments, documents and partnerships. Email reaches ${EMAIL}; the phone line is ${PHONE_DISPLAY}. The registered office is ${ADDRESS.street}, ${ADDRESS.city}, ${ADDRESS.region} ${ADDRESS.postalCode}. For a route or rate question it is fastest to send origin, destination, cargo weight and the date you need the truck, because that is exactly what the platform needs to quote it.`,
   '/privacy': `LoadSaathi collects the account details a booking requires — name, email, phone, company, and for truckers the KYC documents needed to verify a licence and vehicle — plus the operational data a shipment generates: pickup and drop addresses, cargo description and weight, vehicle location while a trip is live, and the reviews and credit inputs a participant produces. Live GPS is shown to the counterparty on the booking for the duration of the trip and is not exposed publicly.`,
-  '/terms': `The marketplace terms cover who may use the platform, what a shipper must provide for a load to be bookable, what a trucker must provide for a vehicle to be listed, how escrow-backed payment is released, how cancellations and disputes are handled, and how the freight credit score may be used. Freight services on LoadSaathi are a road transport marketplace — LoadSaathi is not a lender, broker of credit, or financial services provider.`,
+  '/terms': `The marketplace terms cover who may use the platform, what a shipper must provide for a load to be bookable, what a trucker must provide for a vehicle to be listed, how escrow-backed payment (planned) would be released, how cancellations and disputes are handled, and how the freight credit score may be used. Freight services on LoadSaathi are a road transport marketplace — LoadSaathi is not a lender, broker of credit, or financial services provider.`,
   '/tools': `All ${TOOL_LINKS.length} tools are free and need no account. They cover the decisions that have to be made before a booking: what a lane costs, whether part load or a full truck is cheaper, which truck fits the cargo, what the tolls and diesel will run to, what GST applies to the invoice, and what documents the vehicle has to carry. Each returns an estimate from the inputs you provide, not a live carrier quote.`,
   '/return-load': `A truck that finishes a delivery empty has already paid for its fuel, its driver's time and its tolls. Finding a posted load for that same return leg turns a fixed cost into revenue, and it is the single largest lever in an owner-driver's cost per kilometre. LoadSaathi posts loads ahead of the vehicle reaching the destination, filters them by lane and date, and scores matches on the truck's available capacity and the shipper's credit standing.`,
   '/ptl-transport': `Part load means booking space in a truck someone else is already paying for. The consignment travels with one to four other cargoes, so the diesel, toll and driver cost is shared across all of them — typically 30 to 40% below hiring the same vehicle outright. It suits consignments up to about three tonnes. The trade is transit time: consolidation at origin and multiple drops add hours, which is why urgent cargo is better served by a full truck.`,
@@ -5472,7 +5472,7 @@ const STATIC_CONTENT_NOTES = {
   '/truck-near-me': 'Finding a truck locally is a filtering problem rather than a search problem: capacity against your cargo, available space against your date, and the counterparty’s credit standing. LoadSaathi exposes all three as filters, so a shortlist can be built for a specific lane and a specific morning. Trucks running empty out of your city on a return leg are often the cheapest option available, and they are listed first when you filter by date.',
   '/gallery': `The app screens below show what shippers and truckers actually use day to day: the role-based dashboard with live shipment counts and earnings, the matching screen with confidence scores and trucker profiles, the shipment chat with read receipts, the 300 to 900 freight credit score with its factor breakdown, and the bidirectional review flow. The web app and the Android build share the same data.`,
   '/sitemap': `Every indexable page on LoadSaathi, grouped by section: ${COVERAGE.freightRoutes} freight corridor pages, ${COVERAGE.cityPages} city pages, transport services by city, practical guides, ${TOOL_LINKS.length} free freight calculators, the logistics blog, and the legal pages — ${COVERAGE.sitemapUrls} URLs in total. The same list is available as XML at ${SITE_URL}/sitemap.xml, and a plain-text summary for AI agents at ${SITE_URL}/llms.txt. If a page you need is not listed here, it is not published: the sitemap is generated from the same data the app routes from, so it cannot list a page that 404s.`,
-  '/solutions/shippers': `For a shipper, the platform removes the broker from the middle of the loop. Post once, compare several verified truckers on rate, vehicle type, credit score and rating, then track the vehicle live until delivery and release payment on milestones. The rate you agree is the rate you pay — the only addition is the ${FEES.shipper} transaction fee, and the inputs for the GST e-way bill come straight out of the booking.`,
+  '/solutions/shippers': `For a shipper, the platform removes the broker from the middle of the loop. Post once, compare several verified truckers on rate, vehicle type, credit score and rating, then track the vehicle live until delivery and agree settlement on completion. The rate you agree is the rate you pay — the only addition is a transaction fee on the completed shipment (final schedule to be published), and the inputs for the GST e-way bill come straight out of the booking.`,
   '/solutions/truckers': `For a trucker, the platform fills the leg you are about to run and the leg you were about to run empty. Post the trip with the vehicle type, available capacity and lane, and matching loads surface against it — ranked on route overlap, timing, capacity fit and the shipper's credit standing. Settlement is on milestones rather than on delivery day, so cash flow is not tied to the delivery window.`,
   '/transport-cost-calculator': 'Transport cost per kilometre is the number every rate conversation turns on. The estimate here builds up from distance, load type, tolls and a diesel reference, so you can see which part of a quote is fuel, which part is the road, and which part is the truck. Use it to check a rate you have been quoted, or to sanity-check a budget before you go to market.',
   '/fare-calculator': 'A fare estimate needs the same four inputs a booking does: origin, destination, weight and date. The calculator turns those into a per-kilometre and per-kilogram range for part load and full truck, with a toll and diesel allowance, so two quotes for the same movement can be compared on equal terms.',
@@ -6238,7 +6238,7 @@ The page \`${rawPath}\` does not exist on LoadSaathi.
 
 ## LoadSaathi
 
-LoadSaathi is India's AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, digital credit scores, and escrow-backed payments to eliminate empty return trips and reduce freight costs by up to 40%.
+LoadSaathi is India's AI-powered shared freight marketplace connecting shippers and truckers for PTL (Partial Truckload) and LTL (Less Than Truckload) loads across East India. The platform uses AI matching, real-time GPS tracking, and digital credit scores, with escrow-backed payments planned, to help reduce empty return trips.
 
 ## Available Pages
 

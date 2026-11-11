@@ -109,7 +109,7 @@ const sections = [
       },
       {
         heading: "Address",
-        text: "LoadSaathi Technologies Pvt. Ltd., Bengaluru, Karnataka, India. We will respond to all legitimate requests within 30 days.",
+        text: "LoadSaathi, FTBI, NIT Rourkela, Sector 1, Rourkela, Odisha 769008, India. We will respond to all legitimate requests within 30 days.",
       },
     ],
   },
@@ -143,7 +143,7 @@ const Privacy = () => {
         ))}
         <p>
           Questions about privacy? Contact our Data Protection Officer at privacy@loadsaathi.in.
-          LoadSaathi Technologies Pvt. Ltd., Bengaluru, Karnataka, India.
+          LoadSaathi, FTBI, NIT Rourkela, Sector 1, Rourkela, Odisha 769008, India.
         </p>
       </div>
     </noscript>

@@ -78,7 +78,7 @@ const Index = () => {
                   name: 'How much does it cost to use LoadSaathi?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'LoadSaathi is free to join for both shippers and truckers. We charge a small transaction fee of 2–5% per completed shipment, which varies by role, volume, and credit score. There are no subscriptions, no hidden fees, and no minimum commitments.',
+                    text: 'LoadSaathi is free to join for both shippers and truckers. We charge a transaction fee on completed shipments; the final schedule will be published once confirmed. There are no subscriptions, no hidden fees, and no minimum commitments.',
                   },
                 },
                 {
@@ -86,7 +86,7 @@ const Index = () => {
                   name: 'Which cities and routes does LoadSaathi cover?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'LoadSaathi currently operates across East India with the Rourkela–Ranchi–Burdwan corridor as our primary route. We also cover Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal with 25+ active freight corridors.',
+                    text: 'LoadSaathi is building its network across East India with the Rourkela–Ranchi–Burdwan corridor as the primary route. It also covers Bhubaneswar, Kolkata, Jamshedpur, and 50+ cities across Odisha, Jharkhand, and West Bengal in its freight coverage data, with multiple published corridors.',
                   },
                 },
                 {
@@ -102,7 +102,7 @@ const Index = () => {
                   name: 'Is my payment secure on LoadSaathi?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Yes. LoadSaathi uses an escrow-backed payment system. Funds are held securely and released in milestones as delivery progresses. Digital settlements mean faster, transparent payouts compared to traditional 30–60 day credit cycles.',
+                    text: 'Escrow-backed payments are planned. Until they launch, funds and settlement terms are agreed directly between shipper and trucker. Digital settlement is being built to replace traditional 30–60 day credit cycles.',
                   },
                 },
                 {
@@ -128,7 +128,7 @@ const Index = () => {
               name: 'PTL and LTL Freight Marketplace',
               serviceType: 'Freight transport marketplace',
               description:
-                'AI-powered marketplace connecting shippers with verified truckers for part truckload (PTL) and less-than-truckload (LTL) shipments across East India, with live GPS tracking and escrow-backed payments.',
+                'AI-powered marketplace connecting shippers with verified truckers for part truckload (PTL) and less-than-truckload (LTL) shipments across East India, with live GPS tracking; escrow-backed payments are planned.',
               url: 'https://loadsaathi.in',
               provider: {
                 '@type': 'Organization',
@@ -147,7 +147,7 @@ const Index = () => {
                   '@type': 'PriceSpecification',
                   priceCurrency: 'INR',
                   description:
-                    'Free to join. Platform fee 1.5–3% per completed shipment for shippers, 1.5–2.5% for truckers. No subscriptions, no hidden fees.',
+                    'Free to join. A transaction fee applies on completed shipments; the final schedule will be published. No subscriptions, no hidden fees.',
                 },
                 availability: 'https://schema.org/InStock',
               },

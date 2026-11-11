@@ -61,16 +61,16 @@ const trustComponents = [
   },
   {
     icon: Shield,
-    title: "Escrow Payment Protection",
-    subtitle: "Secure Transactions",
+    title: "Escrow Payment Protection (planned)",
+    subtitle: "Planned",
     color: "purple",
-    description: "Funds are held securely in escrow until both parties confirm successful delivery. This eliminates payment risk and ensures fair treatment for shippers and truckers alike.",
+    description: "Escrow-backed payment protection is planned. When it launches, funds will be held securely until both parties confirm successful delivery.",
     features: [
-      "Funds held in secure escrow account",
+      "Escrow-held funds — planned",
       "Milestone-based release options",
       "Dispute resolution for both parties",
       "Transparent fee structure",
-      "Fast settlement post-delivery",
+      "Fast settlement post-delivery — planned",
     ],
   },
   {
@@ -130,10 +130,10 @@ const SafetyTrust = () => {
           <p>A 300-900 score evaluating completion rate (30%), on-time delivery (25%), review ratings (20%), communication quality (15%), and account tenure (10%). Higher scores unlock better loads, lower fees, and priority support.</p>
           <h2>Payment Protection</h2>
           <ul>
-            <li>Escrow-backed transactions</li>
-            <li>Milestone-based payments</li>
-            <li>Instant payment release after delivery confirmation</li>
-            <li>UPI, net banking, cards, NEFT, RTGS supported</li>
+            <li>Escrow-backed transactions — planned</li>
+            <li>Milestone-based payments — planned</li>
+            <li>Payment release per agreed terms</li>
+            <li>Payment method support to be confirmed when escrow launches</li>
           </ul>
           <h2>Real-Time Monitoring</h2>
           <ul>
@@ -161,7 +161,7 @@ const SafetyTrust = () => {
       </noscript>
       <SeoMeta
         title="Safety & Trust — Verified Freight Network"
-        description="LoadSaathi's multi-layer trust system: ID verification, escrow payments, GPS tracking, bidirectional reviews, and fraud detection. Safe freight for everyone."
+        description="LoadSaathi's multi-layer trust system: ID verification, planned escrow payments, GPS tracking, bidirectional reviews, and fraud detection. Safer freight for everyone."
         keywords="freight safety India, trucking trust system, verified shippers truckers, secure freight payments"
         canonical="/safety-trust"
         breadcrumbs={[{ name: "Safety & Trust", url: "/safety-trust" }]}
@@ -190,7 +190,7 @@ const SafetyTrust = () => {
               name: "How are payments protected?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "All transactions are escrow-backed with milestone-based payments. Payment is released instantly after GPS + ePOD delivery confirmation. Supports UPI, net banking, cards, NEFT, and RTGS.",
+                text: "Escrow-backed, milestone-based payments are planned. Today, payment terms are agreed directly between shipper and transporter. Payment method support will be confirmed when escrow launches.",
               },
             },
             {
@@ -198,7 +198,7 @@ const SafetyTrust = () => {
               name: "What happens in case of a dispute?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "LoadSaathi provides AI-powered anomaly detection, an evidence submission portal, 24-48 hour resolution, and mediation by the LoadSaathi team. Escrow protection ensures fair handling.",
+                text: "LoadSaathi provides AI-powered anomaly detection, an evidence submission portal, 24-48 hour resolution, and mediation by the LoadSaathi team. Escrow-backed protection (planned) will ensure fair handling once launched.",
               },
             },
             {

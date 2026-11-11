@@ -53,14 +53,8 @@ const Contact = () => {
           <p><strong>Email:</strong> hello@loadsaathi.in</p>
           <p><strong>Phone:</strong> +91-83289-98031</p>
           <p><strong>Hours:</strong> Monday to Saturday, 9:00 AM - 7:00 PM IST</p>
-          <h2>Head Office</h2>
-          <p><strong>Address:</strong> LoadSaathi Technologies Pvt. Ltd., Near NIT Rourkela, Rourkela, Odisha 769008, India</p>
-          <h2>Regional Offices</h2>
-          <ul>
-            <li><strong>Delhi NCR:</strong> Plot No. 15, Sector 44, Gurugram, Haryana 122003</li>
-            <li><strong>Mumbai:</strong> 701, 7th Floor, Ackruti Cosmos, MIDC, Andheri East, Mumbai 400093</li>
-            <li><strong>Bengaluru:</strong> 3rd Floor, Prestige Towers, Residency Road, Bengaluru 560025</li>
-          </ul>
+          <h2>Operating Base</h2>
+          <p><strong>Rourkela, Odisha:</strong> LoadSaathi operates from Rourkela, Odisha, with its team based at FTBI, NIT Rourkela, Sector 1, Rourkela, Odisha 769008.</p>
           <h2>Specialized Contacts</h2>
           <ul>
             <li><strong>Technical Support:</strong> support@loadsaathi.in</li>

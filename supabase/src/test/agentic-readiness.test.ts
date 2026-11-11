@@ -156,7 +156,8 @@ describe('Agentic Readiness: public/index.md', () => {
 
   it('includes pricing information', () => {
     expect(content).toContain('Free to join');
-    expect(content).toMatch(/2[-–]5%/);
+    expect(content).toContain('transaction fee');
+    expect(content).not.toMatch(/2[-–]5%/);
   });
 
   it('lists cities served', () => {

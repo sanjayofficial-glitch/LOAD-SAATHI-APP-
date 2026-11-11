@@ -14,7 +14,7 @@ export const routeMeta: Record<string, RouteMeta> = {
     title: "PTL Freight Rourkela to Ranchi | Book Trucks Online",
     titleHi: "Rourkela se Ranchi Bhejna Hai? PTL Truck Book Karo",
     description:
-      "Book PTL/LTL freight from Rourkela to Ranchi. Save up to 40% with LoadSaathi's shared truck network. GPS tracking, AI matching, and transparent pricing on the Rourkela-Ranchi corridor.",
+      "Book PTL/LTL freight from Rourkela to Ranchi with LoadSaathi's shared truck network. GPS tracking, AI matching, and transparent pricing on the Rourkela-Ranchi corridor.",
     descriptionHi:
       "Rourkela se Ranchi ke liye sasta truck kaise milega? LoadSaathi par AI se truck match hota hai. GPS tracking aur transparent pricing ke saath. Steel products, cement, FMCG goods — sab bhejo!",
     keywordsHi:
@@ -62,7 +62,7 @@ export const routeMeta: Record<string, RouteMeta> = {
     title: "PTL Freight Rourkela to Bhubaneswar | Intra-Odisha Shipping",
     titleHi: "Rourkela se Bhubaneswar Truck Book Karo — LoadSaathi Se",
     description:
-      "Book PTL/LTL freight from Rourkela to Bhubaneswar. Save up to 40% on shipping within Odisha. AI truck matching, GPS tracking, and digital credit scores on LoadSaathi.",
+      "Book PTL/LTL freight from Rourkela to Bhubaneswar within Odisha. AI truck matching, GPS tracking, and digital credit scores on LoadSaathi.",
     descriptionHi:
       "Rourkela se Bhubaneswar ke liye sasta truck kaise milega? LoadSaathi par Odisha ke andar shipping karo. AI matching, GPS tracking aur credit score system. Sabse sasti freight!",
     keywordsHi:

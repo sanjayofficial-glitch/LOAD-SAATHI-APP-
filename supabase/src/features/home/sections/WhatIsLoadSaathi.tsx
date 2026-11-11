@@ -38,9 +38,9 @@ const WhatIsLoadSaathi = React.memo(() => (
             Partial Truckload (PTL)
           </Link>{' '}
           and Less Than Truckload (LTL) loads across East India. Built for MSMEs in Tier 2 and 3
-          cities, LoadSaathi eliminates empty return trips, reduces freight costs by up to 40%, and
-          brings digital trust to an industry that has operated on phone calls and brokers for
-          decades.
+          cities, LoadSaathi helps reduce empty return trips and freight costs through shared
+          capacity, and brings digital trust to an industry that has operated on phone calls and
+          brokers for decades.
         </p>
         <p className="text-sm text-muted-foreground mt-4">
           LoadSaathi is a truck freight and logistics company (loadsaathi.in). It is{' '}

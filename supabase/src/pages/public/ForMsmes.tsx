@@ -19,7 +19,7 @@ const faqItems = [
   },
   {
     q: "How much can MSMEs save on freight?",
-    a: "MSMEs typically save 20–40% on freight costs by using LoadSaathi instead of traditional broker channels. Our AI price predictor shows you the market rate before you book, so you never overpay.",
+    a: "MSMEs pay only for the truck space they use instead of booking a full truck. Our AI price predictor shows you the market rate before you book, so you can compare fairly.",
   },
   {
     q: "Can I ship small quantities?",
@@ -37,12 +37,12 @@ export default function ForMsmes() {
       <noscript>
         <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px", fontFamily: "system-ui" }}>
           <h2>Freight Transport for MSMEs — LoadSaathi</h2>
-          <p>LoadSaathi helps small businesses save 20–40% on freight costs by connecting them directly with verified truckers. Transparent pricing, AI rate predictions, PTL/LTL options, and GPS tracking.</p>
+          <p>LoadSaathi connects small businesses directly with verified truckers. Transparent pricing, AI rate predictions, PTL/LTL options, and GPS tracking.</p>
         </div>
       </noscript>
       <SeoMeta
-        title="Freight Transport for MSMEs | Save 20–40% on Truck Booking"
-        description="LoadSaathi helps MSMEs save 20–40% on freight costs with AI-powered rate predictions, verified truckers, and PTL/LTL options. No brokers, no hidden charges."
+        title="Freight Transport for MSMEs | PTL/LTL Shared Truck Booking"
+        description="LoadSaathi connects MSMEs with verified truckers via AI-powered rate predictions and PTL/LTL options. No brokers, no hidden charges."
         keywords="MSME logistics India, small business freight transport, affordable truck booking, PTL for small business, B2B transport India, reduce freight cost MSME"
         canonical="/for-msmes"
         breadcrumbs={[
@@ -54,7 +54,7 @@ export default function ForMsmes() {
             "@context": "https://schema.org",
             "@type": "WebPage",
             "name": "Freight Transport for MSMEs — LoadSaathi",
-            "description": "AI-powered freight marketplace for Indian MSMEs. Save 20–40% on truck booking with transparent pricing and verified truckers.",
+            "description": "AI-powered freight marketplace for Indian MSMEs with transparent pricing and verified truckers.",
             "url": "https://loadsaathi.in/for-msmes",
           },
           {
@@ -65,7 +65,7 @@ export default function ForMsmes() {
               "name": "How can MSMEs reduce freight transport costs in India?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "MSMEs can reduce freight costs by 20–40% by booking directly through AI-powered marketplaces like LoadSaathi instead of using traditional brokers. LoadSaathi provides transparent pricing, AI rate predictions for each route, and PTL/LTL options so you only pay for the truck space you need.",
+                "text": "MSMEs can book through AI-powered marketplaces like LoadSaathi instead of using traditional brokers. LoadSaathi provides transparent pricing, AI rate predictions for each route, and PTL/LTL options so you only pay for the truck space you need.",
               },
             },
           },
@@ -80,7 +80,7 @@ export default function ForMsmes() {
               Freight Transport Made Affordable for Small Businesses
             </h1>
             <p className="text-lg sm:text-xl text-white/90 max-w-[700px] mb-8">
-              LoadSaathi connects MSMEs directly with verified truckers. Transparent pricing, AI rate predictions, and no brokers — helping you save 20–40% on every shipment.
+              LoadSaathi connects MSMEs directly with verified truckers. Transparent pricing, AI rate predictions, and no brokers — so you pay for the space you use.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/tools/freight-rate-calculator" className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-white/90 transition-colors">
@@ -102,7 +102,7 @@ export default function ForMsmes() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
               {[
                 { problem: "Broker Dependency", solution: "Direct trucker access via LoadSaathi", stat: "30%" },
-                { problem: "Opaque Pricing", solution: "AI rate predictions before booking", stat: "20–40%" },
+                { problem: "Opaque Pricing", solution: "AI rate predictions before booking", stat: "Transparent rates" },
                 { problem: "No Small-Load Options", solution: "PTL/LTL for any shipment size", stat: "50%" },
               ].map((item, i) => (
                 <div key={i} className="p-6 rounded-xl glass-card border border-border space-y-3">

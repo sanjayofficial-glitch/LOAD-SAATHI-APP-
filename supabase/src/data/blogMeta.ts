@@ -115,7 +115,7 @@ export const blogMeta: BlogMetaEntry[] = [
   readTime: "8 min read",
   author: "Amit Verma",
   authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
-  summary: "Sharma Fabrics in Delhi reduced logistics costs by 28% (₹4.2 lakh/month savings) after switching from brokers to LoadSaathi. On-time delivery improved from 62% to 94%, and freight arrangement time dropped from 8 hours/week to under 1 hour.",
+  summary: "Sharma Fabrics in Delhi switched from brokers to LoadSaathi, cutting logistics costs and improving on-time delivery by removing broker margins and using shared truck space.",
   coverImage: "/blog/og/broker-to-direct-shipper.svg",
   },
   {
@@ -230,7 +230,7 @@ export const blogMeta: BlogMetaEntry[] = [
   readTime: "4 min read",
   author: "Priya Sharma",
   authorBio: "Priya Sharma is the Product Lead at LoadSaathi, specializing in trust and reputation systems for marketplace platforms.",
-  summary: "LoadSaathi processes payments through escrow-backed settlement: shippers pay into escrow at booking, funds are released to truckers within 24-48 hours of delivery confirmation. Digital payments eliminate the traditional 30-45 day payment cycles that truckers face in broker-mediated models.",
+  summary: "LoadSaathi plans escrow-backed settlement — funds held at booking and released after delivery confirmation — to replace the traditional 30-45 day payment cycles truckers face in broker-mediated models.",
   coverImage: "/blog/og/digital-payments-for-truckers.svg",
   },
   {
@@ -320,7 +320,7 @@ export const blogMeta: BlogMetaEntry[] = [
   readTime: "6 min read",
   author: "Amit Verma",
   authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
-  summary: "Reduce freight costs by up to 40% with these 10 strategies: use PTL for small loads, book return-load trucks, use AI price predictions, consolidate shipments, negotiate annual contracts, optimize packaging, avoid peak seasons, use digital platforms, maintain good credit scores, and plan routes efficiently.",
+  summary: "Lower freight costs with these 10 practical strategies: use PTL for small loads, book return-load trucks, use AI price predictions, consolidate shipments, negotiate annual contracts, optimize packaging, avoid peak seasons, use digital platforms, maintain good credit scores, and plan routes efficiently.",
   coverImage: "/blog/og/shipper-tips-lower-freight-cost.svg",
   },
   {
@@ -367,7 +367,7 @@ export const blogMeta: BlogMetaEntry[] = [
   readTime: "5 min read",
   author: "LoadSaathi Team",
   authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
-  summary: "The Rourkela–Bhubaneswar corridor covers 310 km in 7–8 hours with FTL rates from ₹28,000–₹42,000 and PTL rates from ₹5–8/kg. This guide covers 2026 rates, optimal routes, truck availability, and tips for saving up to 35% on this key Odisha freight corridor.",
+  summary: "The Rourkela–Bhubaneswar corridor covers 310 km in 7–8 hours with FTL rates from ₹28,000–₹42,000 and PTL rates from ₹5–8/kg. This guide covers 2026 rates, optimal routes, truck availability, and tips for planning cost-efficient moves on this key Odisha freight corridor.",
   coverImage: "/blog/og/rourkela-bhubaneswar.svg",
   },
   {
@@ -415,7 +415,7 @@ export const blogMeta: BlogMetaEntry[] = [
   readTime: "5 min read",
   author: "Amit Verma",
   authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
-  summary: "Indian MSMEs spend 12–15% of turnover on logistics vs 8% for large enterprises. PTL shared freight, digital load boards, route optimisation, and credit score leverage can cut MSME freight costs by 25–35%. This guide provides actionable strategies for 2026.",
+  summary: "Indian MSMEs spend 12–15% of turnover on logistics vs 8% for large enterprises. PTL shared freight, digital load boards, route optimisation, and credit score leverage can help MSMEs pay for the space they use and reduce freight spend. This guide provides actionable strategies for 2026.",
   coverImage: "/blog/og/msme-freight-saving.svg",
   },
   {
@@ -452,7 +452,7 @@ export const blogMeta: BlogMetaEntry[] = [
   readTime: "10 min read",
   author: "LoadSaathi Team",
   authorBio: "LoadSaathi's editorial team publishes practical guides for shippers and fleet operators across East India, covering freight corridors, cost optimization, and logistics compliance.",
-  summary: "PTL (Partial Truckload) shipping lets Odisha and Jharkhand shippers pay only for the truck space they use — cutting freight costs by 30-40%. In 2026, PTL rates on Rourkela-Kolkata are ₹1,800-2,500/tonne, Rourkela-Ranchi is ₹800-1,200/tonne, and Rourkela-Bhubaneswar is ₹1,200-1,800/tonne. Learn corridors, booking steps, and why LoadSaathi is the best PTL platform.",
+  summary: "PTL (Partial Truckload) shipping lets Odisha and Jharkhand shippers pay only for the truck space they use, compared with booking a full truck. In 2026, PTL rates on Rourkela-Kolkata are ₹1,800-2,500/tonne, Rourkela-Ranchi is ₹800-1,200/tonne, and Rourkela-Bhubaneswar is ₹1,200-1,800/tonne. Learn corridors, booking steps, and how to book PTL online.",
   relatedRoutes: ["rourkela-kolkata","rourkela-ranchi","bhubaneswar-kolkata","ranchi-kolkata"],
   coverImage: "/blog/og/ptl-transport-odisha-jharkhand.svg",
   },
@@ -538,7 +538,7 @@ export const blogMeta: BlogMetaEntry[] = [
   lastUpdated: "August 22, 2026",
   readTime: "5 min read",
   author: "Sanjaya Sahu",
-  summary: "40% of Indian trucks run empty on return trips, inflating logistics costs for MSMEs. Learn how AI-powered PTL matching eliminates empty miles and saves MSMEs 25-35% on freight.",
+  summary: "40% of Indian trucks run empty on return trips, inflating logistics costs for MSMEs. Learn how AI-powered PTL matching helps fill empty miles and reduce freight spend.",
   relatedRoutes: ["rourkela-to-kolkata","jamshedpur-to-kolkata"],
   coverImage: "/blog/og/empty-miles-msme.svg",
   },

@@ -55,7 +55,7 @@ const About = () => {
           <ul>
             <li><strong>15,000+ km:</strong> Empty kilometers eliminated every month.</li>
             <li><strong>2,500+ Tonnes:</strong> Monthly freight movement across 14 states.</li>
-            <li><strong>50+ Route Corridors:</strong> Pan-India network from Kashmir to Kanyakumari.</li>
+            <li><strong>Published Corridors:</strong> Routes across Odisha, Jharkhand, and West Bengal.</li>
             <li><strong>₹30L+:</strong> Monthly savings passed to truckers.</li>
           </ul>
           <h2>Leadership</h2>

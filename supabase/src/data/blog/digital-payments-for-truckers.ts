@@ -4,7 +4,7 @@
  */
 export const content: string[] = [
       "One of the biggest pain points for truckers in India is payment delays. In the traditional broker model, truckers often wait 30-45 days to receive payment after delivery. Some brokers delay further, citing 'client payment pending' while using the trucker's money as working capital. LoadSaathi's digital payment system changes this fundamentally.",
-      "When a shipper books a load on LoadSaathi, the payment is held in escrow. This means the funds are secured by the platform before the truck even starts moving. Upon successful delivery — confirmed by the shipper through the app — the payment is released to the trucker within 24-48 hours.",
+      "When a shipper books a load on LoadSaathi, escrow-backed settlement is planned: funds would be secured by the platform before the truck starts moving, and released to the trucker after delivery is confirmed by the shipper. Until it launches, payment terms are agreed directly between the parties.",
       "For truckers, this means predictable cash flow, no chasing payments, and no broker withholding. For shippers, escrow protection means their payment is only released when the delivery is confirmed — eliminating the risk of paying for undelivered goods. Both sides win with this transparent system.",
       "Future enhancements planned include UPI AutoPay integration for instant settlement, invoice factoring for truckers who need faster access to funds, and a tiered payment system where high-credit-score truckers can access payment within hours of delivery.",
     ];

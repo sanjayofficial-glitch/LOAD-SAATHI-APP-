@@ -27,15 +27,15 @@ const benefits = [
     icon: Users,
     title: 'Shared Network Effect',
     desc: 'Your cargo travels alongside other verified shipments. More loads per truck means lower cost per tonne for everyone.',
-    stat: '200+',
-    statLabel: 'Active Trucks Daily',
+    stat: 'Live',
+    statLabel: 'GPS Tracked Shipments',
   },
   {
     icon: Shield,
     title: 'Verified & Insured',
-    desc: 'Every trucker is credit-scored and verified. Cargo insurance up to ₹5 lakh. GPS tracking on every shipment.',
-    stat: '₹5L',
-    statLabel: 'Cargo Insurance',
+    desc: 'Every trucker is credit-scored and verified, with GPS tracking on every shipment.',
+    stat: 'Verified',
+    statLabel: 'Trucker Network',
   },
 ];
 
@@ -43,7 +43,7 @@ const howItWorks = [
   { step: '1', title: 'Enter Shipment Details', desc: 'Origin, destination, weight, cargo type. Our calculator shows instant rate estimates.' },
   { step: '2', title: 'Choose a Truck', desc: 'AI recommends the best truck for your weight and route. Compare options and prices.' },
   { step: '3', title: 'Book & Track', desc: 'Confirm booking and track your cargo live via GPS. Get updates at every milestone.' },
-  { step: '4', title: 'Deliver & Pay', desc: 'Receive delivery confirmation with ePOD. Pay securely through escrow.' },
+  { step: '4', title: 'Deliver & Pay', desc: 'Receive delivery confirmation with ePOD. Pay per agreed terms (escrow-backed payment is planned).' },
 ];
 
 const routes = [
@@ -60,7 +60,7 @@ const faqs = [
   { q: "How is LTL different from PTL?", a: "PTL (Partial Truckload) and LTL (Less Than Truckload) are often used interchangeably in India. Both involve sharing truck space. PTL typically refers to 0.5–3 tonne shipments, while LTL can also cover smaller parcel-level loads. On LoadSaathi, we use PTL for the 0.5–3 tonne range." },
   { q: "What are typical LTL rates?", a: "LTL rates on East India corridors range from ₹1,500–3,500 per tonne depending on route, weight, and cargo type. Use LoadSaathi's fare calculator for an instant estimate." },
   { q: "Is my cargo safe in shared trucks?", a: "Yes. Every LoadSaathi trucker is verified with a credit score (300–900), GPS-tracked in real time, and cargo is insured up to ₹5 lakh. You also get electronic proof of delivery (ePOD)." },
-  { q: "Which cities does LoadSaathi LTL cover?", a: "LoadSaathi covers all major East India cities: Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, Burdwan, Dhanbad, Sambalpur, and 50+ cities across Odisha, Jharkhand, and West Bengal." },
+  { q: "Which cities does LoadSaathi LTL cover?", a: "LoadSaathi covers the major East India cities: Rourkela, Ranchi, Bhubaneswar, Kolkata, Jamshedpur, Burdwan, Dhanbad, and Sambalpur, with 50+ cities in its freight coverage data across Odisha, Jharkhand, and West Bengal." },
 ];
 
 export default function LtlTransport() {
@@ -152,7 +152,7 @@ export default function LtlTransport() {
                   "Pay only for the weight and volume your cargo uses",
                   "Costs 30–40% less than booking a full truck",
                   "Cargo is consolidated with other verified shipments",
-                  "GPS tracking and escrow payments included"
+                  "GPS tracking included; escrow-backed payments planned"
                 ]}
               />
               <p className="text-lg sm:text-xl text-muted-foreground max-w-xl leading-relaxed">

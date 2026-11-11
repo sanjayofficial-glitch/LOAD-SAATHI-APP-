@@ -37,30 +37,30 @@ const features = [
   {
     icon: Route,
     title: 'Find Return Loads',
-    desc: 'Browse hundreds of available shipments on your return route. Book instantly and never drive empty again.',
-    stat: '40%',
-    statLabel: 'More Revenue Per Trip',
+    desc: 'Browse available shipments on your return route, matching your truck type, capacity, and timing.',
+    stat: 'Return loads',
+    statLabel: 'Fill Empty Trips',
   },
   {
     icon: TrendingUp,
     title: 'AI Price Prediction',
     desc: 'Know the fair market rate for any route before you bid. Our AI analyzes demand, fuel, and seasonality so you never under-quote.',
-    stat: '22%',
-    statLabel: 'Higher Earnings',
+    stat: 'Market rates',
+    statLabel: 'AI Price Prediction',
   },
   {
     icon: Shield,
     title: 'Credit Score',
     desc: 'Build a verifiable reputation with every completed trip. Higher scores unlock premium loads and faster payments.',
-    stat: '850+',
-    statLabel: 'Top Trucker Score',
+    stat: '300–900',
+    statLabel: 'Credit Score Range',
   },
   {
     icon: MessageSquare,
     title: 'Direct Communication',
     desc: 'Chat directly with shippers. Negotiate terms, share updates, and build relationships — no broker in between.',
-    stat: '< 5min',
-    statLabel: 'Avg. Response Time',
+    stat: 'Direct',
+    statLabel: 'Shipper Chat',
   },
 ];
 
@@ -83,7 +83,7 @@ export default function TruckerSolution() {
           <ul>
             <li><strong>Backhaul Loads:</strong> AI finds loads on your return route to eliminate empty kilometers.</li>
             <li><strong>Zero Empty Returns:</strong> Intelligent matching ensures every trip generates revenue.</li>
-            <li><strong>Guaranteed Payments:</strong> Escrow-backed instant payments after delivery.</li>
+            <li><strong>Reliable Payments:</strong> Escrow-backed settlement is planned; payment terms are agreed directly at booking.</li>
             <li><strong>AI Route Optimization:</strong> Saves fuel and maximizes trips per month.</li>
             <li><strong>Digital Records:</strong> Complete digital trip history for compliance.</li>
             <li><strong>Performance Tracking:</strong> AI monitors safety, speed, and efficiency.</li>
@@ -112,7 +112,7 @@ export default function TruckerSolution() {
           <h3>When do I get paid?</h3>
           <p>Payments are released instantly after GPS + ePOD delivery confirmation.</p>
           <h3>What fees does LoadSaathi charge?</h3>
-          <p>2-4% per completed trip, reduced for high credit scores. No hidden charges, fuel surcharges, or commissions.</p>
+          <p>A transaction fee applies on completed trips; the final schedule will be published. No hidden charges, fuel surcharges, or commissions.</p>
         </div>
       </noscript>
       <SeoMeta
@@ -138,7 +138,7 @@ export default function TruckerSolution() {
               name: "When do I get paid?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Payments are released instantly after GPS + ePOD delivery confirmation.",
+                text: "Escrow-based payment release is planned; currently payment terms are agreed directly at booking.",
               },
             },
             {
@@ -146,7 +146,7 @@ export default function TruckerSolution() {
               name: "What fees does LoadSaathi charge?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "2-4% per completed trip, reduced for high credit scores. No hidden charges, fuel surcharges, or commissions.",
+                text: "A transaction fee applies on completed trips; the final schedule will be published. No hidden charges, fuel surcharges, or commissions.",
               },
             },
           ],
@@ -395,7 +395,7 @@ export default function TruckerSolution() {
             {[
               { q: "How do I find loads on LoadSaathi?", a: "Register your fleet, then browse AI-matched shipments from your dashboard. Our engine prioritizes loads matching your truck type, capacity, and preferred routes. New matches are pushed to you in real-time." },
               { q: "How does the Digital Freight Credit Score work?", a: "Your score (300-900) is calculated from completion rates, on-time performance, reviews, communication, and tenure. Higher scores unlock priority matching, lower transaction fees, and faster payments." },
-              { q: "When and how do I get paid?", a: "Payments are released through our secure escrow system within 24-48 hours of delivery confirmation. You can track earnings and payment history from your dashboard." },
+              { q: "When and how do I get paid?", a: "Payments are coordinated between you and the shipper per agreed terms. Escrow-based settlement within 24–48 hours of delivery confirmation is planned." },
               { q: "Can I choose which loads to accept?", a: "Absolutely. Each shipment listing includes full details — origin, destination, cargo type, weight, price, and shipper reviews. Accept only the loads that fit your schedule and preferences." },
             ].map((item, i) => (
               <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08]">
