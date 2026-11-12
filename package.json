@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/validate-env.mjs && node scripts/generate-blog-meta.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-llms-routes.mjs",
+    "prebuild": "node scripts/validate-env.mjs && node scripts/generate-indexnow-key.mjs && node scripts/generate-blog-meta.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-llms-routes.mjs",
     "build": "vite build && node scripts/prerender.mjs && node scripts/smoke.mjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
@@ -21,7 +21,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm verify:seo",
-    "verify:seo": "node scripts/verify-agent-meta.mjs"
+    "verify:seo": "node scripts/verify-agent-meta.mjs",
+    "indexnow:seed": "node scripts/submit-indexnow.mjs --seed",
+    "indexnow:latest": "node scripts/submit-indexnow.mjs --latest"
   },
   "dependencies": {
     "@astryxdesign/core": "^0.7.13",

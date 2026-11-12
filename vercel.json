@@ -102,6 +102,10 @@
     {
       "path": "/api/cron/load-match-alert",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/indexnow",
+      "schedule": "30 0 * * *"
     }
   ],
   "rewrites": [
