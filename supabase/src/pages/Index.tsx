@@ -1,6 +1,5 @@
 import SeoMeta from '@/components/SeoMeta';
 import HeroSection from '@/features/home/sections/HeroSection';
-import SectionNav from '@/features/home/sections/SectionNav';
 import ProofBar from '@/features/home/sections/ProofBar';
 import BentoGrid from '@/features/home/sections/BentoGrid';
 import WhatIsLoadSaathi from '@/features/home/sections/WhatIsLoadSaathi';
@@ -156,7 +155,6 @@ const Index = () => {
         }}
       />
       <HeroSection />
-      <SectionNav />
       <div id="problems">
         <ProofBar />
         <BentoGrid />

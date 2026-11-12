@@ -1,9 +1,9 @@
 
 import { Reveal } from "@/components/motion";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Mail, MessageSquare, Clock, MapPin, Send, ArrowRight, Truck, Phone, Linkedin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button as AstryxButton } from "@astryxdesign/core/Button";
+import { Card } from "@astryxdesign/core/Card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SeoMeta from "@/components/SeoMeta";
@@ -158,7 +158,7 @@ const Contact = () => {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             {/* Form */}
             <div className="lg:col-span-3">
-              <div className="glass-card p-8 sm:p-10 rounded-xl border-border dark:border-white/[0.08]">
+              <Card padding={8}>
                 <h2 className="text-2xl font-black text-foreground mb-6">Send Us a Message</h2>
                 {submitted ? (
                   <div className="text-center py-12">
@@ -218,12 +218,10 @@ const Contact = () => {
                         className="bg-background dark:bg-[#0B1220] border-border resize-none"
                       />
                     </div>
-                    <Button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)] w-full sm:w-auto">
-                      Send Message <Send className="ml-2 h-4 w-4" />
-                    </Button>
+                    <AstryxButton type="submit" label="Send Message" variant="primary" size="lg" endContent={<Send />} />
                   </form>
                 )}
-              </div>
+              </Card>
             </div>
 
             {/* Info Cards */}
@@ -231,7 +229,7 @@ const Contact = () => {
               {supportInfo.map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-orange-500/30 elevate group">
+                  <Card key={i} variant="muted" padding={6} className="group">
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-lg bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
                         <Icon className="h-5 w-5 text-orange-600 dark:text-orange-400" />
@@ -242,11 +240,11 @@ const Contact = () => {
                         <div className="text-xs text-muted-foreground mt-1">{item.detail}</div>
                       </div>
                     </div>
-                  </div>
+                  </Card>
                 );
               })}
 
-              <div className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] mt-6">
+              <Card variant="muted" padding={6} className="mt-6">
                 <h3 className="text-sm font-bold text-foreground mb-3">Business Hours</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -262,15 +260,15 @@ const Contact = () => {
                     <span className="text-foreground font-medium">Closed (Chat support available)</span>
                   </div>
                 </div>
-              </div>
+              </Card>
 
-              <div className="glass-card p-6 rounded-xl border border-orange-500/10 bg-orange-500/5 mt-6">
+              <Card variant="orange" padding={6} className="mt-6">
                 <h3 className="text-sm font-bold text-foreground mb-2">Enterprise Inquiries</h3>
                 <p className="text-xs text-muted-foreground mb-3">Looking to integrate LoadSaathi with your existing systems or need a custom solution?</p>
                 <a href="mailto:enterprise@loadsaathi.in" className="text-sm text-orange-500 hover:text-orange-400 font-semibold underline underline-offset-2">
                   enterprise@loadsaathi.in
                 </a>
-              </div>
+              </Card>
             </div>
           </div>
 
@@ -345,11 +343,7 @@ const Contact = () => {
           <Truck className="h-10 w-10 text-orange-500 mx-auto mb-6" />
           <h2 className="text-3xl sm:text-4xl font-black text-foreground dark:text-white mb-4">Ready to Get Started?</h2>
           <p className="text-muted-foreground mb-8">Join India&apos;s intelligent freight network today.</p>
-          <Link to="/register">
-            <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-              Create Free Account <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
+          <AstryxButton href="/register" label="Create Free Account" variant="primary" size="lg" endContent={<ArrowRight />} />
         </div>
       </Reveal>
     </div>

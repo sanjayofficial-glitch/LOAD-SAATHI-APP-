@@ -1,9 +1,9 @@
 
 import { Reveal } from "@/components/motion";
 
-import { Link } from "react-router-dom";
 import { UserPlus, ClipboardList, Route, MapPin, CheckCircle, Truck, DollarSign, Package, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button as AstryxButton } from "@astryxdesign/core/Button";
+import { Card } from "@astryxdesign/core/Card";
 import SeoMeta from "@/components/SeoMeta";
 
 const shipperSteps = [
@@ -149,7 +149,7 @@ const HowItWorks = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {shipperSteps.map((step, i) => (
-              <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-orange-500/30 elevate group relative">
+              <Card key={i} padding={6} className="group relative">
                 <div className="text-5xl font-black text-orange-600/10 dark:text-orange-500/10 absolute top-3 right-4 select-none">{step.step}</div>
                 <div className="w-12 h-12 rounded-full bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                    <step.icon className="h-6 w-6 text-orange-600 dark:text-orange-400 icon-hover" />
@@ -157,7 +157,7 @@ const HowItWorks = () => {
                 <div className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-2">{step.step}</div>
                 <h3 className="text-base font-bold text-foreground mb-2">{step.title}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
-              </div>
+              </Card>
             ))}
           </div>
           <div className="flex justify-center mt-10">
@@ -183,7 +183,7 @@ const HowItWorks = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {truckerSteps.map((step, i) => (
-              <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08] hover:border-blue-500/30 elevate group relative">
+              <Card key={i} padding={6} className="group relative">
                 <div className="text-5xl font-black text-blue-600/10 dark:text-blue-500/10 absolute top-3 right-4 select-none">{step.step}</div>
                 <div className="w-12 h-12 rounded-full bg-blue-600/10 dark:bg-blue-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                    <step.icon className="h-6 w-6 text-blue-600 dark:text-blue-400 icon-hover" />
@@ -191,7 +191,7 @@ const HowItWorks = () => {
                 <div className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-2">{step.step}</div>
                 <h3 className="text-base font-bold text-foreground mb-2">{step.title}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
-              </div>
+              </Card>
             ))}
           </div>
           <div className="flex justify-center mt-10">
@@ -207,22 +207,14 @@ const HowItWorks = () => {
       <Reveal as="section" className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
-          <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">
+          <Card variant="orange" elevation="high" padding={10} className="text-center">
             <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-4">Ready to Get Started?</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-8">Join thousands of businesses and truckers already transforming Indian logistics.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register?type=shipper">
-                <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                  <Package className="mr-2 h-5 w-5 icon-hover" /> Sign Up as Shipper
-                </Button>
-              </Link>
-              <Link to="/register?type=trucker">
-                <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg border-border text-foreground hover:bg-accent">
-                  <Truck className="mr-2 h-5 w-5 icon-hover" /> Sign Up as Trucker
-                </Button>
-              </Link>
+              <AstryxButton href="/register?type=shipper" label="Sign Up as Shipper" variant="primary" size="lg" icon={<Package />} />
+              <AstryxButton href="/register?type=trucker" label="Sign Up as Trucker" variant="secondary" size="lg" icon={<Truck />} />
             </div>
-          </div>
+          </Card>
         </div>
       </Reveal>
     </div>

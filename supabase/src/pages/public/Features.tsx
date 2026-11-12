@@ -1,9 +1,9 @@
 
 import { Reveal } from "@/components/motion";
 
-import { Link } from "react-router-dom";
 import { Search, Bell, Map, Package, Truck, Route, Shield, TrendingUp, Brain, BarChart3, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button as AstryxButton } from "@astryxdesign/core/Button";
+import { Card } from "@astryxdesign/core/Card";
 import SeoMeta from "@/components/SeoMeta";
 
 const shipperFeatures = [
@@ -160,13 +160,13 @@ const Features = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {shipperFeatures.map((feature, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl hover:border-orange-500/30 elevate group border-border dark:border-white/[0.08]">
+              <Card key={i} padding={8} className="group">
                 <div className="w-12 h-12 rounded-lg bg-orange-600/10 dark:bg-orange-500/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground mb-3">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -186,7 +186,7 @@ const Features = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {truckerFeatures.map((feature, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl hover:border-blue-500/30 elevate group border-border dark:border-white/[0.08]">
+              <Card key={i} padding={8} className="group">
                 <div className="w-12 h-12 rounded-lg bg-blue-600/10 dark:bg-blue-500/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
@@ -199,7 +199,7 @@ const Features = () => {
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -218,13 +218,13 @@ const Features = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {aiFeatures.map((feature, i) => (
-              <div key={i} className="glass-card p-10 rounded-xl border border-orange-500/10 hover:border-orange-500/30 elevate group relative overflow-hidden">
+              <Card key={i} padding={10} className="group relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-[0.06] pointer-events-none"
                   style={{ background: "radial-gradient(circle, #f97316 0%, transparent 70%)" }} />
                 <feature.icon className="h-10 w-10 text-orange-600 dark:text-orange-400 mb-6 group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-xl font-bold text-foreground mb-4">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -244,10 +244,10 @@ const Features = () => {
               { q: "Is real-time GPS tracking included?", a: "Yes. Every shipment and trip on LoadSaathi includes live GPS tracking with ETAs, route visualization, and geofence alerts. Location data stays within the platform and is never sold to third parties." },
               { q: "How does the AI Price Predictor work?", a: "The system uses a multi-provider AI chain (Gemini, Groq, OpenRouter) to analyze route, weight, vehicle type, and historical data. It recommends a fair market rate with confidence level and trend indicator." },
             ].map((item, i) => (
-              <div key={i} className="glass-card p-6 rounded-xl border-border dark:border-white/[0.08]">
+              <Card key={i} variant="muted" padding={6}>
                 <h3 className="font-bold text-foreground mb-2">{item.q}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{item.a}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -257,25 +257,17 @@ const Features = () => {
       <Reveal as="section" className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
-          <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">
+          <Card variant="orange" elevation="high" padding={10} className="text-center">
             <div className="bg-orange-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
               <Truck className="h-8 w-8 text-orange-400" />
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-4">Ready to Transform Your Freight?</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-8">Join India&apos;s intelligent freight network. Sign up as a shipper or trucker and start optimizing today.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register?type=shipper">
-                <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                  <Package className="mr-2 h-5 w-5" /> I Want to Ship Goods
-                </Button>
-              </Link>
-              <Link to="/register?type=trucker">
-                <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg border-border text-foreground hover:bg-accent">
-                  <Truck className="mr-2 h-5 w-5" /> I Have Truck Space
-                </Button>
-              </Link>
+              <AstryxButton href="/register?type=shipper" label="I Want to Ship Goods" variant="primary" size="lg" icon={<Package />} />
+              <AstryxButton href="/register?type=trucker" label="I Have Truck Space" variant="secondary" size="lg" icon={<Truck />} />
             </div>
-          </div>
+          </Card>
         </div>
       </Reveal>
     </div>

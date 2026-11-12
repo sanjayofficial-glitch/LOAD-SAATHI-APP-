@@ -962,3 +962,55 @@
 .leaflet-popup-content a {
   pointer-events: auto !important;
 }
+
+/* ─── Mobile-first compaction (≤480px) ───
+   Tightens hero type, section rhythm, and touch targets app-wide without
+   touching page markup. Unlayered, so it wins over the layered Tailwind
+   utilities at equal specificity — but only on small screens. */
+@media (max-width: 480px) {
+  /* Hero display type — fits more content above the fold */
+  .text-7xl {
+    font-size: 2.6rem;
+    line-height: 1.08;
+  }
+  .text-6xl {
+    font-size: 2.25rem;
+    line-height: 1.1;
+  }
+  .text-5xl {
+    font-size: 2rem;
+    line-height: 1.12;
+  }
+  .text-4xl {
+    font-size: 1.75rem;
+    line-height: 1.15;
+  }
+
+  /* Compact hero/section heights */
+  .min-h-\[680px\] { min-height: 520px; }
+  .min-h-\[500px\] { min-height: 400px; }
+  .min-h-\[450px\] { min-height: 360px; }
+  .min-h-\[400px\] { min-height: 330px; }
+  .min-h-\[350px\] { min-height: 300px; }
+  .min-h-\[320px\] { min-height: 280px; }
+  .min-h-\[300px\] { min-height: 260px; }
+  .min-h-\[280px\] { min-height: 240px; }
+  .min-h-\[250px\] { min-height: 220px; }
+
+  /* Section padding — tighter vertical rhythm */
+  .py-24 { padding-top: 4rem; padding-bottom: 4rem; }
+  .py-20 { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+  .py-16 { padding-top: 3rem; padding-bottom: 3rem; }
+  .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+
+  /* Edge padding — more usable width on phones */
+  .px-6 { padding-left: 1rem; padding-right: 1rem; }
+
+  /* Generous touch targets for bare controls */
+  button,
+  [role="button"],
+  .chip,
+  .tab {
+    min-height: 44px;
+  }
+}

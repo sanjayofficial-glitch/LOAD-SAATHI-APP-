@@ -1,7 +1,8 @@
 
 import { Link } from "react-router-dom";
 import { CheckCircle, X, HelpCircle, Truck, Package, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button as AstryxButton } from "@astryxdesign/core/Button";
+import { Card } from "@astryxdesign/core/Card";
 import SeoMeta from "@/components/SeoMeta";
 
 const plans = [
@@ -207,13 +208,12 @@ const Pricing = () => {
             {plans.map((plan) => {
               const Icon = plan.icon;
               return (
-                <div
+                <Card
                   key={plan.id}
-                  className={`glass-card p-8 sm:p-10 rounded-xl border elevate relative ${
-                    plan.popular
-                      ? "border-orange-500/40 shadow-[0_0_30px_rgba(249,115,22,0.1)]"
-                      : "border-border dark:border-white/[0.08] hover:border-orange-500/30"
-                  }`}
+                  variant={plan.popular ? "orange" : "default"}
+                  elevation={plan.popular ? "med" : "none"}
+                  padding={8}
+                  className="relative"
                 >
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-600 text-white text-xs font-bold tracking-widest uppercase px-4 py-1 rounded-full">
@@ -248,18 +248,15 @@ const Pricing = () => {
                       </li>
                     ))}
                   </ul>
-                  <Link to={plan.link}>
-                    <Button
-                      className={`w-full text-sm font-bold tracking-wider uppercase py-4 h-auto rounded-lg ${
-                        plan.popular
-                          ? "bg-orange-600 hover:bg-orange-700 text-white shadow-[0_0_20px_rgba(249,115,22,0.3)]"
-                          : "bg-muted hover:bg-accent text-foreground"
-                      }`}
-                    >
-                      {plan.cta} <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
+                  <AstryxButton
+                    href={plan.link}
+                    label={plan.cta}
+                    variant={plan.popular ? "primary" : "secondary"}
+                    size="lg"
+                    width="100%"
+                    endContent={<ArrowRight />}
+                  />
+                </Card>
               );
             })}
           </div>
@@ -275,21 +272,21 @@ const Pricing = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {transactionFee.items.map((item, i) => (
-              <div key={i} className="glass-card p-8 rounded-xl border-border dark:border-white/[0.08]">
+              <Card key={i} variant="muted" padding={8}>
                 <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">{item.label}</div>
                 <div className="text-2xl font-black text-orange-600 dark:text-orange-400 mb-2">{item.value}</div>
                 <p className="text-sm text-muted-foreground">{item.detail}</p>
-              </div>
+              </Card>
             ))}
           </div>
-          <div className="mt-8 glass-card p-6 rounded-xl border-border dark:border-white/[0.08]">
+          <Card className="mt-8" variant="muted" padding={6}>
             <div className="flex items-start gap-3">
               <HelpCircle className="h-5 w-5 text-orange-500 mt-0.5 shrink-0" />
               <p className="text-sm text-muted-foreground">
                 <strong className="text-foreground">Why a transaction fee?</strong> Unlike traditional brokers who take undisclosed margins, we charge a transparent fee on completed transactions. This aligns our success with yours — we only earn when you successfully move freight.
               </p>
             </div>
-          </div>
+          </Card>
         </div>
       </section>
 
@@ -370,15 +367,17 @@ const Pricing = () => {
       <section className=" py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-900/5 to-transparent dark:bg-[radial-gradient(ellipse_at_center,_rgba(249,115,22,0.12),transparent_70%)]" />
         <div className="max-w-xl w-full mx-auto px-6 sm:px-12 relative z-10">
-          <div className="glass-card p-10 sm:p-14 rounded-2xl border border-orange-500/20 shadow-[0_0_50px_rgba(249,115,22,0.1)] text-center">
+          <Card variant="orange" elevation="high" padding={10} className="text-center">
             <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-4">Start Free Today</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-8">No credit card required. No commitment. Just smarter freight.</p>
-            <Link to="/register">
-              <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                Create Free Account <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
+            <AstryxButton
+              href="/register"
+              label="Create Free Account"
+              variant="primary"
+              size="lg"
+              endContent={<ArrowRight />}
+            />
+          </Card>
         </div>
       </section>
     </div>

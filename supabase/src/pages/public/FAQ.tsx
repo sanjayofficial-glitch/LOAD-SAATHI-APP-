@@ -1,9 +1,8 @@
 
 import { Reveal } from "@/components/motion";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
 import { Check, Truck, Package, Shield, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button as AstryxButton } from "@astryxdesign/core/Button";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import SeoMeta from "@/components/SeoMeta";
 
@@ -274,16 +273,8 @@ const FAQ = () => {
           <h2 className="text-3xl sm:text-4xl font-black text-foreground dark:text-white mb-4">Still Have Questions?</h2>
           <p className="text-muted-foreground mb-8">Our support team is here to help you 24/7.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/contact">
-              <Button className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                Contact Support
-              </Button>
-            </Link>
-            <Link to="/register">
-              <Button variant="outline" className="text-sm font-bold tracking-wider uppercase px-8 py-4 h-auto rounded-lg border-border text-foreground hover:bg-accent">
-                Create Free Account
-              </Button>
-            </Link>
+            <AstryxButton href="/contact" label="Contact Support" variant="primary" size="lg" />
+            <AstryxButton href="/register" label="Create Free Account" variant="secondary" size="lg" />
           </div>
         </div>
       </Reveal>

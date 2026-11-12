@@ -9,6 +9,8 @@ export default tseslint.config(
     ignores: [
       "dist",
       "android",
+      // Generated Astryx theme build artifacts (source: src/themes/**/*.ts)
+      "src/themes/**/*.{js,d.ts,css}",
       // Vendored AI-agent skill packs (third-party examples, not app code)
       ".agents",
       "agent",
