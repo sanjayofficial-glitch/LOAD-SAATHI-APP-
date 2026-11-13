@@ -46,6 +46,9 @@ const HiBhadaGuide = lazy(() => import("./pages/public/hi/HiBhadaGuide"));
 const HiRouteRourkelaRanchi = lazy(() => import("./pages/public/hi/HiRouteRourkelaRanchi"));
 const RoutesIndex = lazy(() => import("./pages/public/RoutesIndex"));
 const RouteDetail = lazy(() => import("./pages/public/RouteDetail"));
+const OdishaHub = lazy(() => import("./pages/public/odisha/OdishaHub"));
+const OdishaHubDetail = lazy(() => import("./pages/public/odisha/OdishaHubDetail"));
+const OdishaFreightIndex2026 = lazy(() => import("./pages/public/odisha/OdishaFreightIndex2026"));
 const SitemapPage = lazy(() => import("./pages/public/SitemapPage"));
 const Comparison = lazy(() => import("./pages/public/Comparison"));
 const CompareTruckSuvidha = lazy(() => import("./pages/public/compare/CompareTruckSuvidha"));
@@ -161,6 +164,11 @@ export const AppRoutes = () => (
       {/* Freight Routes */}
       <Route path="/routes" element={<RoutesIndex />} />
       <Route path="/routes/:slug" element={<RouteDetail />} />
+
+      {/* Odisha Hub & Benchmark Silo (additive — zero overlap with /location/*) */}
+      <Route path="/odisha" element={<OdishaHub />} />
+      <Route path="/odisha/:hub" element={<OdishaHubDetail />} />
+      <Route path="/odisha-freight-index-2026" element={<OdishaFreightIndex2026 />} />
 
       {/* HTML sitemap */}
       <Route path="/sitemap" element={<SitemapPage />} />
