@@ -24,6 +24,7 @@ const HeroSection = React.memo(() => {
           className="w-full h-full object-cover opacity-20"
           loading="eager"
           fetchPriority="high"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background/95 dark:from-[#0a1a2e]/90 dark:via-[#0a1a2e]/80 dark:to-[#0a1a2e]/95" />
       </div>

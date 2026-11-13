@@ -74,6 +74,15 @@ afterPaint(() => {
   import("./pages/auth/Login");
   import("./pages/public/Features");
   import("./pages/public/HowItWorks");
+
+  // Warm the authenticated app shell (Layout) during idle so the first
+  // post-login navigation never pays a full chunk download. Skipped on
+  // data-saver connections. Page-level chunks (dashboards, browse) stay
+  // on-demand — they are large and only relevant after a role is chosen.
+  const saveData = (navigator as { connection?: { saveData?: boolean } }).connection?.saveData;
+  if (!saveData) {
+    import("./components/Layout");
+  }
 });
 
 async function mountApp() {

@@ -73,6 +73,8 @@ export function ExpandableGallery({
               src={getImageUrl(image.storage_path)}
               alt={image.title || `Gallery image ${index + 1}`}
               className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
             />
             {/* Dark overlay on non-hovered */}
             <motion.div

@@ -74,7 +74,7 @@ import { I8 } from "@/components/icons/I8";
 
 // Freddy AI Chat - draggable floating trigger (works for both authenticated
 // and non-authenticated users)
-import FreddyTrigger from "./FreddyTrigger";
+import FreddyWidget from "./FreddyWidget";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { socialLinks } from "@/data/socialLinks";
@@ -611,7 +611,7 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
         }
       />
       <ScrollToTopFab bottomClass="bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))]" />
-      <FreddyTrigger />
+      <FreddyWidget variant="pill" />
       <MascotInteractionTracker />
       <footer className="hidden lg:block bg-white/80 dark:bg-gray-900/80 border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 pb-24 mt-auto backdrop-blur-lg" style={{ contain: 'layout style' }}>
         <div className="container mx-auto px-4 text-center">

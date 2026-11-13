@@ -38,7 +38,7 @@ import type { BottomNavItem } from "./DockNav";
 const DockNav = lazy(() => import("./DockNav"));
 
 // Freddy AI assistant — unified floating mascot/chat/help (auth + guest)
-import FreddyAssistant from "./FreddyAssistant";
+import FreddyWidget from "./FreddyWidget";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./ui/tooltip";
 import { socialLinks } from "@/data/socialLinks";
 import { useAuth } from "@/contexts/AuthContext";
@@ -355,7 +355,7 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
         }
       />
       <ScrollToTopFab bottomClass="bottom-[calc(9rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))]" />
-      <FreddyAssistant />
+      <FreddyWidget />
       <MascotInteractionTracker />
     </div>
   );
