@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabase } from '@/hooks/useSupabase';
+import { getParticipantContact } from '@/lib/userContact';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -73,6 +74,7 @@ const TruckerHub = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [sentOffers, setSentOffers] = useState<ShipmentRequest[]>([]);
   const [incomingRequests, setIncomingRequests] = useState<Request[]>([]);
+  const [shipperPhones, setShipperPhones] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -94,7 +96,7 @@ const TruckerHub = () => {
         .from('shipment_requests')
         .select(`
           id, created_at, status, proposed_price_per_tonne, message, shipment_id, trucker_id, shipper_id,
-          shipment:shipments!inner(id, origin_city, destination_city, departure_date, weight_tonnes, status, shipper_id, shipper:users!shipments_shipper_id_fkey(full_name, phone))
+          shipment:shipments!inner(id, origin_city, destination_city, departure_date, weight_tonnes, status, shipper_id, shipper:users!shipments_shipper_id_fkey(full_name, id))
         `)
         .eq('trucker_id', userProfile.id)
         .order('created_at', { ascending: false });
@@ -127,6 +129,24 @@ const TruckerHub = () => {
       setTrips(tripsData || []);
       setSentOffers(mappedSent);
       setIncomingRequests(mappedIncoming);
+
+      // SEC-01: shipper phone numbers are masked until the offer is accepted.
+      // Resolve them through the participant-contact RPC (which checks the
+      // accepted-request link) once per unique shipper.
+      const acceptedOffers = mappedSent.filter((o) => o.status === 'accepted');
+      const shipperIds = [
+        ...new Set(
+          acceptedOffers
+            .map((o) => o.shipment?.shipper_id)
+            .filter((id): id is string => typeof id === 'string' && id.length > 0),
+        ),
+      ];
+      const phoneEntries: Array<[string, string]> = [];
+      for (const id of shipperIds) {
+        const phone = await getParticipantContact(supabase, id);
+        if (phone) phoneEntries.push([id, phone]);
+      }
+      setShipperPhones(Object.fromEntries(phoneEntries));
       setFetchError(false);
     } catch (_err) {
       setFetchError(true);
@@ -541,11 +561,14 @@ const TruckerHub = () => {
                             <Button className="w-full bg-orange-600 hover:bg-orange-700" onClick={() => navigate(`/chat/${offer.id}`)}>
                               <MessageSquare className="h-4 w-4 mr-2" />Chat
                             </Button>
-                            {offer.shipment?.shipper?.phone && (
-                              <a href={`tel:${offer.shipment.shipper.phone}`} className="block">
-                                <Button variant="outline" className="w-full"><Phone className="h-4 w-4 mr-2" />Call</Button>
-                              </a>
-                            )}
+                            {offer.status === 'accepted' && (() => {
+                              const shipperPhone = shipperPhones[offer.shipment?.shipper_id ?? ''];
+                              return shipperPhone ? (
+                                <a href={`tel:${shipperPhone}`} className="block">
+                                  <Button variant="outline" className="w-full"><Phone className="h-4 w-4 mr-2" />Call</Button>
+                                </a>
+                              ) : null;
+                            })()}
                           </>
                         )}
                       </div>

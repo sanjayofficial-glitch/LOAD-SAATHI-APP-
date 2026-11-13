@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabase } from '@/hooks/useSupabase';
+import { getParticipantContact } from '@/lib/userContact';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -65,6 +66,7 @@ const TruckerTripDetail = () => {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [selectedShipperForReview, setSelectedShipperForReview] = useState<{ id: string; name: string } | null>(null);
+  const [shipperPhones, setShipperPhones] = useState<Record<string, string>>({});
 
   const fetchData = useCallback(async () => {
     if (!tripId || !userProfile?.id) return;
@@ -73,7 +75,7 @@ const TruckerTripDetail = () => {
 
       const { data: tripData, error: tripError } = await supabase
         .from('trips')
-        .select('*, trucker:users!trips_trucker_id_fkey(*)')
+        .select('*, trucker:users!trips_trucker_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)')
         .eq('id', tripId)
         .eq('trucker_id', userProfile.id)
         .single();
@@ -87,11 +89,28 @@ const TruckerTripDetail = () => {
 
       const { data: requests, error: requestsError } = await supabase
         .from('requests')
-        .select('*, shipper:users!requests_shipper_id_fkey(*)')
+        .select('*, shipper:users!requests_shipper_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)')
         .eq('trip_id', tripId)
         .order('created_at', { ascending: false });
 
       if (!requestsError) setBookingRequests(requests || []);
+
+      // SEC-01: shipper phone numbers are masked until a request is accepted.
+      // Resolve via the participant-contact RPC (checks the accepted link).
+      const acceptedRequests = (requests || []).filter((r) => r.status === 'accepted');
+      const shipperIds = [
+        ...new Set(
+          acceptedRequests
+            .map((r) => r.shipper_id)
+            .filter((id): id is string => typeof id === 'string' && id.length > 0),
+        ),
+      ];
+      const phoneEntries: Array<[string, string]> = [];
+      for (const id of shipperIds) {
+        const phone = await getParticipantContact(supabase, id);
+        if (phone) phoneEntries.push([id, phone]);
+      }
+      setShipperPhones(Object.fromEntries(phoneEntries));
     } catch (_err) {
       showError('Failed to load trip details');
     } finally {
@@ -516,8 +535,8 @@ const TruckerTripDetail = () => {
                                     <User className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                                     {request.shipper?.full_name}
                                   </p>
-                                  {request.shipper?.phone && (
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">{request.shipper.phone}</p>
+                                  {request.status === 'accepted' && shipperPhones[request.shipper_id] && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">{shipperPhones[request.shipper_id]}</p>
                                   )}
                                   <div className="flex items-center gap-1 text-xs text-yellow-500 dark:text-yellow-400">
                                     <Star className="h-3 w-3" />

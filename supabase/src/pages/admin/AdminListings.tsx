@@ -21,6 +21,11 @@ import {
 import ListingDetailPanel, { type ListingSelection } from './command-center/ListingDetailPanel';
 import { SHIPMENT_SELECT, TRIP_SELECT } from './command-center/usePostedListings';
 import {
+  attachShipperToShipments,
+  attachTruckerToTrips,
+  fetchAdminUsersMap,
+} from '@/lib/adminUsers';
+import {
   STATUS_ORDER,
   formatINR,
   formatDate,
@@ -173,7 +178,13 @@ const AdminListings = ({ kind }: AdminListingsProps) => {
           .order('created_at', { ascending: false })
           .limit(ROW_LIMIT);
         if (err) throw new Error(err.message);
-        setRows((data ?? []) as unknown as Row[]);
+        // SEC-01: attach full poster profiles (incl. phone for admin search)
+        // from the admin_users_view RPC instead of direct `users` reads.
+        const userMap = await fetchAdminUsersMap(supabase);
+        const rowsData = IS_TRIPS(kind)
+          ? attachTruckerToTrips((data ?? []) as Trip[], userMap)
+          : attachShipperToShipments((data ?? []) as Shipment[], userMap);
+        setRows(rowsData as unknown as Row[]);
       } catch (err) {
         console.error('[AdminListings] load failed:', err);
         setError(err instanceof Error ? err.message : 'Failed to load listings');

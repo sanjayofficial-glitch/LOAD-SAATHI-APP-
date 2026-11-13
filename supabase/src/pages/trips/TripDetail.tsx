@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { showSuccess, showError } from '@/utils/toast';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
+import { getParticipantContact } from '@/lib/userContact';
 import { MapPin, Calendar, Truck, IndianRupee, ArrowLeft, AlertCircle, MessageSquare, Loader2, CheckCircle2, Weight, Star } from 'lucide-react';
 import RouteMap from '@/components/RouteMap';
 import EmissionsCard from '@/components/EmissionsCard';
@@ -38,6 +39,7 @@ const TripDetail = () => {
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [truckerLocation, setTruckerLocation] = useState<TruckLocation | null>(null);
+  const [truckerPhone, setTruckerPhone] = useState<string | null>(null);
   const { data: truckerCreditData } = useCreditScore(trip?.trucker_id);
   const truckerCreditScore = truckerCreditData?.score ?? null;
 
@@ -51,7 +53,7 @@ const TripDetail = () => {
         
         const { data: tripData, error: tripError } = await supabase
           .from('trips')
-          .select('*, trucker:users(*)')
+          .select('*, trucker:users(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)')
           .eq('id', tripId)
           .single();
         
@@ -63,6 +65,14 @@ const TripDetail = () => {
           ...tripData,
           trucker: truckerInfo
         } as unknown as Trip);
+
+        // SEC-01: the trucker's phone is masked until the shipper is
+        // connected (accepted request). Only then does the RPC reveal it.
+        setTruckerPhone(null);
+        if (userProfile?.user_type === 'shipper' && tripData.trucker_id) {
+          const phone = await getParticipantContact(supabase, tripData.trucker_id);
+          setTruckerPhone(phone);
+        }
 
         const { data: reviewData } = await supabase
           .from('reviews')
@@ -107,7 +117,7 @@ const TripDetail = () => {
       }
     };
     fetchTripAndReviews();
-  }, [tripId, getToken]);
+  }, [tripId, getToken, userProfile]);
 
   // Real-time subscription for trucker's live location
   useEffect(() => {
@@ -293,10 +303,10 @@ const TripDetail = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* WhatsApp Contact Button */}
-              {userProfile?.user_type === 'shipper' && trip.trucker?.phone && (
+              {/* WhatsApp Contact Button — only revealed after a connection exists */}
+              {userProfile?.user_type === 'shipper' && truckerPhone && (
                 <a
-                  href={generateWhatsAppLink(trip.trucker.phone, {
+                  href={generateWhatsAppLink(truckerPhone, {
                     id: trip.id,
                     cargo_type: trip.vehicle_type,
                     pickup_city: trip.origin_city,

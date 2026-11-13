@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSupabase } from '@/hooks/useSupabase';
+import { getParticipantContact } from '@/lib/userContact';
 import { useAuth as useClerkAuth } from '@clerk/clerk-react';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { useOnlineUsers } from '@/hooks/useOnlineUsers';
@@ -71,8 +72,8 @@ const Chat = () => {
         const supabaseClient = await getClientRef.current();
 
         const [reqRes, sReqRes] = await Promise.all([
-          supabaseClient.from('requests').select('*, trip:trips(*, trucker:users!trips_trucker_id_fkey(*)), shipper:users!requests_shipper_id_fkey(*), receiver:users!requests_receiver_id_fkey(*)').eq('id', requestId).maybeSingle(),
-          supabaseClient.from('shipment_requests').select('*, shipment:shipments(*, shipper:users!shipments_shipper_id_fkey(*)), trucker:users!shipment_requests_trucker_id_fkey(*), shipper:users!shipment_requests_shipper_id_fkey(*)').eq('id', requestId).maybeSingle()
+          supabaseClient.from('requests').select('*, trip:trips(*, trucker:users!trips_trucker_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)), shipper:users!requests_shipper_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type), receiver:users!requests_receiver_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)').eq('id', requestId).maybeSingle(),
+          supabaseClient.from('shipment_requests').select('*, shipment:shipments(*, shipper:users!shipments_shipper_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)), trucker:users!shipment_requests_trucker_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type), shipper:users!shipment_requests_shipper_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)').eq('id', requestId).maybeSingle()
         ]);
 
         if (cancelled) return;
@@ -90,6 +91,16 @@ const Chat = () => {
 
         if (!otherUser) throw new Error('Chat partner not found');
         setRecipient(otherUser);
+
+        // SEC-01: the partner's phone is only revealed once the booking
+        // request / offer is accepted (resolved via the participant-contact RPC).
+        const requestStatus = reqRes.data?.status ?? sReqRes.data?.status;
+        if (requestStatus === 'accepted' && otherUser?.id) {
+          const phone = await getParticipantContact(supabaseClient, otherUser.id);
+          if (phone) {
+            setRecipient((prev) => (prev ? { ...prev, phone } : prev));
+          }
+        }
 
         const initialMessages = await fetchMessages(requestId, getTokenRef.current, chatKindRef.current);
         if (cancelled) return;

@@ -90,7 +90,7 @@ export default function LiveTruckMap({ className }: LiveTruckMapProps) {
       const { data } = await supabase
         .from('trips')
         .select(
-          'id, origin_city, destination_city, origin_state, destination_state, origin_lat, origin_lng, destination_lat, destination_lng, available_capacity_tonnes, price_per_tonne, departure_date, vehicle_type, vehicle_number, status, estimated_distance_km, estimated_duration_min, trucker_id, trucker:users!trips_trucker_id_fkey(full_name, rating, phone, total_trips, is_verified)',
+          'id, origin_city, destination_city, origin_state, destination_state, origin_lat, origin_lng, destination_lat, destination_lng, available_capacity_tonnes, price_per_tonne, departure_date, vehicle_type, vehicle_number, status, estimated_distance_km, estimated_duration_min, trucker_id, trucker:users!trips_trucker_id_fkey(full_name, rating, total_trips, is_verified)',
         )
         .eq('id', liveTruck.trip_id)
         .maybeSingle();
@@ -109,7 +109,7 @@ export default function LiveTruckMap({ className }: LiveTruckMapProps) {
       const supabase = createClerkSupabaseClient(token);
       const { data } = await supabase
         .from('users')
-        .select('id, full_name, rating, phone, total_trips, is_verified')
+        .select('id, full_name, rating, total_trips, is_verified')
         .eq('id', liveTruck.driver_id)
         .maybeSingle();
       return (data as TruckerProfile | null) ?? null;

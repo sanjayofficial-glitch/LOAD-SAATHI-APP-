@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { showError, showSuccess } from '@/utils/toast';
 import { generateWhatsAppLink } from '@/utils/whatsapp';
+import { getParticipantContact } from '@/lib/userContact';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
@@ -74,7 +75,7 @@ const ShipmentDetail = () => {
 
       const { data: shipmentData, error: shipmentError } = await supabase
         .from('shipments')
-        .select('*, shipper:users!shipments_shipper_id_fkey(*)')
+        .select('*, shipper:users!shipments_shipper_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)')
         .eq('id', id)
         .single();
 
@@ -93,12 +94,18 @@ const ShipmentDetail = () => {
         if (shipmentData.status === 'matched' || shipmentData.status === 'completed') {
           const { data: acceptedReq } = await supabase
             .from('shipment_requests')
-            .select('*, trucker:users!shipment_requests_trucker_id_fkey(*)')
+            .select('*, trucker:users!shipment_requests_trucker_id_fkey(id, full_name, rating, total_trips, is_verified, verification_status, avatar_url, user_type)')
             .eq('shipment_id', id)
             .eq('status', 'accepted')
             .maybeSingle();
           if (acceptedReq?.trucker) {
             setAcceptedTrucker(acceptedReq.trucker);
+            // SEC-01: phone is masked until the offer is accepted — resolve it
+            // through the participant-contact RPC (this IS an accepted link).
+            const phone = await getParticipantContact(supabase, acceptedReq.trucker_id);
+            if (phone) {
+              setAcceptedTrucker({ ...acceptedReq.trucker, phone });
+            }
           }
         }
         

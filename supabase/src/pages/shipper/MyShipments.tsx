@@ -103,7 +103,7 @@ const MyShipments = () => {
         .select(`
           id, created_at, status, proposed_price_per_tonne, message, trucker_id, shipment_id, shipper_id,
           shipment:shipments!inner(id, origin_city, destination_city, goods_description, weight_tonnes, budget_per_tonne, departure_date),
-          trucker:users!shipment_requests_trucker_id_fkey(full_name, phone, rating)
+          trucker:users!shipment_requests_trucker_id_fkey(full_name, rating, id)
         `)
         .eq('shipper_id', userProfile.id)
         .order('created_at', { ascending: false });
