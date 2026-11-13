@@ -62,6 +62,17 @@ All database verifications below were executed inside transactions that were
 - `.github/workflows/secret-scan.yml` — gitleaks on push/PR
 - `docs/security/credential-rotation-checklist.md` — rotation steps for the leaked Gemini key
 
+## Production status (updated after apply)
+
+- Migrations A → B → C applied to production Supabase on 2026-11-13, in order.
+- Post-apply verification (live):
+  - Row counts unchanged: 59 users / 16 trips / 13 shipments / 2 requests / 2 shipment requests (zero data loss)
+  - `users` policies: blanket read-all removed; `users select own or admin` + `users select marketplace profile` present
+  - Grants: `authenticated` table-level SELECT = false; `phone`/`email` column SELECT = false; `full_name` = true; `anon` still denied
+  - Function ACLs: `get_users_admin_view`, `admin_users_view`, `get_participant_contact` → only `postgres` + `authenticated`
+  - Behavior: unrelated user reads safe profile; unconnected RPC → NULL; admin RPC → real phone; admin view returns all rows
+- Rollbacks exist for each migration (paired `_ROLLBACK.sql` files).
+
 ## Remaining (needs human/explicit approval)
 
 1. Rotate the leaked Gemini key (checklist in `docs/security/credential-rotation-checklist.md`).
