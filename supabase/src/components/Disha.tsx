@@ -1170,7 +1170,11 @@ function DishaInner({ className, size = 'lg', accent = 'orange' }: DishaProps) {
                         value={chatInput}
                         onChange={(e) => setChatInput(e.target.value)}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
+                          // IME-safe: ignore Enter while composing (Hindi/CJK IME
+                          // confirms conversion with Enter; Safari misorders
+                          // compositionend, so also check keyCode 229).
+                          const ne = e.nativeEvent;
+                          if (e.key === 'Enter' && !ne.isComposing && ne.keyCode !== 229) {
                             sendFreddyMessage(chatInput)
                           }
                         }}

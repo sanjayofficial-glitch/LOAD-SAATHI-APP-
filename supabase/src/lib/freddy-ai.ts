@@ -1,499 +1,236 @@
-// Freddy AI Service - Uses free LLM APIs to answer user questions
-// Supports multiple free providers with fallback
-
-// Available free LLM providers (in order of preference)
-const PROVIDERS = {
-  // HuggingFace Inference API - free tier available
-  huggingface: {
-    name: 'HuggingFace',
-    baseUrl: 'https://api-inference.huggingface.co/models',
-    // Models that work well for chat
-    models: [
-      'microsoft/DialoGPT-medium',
-      'google/flan-t5-large',
-      'facebook/blenderbot-400M-distill',
-    ],
-    headers: (token: string) => ({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }),
-  },
-  // Groq - free tier with fast inference
-  groq: {
-    name: 'Groq',
-    baseUrl: 'https://api.groq.com/openai/v1',
-    models: [
-      'llama-3.1-8b-instant',
-      'llama-3.2-3b-preview',
-      'mixtral-8x7b-32768',
-    ],
-    headers: (token: string) => ({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }),
-  },
-};
-
-// Knowledge base about LoadSaathi - used for RAG-style responses
-const LOADSAATHI_KNOWLEDGE = `
-LOADSAATHI - Precision Freight Intelligence Platform
-=====================================================
-
-WHAT IS LOADSAATHI:
-LoadSaathi is an AI-powered freight marketplace connecting shippers with truckers in India.
-- Shippers can post loads and find verified truckers
-- Truckers can post trips and find loads to fill empty space
-- AI-powered matching and price suggestions
-- Real-time GPS tracking for fleet management
-
-FOR SHIPPERS (have goods to transport):
-- Post shipments with origin, destination, weight, timeline
-- Browse available trucks on your route
-- Compare rates and choose the best option
-- Track shipments in real-time
-- Build credit score for better matches
-- Get AI-suggested fair prices
-
-FOR TRUCKERS (have truck space):
-- Post trips with route and capacity
-- Browse available loads matching your route
-- Track earnings and trips
-- Build reputation through ratings
-- Get AI-suggested market rates
-- Real-time GPS tracking for transparency
-
-KEY FEATURES:
-- AI-powered price prediction and suggestions
-- Smart matching algorithm (7-factor scoring)
-- Real-time GPS tracking
-- Credit score system for trust
-- Direct chat between shippers and truckers
-- Document checklist for compliance
-- Multiple calculator tools (freight rate, PTL/FTL, return load, etc.)
-
-PRICING:
-- Free to sign up and post loads/trips
-- Pay per successful match/transaction
-- No subscription required for basic features
-
-SUPPORTED REGIONS:
-- Primarily East India (Odisha, Jharkhand, West Bengal, Bihar)
-- Expanding to pan-India coverage
-- Major routes include Rourkela-Ranchi, Kolkata-Delhi, etc.
-
-TRANSPORT TYPES:
-- PTL (Partial Truck Load) - for smaller shipments
-- FTL (Full Truck Load) - for full truck capacity
-- LTL (Less than Truck Load) - for very small shipments
-
-HOW IT WORKS:
-1. Sign up as shipper or trucker
-2. Post your load/trip with details
-3. AI matches you with suitable partners
-4. Chat and coordinate directly
-5. Track the shipment/trip in real-time
-6. Rate and review after completion
-
-TOOLS AVAILABLE:
-- Fare Calculator
-- Freight Rate Calculator
-- Return Load Calculator
-- Truck Load Calculator
-- PTL vs FTL Calculator
-- Route Optimizer
-- Trip Profit Calculator
-- Carbon Savings Calculator
-- GST Calculator
-- And many more...
-
-CONTACT:
-- Website: loadsaathi.in
-- Email available through contact page
-- WhatsApp support available
-`;
-
-interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-}
+// Freddy AI Service — local knowledge answers only.
+//
+// Security note (SEC-04): this module previously called Groq / HuggingFace
+// directly from the browser using API keys injected via VITE_GROQ_API_KEY /
+// VITE_HUGGINGFACE_TOKEN and cached in localStorage. Those keys are now
+// removed entirely. Freddy's AI answers are served by the server-side
+// `agent-router` edge function (Clerk-JWT verified, rate-limited), and this
+// fallback answers purely from the built-in knowledge base with no external
+// calls and no stored credentials.
+//
+// Voice: Freddy speaks like a helpful colleague, not a brochure. Short
+// sentences, contractions, one idea at a time, honest about limits, and
+// always leaves a next step on the table. When the user writes in Hindi,
+// answers come in Hindi (same honesty, same warmth).
 
 interface AIResponse {
   success: boolean;
   message: string;
   providerUsed?: string;
-  error?: string;
 }
 
 class FreddyAI {
-  private hfToken: string | null = null;
-  private groqToken: string | null = null;
-
-  constructor() {
-    // Load tokens from environment (will be defined at build time)
-    this.hfToken = typeof window !== 'undefined' 
-      ? localStorage.getItem('freddy_hf_token') 
-      : null;
-    this.groqToken = typeof window !== 'undefined'
-      ? localStorage.getItem('freddy_groq_token')
-      : null;
-  }
-
-  setTokens(hfToken?: string, groqToken?: string) {
-    if (hfToken) {
-      this.hfToken = hfToken;
-      localStorage.setItem('freddy_hf_token', hfToken);
-    }
-    if (groqToken) {
-      this.groqToken = groqToken;
-      localStorage.setItem('freddy_groq_token', groqToken);
-    }
-  }
-
-  async ask(question: string, context?: string, lang: "en" | "hi" = "en"): Promise<AIResponse> {
-    const messages: ChatMessage[] = [
-      { role: 'system', content: this.getSystemPrompt(lang) },
-      { role: 'user', content: this.formatUserQuestion(question, context, lang) },
-    ];
-
-    // Try each provider in order
-    const providers = [
-      { key: 'groq', config: PROVIDERS.groq, token: this.groqToken },
-      { key: 'huggingface', config: PROVIDERS.huggingface, token: this.hfToken },
-    ];
-
-    for (const provider of providers) {
-      if (!provider.token) continue;
-
-      try {
-        const response = await this.callProvider(provider.key, provider.config, provider.token, messages);
-        if (response.success) {
-          return {
-            success: true,
-            message: response.message,
-            providerUsed: provider.config.name,
-          };
-        }
-      } catch (error) {
-        console.warn(`[FreddyAI] ${provider.config.name} failed:`, error);
-        continue;
-      }
-    }
-
-    // Fallback to knowledge-based response if all APIs fail
+  async ask(question: string, _context?: string, lang: 'en' | 'hi' = 'en'): Promise<AIResponse> {
+    const message =
+      lang === 'hi'
+        ? this.hindiKnowledgeBasedResponse(question)
+        : this.knowledgeBasedResponse(question);
     return {
       success: true,
-      message: this.knowledgeBasedResponse(question),
+      message,
       providerUsed: 'knowledge-base',
     };
   }
 
-  private async callProvider(
-    providerKey: string,
-    config: typeof PROVIDERS.groq,
-    token: string,
-    messages: ChatMessage[]
-  ): Promise<AIResponse> {
-    const model = config.models[0]; // Use first available model
-    if (!model) {
-      return { success: false, message: 'No model configured for this provider', error: 'no_model' };
-    }
-
-    if (providerKey === 'groq') {
-      return this.callGroq(config, token, model, messages);
-    } else if (providerKey === 'huggingface') {
-      return this.callHuggingFace(config, token, model, messages);
-    }
-
-    return { success: false, message: 'Unknown provider', error: 'Invalid provider' };
+  /** Rotate greetings so Freddy doesn't sound like a recording. */
+  private greeting(): string {
+    const greetings = [
+      "Hey! I'm Freddy — your LoadSaathi copilot.",
+      "Hi, it's Freddy here.",
+      "Hello! Freddy at your service.",
+    ];
+    return (
+      greetings[Math.floor(Math.random() * greetings.length)] ??
+      "Hey! I'm Freddy — your LoadSaathi copilot."
+    );
   }
 
-  private async callGroq(
-    config: typeof PROVIDERS.groq,
-    token: string,
-    model: string,
-    messages: ChatMessage[]
-  ): Promise<AIResponse> {
-    const response = await fetch(`${config.baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: config.headers(token),
-      body: JSON.stringify({
-        model,
-        messages: messages.map(m => ({
-          role: m.role,
-          content: m.content,
-        })),
-        max_tokens: 1024,
-        temperature: 0.7,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return {
-        success: false,
-        message: 'API error',
-        error: `Groq error: ${response.status} - ${errorText}`,
-      };
-    }
-
-    const data = await response.json();
-    
-    if (data.choices && data.choices.length > 0) {
-      return {
-        success: true,
-        message: data.choices[0].message.content,
-      };
-    }
-
-    return {
-      success: false,
-      message: 'No response',
-      error: 'Empty response from Groq',
-    };
-  }
-
-  private async callHuggingFace(
-    config: typeof PROVIDERS.huggingface,
-    token: string,
-    model: string,
-    messages: ChatMessage[]
-  ): Promise<AIResponse> {
-    // HuggingFace uses a different format - convert messages to text
-    const userMessage = messages.find(m => m.role === 'user')?.content || '';
-    
-    const response = await fetch(`${config.baseUrl}/${model}`, {
-      method: 'POST',
-      headers: config.headers(token),
-      body: JSON.stringify({
-        inputs: userMessage,
-        parameters: {
-          max_new_tokens: 512,
-          temperature: 0.7,
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 503) {
-        // Model is loading, return fallback
-        return {
-          success: false,
-          message: 'Model loading',
-          error: 'Model is loading, please try again',
-        };
-      }
-      const errorText = await response.text();
-      return {
-        success: false,
-        message: 'API error',
-        error: `HuggingFace error: ${response.status} - ${errorText}`,
-      };
-    }
-
-    const data = await response.json();
-    
-    if (data.generated_text) {
-      return {
-        success: true,
-        message: data.generated_text,
-      };
-    }
-
-    return {
-      success: false,
-      message: 'No response',
-      error: 'Empty response from HuggingFace',
-    };
-  }
-
-  private getSystemPrompt(lang: "en" | "hi" = "en"): string {
-    const languageRule = lang === "hi"
-      ? `- REPLY IN HINDI (Devanagari script). Use simple, friendly Hindi. Keep any page links and numbers as-is.`
-      : `- REPLY IN ENGLISH. Use simple, friendly English.`;
-    return `You are Freddy, the friendly AI assistant for LoadSaathi, an Indian freight marketplace platform.
-
-YOUR ROLE:
-- Help users understand LoadSaathi's services
-- Guide users on how to use the platform
-- Answer questions about freight, truck booking, and logistics in India
-- Be friendly, helpful, and professional
-- Use simple Hindi/English mix if the user seems more comfortable with that
-- ALWAYS include relevant links to pages when helping users take action
-
-LANGUAGE RULE:
-${languageRule}
-
-IMPORTANT GUIDELINES:
-1. Keep responses concise and actionable
-2. When users ask about specific features, guide them to the right page
-3. For pricing questions, mention that basic features are free
-4. For signup questions, encourage them to register (it's free)
-5. If you don't know something, be honest and suggest contacting support
-6. Always be encouraging - freight can be complex for new users
-
-KEY PAGES TO REFERENCE:
-- /register - Sign up (free)
-- /login - Sign in
-- /features - Platform features
-- /how-it-works - Step by step guide
-- /tools/fare-calculator - Calculate freight rates
-- /browse-trucks - Find trucks (for shippers)
-- /trucker/browse-shipments - Find loads (for truckers)
-- /contact - Contact support
-- /faq - Frequently asked questions
-- /pricing - Pricing information
-
-LoadSaathi is FREE to use for basic features. Users only pay for successful matches/transactions.`;
-  }
-
-  private formatUserQuestion(question: string, context?: string, lang: "en" | "hi" = "en"): string {
-    let formatted = `Context: ${LOADSAATHI_KNOWLEDGE}\n\n`;
-    
-    if (context) {
-      formatted += `Current Page Context: ${context}\n\n`;
-    }
-    
-    formatted += `User Question: ${question}\n\n`;
-    formatted += lang === "hi"
-      ? `Please provide a helpful, concise answer IN HINDI (Devanagari script). Include relevant page links if appropriate. Use friendly language suitable for Indian users.`
-      : `Please provide a helpful, concise answer IN ENGLISH. Include relevant page links if appropriate. Use friendly language suitable for Indian users.`;
-    
-    return formatted;
+  private hindiGreeting(): string {
+    const greetings = [
+      "नमस्ते! मैं फ्रेडी हूँ — आपका लोडसाथी साथी।",
+      "हैलो, फ्रेडी यहाँ।",
+      "नमस्कार! फ्रेडी आपकी मदद के लिए तैयार है।",
+    ];
+    return (
+      greetings[Math.floor(Math.random() * greetings.length)] ??
+      "नमस्ते! मैं फ्रेडी हूँ — आपका लोडसाथी साथी।"
+    );
   }
 
   private knowledgeBasedResponse(question: string): string {
-    const lowerQuestion = question.toLowerCase();
+    const q = question.toLowerCase();
 
-    // Simple keyword-based responses as fallback
-    if (lowerQuestion.includes('what is') || lowerQuestion.includes('what\'s') || lowerQuestion.includes('who are')) {
-      return `Hi! I'm Freddy, your LoadSaathi assistant! 🎯
+    if (q.includes('what is') || q.includes("what's") || q.includes('who are')) {
+      return `${this.greeting()} I help shippers and truckers match up on freight across India — think of me as the person who knows the market, the rates, and how to get you moving.
 
-LoadSaathi is an AI-powered freight marketplace that connects shippers with truckers across India. We help you:
-• Shippers: Post loads and find verified truckers at fair prices
-• Truckers: Find loads to fill your empty truck space
+We connect people with goods to trucks with space. It's free to join, and we only earn when a trip actually happens — no subscription, no hidden charges.
 
-It's completely free to sign up! Want me to guide you on getting started?`;
+What are you hoping to do today: ship something, or carry something?`;
     }
 
-    if (lowerQuestion.includes('shipp') || lowerQuestion.includes('goods') || lowerQuestion.includes('send')) {
-      return `Great question! As a shipper on LoadSaathi:
+    if (q.includes('shipp') || q.includes('goods') || q.includes('send')) {
+      return `So you've got goods to move — that's the part I'm best at. Here's how it works in plain words:
 
-1. **Post Your Load** - Enter origin, destination, weight, and timeline
-2. **Get Matches** - Our AI finds suitable truckers on your route
-3. **Compare & Choose** - Review rates and truck details
-4. **Track** - Monitor your shipment in real-time
-5. **Rate** - Build your credit score with reviews
+1. Tell me where your goods start and where they need to go.
+2. You'll see trucks on that route with live prices.
+3. You pick the one that fits your budget and needs.
+4. Once it's booked, you can track the trip in real time.
 
-It's FREE to post loads! Start here: /register
+I can search the market for you right here — just say something like "find a truck from Rourkela to Ranchi for 5 tonnes" and I'll go look.
 
-Need help with something specific like pricing or finding trucks?`;
+One honest note: I match you with what's actually on the marketplace. I never invent trucks or prices.`;
     }
 
-    if (lowerQuestion.includes('truck') || lowerQuestion.includes('driver') || lowerQuestion.includes('earn')) {
-      return `Hey trucker! 🚛 Here's how LoadSaathi helps you earn more:
+    if (q.includes('truck') || q.includes('driver') || q.includes('earn')) {
+      return `A truck that's running half-empty is money sitting on the road — so let's fix that.
 
-1. **Post Your Trip** - Share your route and available capacity
-2. **Find Loads** - Browse shipments matching your route
-3. **Get Fair Prices** - AI suggests market rates so you don't undercharge
-4. **Track Earnings** - See all your trips and income
-5. **Build Reputation** - Good ratings = more opportunities
+Here's the simple version:
+1. Tell me where your truck is and where you're headed.
+2. I'll find open shipments on your route.
+3. You compare loads, pick what works, and book.
+4. Reliable drivers earn better ratings, which means more offers later.
 
-Fill empty space and earn more on every trip! Join free: /register
-
-Want to know about rates or finding loads in your area?`;
+Try asking me something like "find shipments from Bhubaneswar to Kolkata for 8 tonnes" and I'll search the live market for you right now.`;
     }
 
-    if (lowerQuestion.includes('price') || lowerQuestion.includes('rate') || lowerQuestion.includes('cost') || lowerQuestion.includes('fare')) {
-      return `Freight rates depend on several factors:
-• Distance between cities
-• Weight/volume of goods
-• Vehicle type (truck size)
-• Market demand
-• Fuel prices
+    if (q.includes('price') || q.includes('rate') || q.includes('cost') || q.includes('fare')) {
+      return `Rates in freight are living numbers — they move with distance, load weight, vehicle type, fuel prices, and how much demand there is on that route that day.
 
-We offer FREE calculator tools to help estimate rates:
-• Fare Calculator: /tools/fare-calculator
-• Freight Rate Calculator: /tools/freight-rate-calculator
-• PTL vs FTL Calculator: /tools/ptl-vs-ftl-calculator
+The good news: you don't have to guess. We have free calculators (Fare Calculator, Freight Rate Calculator, PTL vs FTL) under Tools, and when you post a load or trip, I help suggest a fair price from real market data.
 
-Our AI also suggests fair prices when you post loads or trips! Want to try a calculator?`;
+Want to price a specific route? Tell me the origin, destination, and weight — I'll pull the market for you.`;
     }
 
-    if (lowerQuestion.includes('how') || lowerQuestion.includes('start') || lowerQuestion.includes('begin')) {
-      return `Getting started with LoadSaathi is simple! 🚀
+    if (q.includes('how') || q.includes('start') || q.includes('begin') || q.includes('work')) {
+      return `Getting started is genuinely simple:
 
-**For Shippers:**
-1. Sign up for free at /register
-2. Choose "I have goods to ship"
-3. Post your first load with details
-4. Get matched with truckers instantly
+• Shippers: sign up, say "I have goods to ship", post your load, and trucks come to you.
+• Truckers: sign up, say "I have truck space", and start seeing loads that match your route.
 
-**For Truckers:**
-1. Sign up at /register
-2. Choose "I have truck space"
-3. Post your trip or browse loads
-4. Start earning!
-
-Both are 100% free to start. Need help with anything specific?`;
+Both are free. If you'd rather not type it all out, tap "Find a truck" or "Find a load" on my home screen and I'll walk you through it step by step.`;
     }
 
-    if (lowerQuestion.includes('contact') || lowerQuestion.includes('support') || lowerQuestion.includes('help') || lowerQuestion.includes('call')) {
-      return `I'm here to help! For direct support:
+    if (q.includes('contact') || q.includes('support') || q.includes('help') || q.includes('call')) {
+      return `I'm happy to sort out most things right here, but for anything account-specific or urgent, our human team is genuinely responsive:
 
-📞 **Contact Us:** /contact
-• Fill out our contact form
-• We typically respond within 24 hours
+• WhatsApp: available from the Contact page.
+• Call: our number is listed on the Contact page too.
+• Form: /contact — they reply within 24 hours.
 
-💬 **WhatsApp:** Available through the contact page
-• Quick responses for urgent queries
-
-📧 **Email:** Available on our contact page
-
-For immediate help with using the platform, I can guide you right here! What do you need help with?`;
+Meanwhile, what's the issue? If it's about a load, a trip, or a rate, I can almost certainly dig in now.`;
     }
 
-    if (lowerQuestion.includes('payment') || lowerQuestion.includes('pay') || lowerQuestion.includes('charge') || lowerQuestion.includes('free')) {
-      return `Good question about pricing! 💰
+    if (q.includes('payment') || q.includes('pay') || q.includes('charge') || q.includes('free')) {
+      return `Straight answer: LoadSaathi is free to join, post, search, and chat. We don't charge subscriptions.
 
-**LoadSaathi is FREE to use:**
-• Sign up - FREE
-• Post loads/trips - FREE
-• Browse matches - FREE
-• Chat with partners - FREE
+You only pay when a shipment or trip is actually booked through the platform — and you'll always see the price terms before you commit. No surprises, no "per lead" tricks.
 
-You only pay when you successfully book a shipment or trip through the platform. We don't charge subscription fees.
-
-The platform helps you get fair market prices through AI suggestions and transparent comparing.
-
-Any other questions about costs or payments?`;
+Anything else about costs or payments I can clarify?`;
     }
 
     // Default fallback
-    return `Hi! I'm Freddy, your LoadSaathi assistant. 🤝
+    return `${this.greeting()} I can help you with:
 
-I can help you with:
-• Understanding how LoadSaathi works
-• Signing up as a shipper or trucker
-• Finding loads or trucks
-• Estimating freight prices
-• Using our calculator tools
-• General questions about freight in India
+• How LoadSaathi works (we're a freight matching marketplace for shippers and truckers)
+• Finding trucks or loads on a live market
+• Estimating fair freight rates
+• Using our free calculator tools
 
-What would you like to know? Feel free to ask anything!`;
+If I don't know something, I'll say so and point you to a human — I won't make it up. What's on your mind?`;
+  }
+
+  private hindiKnowledgeBasedResponse(question: string): string {
+    const q = question.toLowerCase();
+
+    if (q.includes('क्या है') || q.includes('कौन') || q.includes('कैसे काम')) {
+      return `${this.hindiGreeting()} मैं शिपर और ट्रकर को भारत भर में माल ढुलाई के लिए जोड़ता हूँ — मार्केट, रेट और सही गाड़ी तक पहुँचाना मेरा काम है।
+
+हम माल वालों को ट्रक वालों से जोड़ते हैं। जुड़ना बिल्कुल मुफ़्त है, और हमें पैसा तभी मिलता है जब कोई ट्रिप सच में होती है — कोई सब्सक्रिप्शन नहीं, कोई छुपा चार्ज नहीं।
+
+आज आप क्या करना चाहते हैं — माल भेजना है, या माल ढोना है?`;
+    }
+
+    if (q.includes('शिप') || q.includes('माल भेज') || q.includes('सामान') || q.includes('भेजना')) {
+      return `तो आपको माल भेजना है — यही तो मेरा काम है। आसान शब्दों में:
+
+1. बताइए माल कहाँ से कहाँ जाना है।
+2. आपको उस रूट पर ट्रक दिखेंगे, असली दामों के साथ।
+3. आप अपने बजट में फिट होने वाला ट्रक चुनिए।
+4. बुक होने के बाद ट्रिप को लाइव ट्रैक कर सकते हैं।
+
+मैं अभी यहीं मार्केट खोज सकता हूँ — बस ऐसे पूछिए: "राउरकेला से राँची के लिए 5 टन का ट्रक खोजें" और मैं देखता हूँ।
+
+एक ईमानदार बात: मैं आपको वही दिखाता हूँ जो मार्केट में सच में है। मैं कभी नकली ट्रक या दाम नहीं बनाता।`;
+    }
+
+    if (q.includes('ट्रक') || q.includes('ड्राइवर') || q.includes('कमाई') || q.includes('कमाओ')) {
+      return `आधा खाली ट्रक मतलब सड़क पर पड़ा पैसा — चलिए इसे ठीक करते हैं।
+
+आसान तरीका:
+1. बताइए आपका ट्रक कहाँ है और कहाँ जा रहा है।
+2. मैं आपके रूट पर खुले शिपमेंट खोजूँगा।
+3. लोड देखिए, चुनिए, और बुक कीजिए।
+4. भरोसेमंद ड्राइवरों को बेहतर रेटिंग मिलती है — मतलब आगे ज़्यादा ऑफर।
+
+ऐसे पूछिए: "भुवनेश्वर से कोलकाता के लिए 8 टन का शिपमेंट खोजें" — मैं अभी लाइव मार्केट देखता हूँ।`;
+    }
+
+    if (q.includes('कीमत') || q.includes('रेट') || q.includes('दाम') || q.includes('किराया') || q.includes('कॉस्ट')) {
+      return `माल ढुलाई के दाम स्थिर नहीं होते — ये दूरी, वज़न, गाड़ी के प्रकार, डीज़ल की कीमत और उस दिन उस रूट पर डिमांड के हिसाब से बदलते हैं।
+
+अच्छी खबर: आपको अंदाज़ा लगाने की ज़रूरत नहीं। हमारे पास मुफ़्त कैलकुलेटर हैं (फेयर कैलकुलेटर, फ्रेट रेट कैलकुलेटर, PTL vs FTL) — टूल्स में। और जब आप लोड या ट्रिप डालते हैं, तो मैं असली मार्केट डेटा से सही दाम सुझाता हूँ।
+
+किसी खास रूट का दाम जानना है? ओरिजिन, डेस्टिनेशन और वज़न बताइए — मैं मार्केट देखता हूँ।`;
+    }
+
+    if (q.includes('कैसे शुरू') || q.includes('शुरू') || q.includes('कैसे काम') || q.includes('रजिस्टर') || q.includes('साइन अप')) {
+      return `शुरू करना सच में आसान है:
+
+• शिपर: साइन अप कीजिए, "मुझे माल भेजना है" चुनिए, लोड डालिए — ट्रक आपके पास आएँगे।
+• ट्रकर: साइन अप कीजिए, "मेरे पास ट्रक है" चुनिए — और अपने रूट से मेल खाते लोड देखना शुरू कीजिए।
+
+दोनों मुफ़्त हैं। अगर टाइप नहीं करना है, तो मेरी होम स्क्रीन पर "ट्रक खोजें" या "लोड खोजें" दबाइए — मैं कदम-दर-कदम साथ चलूँगा।`;
+    }
+
+    if (q.includes('संपर्क') || q.includes('सपोर्ट') || q.includes('मदद') || q.includes('कॉल') || q.includes('फोन')) {
+      return `ज़्यादातर चीज़ें मैं यहीं सुलझा सकता हूँ, लेकिन खाते से जुड़ी या ज़रूरी बातों के लिए हमारी ह्यूमन टीम सच में तेज़ है:
+
+• WhatsApp: कॉन्टैक्ट पेज से।
+• कॉल: नंबर भी कॉन्टैक्ट पेज पर है।
+• फॉर्म: /contact — 24 घंटे के अंदर जवाब मिलता है।
+
+वैसे, समस्या क्या है? अगर लोड, ट्रिप या रेट की है, तो मैं अभी मदद कर सकता हूँ।`;
+    }
+
+    if (q.includes('पैसा') || q.includes('पेमेंट') || q.includes('चार्ज') || q.includes('मुफ़्त') || q.includes('फ्री')) {
+      return `सीधा जवाब: लोडसाथी पर जुड़ना, लोड डालना, खोजना और चैट करना — सब मुफ़्त है। हम कोई सब्सक्रिप्शन नहीं लेते।
+
+पैसा तभी देते हैं जब कोई शिपमेंट या ट्रिप सच में बुक होती है — और बुक करने से पहले दाम की शर्तें हमेशा साफ दिखती हैं। कोई सरप्राइज़ नहीं।
+
+लागत या पेमेंट के बारे में और कुछ बताऊँ?`;
+    }
+
+    // Default fallback
+    return `${this.hindiGreeting()} मैं इनमें मदद कर सकता हूँ:
+
+• लोडसाथी कैसे काम करता है (शिपर और ट्रकर के लिए माल ढुलाई का मार्केटप्लेस)
+• लाइव मार्केट में ट्रक या लोड खोजना
+• सही फ्रेट रेट का अंदाज़ा
+• हमारे मुफ़्त कैलकुलेटर टूल्स
+
+अगर मुझे कुछ नहीं पता, तो मैं साफ कहूँगा और आपको इंसान तक पहुँचाऊँगा — मैं कुछ भी मनगढ़ंत नहीं बताऊँगा। आपके मन में क्या सवाल है?`;
   }
 }
 
 // Singleton instance
 export const freddyAI = new FreddyAI();
 
-// Initialize with tokens from environment if available
+// Purge any provider tokens previously cached in localStorage (SEC-04).
 if (typeof window !== 'undefined') {
-  const initTokens = () => {
-    const hfToken = import.meta.env.VITE_HUGGINGFACE_TOKEN;
-    const groqToken = import.meta.env.VITE_GROQ_API_KEY;
-    if (hfToken || groqToken) {
-      freddyAI.setTokens(hfToken || undefined, groqToken || undefined);
-    }
-  };
-  initTokens();
+  try {
+    localStorage.removeItem('freddy_hf_token');
+    localStorage.removeItem('freddy_groq_token');
+  } catch {
+    // localStorage unavailable (private mode) — nothing to purge.
+  }
 }

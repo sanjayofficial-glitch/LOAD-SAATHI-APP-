@@ -31,16 +31,14 @@ import { freddyAI } from '@/lib/freddy-ai';
 import {
   askFreddyAgent,
   getOrCreateSessionId,
-  classifyQuery,
-  executeSearchDirect,
-  searchAvailability,
   type AgentLoad,
   type AgentShipment,
   type AgentTool,
-  type AgentAvailability,
   type FreddySlots,
 } from '@/lib/freddyAgent';
 import { speakAssistantText, cancelVoice, detectLanguage } from '@/lib/fishTts';
+import { haptic } from '@/lib/haptics';
+import { trackEvent, trackFreddyTurn, EVENTS } from '@/utils/analytics';
 import { Freddy } from './FreddyAvatar';
 import { moodToFreddyAnimation } from './freddyAnimations';
 import { useReducedMotion, useDishaKeyboard, type DishaMood } from './DishaMascot';
@@ -49,7 +47,7 @@ import { useDishaGuide } from './DishaGuideProvider.hooks';
 import { PHONE_COMPACT, PHONE_E164 } from '@/config/site';
 
 /**
- * Freddy assistant chat panel (extracted from FreddyAssistant).
+ * Freddy assistant chat panel.
  *
  * Renders the single combined panel:
  *   1. Chat — Freddy AI conversation (quick actions, typing, page context,
@@ -85,10 +83,11 @@ interface ChatMessage {
   improvements?: string[];
   tips?: string[];
   projection?: string;
-  /** Quick-reply chips rendered under this assistant message. */
-  options?: string[];
-  /** Nearby-availability guidance shown when a strict search found nothing. */
-  availability?: AgentAvailability;
+  /**
+   * Quick-reply chips rendered under this assistant message. A plain string is
+   * sent verbatim; an object shows `label` and sends `value` instead.
+   */
+  options?: Array<string | { label: string; value: string }>;
   /** Step indicator for guided-form questions. */
   progress?: { current: number; total: number };
 }
@@ -371,7 +370,10 @@ export default function FreddyChatModal({
   useEffect(() => {
     if (typeof window === 'undefined') return;
     window.dispatchEvent(new CustomEvent('lsaathi-fab-open', { detail: { open } }));
-  }, [open]);
+    if (open) {
+      trackEvent(EVENTS.FREDDY_OPEN, { trigger: anchor ? 'pill' : 'avatar' });
+    }
+  }, [open, anchor]);
 
   // Auto-open on first visit — once per browser session, never on auth/admin
   // pages (so forms are never covered), and only when not dismissed.
@@ -388,8 +390,11 @@ export default function FreddyChatModal({
     const timer = setTimeout(() => {
       onOpenChange(true);
       setMood('excited');
+      const firstName = userProfile?.full_name?.trim().split(/\s+/)[0];
       addBotMessage(
-        'Hi there! 👋 I\'m Freddy, your LoadSaathi assistant. Ask me anything about freight, trucks, or how to use LoadSaathi!'
+        firstName
+          ? `Hi ${firstName}! 👋 I’m Freddy, your LoadSaathi copilot. Need a truck, a load, or a rate? Ask me anything.`
+          : 'Hi there! 👋 I’m Freddy, your LoadSaathi copilot. Need a truck, a load, or a rate? Ask me anything.'
       );
       try {
         sessionStorage.setItem('freddy-chat-autoopened', '1');
@@ -399,7 +404,7 @@ export default function FreddyChatModal({
     }, 3000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dismissed, open, messages.length, tipContext, onOpenChange]);
+  }, [dismissed, open, messages.length, tipContext, onOpenChange, userProfile]);
 
   // When a guide flow becomes active, bring up the panel so the guidance is
   // visible (the FAB also moves to the target field). When the flow ends or is
@@ -470,31 +475,6 @@ export default function FreddyChatModal({
     setMessages((prev) => [...prev, msg]);
   }, []);
 
-  const getSuggestedReply = useCallback((userMessage: string): string => {
-    const lower = userMessage.toLowerCase();
-
-    if (lower.includes('shipper') || lower.includes('goods') || lower.includes('send') || lower.includes('transport')) {
-      return 'Great! As a shipper on LoadSaathi, you can post loads and find verified truckers. Would you like to know how to get started?';
-    }
-    if (lower.includes('truck') || lower.includes('driver') || lower.includes('earn') || lower.includes('capacity')) {
-      return 'Hey there! Truckers use LoadSaathi to find loads and fill empty space. Want me to explain how it works?';
-    }
-    if (lower.includes('price') || lower.includes('rate') || lower.includes('cost') || lower.includes('charge') || lower.includes('fare')) {
-      return 'Freight rates depend on distance, weight, vehicle type, and market demand. I can help you use our free calculators! Which route are you looking at?';
-    }
-    if (lower.includes('how') || lower.includes('start') || lower.includes('begin') || lower.includes('work')) {
-      return 'LoadSaathi makes freight simple! Shippers post loads, truckers find them, and our AI helps match them fairly. Would you like a step-by-step guide?';
-    }
-    if (lower.includes('free') || lower.includes('payment') || lower.includes('pay') || lower.includes('charge') || lower.includes('cost')) {
-      return 'Good news! LoadSaathi is completely free to sign up and use. You only pay for successful matches. No subscription needed!';
-    }
-    if (lower.includes('contact') || lower.includes('support') || lower.includes('help') || lower.includes('call') || lower.includes('phone')) {
-      return 'I can help you right here! But if you need direct support, visit /contact to reach our team. What do you need help with?';
-    }
-
-    return '';
-  }, []);
-
   const presentToolResult = useCallback(
     (data: Awaited<ReturnType<typeof askFreddyAgent>>) => {
       setIsLoading(false);
@@ -505,6 +485,19 @@ export default function FreddyChatModal({
           ? 'Here are your credit insights.'
           : 'Here are the matches:');
 
+      // Server-provided zero-result suggestions come first; universal follow-up
+      // chips follow them. Chips are { label, value } so the visible text and
+      // the re-run query can differ.
+      const suggestionChips: Array<{ label: string; value: string }> =
+        data.suggestions?.map((s) => ({ label: s.label, value: s.query })) ?? [];
+      const followUpOptions: Array<string | { label: string; value: string }> =
+        data.tool === 'credit-insights'
+          ? ['How can I improve my score?', 'Check freight rates', 'How does LoadSaathi work?']
+          : data.tool
+            ? ['Refine my search', 'My credit score', 'Check freight rates']
+            : [];
+      const chips = [...suggestionChips, ...followUpOptions];
+
       addBotMessage(content, false, {
         tool: data.tool ?? undefined,
         loads: data.loads,
@@ -513,17 +506,20 @@ export default function FreddyChatModal({
         improvements: data.improvements,
         tips: data.tips,
         projection: data.projection,
+        ...(chips.length > 0 ? { options: chips } : {}),
       });
 
       const hasResults =
         (data.loads && data.loads.length > 0) ||
         (data.shipments && data.shipments.length > 0);
       setMood(data.tool === 'credit-insights' || hasResults ? 'celebrate' : 'helpful');
+      trackFreddyTurn({ ok: true, tool: data.tool ?? null });
+      if (data.tool === 'credit-insights' || hasResults) haptic('success');
     },
     [addBotMessage]
   );
 
-  /** Run a completed search: try the agent-router, fall back to a direct DB read. */
+  /** Run a completed search via agent-router — the single source of truth. */
   const executeSearchFromSlots = useCallback(
     async (slots: FreddySlots) => {
       setForm(null);
@@ -537,50 +533,32 @@ export default function FreddyChatModal({
       try {
         const data = await askFreddyAgent({ message: query, sessionId, history, getToken });
         setMessages((prev) => prev.filter((m) => !m.isTyping));
-        if (data.enabled !== false && data.tool) {
-          presentToolResult(data);
+
+        if (data.enabled === false) {
+          addBotMessage(
+            'Freddy is temporarily unavailable. Please try again later, or use the browse filters on the marketplace pages.',
+            false
+          );
+          setMood('idle');
           return;
         }
-        // fall through to direct search (disabled or no tool)
-      } catch {
-        // fall through to direct search
-      }
 
-      try {
-        const data = await executeSearchDirect(slots, getToken);
-        setMessages((prev) => prev.filter((m) => !m.isTyping));
-
-        const hasResults =
-          (data.loads && data.loads.length > 0) ||
-          (data.shipments && data.shipments.length > 0);
-
-        if (hasResults) {
+        if (data.tool) {
           presentToolResult(data);
           return;
         }
 
-        // Zero results → guide the user instead of leaving them at a dead end.
-        const noun = slots.role === 'trucker' ? 'open shipments' : 'open trucks';
-        let availability: AgentAvailability | undefined;
-        try {
-          const avail = await searchAvailability(slots, getToken);
-          availability = avail.suggestions.length > 0 ? avail : undefined;
-        } catch {
-          availability = undefined;
-        }
-        addBotMessage(
-          `No ${noun} found matching your search. Here’s what was available nearby:`,
-          false,
-          availability ? { availability } : {}
-        );
-        setMood('idle');
+        addBotMessage(data.detail || 'No match was found. Try broadening your search.', false);
+        setMood('helpful');
       } catch {
         setMessages((prev) => prev.filter((m) => !m.isTyping));
         addBotMessage(
-          "I couldn't reach the search service right now. Please try again shortly.",
+          "I couldn't reach the live market just now — that's on my side, not yours. Give it a few seconds and try again, or tap Help to reach a human.",
           false
         );
         setMood('confused');
+        haptic('error');
+        trackFreddyTurn({ ok: false });
       } finally {
         setIsLoading(false);
         setTimeout(() => setMood('idle'), 2000);
@@ -643,6 +621,7 @@ export default function FreddyChatModal({
       // Match Freddy's language to what the user just wrote.
       const replyLang = detectLanguage(message);
       setUiLang(replyLang);
+      trackEvent(EVENTS.FREDDY_SEND, { lang: replyLang });
 
       // Active form → this message is the answer to the current question.
       if (form) {
@@ -686,46 +665,34 @@ export default function FreddyChatModal({
           return;
         }
 
-        // No tool executed → if this looks like a search request, start the
-        // slot-filling form instead of showing a generic "no filters" message.
-        if (!data.tool && data.detail) {
-          const { intent, slots } = classifyQuery(message);
-          if (intent) {
-            if (!slots.role && userRole) slots.role = userRole;
-            setIsLoading(false);
-            beginForm(slots);
-            return;
-          }
-          setIsLoading(false);
-          addBotMessage(data.detail, false);
-          setMood('idle');
-          return;
-        }
-
         if (data.tool) {
           presentToolResult(data);
           return;
         }
+
+        // No tool executed → this is a conversational turn (help, how-to, chit-
+        // chat), not a search. Let the local knowledge base answer naturally —
+        // the backend detail would be a mechanical "no filters" prompt. Search
+        // remains fully server-authoritative.
+        setIsLoading(false);
+        const kb = (await freddyAI.ask(message, undefined, replyLang)) as AiResponse;
+        if (kb.success && kb.message) {
+          addBotMessage(kb.message, false);
+          setMood('helpful');
+        } else {
+          addBotMessage(
+            data.detail || 'I didn’t quite catch that. Try asking for trucks or shipments with a route.',
+            false
+          );
+          setMood('idle');
+        }
+        return;
       } catch {
         // agent-router unavailable / not authenticated / network error → fall
-        // through to direct search or the knowledge path below.
+        // through to the knowledge path below.
       }
 
-      // ── Search intent without a working agent → interview, then search directly ──
-      const { intent, slots } = classifyQuery(message);
-      if (intent) {
-        if (!slots.role && userRole) slots.role = userRole;
-        setMessages((prev) => prev.filter((m) => !m.isTyping));
-        if (slots.role && slots.origin && slots.destination) {
-          await executeSearchFromSlots(slots as FreddySlots);
-          return;
-        }
-        setIsLoading(false);
-        beginForm(slots);
-        return;
-      }
-
-      // ── Fallback path: free LLM knowledge answers ──
+      // ── Fallback path: local knowledge-base answers ──
       try {
         const pageContext = typeof window !== 'undefined' ? getPageContext(window.location.pathname) : 'General inquiry';
 
@@ -736,17 +703,10 @@ export default function FreddyChatModal({
         if (response.success) {
           addBotMessage(response.message ?? '');
           setMood('helpful');
-
-          const suggestedReply = getSuggestedReply(message);
-          if (suggestedReply && !(response.message ?? '').includes(suggestedReply)) {
-            setTimeout(() => {
-              addBotMessage(suggestedReply, false);
-              setMood('idle');
-            }, 1500);
-          }
+          trackFreddyTurn({ ok: true, tool: null, fallback: true });
         } else {
           addBotMessage(
-            "I'm having trouble connecting right now. But I can still help! Try asking about LoadSaathi features, pricing, or how to get started. You can also visit /contact for direct support.",
+            "I'm having trouble forming an answer right now — that's on my side, not yours. Try rephrasing, or tap Help to reach a human.",
             false
           );
           setMood('confused');
@@ -754,10 +714,12 @@ export default function FreddyChatModal({
       } catch {
         setMessages((prev) => prev.filter((m) => !m.isTyping));
         addBotMessage(
-          'I encountered an error. Please try again or visit /contact for help. In the meantime, feel free to ask me about LoadSaathi!',
+          'Something went wrong on my end. Please try again, or tap Help to reach a real person — they reply fast.',
           false
         );
         setMood('confused');
+        haptic('error');
+        trackFreddyTurn({ ok: false });
       } finally {
         setIsLoading(false);
         setTimeout(() => setMood('idle'), 2000);
@@ -769,24 +731,27 @@ export default function FreddyChatModal({
       messages,
       sessionId,
       getToken,
-      userRole,
       addUserMessage,
       addBotMessage,
-      getSuggestedReply,
       askFormQuestion,
-      beginForm,
       presentToolResult,
-      executeSearchFromSlots,
     ]
   );
 
   const handleSend = useCallback(() => {
+    if (!inputValue.trim() || isLoading) return;
+    haptic('selection');
     void sendText(inputValue);
-  }, [inputValue, sendText]);
+  }, [inputValue, sendText, isLoading]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
+        // IME-safe: ignore Enter while composing (Hindi/CJK IME confirms
+        // conversion with Enter; Safari misorders compositionend, so also
+        // check keyCode 229 on the native event).
+        const ne = e.nativeEvent;
+        if (ne.isComposing || ne.keyCode === 229) return;
         e.preventDefault();
         handleSend();
       }
@@ -874,11 +839,12 @@ export default function FreddyChatModal({
       },
     ];
 
+    const firstName = userProfile?.full_name?.trim().split(/\s+/)[0];
     const greeting = isTrucker
-      ? 'Hi, I’m Freddy 👋 — ready to find you loads.'
+      ? `Hi${firstName ? ` ${firstName}` : ''}, I’m Freddy 👋 — ready to find you loads.`
       : isShipper
-        ? 'Hi, I’m Freddy 👋 — ready to move your goods.'
-        : 'Hi, I’m Freddy 👋';
+        ? `Hi${firstName ? ` ${firstName}` : ''}, I’m Freddy 👋 — ready to move your goods.`
+        : `Hi${firstName ? ` ${firstName}` : ''}, I’m Freddy 👋`;
 
     return (
       <div className="px-4 py-4 space-y-4">
@@ -897,7 +863,7 @@ export default function FreddyChatModal({
               key={action.key}
               type="button"
               onClick={action.run}
-              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 text-left transition-colors hover:border-orange-400"
+              className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 text-left transition-colors hover:border-orange-400 active:scale-[0.98]"
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-300">
                 {action.icon}
@@ -914,7 +880,7 @@ export default function FreddyChatModal({
         </p>
       </div>
     );
-  }, [beginForm, handleLinkClick, micSupported, mood, sendText, userRole]);
+  }, [beginForm, handleLinkClick, micSupported, mood, sendText, userProfile, userRole]);
 
   const handleClose = useCallback(() => {
     onOpenChange(false);
@@ -937,7 +903,9 @@ export default function FreddyChatModal({
     if (!Ctor) return;
     try {
       const recognition = new Ctor();
-      recognition.lang = 'en-IN';
+      // Match the mic to the language the user has been writing in (Hindi when
+      // they write Hindi, otherwise English).
+      recognition.lang = uiLang === 'hi' ? 'hi-IN' : 'en-IN';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
       recognition.onresult = (e) => {
@@ -953,7 +921,7 @@ export default function FreddyChatModal({
     } catch {
       setListening(false);
     }
-  }, [stopListening]);
+  }, [stopListening, uiLang]);
 
   const renderMessageContent = useCallback(
     (content: string, role: 'user' | 'assistant') => {
@@ -992,6 +960,9 @@ export default function FreddyChatModal({
       if (msg.tool === 'search_market' && msg.loads && msg.loads.length > 0) {
         return (
           <div className="mt-2 space-y-2">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Live marketplace listings
+            </p>
             {msg.loads.map((load) => (
               <div
                 key={load.id}
@@ -1029,7 +1000,10 @@ export default function FreddyChatModal({
             ))}
             <button
               type="button"
-              onClick={() => handleLinkClick('/browse-trucks')}
+              onClick={() => {
+                trackEvent(EVENTS.FREDDY_BOOK_CLICK, { target: 'browse-trucks' });
+                handleLinkClick('/browse-trucks');
+              }}
               className="text-xs font-semibold text-orange-600 hover:text-orange-700 dark:text-orange-400 transition-colors"
             >
               View all available trucks →
@@ -1041,6 +1015,9 @@ export default function FreddyChatModal({
       if (msg.tool === 'search_shipments' && msg.shipments && msg.shipments.length > 0) {
         return (
           <div className="mt-2 space-y-2">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Live marketplace listings
+            </p>
             {msg.shipments.map((shipment) => (
               <div
                 key={shipment.id}
@@ -1078,7 +1055,10 @@ export default function FreddyChatModal({
             ))}
             <button
               type="button"
-              onClick={() => handleLinkClick('/trucker/browse-shipments')}
+              onClick={() => {
+                trackEvent(EVENTS.FREDDY_BOOK_CLICK, { target: 'browse-shipments' });
+                handleLinkClick('/trucker/browse-shipments');
+              }}
               className="text-xs font-semibold text-orange-600 hover:text-orange-700 dark:text-orange-400 transition-colors"
             >
               View all open shipments →
@@ -1096,6 +1076,9 @@ export default function FreddyChatModal({
         if (!hasInsights) return null;
         return (
           <div className="mt-2 space-y-2">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Private — visible only to you
+            </p>
             {msg.strengths && msg.strengths.length > 0 && (
               <div>
                 <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-green-600 dark:text-green-400">
@@ -1161,46 +1144,6 @@ export default function FreddyChatModal({
     [handleLinkClick]
   );
 
-  const renderAvailability = useCallback(
-    (msg: ChatMessage) => {
-      if (!msg.availability || msg.availability.suggestions.length === 0) return null;
-      const role = msg.availability.role;
-      const ctaPath = role === 'trucker' ? '/trucker/post-trip' : '/shipper/post-shipment';
-      const ctaLabel =
-        role === 'trucker'
-          ? 'Post your trip — shippers will find you'
-          : 'Post your load — truckers will come to you';
-      return (
-        <div className="mt-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-900/60 p-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-            Nearby availability
-          </p>
-          <div className="mt-1.5 space-y-1.5">
-            {msg.availability.suggestions.map((s) => (
-              <button
-                key={s.key}
-                type="button"
-                onClick={() => void executeSearchFromSlots(s.slots)}
-                className="w-full text-left rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-2.5 py-2 text-xs transition-colors hover:border-orange-400"
-              >
-                <span className="block font-medium text-gray-800 dark:text-gray-100">{s.label}</span>
-                <span className="text-orange-600 dark:text-orange-400 font-semibold">Search now →</span>
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => handleLinkClick(ctaPath)}
-              className="w-full text-left rounded-lg border border-dashed border-orange-300 dark:border-orange-800 px-2.5 py-2 text-xs font-medium text-orange-700 dark:text-orange-300 transition-colors hover:bg-orange-50 dark:hover:bg-orange-950/40"
-            >
-              {ctaLabel} →
-            </button>
-          </div>
-        </div>
-      );
-    },
-    [executeSearchFromSlots, handleLinkClick]
-  );
-
   // Panel geometry — the morph travels from the pill's actual position to an
   // adjacent spot (above the pill when there's room, otherwise below it).
   // This keeps the expansion attached to the trigger instead of jumping to
@@ -1256,7 +1199,7 @@ export default function FreddyChatModal({
   return (
     <motion.div
       className={cn(
-        'fixed z-[100] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-180px)] rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl overflow-hidden flex flex-col'
+        'fixed z-[100] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-180px)] rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/90 backdrop-blur-xl dark:bg-gray-900/85 shadow-2xl overflow-hidden flex flex-col'
       )}
       style={{
         left: panelRect.left,
@@ -1296,7 +1239,7 @@ export default function FreddyChatModal({
         transition={{ opacity: { duration: 0.3, delay: open && !reducedMotion ? 0.14 : 0 } }}
       >
       {/* Slim header — mini avatar + speaker + exit (no bulky title bar) */}
-      <div className="flex items-center gap-2 px-3 py-1.5 border-b border-orange-200 dark:border-orange-800">
+      <div className="flex items-center gap-2 px-3 py-1.5 border-b border-orange-200 dark:border-orange-800 bg-white/60 dark:bg-gray-950/50 backdrop-blur-xl">
         <div className="grid h-8 w-8 flex-shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-orange-400 to-orange-600">
           <Freddy animation={moodToFreddyAnimation[mood]} size={30} />
         </div>
@@ -1393,14 +1336,14 @@ export default function FreddyChatModal({
           <>
             {/* Quick actions */}
             {messages.length <= 1 && !isLoading && (
-              <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+              <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-800 bg-white/60 dark:bg-gray-950/40 backdrop-blur-xl">
                 <div className="flex flex-wrap gap-1.5">
                   {QUICK_ACTIONS.map((action) => (
                     <button
                       key={action.label}
                       type="button"
                       onClick={() => handleQuickAction(action)}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-800/40"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 hover:bg-orange-200 active:scale-[0.97] dark:hover:bg-orange-800/40"
                     >
                       {action.icon}
                       <span className="hidden sm:inline">{action.label}</span>
@@ -1416,12 +1359,12 @@ export default function FreddyChatModal({
                 renderHome()
               ) : (
                 <div className="p-3 sm:p-4 space-y-3">
-                  {messages.map((message) => (
+                  {messages.map((message, index) => (
                   <motion.div
                     key={message.id}
                     initial={reducedMotion ? {} : { opacity: 0, y: 10, scale: 0.95 }}
                     animate={reducedMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.2 }}
+                    transition={{ duration: 0.2, delay: reducedMotion ? 0 : Math.min(index * 0.03, 0.15) }}
                     className={cn('flex', message.role === 'user' ? 'justify-end' : 'justify-start')}
                   >
                     <div
@@ -1471,33 +1414,48 @@ export default function FreddyChatModal({
                       )}
                       <div className="text-sm leading-relaxed">
                         {message.isTyping ? (
-                          <div className="flex items-center gap-1 py-1">
-                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">Thinking...</span>
+                          <div className="flex items-center gap-1.5 py-1" role="status" aria-live="polite">
+                            <span className="sr-only">Freddy is typing</span>
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-orange-500/70 animate-bounce"
+                              style={{ animationDelay: '0ms' }}
+                            />
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-orange-500/70 animate-bounce"
+                              style={{ animationDelay: '120ms' }}
+                            />
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-orange-500/70 animate-bounce"
+                              style={{ animationDelay: '240ms' }}
+                            />
+                            <span className="ml-1 text-[11px] text-muted-foreground">Freddy is typing…</span>
                           </div>
                         ) : (
                           renderMessageContent(message.content, message.role)
                         )}
                       </div>
                       {renderToolResults(message)}
-                      {renderAvailability(message)}
                       {message.options && message.options.length > 0 && (
                         <div className={cn('mt-2 flex gap-1.5', message.progress ? 'flex-col' : 'flex-wrap')}>
-                          {message.options.map((option) => (
-                            <button
-                              key={option}
-                              type="button"
-                              onClick={() => void sendText(option)}
-                              className={cn(
-                                'font-medium transition-colors',
-                                message.progress
-                                  ? 'w-full text-left rounded-xl border border-orange-200 bg-orange-50 px-3.5 py-2.5 text-sm text-orange-700 hover:bg-orange-100 dark:border-orange-800/60 dark:bg-orange-950/40 dark:text-orange-300 dark:hover:bg-orange-900/40'
-                                  : 'rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs text-orange-700 hover:bg-orange-100 dark:border-orange-800/60 dark:bg-orange-950/40 dark:text-orange-300 dark:hover:bg-orange-900/40'
-                              )}
-                            >
-                              {option}
-                            </button>
-                          ))}
+                          {message.options.map((option, optionIndex) => {
+                            const chipLabel = typeof option === 'string' ? option : option.label;
+                            const chipValue = typeof option === 'string' ? option : option.value;
+                            return (
+                              <button
+                                key={typeof option === 'string' ? option : `${option.label}-${optionIndex}`}
+                                type="button"
+                                onClick={() => void sendText(chipValue)}
+                                className={cn(
+                                  'font-medium transition-colors active:scale-[0.98]',
+                                  message.progress
+                                    ? 'w-full text-left rounded-xl border border-orange-200 bg-orange-50 px-3.5 py-2.5 text-sm text-orange-700 hover:bg-orange-100 dark:border-orange-800/60 dark:bg-orange-950/40 dark:text-orange-300 dark:hover:bg-orange-900/40'
+                                    : 'rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs text-orange-700 hover:bg-orange-100 dark:border-orange-800/60 dark:bg-orange-950/40 dark:text-orange-300 dark:hover:bg-orange-900/40'
+                                )}
+                              >
+                                {chipLabel}
+                              </button>
+                            );
+                          })}
                         </div>
                       )}
                       <div
@@ -1549,7 +1507,7 @@ export default function FreddyChatModal({
             )}
 
             {/* Input */}
-            <div className="flex items-center gap-2 px-4 py-3 border-t border-orange-200 dark:border-orange-800">
+            <div className="flex items-center gap-2 px-4 py-3 border-t border-orange-200 dark:border-orange-800 bg-white/60 dark:bg-gray-950/50 backdrop-blur-xl">
               <Input
                 ref={inputRef}
                 type="text"
@@ -1567,7 +1525,7 @@ export default function FreddyChatModal({
                   aria-label={listening ? 'Stop listening' : 'Speak your answer'}
                   onClick={listening ? stopListening : startListening}
                   className={cn(
-                    'h-10 w-10 p-0 shrink-0',
+                    'h-10 w-10 p-0 shrink-0 transition-transform duration-100 active:scale-90',
                     listening && 'bg-red-500 hover:bg-red-600 border-red-500 text-white'
                   )}
                 >
@@ -1579,7 +1537,7 @@ export default function FreddyChatModal({
                 onClick={handleSend}
                 disabled={!inputValue.trim() || isLoading}
                 className={cn(
-                  'h-10 w-10 p-0',
+                  'h-10 w-10 p-0 transition-transform duration-100 active:scale-90',
                   !inputValue.trim() || isLoading ? 'opacity-50 cursor-not-allowed' : ''
                 )}
               >
@@ -1633,9 +1591,9 @@ export default function FreddyChatModal({
       </div>
 
       {/* Footer hint — hidden on phones to save vertical space */}
-      <div className="hidden min-[480px]:block px-4 py-2 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/30">
+      <div className="hidden min-[480px]:block px-4 py-2 border-t border-gray-100 dark:border-gray-800 bg-white/60 dark:bg-gray-950/40 backdrop-blur-xl">
         <p className="text-[10px] text-muted-foreground text-center">
-          Powered by AI • Free to use • 🎯 LoadSaathi
+          Freddy replies with live marketplace data • Free to use • 🎯 LoadSaathi
         </p>
       </div>
       </motion.div>

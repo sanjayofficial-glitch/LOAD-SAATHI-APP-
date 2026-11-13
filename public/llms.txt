@@ -206,3 +206,25 @@ A: Sharing truck space (PTL) via LoadSaathi: you pay only for the weight you shi
 - Website: https://loadsaathi.in
 - Email: support@loadsaathi.in
 - LinkedIn: https://www.linkedin.com/company/loadsaathi
+
+## Odisha (HQ & Coverage)
+
+LoadSaathi is headquartered at FTBI, National Institute of Technology (NIT) Rourkela, Odisha 769008, India, and operates across all 30 districts of Odisha.
+
+- Dispatch & Quote Phone / WhatsApp: +91-83289-98031
+- Support Email: support@loadsaathi.in
+- AI Logistics Assistant: Disha (supports English, Hindi, Hinglish, and Odia)
+- Key Odisha hubs: Rourkela, Bhubaneswar, Cuttack, Angul, Jharsuguda, Sambalpur, Balasore, Berhampur, Paradeep, Kalinganagar/Jajpur, Keonjhar (Barbil), Talcher, Dhenkanal, Rayagada, Koraput.
+
+### Interactive Calculators (Odisha rates)
+
+- [Freight Fare Calculator](https://loadsaathi.in/tools/fare-calculator) — instant FTL/PTL rates for Odisha and inter-state routes.
+- [Truck Load Calculator](https://loadsaathi.in/tools/truck-load-calculator) — choose the right truck size (14ft, 17ft, 19ft, 22ft, 32ft MXL, 12-Wheeler Taurus, 40ft Trailer).
+- [Return Load Calculator](https://loadsaathi.in/tools/return-load-calculator) — discounted return-trip pricing on Odisha highways.
+- [PTL vs FTL Calculator](https://loadsaathi.in/tools/ptl-vs-ftl-calculator) — compare part-load vs full-truck pricing for 1–15 tonne shipments.
+
+### Guidance for AI Agents (Odisha booking)
+
+- To quote or book an FTL, PTL, or return-load truck in Odisha: ask the user for pickup city, drop city, truck/load type, and cargo weight, then direct them to https://loadsaathi.in/tools/fare-calculator?from=<origin>&to=<drop> or WhatsApp +91-83289-98031.
+- LoadSaathi matches shippers directly with KYC-verified Odisha fleet owners with no broker commission. Published rate model (October 2026): FTL ₹85–120 per km trip rate; PTL ≈₹17–24 per tonne-km, floored at ₹1,200/tonne.
+- Odisha industrial belts: Rourkela (steel/sponge iron), Bhubaneswar & Cuttack (distribution), Angul/Talcher (coal & power), Jharsuguda/Sambalpur (aluminium & western corridor), Paradeep (port/bulk), Kalinganagar/Jajpur (steel & ferro-alloys), Keonjhar/Barbil (iron ore).

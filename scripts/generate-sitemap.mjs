@@ -120,6 +120,14 @@ const STATIC = [
   ["/hi/return-load", "monthly", "0.8"],
   ["/hi/bhada-kaise-book-kare", "monthly", "0.7"],
   ["/hi/route/rourkela-to-ranchi", "monthly", "0.7"],
+  ["/odisha", "weekly", "0.9"],
+  ["/odisha/kalinganagar-jajpur", "monthly", "0.8"],
+  ["/odisha/paradeep", "monthly", "0.8"],
+  ["/odisha/keonjhar-barbil", "monthly", "0.8"],
+  ["/odisha/talcher-angul", "monthly", "0.8"],
+  ["/odisha/dhenkanal", "monthly", "0.8"],
+  ["/odisha/rayagada-koraput", "monthly", "0.8"],
+  ["/odisha-freight-index-2026", "monthly", "0.8"],
 ];
 
 // ── Dynamic slugs (same sources as scripts/prerender.mjs) ────────────────────

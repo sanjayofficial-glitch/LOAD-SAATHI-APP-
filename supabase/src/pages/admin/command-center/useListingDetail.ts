@@ -1,14 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
+import {
+  attachShipperToRequests,
+  attachTruckerToShipmentRequests,
+  fetchAdminUsersMap,
+} from '@/lib/adminUsers';
 import type { Request, ShipmentRequest } from '@/types';
 
 /** Literal selects so the embedded relation parses at the type level. */
 const TRIP_REQUEST_SELECT =
-  '*, shipper:users!requests_shipper_id_fkey(id, full_name, phone, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
+  '*, shipper:users!requests_shipper_id_fkey(id, full_name, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
 
 const SHIPMENT_OFFER_SELECT =
-  '*, trucker:users!shipment_requests_trucker_id_fkey(id, full_name, phone, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
+  '*, trucker:users!shipment_requests_trucker_id_fkey(id, full_name, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
 
 const RELATED_LIMIT = 50;
 
@@ -22,8 +27,8 @@ export type ListingKind = 'trip' | 'shipment';
  *  - a load  → the offers truckers made on it (proposed rate, message,
  *              status), each joined to the trucker's profile
  *
- * This is the part the map and the KPI strip can never show: who is actually
- * on each side of a posting.
+ * Full profiles are attached from the `admin_users_view` RPC (SEC-01: the
+ * `users` table no longer exposes sensitive columns to direct reads).
  */
 export function useListingDetail(kind: ListingKind | null, id: string | null) {
   const { getSupabaseToken } = useAuth();
@@ -36,6 +41,8 @@ export function useListingDetail(kind: ListingKind | null, id: string | null) {
       if (!token) return [];
       const supabase = createClerkSupabaseClient(token);
 
+      const userMap = await fetchAdminUsersMap(supabase);
+
       if (kind === 'trip') {
         const { data, error } = await supabase
           .from('requests')
@@ -44,7 +51,7 @@ export function useListingDetail(kind: ListingKind | null, id: string | null) {
           .order('created_at', { ascending: false })
           .limit(RELATED_LIMIT);
         if (error) console.warn('[useListingDetail] trip requests failed:', error.message);
-        return (data ?? []) as Request[];
+        return attachShipperToRequests((data ?? []) as Request[], userMap);
       }
 
       const { data, error } = await supabase
@@ -54,7 +61,7 @@ export function useListingDetail(kind: ListingKind | null, id: string | null) {
         .order('created_at', { ascending: false })
         .limit(RELATED_LIMIT);
       if (error) console.warn('[useListingDetail] shipment offers failed:', error.message);
-      return (data ?? []) as ShipmentRequest[];
+      return attachTruckerToShipmentRequests((data ?? []) as ShipmentRequest[], userMap);
     },
     staleTime: 15000,
   });

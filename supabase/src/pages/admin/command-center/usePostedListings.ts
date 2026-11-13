@@ -1,21 +1,27 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
+import {
+  attachShipperToShipments,
+  attachTruckerToTrips,
+  fetchAdminUsersMap,
+} from '@/lib/adminUsers';
 import type { Trip, Shipment } from '@/types';
 
 /**
  * Every profile field the board shows next to a posting — enough to tell the
  * operator *who* posted it without opening the Users page.
  *
- * Written out as literals rather than interpolated from a field list so the
- * supabase-js string parser can still resolve the embedded relation at the
- * type level (a `${string}` template type makes it bail out).
+ * SEC-01: sensitive columns (phone, KYC docs, …) are no longer readable
+ * directly from `users`; the full profiles are attached client-side from the
+ * `admin_users_view` RPC (see fetchAdminUsersMap). The constants below only
+ * carry the safe public fields in case the admin RPC is ever unavailable.
  */
 export const TRIP_SELECT =
-  '*, trucker:users!trips_trucker_id_fkey(id, full_name, phone, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
+  '*, trucker:users!trips_trucker_id_fkey(id, full_name, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
 
 export const SHIPMENT_SELECT =
-  '*, shipper:users!shipments_shipper_id_fkey(id, full_name, phone, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
+  '*, shipper:users!shipments_shipper_id_fkey(id, full_name, company_name, rating, total_trips, is_verified, avatar_url, user_type, created_at, verification_status)';
 
 /** Newest N trips and loads kept on the board at once. */
 const LISTING_LIMIT = 60;
@@ -34,7 +40,7 @@ export interface PostedListings {
 /**
  * usePostedListings — the postings themselves: every trip a trucker has posted
  * and every load a shipper has posted, newest first, each joined to the
- * poster's profile.
+ * poster's profile (attached from admin_users_view).
  *
  * This is separate from the live GPS hooks (driver_locations / load_locations),
  * which only carry vehicles and loads that have coordinates — a posting with no
@@ -50,7 +56,7 @@ export function usePostedListings(enabled: boolean) {
       if (!token) return { trips: [], shipments: [] };
       const supabase = createClerkSupabaseClient(token);
 
-      const [tripsRes, shipmentsRes] = await Promise.all([
+      const [tripsRes, shipmentsRes, userMap] = await Promise.all([
         supabase
           .from('trips')
           .select(TRIP_SELECT)
@@ -61,6 +67,7 @@ export function usePostedListings(enabled: boolean) {
           .select(SHIPMENT_SELECT)
           .order('created_at', { ascending: false })
           .limit(LISTING_LIMIT),
+        fetchAdminUsersMap(supabase),
       ]);
 
       if (tripsRes.error) {
@@ -75,8 +82,8 @@ export function usePostedListings(enabled: boolean) {
       if (shipmentsRes.error) errors.shipments = shipmentsRes.error.message;
 
       return {
-        trips: (tripsRes.data ?? []) as Trip[],
-        shipments: (shipmentsRes.data ?? []) as Shipment[],
+        trips: attachTruckerToTrips((tripsRes.data ?? []) as Trip[], userMap),
+        shipments: attachShipperToShipments((shipmentsRes.data ?? []) as Shipment[], userMap),
         errors,
       };
     },

@@ -65,6 +65,10 @@ export const EVENTS = {
   PHONE_ADDED: "phone_added",
   PHONE_SKIPPED: "phone_skipped",
   PHONE_NUDGE_CLICKED: "phone_nudge_clicked",
+  FREDDY_OPEN: "freddy_open",
+  FREDDY_SEND: "freddy_send",
+  FREDDY_TURN: "freddy_turn",
+  FREDDY_BOOK_CLICK: "freddy_book_click",
 } as const;
 
 // Shared properties for public-funnel events
@@ -343,4 +347,16 @@ export function trackArticleView(props: {
  */
 export function trackToolCompleted(props: { tool: string; [key: string]: unknown }) {
   trackEvent(EVENTS.TOOL_COMPLETED, props);
+}
+
+export type FreddyTurnProps = {
+  ok: boolean;
+  tool?: string | null;
+  fallback?: boolean;
+  latency_ms?: number;
+};
+
+/** One completed Freddy chat turn (any outcome). No PII. */
+export function trackFreddyTurn(props: FreddyTurnProps) {
+  trackEvent(EVENTS.FREDDY_TURN, props);
 }

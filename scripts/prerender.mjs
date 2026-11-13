@@ -84,6 +84,14 @@ const STATIC_ROUTES = [
   "/hi/return-load",
   "/hi/bhada-kaise-book-kare",
   "/hi/route/rourkela-to-ranchi",
+  "/odisha",
+  "/odisha/kalinganagar-jajpur",
+  "/odisha/paradeep",
+  "/odisha/keonjhar-barbil",
+  "/odisha/talcher-angul",
+  "/odisha/dhenkanal",
+  "/odisha/rayagada-koraput",
+  "/odisha-freight-index-2026",
 ];
 // NOTE: redirect sources (/freight-intelligence, legacy calculator URLs,
 // /transport/*, /location/vizag) are deliberately NOT prerendered — baking a

@@ -45,6 +45,14 @@ import {
   fetchSessionHistory,
   persistSessionHistory,
 } from "../_shared/freddyMemory.ts";
+import {
+  buildMarketProbes,
+  buildShipmentProbes,
+  buildSuggestions,
+  probeMarketAvailability,
+  probeShipmentAvailability,
+  type SearchSuggestion,
+} from "../_shared/freddySuggestions.ts";
 
 const MAX_MESSAGE_LENGTH = 2_000;
 const MAX_BODY_BYTES = 16 * 1024;
@@ -531,6 +539,22 @@ export async function handleAgentRouter(
 
     const summary = buildFreddyShipmentsSummary(outcome.shipments, filters, intentSource);
 
+    // Zero-result recovery: relaxed-scope suggestions so the user can broaden.
+    let suggestions: SearchSuggestion[] = [];
+    if (outcome.count === 0) {
+      try {
+        const probes = buildShipmentProbes(mapped);
+        const counts = await probeShipmentAvailability(
+          { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token },
+          probes,
+          fetchImpl,
+        );
+        suggestions = buildSuggestions(probes, counts);
+      } catch {
+        suggestions = [];
+      }
+    }
+
     // Append to conversation memory.
     if (sessionId && appendSessionHistory) {
       try {
@@ -555,6 +579,7 @@ export async function handleAgentRouter(
         intentSource,
         intentRaw,
         summary,
+        suggestions,
         sessionId,
         requestId,
       }),
@@ -633,6 +658,22 @@ export async function handleAgentRouter(
 
   const summary = buildFreddySummary(outcome.loads, filters, intentSource);
 
+  // Zero-result recovery: relaxed-scope suggestions so the user can broaden.
+  let suggestions: SearchSuggestion[] = [];
+  if (outcome.count === 0) {
+    try {
+      const probes = buildMarketProbes(filters);
+      const counts = await probeMarketAvailability(
+        { baseUrl: supabaseUrl, anonKey: supabaseAnonKey, userJwt: token },
+        probes,
+        fetchImpl,
+      );
+      suggestions = buildSuggestions(probes, counts);
+    } catch {
+      suggestions = [];
+    }
+  }
+
   // Append to conversation memory.
   if (sessionId && appendSessionHistory) {
     try {
@@ -657,6 +698,7 @@ export async function handleAgentRouter(
       intentSource,
       intentRaw,
       summary,
+      suggestions,
       sessionId,
       requestId,
     }),

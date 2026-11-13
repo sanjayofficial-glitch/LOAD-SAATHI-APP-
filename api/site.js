@@ -42,7 +42,7 @@ export const OG_IMAGE = `${SITE_URL}/og-image.png`;
  * /routes/* and /location/* entries in it. scripts/smoke.mjs enforces this.
  */
 export const COVERAGE = {
-  sitemapUrls: 215,
+  sitemapUrls: 223,
   freightRoutes: 48,
   cityPages: 14,
 };

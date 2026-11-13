@@ -284,7 +284,9 @@ export default function FareCalculator() {
   }, [origin, destination, weight, vehicleClass, shipmentMode, applyStaticFallback]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") calculateFare();
+    // IME-safe: ignore Enter while composing (Safari needs keyCode 229 too).
+    const ne = e.nativeEvent;
+    if (e.key === "Enter" && !ne.isComposing && ne.keyCode !== 229) calculateFare();
   };
 
   return (
