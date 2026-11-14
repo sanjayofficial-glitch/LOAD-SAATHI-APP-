@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 import {
   askFreddyAgent,
+  FreddyRateLimitedError,
   getOrCreateSessionId,
   type AgentChatMessage,
 } from './freddyAgent';
@@ -70,6 +71,7 @@ describe('askFreddyAgent', () => {
       history,
       getToken: async () => TOKEN,
       lang: 'hi',
+      pathname: '/shipper/post-shipment',
     });
 
     expect(data.ok).toBe(true);
@@ -89,6 +91,7 @@ describe('askFreddyAgent', () => {
     expect(body.message).toBe('find trucks from Rourkela to Ranchi');
     expect(body.sessionId).toBe('12345678-1234-4123-8234-123456789abc');
     expect(body.lang).toBe('hi');
+    expect(body.pathname).toBe('/shipper/post-shipment');
     // Bounded to the most recent 6 messages.
     expect(body.history).toHaveLength(6);
     expect(body.history[0].content).toBe('message 6');
@@ -108,12 +111,13 @@ describe('askFreddyAgent', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('throws on non-ok responses', async () => {
+  it('throws FreddyRateLimitedError on 429 responses', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue(
         new Response(JSON.stringify({ detail: 'Rate limit exceeded' }), {
           status: 429,
+          headers: { 'Retry-After': '30' },
         })
       )
     );
@@ -124,7 +128,18 @@ describe('askFreddyAgent', () => {
         sessionId: '12345678-1234-4123-8234-123456789abc',
         getToken: async () => TOKEN,
       })
-    ).rejects.toThrow('Rate limit exceeded');
+    ).rejects.toBeInstanceOf(FreddyRateLimitedError);
+
+    try {
+      await askFreddyAgent({
+        message: 'hi again',
+        sessionId: '12345678-1234-4123-8234-123456789abc',
+        getToken: async () => TOKEN,
+      });
+    } catch (err) {
+      expect(err).toBeInstanceOf(FreddyRateLimitedError);
+      expect((err as FreddyRateLimitedError).retryAfterSeconds).toBe(30);
+    }
   });
 
   it('caches identical search queries within the session', async () => {

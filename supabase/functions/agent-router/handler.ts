@@ -18,6 +18,7 @@
 
 import {
   checkRateLimit,
+  checkRateLimitShared,
   errorResponse,
   extractBearerToken,
   generateRequestId,
@@ -39,8 +40,18 @@ import {
   parseFreddyIntent,
   isCreditScoreQuery,
   isShipmentSearchRequest,
+  isLikelySearchRequest,
+  looksLikeConcreteSearch,
 } from "../_shared/freddyIntent.ts";
 import { verifyClerkJwt } from "../_shared/verifyClerkJwt.ts";
+import {
+  freddyChatAnswer,
+  suggestGuideFlow,
+} from "../_shared/freddyChat.ts";
+import {
+  calculateFareEstimate,
+  parseCalcRequest,
+} from "../_shared/calcFare.ts";
 import {
   fetchSessionHistory,
   persistSessionHistory,
@@ -56,7 +67,7 @@ import {
 
 const MAX_MESSAGE_LENGTH = 2_000;
 const MAX_BODY_BYTES = 16 * 1024;
-const RATE_LIMIT_REQUESTS = 10;
+const RATE_LIMIT_REQUESTS = 20;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_RETRY_AFTER_SECONDS = 60;
 const RATE_LIMIT_KEY_PREFIX = "agent-router:";
@@ -82,6 +93,8 @@ interface AgentRouterBody {
   filters?: unknown;
   history?: ChatMessage[];
   lang?: string;
+  /** Current page pathname, used for precise navigation guidance. */
+  pathname?: string;
 }
 
 interface CreditInsightsResult {
@@ -186,7 +199,7 @@ export async function handleAgentRouter(
   deps: AgentRouterDeps = {},
 ): Promise<Response> {
   const env = deps.env ?? ((name: string) => Deno.env.get(name));
-  const checkRateLimitImpl = deps.checkRateLimitImpl ?? checkRateLimit;
+  const checkRateLimitImpl = deps.checkRateLimitImpl ?? checkRateLimitShared;
   const fetchImpl = deps.fetchImpl ?? fetch;
 
   const requestId = generateRequestId();
@@ -327,11 +340,11 @@ export async function handleAgentRouter(
 
   const keys = Object.keys(parsed as Record<string, unknown>);
   const hasUnknownKey = keys.some(
-    (k) => k !== "message" && k !== "sessionId" && k !== "filters" && k !== "history" && k !== "lang",
+    (k) => k !== "message" && k !== "sessionId" && k !== "filters" && k !== "history" && k !== "lang" && k !== "pathname",
   );
   if (hasUnknownKey) {
     return errorResponse(
-      'Unknown body fields. Only "message", optional "sessionId", "filters", "history", "lang" are accepted.',
+      'Unknown body fields. Only "message", optional "sessionId", "filters", "history", "lang", "pathname" are accepted.',
       400,
       headers,
       requestId,
@@ -373,6 +386,18 @@ export async function handleAgentRouter(
       headers,
       requestId,
     );
+  }
+
+  const pathname = body.pathname;
+  if (pathname !== undefined && pathname !== null) {
+    if (typeof pathname !== "string" || pathname.length > 160) {
+      return errorResponse(
+        '"pathname" must be a string of at most 160 characters when present.',
+        400,
+        headers,
+        requestId,
+      );
+    }
   }
   const tr = (en: string, hi: string): string => (lang === "hi" ? hi : en);
 
@@ -461,6 +486,92 @@ export async function handleAgentRouter(
     );
   }
 
+  // ── Phase 2d: non-search intent → calculator tool / chat brain ──
+  // Skip the search path entirely for conversational and calculation messages;
+  // searches still go through the strict market/shipment tools below.
+  if (!isLikelySearchRequest(message)) {
+    // Fare estimate tool: "how much from X to Y for 5 tonnes".
+    const calcReq = parseCalcRequest(message);
+    if (calcReq) {
+      const calcResult = await calculateFareEstimate(calcReq, { fetchImpl });
+      if (calcResult.ok) {
+        if (sessionId && appendSessionHistory) {
+          try {
+            await appendSessionHistory(sessionId, [
+              { role: "user", content: message },
+              { role: "assistant", content: calcResult.estimate.summary },
+            ]);
+          } catch {
+            // best effort
+          }
+        }
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            phase: 2,
+            tool: "calculate_fare",
+            summary: calcResult.estimate.summary,
+            calc: calcResult.estimate,
+            sessionId,
+            requestId,
+          }),
+          { status: 200, headers: phaseHeaders },
+        );
+      }
+      // Geocode/route failure → fall through to chat for a friendly answer.
+    }
+
+    // Generative chat brain (free Gemini tier). Without a key it degrades to
+    // the client-side knowledge base via the tool:null response below.
+    const chat = await freddyChatAnswer(
+      { message, history, pathname: pathname ?? undefined, lang: lang as "en" | "hi" },
+      { env, fetchImpl },
+    );
+    if (chat.ok) {
+      const guide = suggestGuideFlow(message, pathname ?? undefined);
+      if (sessionId && appendSessionHistory) {
+        try {
+          await appendSessionHistory(sessionId, [
+            { role: "user", content: message },
+            { role: "assistant", content: chat.answer },
+          ]);
+        } catch {
+          // best effort
+        }
+      }
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          phase: 2,
+          tool: "chat",
+          summary: chat.answer,
+          provider: chat.provider,
+          guide,
+          sessionId,
+          requestId,
+        }),
+        { status: 200, headers: phaseHeaders },
+      );
+    }
+
+    // No LLM configured / provider unavailable → identical behavior to today:
+    // hand the conversational reply to the client-side knowledge base.
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        phase: 2,
+        tool: null,
+        detail: tr(
+          "I can help with finding trucks or shipments, freight rates, booking, tracking, verification, and more. What are you looking for?",
+          "मैं ट्रक या शिपमेंट खोजने, फ्रेट रेट, बुकिंग, ट्रैकिंग, वेरिफिकेशन और बहुत कुछ में मदद कर सकता हूँ। आप क्या ढूँढ रहे हैं?",
+        ),
+        sessionId,
+        requestId,
+      }),
+      { status: 200, headers: phaseHeaders },
+    );
+  }
+
   // ── Phase 2b: tool selection — trucker-side shipment search vs market search ──
   // Explicit filters are always market-shaped (backwards-compatible contract),
   // so shipment routing only applies when the model must parse free text.
@@ -506,6 +617,8 @@ export async function handleAgentRouter(
             "आपके संदेश से कोई उपयोगी फ़िल्टर नहीं मिला। " +
               "कोशिश करें: 'राउरकेला से राँची के लिए 5 टन, 4000 प्रति टन से कम शिपमेंट खोजें'",
           ),
+          suggestedForm: looksLikeConcreteSearch(message),
+          formRole: "trucker",
           sessionId,
           requestId,
         }),
@@ -625,6 +738,8 @@ export async function handleAgentRouter(
           "आपके संदेश से कोई उपयोगी फ़िल्टर नहीं मिला। " +
             "कोशिश करें: 'राउरकेला से राँची के लिए 5 टन, 4000 प्रति टन से कम ट्रक खोजें'",
         ),
+        suggestedForm: looksLikeConcreteSearch(message),
+        formRole: "shipper",
         sessionId,
         requestId,
       }),

@@ -31,15 +31,37 @@ describe('freddyAI (knowledge base)', () => {
     expect(seen.size).toBeGreaterThan(1);
   });
 
-  it('owns its limits in the default answer', async () => {
+  it('owns its limits in the default answer and flags it as fallback', async () => {
     const res = await freddyAI.ask('tell me about quantum physics');
-    expect(res.message).toContain("I'll say so and point you to a human");
-    expect(res.message).toContain('I won\'t make it up');
+    expect(res.isFallback).toBe(true);
+    expect(res.message).toContain("I won't make it up");
+    expect(res.message).toContain('point you to a human');
+    // The fallback must never re-ask "what's on your mind" as the only
+    // content — it should give next steps instead.
+    expect(res.message).not.toContain("What's on your mind?");
   });
 
   it('never claims invented marketplace data', async () => {
     const res = await freddyAI.ask('I want to ship goods');
     expect(res.message).toContain('never invent trucks or prices');
+  });
+
+  it('answers common product questions without falling back', async () => {
+    const cases: Array<[string, string]> = [
+      ['what is my credit score', 'Credit'],
+      ['how do I verify my truck', 'Verified'],
+      ['track my trip live', 'track'],
+      ['how do I book a truck', 'booking request'],
+      ['what can you do', 'live market'],
+      ['is loadsaathi safe?', 'Never pay outside'],
+      ['do you speak hindi', 'Hindi'],
+    ];
+    for (const [question, expected] of cases) {
+      const res = await freddyAI.ask(question);
+      expect(res.success).toBe(true);
+      expect(res.isFallback).toBe(false);
+      expect(res.message).toContain(expected);
+    }
   });
 
   it('answers in Hindi when lang=hi with the same honesty', async () => {
@@ -62,6 +84,7 @@ describe('freddyAI (knowledge base)', () => {
     }
 
     const fallback = await freddyAI.ask('बाकी कुछ भी', undefined, 'hi');
+    expect(fallback.isFallback).toBe(true);
     expect(fallback.message).toContain('मनगढ़ंत');
   });
 

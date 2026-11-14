@@ -30,7 +30,9 @@ import { useAuth as useAppAuth } from '@/contexts/AuthContext';
 import { freddyAI } from '@/lib/freddy-ai';
 import {
   askFreddyAgent,
+  FreddyRateLimitedError,
   getOrCreateSessionId,
+  type AgentCalcEstimate,
   type AgentLoad,
   type AgentShipment,
   type AgentTool,
@@ -79,6 +81,8 @@ interface ChatMessage {
   tool?: AgentTool;
   loads?: AgentLoad[];
   shipments?: AgentShipment[];
+  /** Fare estimate (tool === 'calculate_fare'). */
+  calc?: AgentCalcEstimate;
   strengths?: string[];
   improvements?: string[];
   tips?: string[];
@@ -102,6 +106,7 @@ interface QuickAction {
 interface AiResponse {
   success?: boolean;
   message?: string;
+  isFallback?: boolean;
 }
 
 const QUICK_ACTIONS: QuickAction[] = [
@@ -360,7 +365,7 @@ export default function FreddyChatModal({
   }, []);
 
   // Guide engine — pages feed it via useDishaGuide().handleClick etc.
-  const { state: guideState, currentStep, nextStep, stop } = useDishaGuide();
+  const { state: guideState, currentStep, nextStep, stop, startFlow } = useDishaGuide();
   useDishaKeyboard({ disabled: !open, onEscape: () => onOpenChange(false) });
 
   const tipContext = getTipContext(pathname);
@@ -493,9 +498,13 @@ export default function FreddyChatModal({
       const followUpOptions: Array<string | { label: string; value: string }> =
         data.tool === 'credit-insights'
           ? ['How can I improve my score?', 'Check freight rates', 'How does LoadSaathi work?']
-          : data.tool
-            ? ['Refine my search', 'My credit score', 'Check freight rates']
-            : [];
+          : data.tool === 'chat'
+            ? ['How does LoadSaathi work?', 'Check freight rates', 'Find a truck from Rourkela to Ranchi']
+            : data.tool === 'calculate_fare'
+              ? ['Refine my search', 'Check freight rates', 'Find trucks on this route']
+              : data.tool
+                ? ['Refine my search', 'My credit score', 'Check freight rates']
+                : [];
       const chips = [...suggestionChips, ...followUpOptions];
 
       addBotMessage(content, false, {
@@ -506,6 +515,7 @@ export default function FreddyChatModal({
         improvements: data.improvements,
         tips: data.tips,
         projection: data.projection,
+        ...(data.tool === 'calculate_fare' && data.calc ? { calc: data.calc } : {}),
         ...(chips.length > 0 ? { options: chips } : {}),
       });
 
@@ -517,6 +527,29 @@ export default function FreddyChatModal({
       if (data.tool === 'credit-insights' || hasResults) haptic('success');
     },
     [addBotMessage]
+  );
+
+  /** Next-step chips shown when Freddy has no answer (the honest "I don't
+   *  know" fallback) so the user is never stuck at a dead end. Values are
+   *  query strings that route back through the same send flow. */
+  const fallbackChips = useCallback(
+    (lang: 'en' | 'hi'): Array<{ label: string; value: string }> => {
+      if (lang === 'hi') {
+        return [
+          { label: 'ट्रक खोजें', value: 'राउरकेला से राँची के लिए 5 टन का ट्रक खोजें' },
+          { label: 'लोड खोजें', value: 'भुवनेश्वर से कोलकाता के लिए 8 टन का शिपमेंट खोजें' },
+          { label: 'फ्रेट रेट देखें', value: 'फ्रेट रेट कितना होना चाहिए?' },
+          { label: 'इंसान से बात करें', value: 'मुझे इंसान से बात करनी है' },
+        ];
+      }
+      return [
+        { label: 'Find a truck', value: 'Find a truck from Rourkela to Ranchi for 5 tonnes' },
+        { label: 'Find a load', value: 'Find shipments from Bhubaneswar to Kolkata for 8 tonnes' },
+        { label: 'Check freight rates', value: 'How much should I charge for freight?' },
+        { label: 'Talk to a human', value: 'I need to talk to a human' },
+      ];
+    },
+    []
   );
 
   /** Run a completed search via agent-router — the single source of truth. */
@@ -531,7 +564,14 @@ export default function FreddyChatModal({
       const history = messages.map((m) => ({ role: m.role, content: m.content }));
 
       try {
-        const data = await askFreddyAgent({ message: query, sessionId, history, getToken });
+        const data = await askFreddyAgent({
+          message: query,
+          sessionId,
+          history,
+          getToken,
+          lang: uiLang,
+          pathname: typeof window !== 'undefined' ? window.location.pathname : '',
+        });
         setMessages((prev) => prev.filter((m) => !m.isTyping));
 
         if (data.enabled === false) {
@@ -564,7 +604,7 @@ export default function FreddyChatModal({
         setTimeout(() => setMood('idle'), 2000);
       }
     },
-    [addBotMessage, getToken, messages, presentToolResult, sessionId]
+    [addBotMessage, getToken, messages, presentToolResult, sessionId, uiLang]
   );
 
   const askFormQuestion = useCallback(
@@ -650,7 +690,14 @@ export default function FreddyChatModal({
       // ── Agent path: Freddy copilot (tool calling via agent-router) ──
       try {
         const history = messages.map((m) => ({ role: m.role, content: m.content }));
-        const data = await askFreddyAgent({ message, sessionId, history, getToken, lang: replyLang });
+        const data = await askFreddyAgent({
+          message,
+          sessionId,
+          history,
+          getToken,
+          lang: replyLang,
+          pathname: typeof window !== 'undefined' ? window.location.pathname : '',
+        });
 
         setMessages((prev) => prev.filter((m) => !m.isTyping));
 
@@ -662,6 +709,25 @@ export default function FreddyChatModal({
             false
           );
           setMood('idle');
+          return;
+        }
+
+        // "How do I…" → start the matching Disha guided flow (non-forcing:
+        // the flow asks before diving in, and the user can dismiss it anytime).
+        if (data.guide?.flowId) {
+          try {
+            startFlow(data.guide.flowId);
+          } catch {
+            // guide not available on this page — ignore
+          }
+        }
+
+        // Search intent with no parseable filters → open the slot-filling form
+        // instead of dumping generic advice.
+        if (data.suggestedForm && data.formRole) {
+          setIsLoading(false);
+          setMood('helpful');
+          beginForm({ role: data.formRole });
           return;
         }
 
@@ -677,7 +743,9 @@ export default function FreddyChatModal({
         setIsLoading(false);
         const kb = (await freddyAI.ask(message, undefined, replyLang)) as AiResponse;
         if (kb.success && kb.message) {
-          addBotMessage(kb.message, false);
+          addBotMessage(kb.message, false, {
+            ...(kb.isFallback ? { options: fallbackChips(replyLang) } : {}),
+          });
           setMood('helpful');
         } else {
           addBotMessage(
@@ -687,7 +755,18 @@ export default function FreddyChatModal({
           setMood('idle');
         }
         return;
-      } catch {
+      } catch (err) {
+        if (err instanceof FreddyRateLimitedError) {
+          setMessages((prev) => prev.filter((m) => !m.isTyping));
+          setIsLoading(false);
+          addBotMessage(
+            "You're moving fast! Give me a few seconds between questions so I can keep up — then try again.",
+            false
+          );
+          setMood('confused');
+          trackFreddyTurn({ ok: false });
+          return;
+        }
         // agent-router unavailable / not authenticated / network error → fall
         // through to the knowledge path below.
       }
@@ -701,7 +780,9 @@ export default function FreddyChatModal({
         setMessages((prev) => prev.filter((m) => !m.isTyping));
 
         if (response.success) {
-          addBotMessage(response.message ?? '');
+          addBotMessage(response.message ?? '', false, {
+            ...(response.isFallback ? { options: fallbackChips(replyLang) } : {}),
+          });
           setMood('helpful');
           trackFreddyTurn({ ok: true, tool: null, fallback: true });
         } else {
@@ -735,6 +816,9 @@ export default function FreddyChatModal({
       addBotMessage,
       askFormQuestion,
       presentToolResult,
+      fallbackChips,
+      startFlow,
+      beginForm,
     ]
   );
 
@@ -923,6 +1007,15 @@ export default function FreddyChatModal({
     }
   }, [stopListening, uiLang]);
 
+  // HTML-escape message text so AI/user content is never injected as markup.
+  const escapeHtml = (value: string): string =>
+    value.replace(/[&<>"']/g, (c: string): string =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] ?? c),
+    );
+
+  const HIGHLIGHT_SPLIT_RE = /(\b(?:shipper|trucker|freight|load|trip|price|rate|calculator|register|login|dashboard|browse|post|track)\b)/gi;
+  const HIGHLIGHT_TEST_RE = /\b(?:shipper|trucker|freight|load|trip|price|rate|calculator|register|login|dashboard|browse|post|track)\b/i;
+
   const renderMessageContent = useCallback(
     (content: string, role: 'user' | 'assistant') => {
       const parts = content.split(/(:\/\/[^\s]+|\/[a-zA-Z0-9/-]+)/g);
@@ -943,12 +1036,23 @@ export default function FreddyChatModal({
             </button>
           );
         }
-        const highlighted = part.replace(
-          /(\b(?:shipper|trucker|freight|load|trip|price|rate|calculator|register|login|dashboard|browse|post|track)\b)/gi,
-          '<strong class="text-orange-600 dark:text-orange-400">$1</strong>'
-        );
+        // Escape first, then emit highlight keywords as real React elements —
+        // never build an HTML string from message text (XSS-safe, 5.2/8.3).
+        const escaped = escapeHtml(part);
+        const pieces = escaped.split(HIGHLIGHT_SPLIT_RE);
         return (
-          <span key={index} dangerouslySetInnerHTML={{ __html: highlighted }} className="leading-relaxed" />
+          <span key={index} className="leading-relaxed">
+            {pieces.map((piece, pieceIndex) => {
+              if (!piece) return null;
+              return HIGHLIGHT_TEST_RE.test(piece) ? (
+                <strong key={pieceIndex} className="text-orange-600 dark:text-orange-400">
+                  {piece}
+                </strong>
+              ) : (
+                piece
+              );
+            })}
+          </span>
         );
       });
     },
@@ -1063,6 +1167,46 @@ export default function FreddyChatModal({
             >
               View all open shipments →
             </button>
+          </div>
+        );
+      }
+
+      if (msg.tool === 'calculate_fare' && msg.calc) {
+        const c = msg.calc;
+        return (
+          <div className="mt-2 space-y-2">
+            <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              Freight estimate
+            </p>
+            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3">
+              <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                <span>📏 {c.distanceKm} km</span>
+                {c.transitMinutes != null && <span>🕐 ~{c.transitMinutes} min</span>}
+                {c.weightTonnes != null && <span>⚖️ {c.weightTonnes}t</span>}
+                {c.vehicleType && <span>🚛 {c.vehicleType}</span>}
+              </div>
+              {c.perTonneRecommended > 0 && (
+                <div className="mt-2 text-sm">
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    ₹{c.perTonneRecommended}/tonne
+                  </span>
+                  <span className="text-muted-foreground"> (₹{c.perTonneMin}–₹{c.perTonneMax})</span>
+                </div>
+              )}
+              {c.totalRecommended != null && (
+                <div className="text-sm text-muted-foreground">
+                  Total ≈ ₹{c.totalRecommended}
+                </div>
+              )}
+              {c.truckRecommendation && (
+                <div className="mt-1 text-xs text-muted-foreground">
+                  🚛 {c.truckRecommendation.name} ({c.truckRecommendation.capacity})
+                </div>
+              )}
+              <p className="mt-2 text-[11px] text-muted-foreground">
+                Estimate only — real prices come from the live marketplace.
+              </p>
+            </div>
           </div>
         );
       }

@@ -37,7 +37,26 @@ export interface AgentShipment {
   shipper?: AgentTrucker;
 }
 
-export type AgentTool = 'search_market' | 'search_shipments' | 'credit-insights';
+export type AgentTool = 'search_market' | 'search_shipments' | 'credit-insights' | 'chat' | 'calculate_fare';
+
+/** Estimate payload returned by the calculate_fare tool. */
+export interface AgentCalcEstimate {
+  distanceKm: number;
+  transitMinutes?: number;
+  weightTonnes?: number;
+  vehicleType?: string;
+  perTonneMin: number;
+  perTonneMax: number;
+  perTonneRecommended: number;
+  totalRecommended?: number;
+  truckRecommendation?: { name: string; capacity: string; type: string };
+  summary: string;
+}
+
+/** Optional guide hint for the Disha spotlight engine ("show me how"). */
+export interface AgentGuideHint {
+  flowId: string;
+}
 
 export interface AgentRouterResponse {
   ok: boolean;
@@ -57,6 +76,15 @@ export interface AgentRouterResponse {
   projection?: string;
   /** Zero-result recovery: relaxed-scope suggestions (label + re-run query). */
   suggestions?: { label: string; query: string }[];
+  /** Fare-estimate result (tool === 'calculate_fare'). */
+  calc?: AgentCalcEstimate;
+  /** Chat brain provider used (tool === 'chat'). */
+  provider?: string;
+  /** "How do I…" hint → start the matching Disha guide flow. */
+  guide?: AgentGuideHint | null;
+  /** Search request with no parseable filters → open the slot-filling form. */
+  suggestedForm?: boolean;
+  formRole?: 'shipper' | 'trucker';
   sessionId?: string;
   requestId?: string;
 }
@@ -104,11 +132,23 @@ export interface AskFreddyAgentOptions {
   getToken: () => Promise<string | null>;
   /** Preferred reply language (used for language-matched responses). */
   lang?: "en" | "hi";
+  /** Current page pathname for precise navigation guidance. */
+  pathname?: string;
   fetchImpl?: typeof fetch;
 }
 
+/** Thrown when the agent-router rate-limits the user (HTTP 429). */
+export class FreddyRateLimitedError extends Error {
+  readonly retryAfterSeconds?: number;
+  constructor(retryAfterSeconds?: number) {
+    super("Freddy is rate-limited");
+    this.name = "FreddyRateLimitedError";
+    this.retryAfterSeconds = retryAfterSeconds;
+  }
+}
+
 export async function askFreddyAgent(options: AskFreddyAgentOptions): Promise<AgentRouterResponse> {
-  const { message, sessionId, history = [], getToken, lang = "en", fetchImpl = fetch } = options;
+  const { message, sessionId, history = [], getToken, lang = "en", pathname = "", fetchImpl = fetch } = options;
 
   const cacheKey = `${sessionId}:${message.trim().toLowerCase()}`;
   const cached = responseCache.get(cacheKey);
@@ -131,9 +171,15 @@ export async function askFreddyAgent(options: AskFreddyAgentOptions): Promise<Ag
       sessionId,
       history: history.slice(-6),
       lang,
+      pathname: pathname.slice(0, 160),
     }),
     signal: AbortSignal.timeout(20000),
   });
+
+  if (res.status === 429) {
+    const retry = Number(res.headers.get('Retry-After')) || undefined;
+    throw new FreddyRateLimitedError(Number.isFinite(retry) ? retry : undefined);
+  }
 
   if (!res.ok) {
     const errData = (await res.json().catch(() => ({}))) as { detail?: string; error?: string };

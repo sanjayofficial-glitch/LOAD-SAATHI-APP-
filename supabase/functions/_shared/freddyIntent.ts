@@ -103,9 +103,117 @@ async function geminiIntent(
 
 /** Deterministic keyword fallback — no LLM needed.
  *  Extracts city-like tokens, "under ₹N/tonne", "X tonnes" patterns. */
+export function normalizeHindi(message: string): string {
+  // Devanagari digits → ASCII.
+  let m = message.replace(/[०१२३४५६७८९]/g, (d) => String("0123456789".indexOf(d)));
+  // Common city names → roman so the shared city list can match them.
+  for (const [hi, en] of Object.entries(HINDI_CITY_ALIASES)) {
+    m = m.split(hi).join(en);
+  }
+  // "राउरकेला से राँची" → "rourkela to ranchi".
+  m = m.replace(/\s+से\s+/g, " to ");
+  m = m.replace(/\s+के लिए\s*/g, " ");
+  return m;
+}
+
+const HINDI_CITY_ALIASES: Record<string, string> = {
+  "राउरकेला": "rourkela",
+  "राँची": "ranchi",
+  "रांची": "ranchi",
+  "भुवनेश्वर": "bhubaneswar",
+  "कोलकाता": "kolkata",
+  "कलकत्ता": "kolkata",
+  "जमशेदपुर": "jamshedpur",
+  "कटक": "cuttack",
+  "संबलपुर": "sambalpur",
+  "बेरहामपुर": "berhampur",
+  "धनबाद": "dhanbad",
+  "बिलासपुर": "bilaspur",
+  "रायपुर": "raipur",
+  "विशाखापट्टनम": "vizag",
+  "बोकारो": "bokaro",
+  "आसनसोल": "asansol",
+  "दुर्गापुर": "durgapur",
+  "मुंबई": "mumbai",
+  "दिल्ली": "delhi",
+  "पुणे": "pune",
+  "नागपुर": "nagpur",
+  "इंदौर": "indore",
+  "भोपाल": "bhopal",
+  "जयपुर": "jaipur",
+  "अहमदाबाद": "ahmedabad",
+  "सूरत": "surat",
+  "लखनऊ": "lucknow",
+  "कानपुर": "kanpur",
+  "पटना": "patna",
+  "वाराणसी": "varanasi",
+  "गुवाहाटी": "guwahati",
+  "हैदराबाद": "hyderabad",
+  "चेन्नई": "chennai",
+  "बेंगलुरु": "bangalore",
+  "बंगलौर": "bangalore",
+  "गोवा": "goa",
+  "देहरादून": "dehradun",
+  "हरिद्वार": "haridwar",
+};
+
+export const INDIAN_CITIES = [
+  "rourkela", "ranchi", "bhubaneswar", "kolkata", "jamshedpur", "cuttack",
+  "sambalpur", "berhampur", "balasore", "jharsuguda", "angul", "dhanbad",
+  "bilaspur", "bhilai", "vizag", "visakhapatnam", "bokaro", "asansol",
+  "durgapur", "raipur", "bhilwara", "adra", "tatanagar", "cuttack",
+  "hyderabad", "chennai", "bangalore", "mumbai", "delhi", "pune",
+  "nagpur", "indore", "bhopal", "jaipur", "ahmedabad", "surat",
+  "lucknow", "kanpur", "ghaziabad", "meerut", "patna", "muzaffarpur",
+  "gaya", "bodh gaya", "varanasi", "allahabad", "coimbatore", "madurai",
+  "trivandrum", "kochi", "goa", "panaji", "dehradun", "haridwar",
+  "siliguri", "darjeeling", "guwahati", "shillong", "agartala",
+  "imphal", "tripura", "ahmednagar", "solapur", "wardha", "yavatmal",
+  "akola", "amravati", "jalgaon", "bhusawal", "jalna", "parbhani",
+  "nanded", "latur", "osmanabad", "kolhapur", "sangli", "satara",
+  "ratnagiri", "dhule", "nashik", "mathura", "bharatpur",
+  "dholpur", "karauli", "alwar", "kishangarh", "pushkar", "beawar",
+  "sikar", "tonk", "dungarpur", "banswara", "udaipur", "chittorgarh",
+  "bharatpur", "dausa", "ajmer", "anand", "kheda", "vadodara",
+  "bharuch", "narmada", "vapi", "navsari", "valsad", "tapi",
+  "panchmahal", "mahisagar", "dahod", "sabarkantha", "aravalli",
+  "gir somnath", "junagadh", "jamnagar", "morbi", "kutch", "bhuj",
+  "gandhidham", "adipur", "pathankot", "hoshiarpur", "gurdaspur",
+  "batala", "dhariwal", "jalandhar", "phagwara", "kapurthala",
+  "ropar", "nawanshahr", "ludhiana", "srinagar", "haldwani",
+  "kathgodam", "ramnagar", "nainital", "kashipur", "kichha",
+  "mukteshwar", "dharchula", "pithoragarh", "bageshwar",
+  "kotdwara", "rishikesh", "jhilmjhir", "hansapur", "rudrapur",
+  "kotdwar", "pauri", "thakurdwar", "shakti",
+  "agra", "bareilly", "lucknow", "varanasi", "kanpur", "allahabad",
+  "dehradun", "haridwar", "haldwani", "kaladhungi", "nainital",
+  "kashipur", "kichha", "pilibhit", "baheri", "shadipur",
+  "budaun", "bisauli", "atrauliganj", "bilsi", "sadulpur",
+  "kakori", "raibareli", " Sultanpur", "jhanjharpur",
+  "samastipur", "muzaffarpur", "siwan", "saran", "gopalganj",
+  "siwan", "bagaha", "harha", "piro", "socket", "jaltikri",
+  "kaptanganj", "thawe", "barharia", "chhapra", "samastipur",
+];
+
+/** Cities found in text, in order of appearance, deduplicated. */
+export function extractIndianCities(text: string): string[] {
+  const lower = text.toLowerCase();
+  const found: string[] = [];
+  for (const city of INDIAN_CITIES) {
+    if (lower.includes(city)) {
+      const title = city
+        .split(" ")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+      if (!found.includes(title)) found.push(title);
+    }
+  }
+  return found;
+}
+
 function keywordFallback(message: string): SearchMarketFilters {
   const filters: SearchMarketFilters = {};
-  const m = message;
+  const m = normalizeHindi(message);
 
   // Price: "under ₹4000/tonne", "max 4000 per tonne", "below 4000"
   const priceMatch = m.match(/(?:under|max|maximum|below|≤|<)\s*₹?\s*([\d,]+)/i);
@@ -180,16 +288,10 @@ function keywordFallback(message: string): SearchMarketFilters {
     return {};
   }
 
-  const foundCities = indianCities.filter((c) => lower.includes(c));
-  if (foundCities.length >= 1) filters.origin = foundCities[0]
-    .split(" ")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+  const foundCities = extractIndianCities(m);
+  if (foundCities.length >= 1) filters.origin = foundCities[0];
   if (foundCities.length >= 2) {
-    filters.destination = foundCities[1]
-      .split(" ")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+    filters.destination = foundCities[1];
   }
 
   return filters;
@@ -267,4 +369,35 @@ export async function parseFreddyIntent(
   }
 
   return { filters: {}, source: "empty" };
+}
+
+/**
+ * Cheap router heuristic: does this message look like a marketplace search at
+ * all? Used by agent-router to avoid sending conversational messages through
+ * the search path (open the chat brain instead).
+ */
+export function isLikelySearchRequest(message: string): boolean {
+  const lower = message.toLowerCase();
+  // Question forms ("how do I…", "what is…") are conversation, not search —
+  // let the chat brain answer them.
+  if (/^(how|what|why|can you|explain|tell me|do you|is it|should i|who|when)\b/.test(lower)) {
+    return false;
+  }
+  const searchSignals = [
+    "truck", "lorry", "vehicle", "capacity", "shipment", "shipments",
+    "goods", "cargo", "freight", "find", "looking for", "need a", "want a",
+    "from ", " to ", "browse",
+  ];
+  if (searchSignals.some((k) => lower.includes(k))) return true;
+  return extractIndianCities(lower).length >= 2;
+}
+
+/**
+ * A search that is concrete enough to open the slot-filling form when no
+ * filters could be parsed (two cities, or an explicit find/need/want).
+ */
+export function looksLikeConcreteSearch(message: string): boolean {
+  const lower = message.toLowerCase();
+  if (extractIndianCities(lower).length >= 2) return true;
+  return /\b(find|need|want|looking)\b/i.test(lower);
 }
