@@ -38,14 +38,20 @@ function makeSheet() {
   return el;
 }
 
-function ev(init: Partial<React.PointerEvent> & { clientX: number; clientY: number }) {
+type PointerEv = React.PointerEvent<HTMLDivElement>;
+
+function ev(init: {
+  clientX: number;
+  clientY: number;
+  timeStamp?: number;
+}): PointerEv {
   return {
     button: 0,
     pointerId: 1,
-    timeStamp: 0,
+    timeStamp: init.timeStamp ?? 0,
     preventDefault: vi.fn(),
     ...init,
-  } as unknown as React.PointerEvent;
+  } as unknown as PointerEv;
 }
 
 function setup(onDismiss = vi.fn(), threshold = 0.3) {
@@ -131,7 +137,8 @@ describe("useSwipeDismiss — Apple drag mechanics", () => {
 
     h.onPointerDown(ev({ clientX: 100, clientY: 100, timeStamp: 0 }));
     h.onPointerMove(ev({ clientX: 100, clientY: 200, timeStamp: 16 }));
-    h.onPointerCancel(ev({ clientX: 100, clientY: 200, timeStamp: 32 }));
+    // The hook's cancel handler takes no event argument.
+    h.onPointerCancel();
 
     expect(onDismiss).not.toHaveBeenCalled();
     expect(el.style.transform).toBe("");
