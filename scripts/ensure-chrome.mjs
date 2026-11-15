@@ -45,16 +45,25 @@ if (candidates.some((c) => existsSync(c))) {
   process.exit(0);
 }
 
-// Download headless shell (Vercel build).
+// Download headless shell (Vercel build). Never hard-fail the build over an
+// optional prerender enhancement — if the download fails, we log and continue;
+// the edge function still serves SEO HTML, and prerender resumes whenever a
+// Chrome binary is available.
 console.log("[chrome] downloading chrome-headless-shell (once per build)…");
-const { install } = await import("@puppeteer/browsers");
-const cacheDir = path.join(ROOT, ".chrome", "cache");
-mkdirSync(cacheDir, { recursive: true });
-const installed = await install({
-  browser: "chrome-headless-shell",
-  buildId: "stable",
-  cacheDir,
-  baseUrl: "https://storage.googleapis.com/chrome-for-testing-public",
-});
-writeFileSync(MARKER, installed.executablePath, "utf8");
-console.log(`[chrome] installed at ${installed.executablePath}`);
+try {
+  const { install } = await import("@puppeteer/browsers");
+  const cacheDir = path.join(ROOT, ".chrome", "cache");
+  mkdirSync(cacheDir, { recursive: true });
+  const installed = await install({
+    browser: "chrome-headless-shell",
+    buildId: "stable",
+    cacheDir,
+    baseUrl: "https://storage.googleapis.com/chrome-for-testing-public",
+  });
+  mkdirSync(path.dirname(MARKER), { recursive: true });
+  writeFileSync(MARKER, installed.executablePath, "utf8");
+  console.log(`[chrome] installed at ${installed.executablePath}`);
+} catch (err) {
+  console.warn(`[chrome] headless-shell install failed (continuing without prerender): ${err?.message ?? err}`);
+  process.exit(0);
+}
