@@ -1399,7 +1399,7 @@ export default function FreddyChatModal({
               return next;
             });
           }}
-          className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground hover:bg-accent transition-colors"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent transition-colors"
           aria-label={voiceEnabled ? 'Mute Freddy voice' : 'Enable Freddy voice'}
           title={voiceEnabled ? 'Mute voice' : 'Enable voice'}
         >
@@ -1531,7 +1531,7 @@ export default function FreddyChatModal({
                               onClick={() => handleSpeakMessage(message)}
                               aria-label={speakingMsgId === message.id ? 'Stop voice' : 'Play this reply'}
                               title={speakingMsgId === message.id ? 'Stop' : 'Listen'}
-                              className="ml-auto flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-orange-600 transition-colors"
+                              className="ml-auto flex min-h-11 min-w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-orange-600 transition-colors"
                             >
                               {speakingMsgId === message.id ? (
                                 <Square className="h-3 w-3" />

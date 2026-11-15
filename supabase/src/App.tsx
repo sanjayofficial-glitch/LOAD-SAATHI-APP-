@@ -33,13 +33,23 @@ const queryClient = new QueryClient({
 const CLERK_PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 function ThemedToaster() {
-  const { isDark } = useTheme();
+  const { isDark, mode } = useTheme();
+
+  // Persist the selected mode (system-mode changes are handled by the
+  // matchMedia listener inside ThemeProvider).
+  useEffect(() => {
+    try {
+      localStorage.setItem('loadsaathi-theme', mode);
+    } catch {
+      /* storage may be blocked */
+    }
+  }, [mode]);
+
   return (
     <Toaster
       position="bottom-center"
       richColors
       theme={isDark ? 'dark' : 'light'}
-      key={String(isDark)}
       gap={10}
       // Clear the fixed mobile tab bar / FABs so toasts never sit under chrome.
       offset={76}
@@ -111,7 +121,7 @@ function App() {
               setIsRetrying(true);
               window.location.reload();
             }}
-            className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+            className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
           >
             Retry
           </button>

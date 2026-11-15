@@ -561,7 +561,7 @@ export function SharedTruckVisualizer() {
       <div className="mt-4 rounded-2xl bg-brand-warm/70 p-3 ring-1 ring-orange-100 dark:bg-orange-500/10 dark:ring-orange-500/20">
         <div className="mb-2 flex items-center justify-between gap-2 text-[11px] font-bold uppercase tracking-wider text-orange-700 dark:text-orange-300">
           <span>Cost split</span>
-          <span className="normal-case tracking-normal text-slate-500 dark:text-slate-400">
+          <span className="normal-case tracking-normal text-slate-600 dark:text-slate-400">
             Full truck · {inr(FULL_TRUCK_RATE)}
           </span>
         </div>
@@ -579,7 +579,7 @@ export function SharedTruckVisualizer() {
                     : "border-dashed border-slate-300/80 bg-white/40 dark:border-white/15 dark:bg-white/[0.03]"
                 }`}
               >
-                <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 dark:text-slate-400">
                   <span className="flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full" style={{ background: l.color }} aria-hidden="true" />
                     {l.name}
@@ -593,7 +593,7 @@ export function SharedTruckVisualizer() {
                 >
                   {on ? inr(shareAmount(l.id)) : "—"}
                 </div>
-                <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                <div className="text-[10px] font-semibold text-slate-600 dark:text-slate-400">
                   {on ? `${sharePct(l.id)}% of truck rate` : "not on board"}
                 </div>
               </li>
@@ -602,7 +602,7 @@ export function SharedTruckVisualizer() {
         </ul>
       </div>
 
-      <p className="mt-3 text-[11px] text-slate-500 dark:text-slate-400">
+      <p className="mt-3 text-[11px] text-slate-600 dark:text-slate-400">
         Illustrative split — get your exact rate in the estimator below.
       </p>
     </section>

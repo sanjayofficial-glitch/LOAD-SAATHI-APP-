@@ -142,7 +142,7 @@ export default function ChatPreview() {
                         <div className="flex items-center justify-between mt-0.5">
                           <span className="text-xs text-muted-foreground truncate max-w-[180px]">{conv.lastMessage}</span>
                           {conv.unread > 0 && (
-                            <span className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
+                            <span className="w-5 h-5 rounded-full bg-orange-600 flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0">
                               {conv.unread}
                             </span>
                           )}
@@ -189,7 +189,7 @@ export default function ChatPreview() {
                       )}
                       <div className={`rounded-2xl px-4 py-2.5 text-sm ${
                         msg.sender === 'me'
-                          ? 'bg-orange-500 text-white rounded-br-md'
+                          ? 'bg-orange-600 text-white rounded-br-md'
                           : 'glass-card border-border rounded-bl-md'
                       }`}>
                         {msg.text}

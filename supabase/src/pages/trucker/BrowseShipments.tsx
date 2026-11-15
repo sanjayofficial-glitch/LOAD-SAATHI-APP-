@@ -320,14 +320,14 @@ const BrowseShipments = () => {
               <div className="flex border rounded-md">
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`px-2 py-1 text-xs ${viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
+                  className={`px-2 py-1 text-xs ${viewMode === 'list' ? 'bg-orange-600 text-white' : 'bg-background text-muted-foreground'}`}
                   aria-label="List view"
                 >
                   <ListIcon className="h-3.5 w-3.5" />
                 </button>
                 <button
                   onClick={() => setViewMode('map')}
-                  className={`px-2 py-1 text-xs ${viewMode === 'map' ? 'bg-orange-500 text-white' : 'bg-background text-muted-foreground'}`}
+                  className={`px-2 py-1 text-xs ${viewMode === 'map' ? 'bg-orange-600 text-white' : 'bg-background text-muted-foreground'}`}
                   aria-label="Map view"
                 >
                   <MapIcon className="h-3.5 w-3.5" />
@@ -469,7 +469,7 @@ const BrowseShipments = () => {
                       </div>
                       <Button
                         size="sm"
-                        className="ml-1 bg-orange-500 hover:bg-orange-600 text-white h-7 px-2"
+                        className="ml-1 bg-orange-600 hover:bg-orange-700 text-white h-11 px-2"
                         onClick={(e) => { e.stopPropagation(); navigate(`/trucker/shipments/${s.id}`); }}
                       >
                         {t('hub.view')}

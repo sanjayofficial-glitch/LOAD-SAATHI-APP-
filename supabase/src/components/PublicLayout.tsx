@@ -203,7 +203,7 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
                   Sign In
                 </Link>
                 <Link to="/register" className="hidden sm:inline-block">
-                  <Button className="border border-orange-300 dark:border-orange-700/60 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-xs font-semibold tracking-wider uppercase px-5 py-2 h-auto">
+                  <Button className="border border-orange-300 dark:border-orange-700/60 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-xs font-semibold tracking-wider uppercase px-5 min-h-11 h-auto">
                     Get Started
                   </Button>
                 </Link>
@@ -273,7 +273,7 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className={`elevate w-9 h-9 rounded-full bg-muted dark:bg-white/5 flex items-center justify-center ${social.color} hover:bg-muted-foreground/10 dark:hover:bg-white/10`}
+                    className={`elevate w-11 h-11 rounded-full bg-muted dark:bg-white/5 flex items-center justify-center ${social.color} hover:bg-muted-foreground/10 dark:hover:bg-white/10`}
                   >
                     {social.icon}
                   </a>

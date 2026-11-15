@@ -133,7 +133,7 @@ export default function DishaHelpPanel({ open, onClose, mood = 'idle', accent = 
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent transition-colors"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent transition-colors"
                 aria-label="Close Disha help"
                 data-disha-auto-focus
               >

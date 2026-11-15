@@ -156,12 +156,12 @@ const CompareBlackBuck = () => {
             <span className="px-2.5 py-1 rounded-md bg-[#00E5A0]/10 border border-[#00E5A0]/30 text-[#00E5A0] text-[10px] font-bold uppercase tracking-widest">
               Head-to-head
             </span>
-            <span className="text-xs text-slate-400">Updated October 2026</span>
+            <span className="text-xs text-slate-500">Updated October 2026</span>
           </div>
           <h1 className="text-3xl lg:text-5xl font-black mb-4">
             LoadSaathi vs <span className="text-[#00E5A0]">BlackBuck</span>
           </h1>
-          <p className="text-slate-300 text-base lg:text-lg max-w-3xl leading-relaxed">
+          <p className="text-slate-600 text-base lg:text-lg max-w-3xl leading-relaxed">
             BlackBuck is a well-funded, well-known fleet-tech platform built around GPS
             tracking and truck cards. LoadSaathi is a free, open load board built around
             one promise: <strong className="text-white">₹0 commission on freight</strong>.
@@ -231,7 +231,7 @@ const CompareBlackBuck = () => {
                         {row.competitor.good === false ? (
                           <X size={14} className="text-red-400 mt-0.5 shrink-0" />
                         ) : (
-                          <Check size={14} className="text-slate-400 mt-0.5 shrink-0" />
+                          <Check size={14} className="text-slate-500 mt-0.5 shrink-0" />
                         )}
                         <span className="text-slate-600">{row.competitor.text}</span>
                       </div>
@@ -309,7 +309,7 @@ const CompareBlackBuck = () => {
               >
                 <item.icon size={20} className="text-[#00E5A0] mb-3" />
                 <h3 className="font-bold mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-300 leading-relaxed">{item.text}</p>
+                <p className="text-sm text-slate-600 leading-relaxed">{item.text}</p>
               </div>
             ))}
           </div>
@@ -372,7 +372,7 @@ const CompareBlackBuck = () => {
           <h2 className="text-2xl lg:text-3xl font-black mb-3">
             Keep 100% of your freight money
           </h2>
-          <p className="text-slate-300 mb-6">
+          <p className="text-slate-600 mb-6">
             Join thousands of Indian truck owners who load smarter with a ₹0 commission load
             board.
           </p>
@@ -404,7 +404,7 @@ const CompareBlackBuck = () => {
                 </div>
                 <ArrowRight
                   size={14}
-                  className="text-slate-400 group-hover:text-[#00B87C] group-hover:translate-x-1 transition-all"
+                  className="text-slate-500 group-hover:text-[#00B87C] group-hover:translate-x-1 transition-all"
                 />
               </div>
             </Link>
@@ -422,7 +422,7 @@ const CompareBlackBuck = () => {
                 </div>
                 <ArrowRight
                   size={14}
-                  className="text-slate-400 group-hover:text-[#00B87C] group-hover:translate-x-1 transition-all"
+                  className="text-slate-500 group-hover:text-[#00B87C] group-hover:translate-x-1 transition-all"
                 />
               </div>
             </Link>

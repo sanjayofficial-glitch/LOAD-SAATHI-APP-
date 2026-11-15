@@ -336,7 +336,7 @@ const CommandCenterMap: React.FC<CommandCenterMapProps> = ({
             onClick={() => setTileLayer(layer)}
             className={cn(
               'px-3 py-1.5 rounded-lg text-[10px] font-semibold uppercase tracking-wider shadow-md',
-              tileLayer === layer ? 'bg-orange-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+              tileLayer === layer ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
             )}
           >
             {layer}

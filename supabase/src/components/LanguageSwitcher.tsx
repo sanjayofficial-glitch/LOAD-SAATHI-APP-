@@ -43,7 +43,7 @@ const LanguageSwitcher = React.memo(function LanguageSwitcher({
               "press flex h-full items-center rounded-full px-2.5 text-[11px] font-bold leading-none transition-colors duration-fast ease-ios",
               compact && "px-1.5 text-[10px]",
               active
-                ? "bg-orange-600 text-white shadow-sm dark:bg-orange-500"
+                ? "bg-orange-600 text-white shadow-sm dark:bg-orange-600"
                 : "text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
             )}
           >

@@ -357,33 +357,36 @@ export default function GalleryManager() {
               )}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
                 <div className="flex justify-between items-start">
-                  <span className="text-xs bg-orange-500/80 text-white px-2 py-0.5 rounded-full">
+                  <span className="text-xs bg-orange-600/80 text-white px-2 py-0.5 rounded-full">
                     {image.category}
                   </span>
                   <div className="flex gap-1">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-white hover:text-orange-400"
+                      className="text-white hover:text-orange-400"
                       onClick={() => handleReorder(image, 'up')}
                       disabled={images.indexOf(image) === 0}
+                      aria-label={`Move image up (${image.title ?? image.category})`}
                     >
                       <ArrowUp className="h-3 w-3" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-white hover:text-orange-400"
+                      className="text-white hover:text-orange-400"
                       onClick={() => handleReorder(image, 'down')}
                       disabled={images.indexOf(image) === images.length - 1}
+                      aria-label={`Move image down (${image.title ?? image.category})`}
                     >
                       <ArrowDown className="h-3 w-3" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-white hover:text-red-400"
+                      className="text-white hover:text-red-400"
                       onClick={() => handleDelete(image)}
+                      aria-label={`Delete image (${image.title ?? image.category})`}
                     >
                       <Trash2 className="h-3 w-3" />
                     </Button>

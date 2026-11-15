@@ -157,7 +157,7 @@ const SheetContent = React.forwardRef<
         {children}
         <SheetPrimitive.Close
           className={cn(
-            "press absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-full opacity-70 ring-offset-background transition-opacity hover:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
+            "press absolute right-4 top-4 grid min-h-11 min-w-11 place-items-center rounded-full opacity-70 ring-offset-background transition-opacity hover:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
             // Keep the close button above (clickable over) the grab strip.
             hasHandle && "z-20",
           )}
