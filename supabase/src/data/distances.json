@@ -1,37 +1,280 @@
 {
   "meta": {
-    "source": "OSRM road distance",
-    "generated": "2026-09-05",
-    "note": "Single source of truth for all route distances. All values are road distances via national highways."
+    "source": "LoadSaathi canonical lane table (api/routeData.json)",
+    "generated": "2026-11-15",
+    "note": "distanceKm/transitHours are the published (human-corrected) figures from the canonical lane table. osrmDistanceKm records the raw OSRM baseline where it differed, for audit only. highway comes from the OSRM routing snapshot."
   },
   "routes": {
-    "rourkela-ranchi": { "distanceKm": 180, "transitHours": 4, "highway": "NH-14/NH-23" },
-    "ranchi-rourkela": { "distanceKm": 180, "transitHours": 4, "highway": "NH-23/NH-14" },
-    "rourkela-jamshedpur": { "distanceKm": 220, "transitHours": 5, "highway": "NH-23" },
-    "jamshedpur-rourkela": { "distanceKm": 220, "transitHours": 5, "highway": "NH-23" },
-    "rourkela-bhubaneswar": { "distanceKm": 340, "transitHours": 7, "highway": "NH-14/NH-16" },
-    "rourkela-burdwan": { "distanceKm": 320, "transitHours": 7, "highway": "NH-14/NH-49/NH-2" },
-    "rourkela-kolkata": { "distanceKm": 440, "transitHours": 9, "highway": "NH-14/NH-49/NH-6" },
-    "ranchi-jamshedpur": { "distanceKm": 130, "transitHours": 3, "highway": "NH-33" },
-    "jamshedpur-ranchi": { "distanceKm": 130, "transitHours": 3, "highway": "NH-33" },
-    "ranchi-bhubaneswar": { "distanceKm": 450, "transitHours": 10, "highway": "NH-20/NH-14/NH-16" },
-    "ranchi-kolkata": { "distanceKm": 420, "transitHours": 8, "highway": "NH-33/NH-2" },
-    "jamshedpur-bhubaneswar": { "distanceKm": 340, "transitHours": 8, "highway": "NH-33/NH-16" },
-    "jamshedpur-burdwan": { "distanceKm": 200, "transitHours": 4, "highway": "NH-33/NH-2" },
-    "jamshedpur-kolkata": { "distanceKm": 280, "transitHours": 6, "highway": "NH-33/NH-2" },
-    "bhubaneswar-kolkata": { "distanceKm": 440, "transitHours": 8, "highway": "NH-16/NH-6" },
-    "bhubaneswar-burdwan": { "distanceKm": 420, "transitHours": 8, "highway": "NH-16/NH-2" },
-    "rourkela-sambalpur": { "distanceKm": 120, "transitHours": 2.5, "highway": "NH-14" },
-    "ranchi-dhanbad": { "distanceKm": 280, "transitHours": 6, "highway": "NH-33/NH-2" },
-    "bhubaneswar-vizag": { "distanceKm": 450, "transitHours": 8, "highway": "NH-16" },
-    "balasore-bhubaneswar": { "distanceKm": 210, "transitHours": 4, "highway": "NH-16" },
-    "berhampur-bhubaneswar": { "distanceKm": 180, "transitHours": 4, "highway": "NH-16" },
-    "dhanbad-jamshedpur": { "distanceKm": 170, "transitHours": 3.5, "highway": "NH-2/NH-33" },
-    "kolkata-burdwan": { "distanceKm": 110, "transitHours": 2.5, "highway": "NH-2" },
-    "sambalpur-jharsuguda": { "distanceKm": 100, "transitHours": 2, "highway": "NH-14" },
-    "cuttack-bhubaneswar": { "distanceKm": 30, "transitHours": 1, "highway": "NH-16" },
-    "cuttack-rourkela": { "distanceKm": 320, "transitHours": 7, "highway": "NH-16/NH-14" },
-    "sambalpur-bhubaneswar": { "distanceKm": 350, "transitHours": 7, "highway": "NH-14/NH-16" },
-    "rourkela-cuttack": { "distanceKm": 320, "transitHours": 7, "highway": "NH-14/NH-16" }
+    "rourkela-to-ranchi": {
+      "distanceKm": 180,
+      "transitHours": 4,
+      "dataStatus": "needs_review",
+      "highway": "NH-14/NH-23"
+    },
+    "ranchi-to-rourkela": {
+      "distanceKm": 180,
+      "transitHours": 4,
+      "dataStatus": "needs_review",
+      "highway": "NH-23/NH-14"
+    },
+    "rourkela-to-jamshedpur": {
+      "distanceKm": 198,
+      "transitHours": 4.5,
+      "dataStatus": "corrected",
+      "highway": "NH-220"
+    },
+    "jamshedpur-to-rourkela": {
+      "distanceKm": 198,
+      "transitHours": 4.5,
+      "dataStatus": "corrected",
+      "highway": "NH-220"
+    },
+    "rourkela-to-bhubaneswar": {
+      "distanceKm": 340,
+      "transitHours": 7,
+      "dataStatus": "needs_review",
+      "highway": "NH-14/NH-16"
+    },
+    "rourkela-to-burdwan": {
+      "distanceKm": 320,
+      "transitHours": 7,
+      "dataStatus": "needs_review",
+      "highway": "NH-14/NH-49/NH-2"
+    },
+    "rourkela-to-kolkata": {
+      "distanceKm": 420,
+      "transitHours": 8.8,
+      "dataStatus": "corrected",
+      "highway": "NH-14/NH-49/NH-6"
+    },
+    "ranchi-to-jamshedpur": {
+      "distanceKm": 130,
+      "transitHours": 3,
+      "dataStatus": "verified",
+      "highway": "NH-33"
+    },
+    "jamshedpur-to-ranchi": {
+      "distanceKm": 130,
+      "transitHours": 3,
+      "dataStatus": "verified",
+      "highway": "NH-33"
+    },
+    "ranchi-to-bhubaneswar": {
+      "distanceKm": 470,
+      "transitHours": 9.8,
+      "dataStatus": "corrected",
+      "highway": "NH-20"
+    },
+    "ranchi-to-kolkata": {
+      "distanceKm": 420,
+      "transitHours": 8,
+      "dataStatus": "needs_review",
+      "highway": "NH-33/NH-2"
+    },
+    "jamshedpur-to-bhubaneswar": {
+      "distanceKm": 347,
+      "transitHours": 7,
+      "dataStatus": "corrected",
+      "highway": "NH-220 / NH-16"
+    },
+    "jamshedpur-to-burdwan": {
+      "distanceKm": 200,
+      "transitHours": 4,
+      "dataStatus": "needs_review",
+      "highway": "NH-33/NH-2"
+    },
+    "jamshedpur-to-kolkata": {
+      "distanceKm": 280,
+      "transitHours": 6,
+      "dataStatus": "needs_review",
+      "highway": "NH-33/NH-2"
+    },
+    "bhubaneswar-to-kolkata": {
+      "distanceKm": 440,
+      "transitHours": 8,
+      "dataStatus": "verified",
+      "highway": "NH-16/NH-6"
+    },
+    "bhubaneswar-to-burdwan": {
+      "distanceKm": 420,
+      "transitHours": 8,
+      "dataStatus": "needs_review",
+      "highway": "NH-16/NH-2"
+    },
+    "rourkela-to-sambalpur": {
+      "distanceKm": 120,
+      "transitHours": 2.5,
+      "dataStatus": "needs_review",
+      "highway": "NH-14"
+    },
+    "ranchi-to-dhanbad": {
+      "distanceKm": 155,
+      "transitHours": 4,
+      "dataStatus": "corrected",
+      "highway": "NH-33/NH-2"
+    },
+    "bhubaneswar-to-vizag": {
+      "distanceKm": 445,
+      "transitHours": 7,
+      "dataStatus": "corrected",
+      "highway": "NH-16"
+    },
+    "balasore-to-bhubaneswar": {
+      "distanceKm": 210,
+      "transitHours": 4,
+      "dataStatus": "needs_review",
+      "highway": "NH-16"
+    },
+    "berhampur-to-bhubaneswar": {
+      "distanceKm": 180,
+      "transitHours": 4,
+      "dataStatus": "needs_review",
+      "highway": "NH-16"
+    },
+    "dhanbad-to-jamshedpur": {
+      "distanceKm": 145,
+      "transitHours": 3.7,
+      "dataStatus": "corrected",
+      "highway": "NH-2/NH-33"
+    },
+    "kolkata-to-burdwan": {
+      "distanceKm": 110,
+      "transitHours": 2.5,
+      "dataStatus": "needs_review",
+      "highway": "NH-2"
+    },
+    "sambalpur-to-jharsuguda": {
+      "distanceKm": 50,
+      "transitHours": 1.5,
+      "dataStatus": "corrected",
+      "highway": "NH-14"
+    },
+    "cuttack-to-bhubaneswar": {
+      "distanceKm": 30,
+      "transitHours": 1,
+      "dataStatus": "needs_review",
+      "highway": "NH-16"
+    },
+    "cuttack-to-rourkela": {
+      "distanceKm": 300,
+      "transitHours": 6.4,
+      "dataStatus": "corrected",
+      "highway": "NH-16/NH-14"
+    },
+    "sambalpur-to-bhubaneswar": {
+      "distanceKm": 350,
+      "transitHours": 7,
+      "dataStatus": "needs_review",
+      "highway": "NH-14/NH-16"
+    },
+    "rourkela-to-cuttack": {
+      "distanceKm": 300,
+      "transitHours": 6.4,
+      "dataStatus": "corrected",
+      "highway": "NH-14/NH-16"
+    },
+    "bhubaneswar-to-rourkela": {
+      "distanceKm": 340,
+      "transitHours": 7,
+      "dataStatus": "needs_review"
+    },
+    "kolkata-to-rourkela": {
+      "distanceKm": 420,
+      "transitHours": 8.8,
+      "dataStatus": "corrected"
+    },
+    "bhubaneswar-to-ranchi": {
+      "distanceKm": 470,
+      "transitHours": 9.8,
+      "dataStatus": "corrected",
+      "highway": "NH-20"
+    },
+    "kolkata-to-ranchi": {
+      "distanceKm": 420,
+      "transitHours": 8,
+      "dataStatus": "needs_review"
+    },
+    "bhubaneswar-to-jamshedpur": {
+      "distanceKm": 347,
+      "transitHours": 7,
+      "dataStatus": "corrected",
+      "highway": "NH-220 / NH-16"
+    },
+    "kolkata-to-jamshedpur": {
+      "distanceKm": 280,
+      "transitHours": 6,
+      "dataStatus": "needs_review"
+    },
+    "kolkata-to-bhubaneswar": {
+      "distanceKm": 440,
+      "transitHours": 8,
+      "dataStatus": "verified"
+    },
+    "dhanbad-to-ranchi": {
+      "distanceKm": 155,
+      "transitHours": 4,
+      "dataStatus": "corrected"
+    },
+    "jamshedpur-to-dhanbad": {
+      "distanceKm": 145,
+      "transitHours": 3.7,
+      "dataStatus": "corrected"
+    },
+    "sambalpur-to-rourkela": {
+      "distanceKm": 120,
+      "transitHours": 2.5,
+      "dataStatus": "needs_review"
+    },
+    "burdwan-to-rourkela": {
+      "distanceKm": 320,
+      "transitHours": 7,
+      "dataStatus": "needs_review"
+    },
+    "burdwan-to-jamshedpur": {
+      "distanceKm": 200,
+      "transitHours": 4,
+      "dataStatus": "needs_review"
+    },
+    "burdwan-to-bhubaneswar": {
+      "distanceKm": 420,
+      "transitHours": 8,
+      "dataStatus": "needs_review"
+    },
+    "visakhapatnam-to-bhubaneswar": {
+      "distanceKm": 445,
+      "transitHours": 7,
+      "dataStatus": "corrected"
+    },
+    "bhubaneswar-to-balasore": {
+      "distanceKm": 210,
+      "transitHours": 4,
+      "dataStatus": "needs_review",
+      "highway": "NH-16"
+    },
+    "bhubaneswar-to-berhampur": {
+      "distanceKm": 180,
+      "transitHours": 4,
+      "dataStatus": "needs_review"
+    },
+    "burdwan-to-kolkata": {
+      "distanceKm": 110,
+      "transitHours": 2.5,
+      "dataStatus": "needs_review"
+    },
+    "jharsuguda-to-sambalpur": {
+      "distanceKm": 50,
+      "transitHours": 1.5,
+      "dataStatus": "corrected"
+    },
+    "bhubaneswar-to-cuttack": {
+      "distanceKm": 30,
+      "transitHours": 1,
+      "dataStatus": "needs_review"
+    },
+    "bhubaneswar-to-sambalpur": {
+      "distanceKm": 350,
+      "transitHours": 7,
+      "dataStatus": "needs_review"
+    }
   }
 }

@@ -131,10 +131,12 @@ const STATIC = [
 ];
 
 // ── Dynamic slugs (same sources as scripts/prerender.mjs) ────────────────────
-const ROUTE_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/data/routes.ts"),
-  /slug:\s*"([^"]+)"/g
+// Routes come from the canonical lane table (api/routeData.json) — the literal
+// array was removed from routes.ts when the table moved to one file.
+const ROUTE_DATA = JSON.parse(
+  fs.readFileSync(path.join(ROOT, "api/routeData.json"), "utf8")
 );
+const ROUTE_SLUGS = Object.keys(ROUTE_DATA);
 const BLOG_SLUGS = extractSlugs(
   path.join(ROOT, "supabase/src/data/blog.ts"),
   /^\s+"([a-z0-9-]+)":\s*\{/gm
@@ -179,11 +181,15 @@ const GUIDE_PUBLISHED = extractLastMod(
   GUIDE_SLUGS,
   /date:\s*"([^"]+)"/
 );
-const ROUTE_DATES = extractLastMod(
-  path.join(ROOT, "supabase/src/data/routes.ts"),
-  ROUTE_SLUGS,
-  /dataStatus:\s*"([^"]+)"/
+const ROUTE_DATES = Object.fromEntries(
+  Object.entries(ROUTE_DATA).map(([slug, r]) => [slug, r.dataStatus])
 );
+// Truck-type comparison pages are generated from the same canonical data as
+// the rest of the site; their slugs come from the build-generated meta file.
+const TRUCK_PAIR_META = JSON.parse(
+  fs.readFileSync(path.join(ROOT, "api/truckPairMeta.json"), "utf8")
+);
+const TRUCK_PAIR_SLUGS = Object.keys(TRUCK_PAIR_META);
 // Routes use RATES_UPDATED_AT as a fallback for lastmod
 const RATES_UPDATED = "2026-10-01"; // Matches RATES_UPDATED_AT in routes.ts
 // Stable baseline for content that only changes on editorial release.
@@ -194,6 +200,7 @@ const urls = [
   ...ROUTE_SLUGS.map((s) => ({ loc: `${BASE}/routes/${s}`, changefreq: "monthly", priority: "0.7", lastmod: ROUTE_DATES[s] || RATES_UPDATED })),
   ...LOCATION_SLUGS.map((s) => ({ loc: `${BASE}/location/${s}`, changefreq: "monthly", priority: "0.8", lastmod: STATIC_LASTMOD })),
   ...TRANSPORT_SERVICE_SLUGS.map((s) => ({ loc: `${BASE}/transport-service/${s}`, changefreq: "monthly", priority: "0.8", lastmod: STATIC_LASTMOD })),
+  ...TRUCK_PAIR_SLUGS.map((s) => ({ loc: `${BASE}/truck-types/${s}`, changefreq: "monthly", priority: "0.8", lastmod: STATIC_LASTMOD })),
   ...GUIDE_SLUGS.map((s) => ({ loc: `${BASE}/guide/${s}`, changefreq: "monthly", priority: "0.7", lastmod: GUIDE_DATES[s] || GUIDE_PUBLISHED[s] || STATIC_LASTMOD })),
   ...BLOG_SLUGS.map((s) => ({ loc: `${BASE}/blog/${s}`, changefreq: "monthly", priority: "0.6", lastmod: BLOG_DATES[s] || BLOG_PUBLISHED[s] || STATIC_LASTMOD })),
 ];

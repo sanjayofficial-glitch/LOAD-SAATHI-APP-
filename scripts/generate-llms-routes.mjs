@@ -41,19 +41,21 @@ function fmt(n) {
   return parts.join(",") + "," + last3;
 }
 
-function parseLanes(src) {
-  const lanes = [];
-  const re =
-    /\{\s*slug:\s*"([^"]+)",\s*from:\s*"([^"]+)",\s*to:\s*"([^"]+)",\s*fromState:\s*"[^"]+",\s*toState:\s*"[^"]+",\s*distanceKm:\s*(\d+),\s*transitTime:\s*"([^"]+)",\s*dataStatus:\s*"(\w+)"/g;
-  let m;
-  while ((m = re.exec(src))) {
-    lanes.push({ slug: m[1], from: m[2], to: m[3], km: Number(m[4]), transit: m[5], status: m[6] });
-  }
-  return lanes;
-}
-
-const lanes = parseLanes(fs.readFileSync(ROUTES_TS, "utf-8"));
-if (!lanes.length) throw new Error("no lanes parsed from routes.ts");
+// Lanes come from the canonical lane table (api/routeData.json) — the literal
+// array was removed from routes.ts when the table moved to one file, and the
+// rate math now lives in the shared api/rateModel.js.
+const ROUTE_DATA = JSON.parse(
+  fs.readFileSync(path.join(ROOT, "api/routeData.json"), "utf8")
+);
+const lanes = Object.entries(ROUTE_DATA).map(([slug, r]) => ({
+  slug,
+  from: r.from,
+  to: r.to,
+  km: r.distanceKm,
+  transit: r.transitTime,
+  status: r.dataStatus,
+}));
+if (!lanes.length) throw new Error("no lanes parsed from routeData.json");
 
 let minKg = Infinity;
 let maxKg = -Infinity;

@@ -116,10 +116,9 @@ function extractSlugs(filePath, pattern) {
   return [...new Set(slugs)];
 }
 
-// Dynamic routes: 28 freight corridors
-const ROUTE_SLUGS = extractSlugs(
-  path.join(ROOT, "supabase/src/data/routes.ts"),
-  /slug:\s*"([^"]+)"/g
+// Dynamic routes: freight corridors (canonical lane table)
+const ROUTE_SLUGS = Object.keys(
+  JSON.parse(fs.readFileSync(path.join(ROOT, "api/routeData.json"), "utf8"))
 );
 
 // Dynamic routes: blog articles
@@ -147,6 +146,12 @@ const TRANSPORT_SERVICE_SLUGS = extractSlugs(
   /^  ([a-z-]+): \{$/gm
 ).filter((s) => !["serviceBlurbs", "about", "contactPoint"].includes(s));
 
+// Dynamic routes: truck-type comparison pages (build-generated meta file)
+const TRUCK_PAIR_META = JSON.parse(
+  fs.readFileSync(path.join(ROOT, "api/truckPairMeta.json"), "utf8")
+);
+const TRUCK_PAIR_SLUGS = Object.keys(TRUCK_PAIR_META);
+
 const PUBLIC_ROUTES = [
   ...STATIC_ROUTES,
   ...ROUTE_SLUGS.map((s) => `/routes/${s}`),
@@ -154,6 +159,7 @@ const PUBLIC_ROUTES = [
   ...GUIDE_SLUGS.map((s) => `/guide/${s}`),
   ...LOCATION_SLUGS.map((s) => `/location/${s}`),
   ...TRANSPORT_SERVICE_SLUGS.map((s) => `/transport-service/${s}`),
+  ...TRUCK_PAIR_SLUGS.map((s) => `/truck-types/${s}`),
 ];
 
 const TIMEOUT_MS = 90_000;
@@ -400,7 +406,7 @@ async function main() {
     return;
   }
   console.log(`[prerender] Using Chrome: ${chromePath}`);
-  console.log(`[prerender] Discovered ${PUBLIC_ROUTES.length} routes to pre-render (${ROUTE_SLUGS.length} routes, ${BLOG_SLUGS.length} blog, ${GUIDE_SLUGS.length} guides, ${LOCATION_SLUGS.length} locations, ${TRANSPORT_SERVICE_SLUGS.length} transport-service)`);
+  console.log(`[prerender] Discovered ${PUBLIC_ROUTES.length} routes to pre-render (${ROUTE_SLUGS.length} routes, ${BLOG_SLUGS.length} blog, ${GUIDE_SLUGS.length} guides, ${LOCATION_SLUGS.length} locations, ${TRANSPORT_SERVICE_SLUGS.length} transport-service, ${TRUCK_PAIR_SLUGS.length} truck-types)`);
 
   const spaIndex = path.join(DIST, "index.html");
   if (!fs.existsSync(spaIndex)) {
