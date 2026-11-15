@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 
+# Prerender Chrome (ensure-chrome.mjs) — never commit a browser download
+.chrome
+
 # Environment variables - NEVER commit real values
 .env
 .env.local
@@ -65,3 +68,6 @@ graphify-out/.graphify_chunk_*.json
 
 # Graphify analysis cache (generated, not app code)
 graphify-out/
+
+# Security audit report — lists app weaknesses, never commit or serve
+AUDIT.md

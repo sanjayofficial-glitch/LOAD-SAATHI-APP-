@@ -194,6 +194,17 @@ const MIME = {
 };
 
 function findChrome() {
+  if (process.env.CHROME_PATH && fs.existsSync(process.env.CHROME_PATH)) {
+    return process.env.CHROME_PATH;
+  }
+  // Written by scripts/ensure-chrome.mjs (Vercel build installs headless shell).
+  try {
+    const marker = path.join(ROOT, ".chrome", "path.txt");
+    const p = fs.readFileSync(marker, "utf8").trim();
+    if (p && fs.existsSync(p)) return p;
+  } catch {
+    /* no marker */
+  }
   if (fs.existsSync(CHROME_PATH)) return CHROME_PATH;
   const candidates = [
     "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
