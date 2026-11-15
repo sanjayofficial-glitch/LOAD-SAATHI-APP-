@@ -9,10 +9,13 @@ import distancesData from '@/data/distances.json';
 interface DistanceEntry {
   distanceKm: number;
   transitHours: number;
-  highway: string;
+  /** Road designation — only present where the routing snapshot knows it. */
+  highway?: string;
+  /** Verification state of the published figures. */
+  dataStatus?: string;
 }
 
-const DISTANCES = (distancesData as { routes: Record<string, DistanceEntry> }).routes;
+const DISTANCES = (distancesData as unknown as { routes: Record<string, DistanceEntry> }).routes;
 
 const CITIES: string[] = [...new Set(routes.flatMap((r) => [r.from, r.to]))].sort();
 const CITIES_LOWER: string[] = CITIES.map((c) => c.toLowerCase());
@@ -58,9 +61,11 @@ interface Estimate {
 
 /**
  * Instant freight estimate — fully client-side, no login, no network.
- * Covers the 28 East-India corridors in distances.json; anything else
+ * Covers every East-India corridor in distances.json; anything else
  * funnels to the full fare calculator with cities prefilled.
  */
+export const CORRIDOR_COUNT = Object.keys(DISTANCES).length;
+
 export default function HeroQuoteWidget() {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
@@ -209,7 +214,7 @@ export default function HeroQuoteWidget() {
       {estimate === 'unknown' && (
         <div className="mt-4 rounded-xl border border-border p-4">
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Instant rates cover 28 East-India corridors. Get a precise quote for this lane in under
+            Instant rates cover {CORRIDOR_COUNT} East-India corridors. Get a precise quote for this lane in under
             a minute:
           </p>
           <Link

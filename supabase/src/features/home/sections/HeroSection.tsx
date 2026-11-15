@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Star, ShieldCheck, MapPin, Handshake, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useDishaGuide } from '@/components/DishaGuideProvider.hooks';
-import HeroQuoteWidget from './HeroQuoteWidget';
+import HeroQuoteWidget, { CORRIDOR_COUNT } from './HeroQuoteWidget';
 import { SharedTruckVisualizer } from '../components/truck/SharedTruckVisualizer';
 import { trackPostLoadClick } from '@/utils/analytics';
 
@@ -115,7 +115,7 @@ const HeroSection = React.memo(() => {
             <div id="instant-rate" className="scroll-mt-24 pt-2 sm:pt-3">
               <HeroQuoteWidget />
               <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground/80 pl-1 mt-2">
-                <Gauge className="h-3.5 w-3.5" /> Instant estimates cover 28 East-India corridors
+                <Gauge className="h-3.5 w-3.5" /> Instant estimates cover {CORRIDOR_COUNT} East-India corridors
                 — no login needed.
               </p>
             </div>
