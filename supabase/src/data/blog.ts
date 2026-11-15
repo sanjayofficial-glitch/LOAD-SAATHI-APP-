@@ -373,7 +373,7 @@ export const articles: Record<string, BlogArticle> = {
     readTime: "5 min read",
     author: "LoadSaathi Team",
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
-    summary: "The Rourkela–Bhubaneswar corridor covers 310 km in 7–8 hours with FTL rates from ₹28,000–₹42,000 and PTL rates from ₹5–8/kg. This guide covers 2026 rates, optimal routes, truck availability, and tips for planning cost-efficient moves on this key Odisha freight corridor.",
+    summary: "The Rourkela–Bhubaneswar corridor covers 340 km in 7–8 hours with FTL rates from ₹28,000–₹42,000 and PTL rates from ₹5–8/kg. This guide covers 2026 rates, optimal routes, truck availability, and tips for planning cost-efficient moves on this key Odisha freight corridor.",
     content: [],
   },
   "kolkata-to-rourkela-freight-rates": {
@@ -384,7 +384,7 @@ export const articles: Record<string, BlogArticle> = {
     readTime: "5 min read",
     author: "LoadSaathi Team",
     authorBio: "The LoadSaathi engineering and product team builds AI-powered logistics tools for India's freight industry.",
-    summary: "Kolkata to Rourkela freight covers 530 km in 12–14 hours. FTL rates range from ₹45,000–₹65,000 and PTL from ₹6–9/kg. Learn about the optimal NH-16 route, seasonal rate patterns, and how to save on this cross-state East India corridor.",
+    summary: "Kolkata to Rourkela freight covers 420 km in 12–14 hours. FTL rates range from ₹45,000–₹65,000 and PTL from ₹6–9/kg. Learn about the optimal NH-16 route, seasonal rate patterns, and how to save on this cross-state East India corridor.",
     content: [],
   },
   "freight-booking-mistakes-to-avoid": {
@@ -451,7 +451,7 @@ export const articles: Record<string, BlogArticle> = {
     relatedRoutes: ["rourkela-kolkata", "rourkela-ranchi", "rourkela-bhubaneswar", "rourkela-jamshedpur"],
     faq: [
       { question: "What is a return load in trucking?", answer: "A return load is cargo booked for the return leg of a trip. For truckers based in or passing through Rourkela, one-way trips often end with an empty truck driving back. Return loads fill that empty leg, turning diesel and toll costs into profit." },
-      { question: "What are the top return load corridors from Rourkela?", answer: "The most active corridors are Rourkela-Kolkata (430 km, ₹1,800-2,500/tonne PTL), Rourkela-Ranchi (180 km, ₹800-1,200/tonne), Rourkela-Bhubaneswar (310 km, ₹1,200-1,800/tonne), Rourkela-Jamshedpur (120 km, ₹500-800/tonne), and Rourkela-Sambalpur (150 km)." },
+      { question: "What are the top return load corridors from Rourkela?", answer: "The most active corridors are Rourkela-Kolkata (420 km, ₹1,800-2,500/tonne PTL), Rourkela-Ranchi (180 km, ₹800-1,200/tonne), Rourkela-Bhubaneswar (340 km, ₹1,200-1,800/tonne), Rourkela-Jamshedpur (198 km, ₹500-800/tonne), and Rourkela-Sambalpur (120 km)." },
       { question: "How much can truckers save by avoiding empty return trips?", answer: "An empty Rourkela-to-Kolkata return leg (430 km) costs approximately ₹4,500-5,500 in diesel plus ₹1,800-2,200 in tolls. A loaded return leg earning ₹8,000-12,000 in freight turns that loss into profit — a swing of ₹15,000-25,000 per round trip." },
       { question: "How does LoadSaathi help truckers find return loads?", answer: "LoadSaathi's AI-powered matching connects truckers with return loads based on route, capacity, and vehicle type — often while the truck is still unloading. Escrow-backed payments are planned, and verified shipper credit scores reduce payment risk." },
       { question: "What is the payment cycle for return loads on LoadSaathi?", answer: "Planned escrow settlement will hold the shipper's payment until delivery is confirmed via GPS, replacing the 30-60 day payment cycles common in traditional freight." },
@@ -473,7 +473,7 @@ export const articles: Record<string, BlogArticle> = {
     faq: [
       { question: "What is PTL transport?", answer: "PTL (Part Truck Load) transport is a shipping method where multiple shippers share space in the same truck. Instead of booking an entire truck (FTL), you pay only for the space your cargo occupies — typically 500 kg to 5 tonnes. This makes PTL 30-40% cheaper than FTL for smaller shipments." },
       { question: "How much cheaper is PTL compared to FTL?", answer: "PTL rates are typically 30-40% lower than FTL rates for the same corridor. For example, a 2-tonne PTL shipment from Rourkela to Kolkata costs ₹9,000-12,000, while a full 9-tonne FTL booking costs ₹55,000-70,000." },
-      { question: "Which corridors are best for PTL in Odisha and Jharkhand?", answer: "The highest-volume PTL corridors are Rourkela-Kolkata (430 km), Rourkela-Ranchi (180 km), Rourkela-Bhubaneswar (310 km), Bhubaneswar-Kolkata (470 km), and Ranchi-Kolkata (350 km)." },
+      { question: "Which corridors are best for PTL in Odisha and Jharkhand?", answer: "The highest-volume PTL corridors are Rourkela-Kolkata (420 km), Rourkela-Ranchi (180 km), Rourkela-Bhubaneswar (340 km), Bhubaneswar-Kolkata (440 km), and Ranchi-Kolkata (420 km)." },
       { question: "How do I book PTL transport online?", answer: "Enter your shipment details on LoadSaathi — origin, destination, weight, and departure date. The AI matches you with verified carriers within minutes. Compare offers, book, and track via GPS; escrow-backed payment is planned." },
       { question: "What is the minimum weight for PTL shipping?", answer: "Most PTL carriers accept shipments from 100 kg upwards. There is no strict minimum, but rates are most competitive for shipments between 500 kg and 5 tonnes." },
     ],
@@ -511,7 +511,7 @@ export const articles: Record<string, BlogArticle> = {
     relatedRoutes: ["rourkela-kolkata", "rourkela-ranchi", "bhubaneswar-kolkata"],
     faq: [
       { question: "How much do truck drivers earn in Odisha in 2026?", answer: "Truck driver salaries in Odisha vary by vehicle type: LCV drivers earn ₹12,000-18,000/month, 10-wheeler drivers ₹18,000-25,000/month, and multi-axle truck drivers ₹25,000-35,000/month. Owner-operators can earn significantly more — ₹30,000-80,000+ per month depending on routes and return-load utilisation." },
-      { question: "How much profit does a Rourkela-Kolkata round trip generate?", answer: "A Rourkela-Kolkata round trip (860 km total) generates ₹50,000-65,000 in revenue. After deducting ₹22,000-28,000 in costs (diesel, tolls, maintenance, driver), net profit is ₹28,000-37,000. With return loads, net profit jumps to ₹36,000-52,000." },
+      { question: "How much profit does a Rourkela-Kolkata round trip generate?", answer: "A Rourkela-Kolkata round trip (420 km total) generates ₹50,000-65,000 in revenue. After deducting ₹22,000-28,000 in costs (diesel, tolls, maintenance, driver), net profit is ₹28,000-37,000. With return loads, net profit jumps to ₹36,000-52,000." },
       { question: "What are the biggest costs for truckers in Odisha?", answer: "Diesel accounts for 45-50% of running costs (₹7.50-9.00/km at ₹90/litre). Tolls account for 15-20% (NH-16 Rourkela-Kolkata tolls total ₹3,600-4,400 round trip). Maintenance and tyres account for 12-15%. Insurance and permits 8-12%. EMI 15-20%." },
       { question: "How do return loads affect trucker profitability?", answer: "A trucker who consistently books return loads earns ₹58,000-67,000 per round trip. A trucker running empty on the return earns only ₹30,000-35,000 — a difference of ₹28,000-32,000 per trip. Over 8 trips per month, that's ₹2,24,000-2,56,000 in lost revenue." },
       { question: "How long does it take to pay off a new truck in 2026?", answer: "At 8 trips per month with ₹35,000-45,000 net profit per trip, a new 10-wheeler (₹25-35 lakh) has a payback period of 18-24 months. Truckers who consistently book return loads achieve payback in 14-18 months, while those running empty returns take 24-30 months." },
@@ -623,7 +623,7 @@ export const articles: Record<string, BlogArticle> = {
     content: [],
     relatedRoutes: ["rourkela-to-kolkata", "jamshedpur-to-kolkata", "bhubaneswar-to-kolkata"],
     faq: [
-      { question: "What are the best return load corridors from Kolkata?", answer: "The most active corridors are Kolkata to Rourkela (430 km, steel and industrial goods), Kolkata to Jamshedpur (280 km, automotive and engineering), Kolkata to Ranchi (420 km, coal and heavy machinery), and Kolkata to Bhubaneswar (440 km, textiles and FMCG)." },
+      { question: "What are the best return load corridors from Kolkata?", answer: "The most active corridors are Kolkata to Rourkela (420 km, steel and industrial goods), Kolkata to Jamshedpur (280 km, automotive and engineering), Kolkata to Ranchi (420 km, coal and heavy machinery), and Kolkata to Bhubaneswar (440 km, textiles and FMCG)." },
       { question: "How much can truckers earn from Kolkata return loads?", answer: "Truckers who book return loads from Kolkata earn 40-60% more per round trip compared to running empty. A Kolkata-Rourkela round trip with return load generates 55,000-70,000 rupees revenue versus 30,000-38,000 without a return load." },
       { question: "How does LoadSaathi find return loads from Kolkata?", answer: "LoadSaathi's AI matching engine identifies return-load opportunities before the outbound trip concludes. It matches the truck's route, capacity, and vehicle type with verified shipper requirements, pushing offers in real-time as the trucker approaches Kolkata." },
     ],
@@ -679,7 +679,7 @@ export const articles: Record<string, BlogArticle> = {
     content: [],
     relatedRoutes: ["ranchi-to-kolkata", "ranchi-to-jamshedpur", "ranchi-to-bhubaneswar"],
     faq: [
-      { question: "What are the best return load corridors from Ranchi?", answer: "The most active corridors are Ranchi to Kolkata (420 km, steel and machinery), Ranchi to Jamshedpur (130 km, automotive parts — ideal for daily trips), Ranchi to Bhubaneswar (450 km, agricultural produce and FMCG), and Ranchi to Dhanbad (280 km, coal and mining equipment)." },
+      { question: "What are the best return load corridors from Ranchi?", answer: "The most active corridors are Ranchi to Kolkata (420 km, steel and machinery), Ranchi to Jamshedpur (130 km, automotive parts — ideal for daily trips), Ranchi to Bhubaneswar (470 km, agricultural produce and FMCG), and Ranchi to Dhanbad (155 km, coal and mining equipment)." },
       { question: "How much can truckers earn from Ranchi return loads?", answer: "Truckers who book return loads from Ranchi earn 40-60% more per round trip compared to running empty. A Ranchi-Kolkata round trip with return load generates 50,000-65,000 rupees revenue versus 25,000-35,000 without a return load." },
       { question: "How does LoadSaathi find return loads from Ranchi?", answer: "LoadSaathi AI matching engine identifies return-load opportunities before the outbound trip concludes. It matches the truck route, capacity, and vehicle type with verified shipper requirements, pushing offers in real-time as the trucker approaches Ranchi." },
     ],
@@ -697,7 +697,7 @@ export const articles: Record<string, BlogArticle> = {
     content: [],
     relatedRoutes: ["jamshedpur-to-kolkata", "jamshedpur-to-ranchi", "jamshedpur-to-bhubaneswar"],
     faq: [
-      { question: "What are the best return load corridors from Jamshedpur?", answer: "The most active corridors are Jamshedpur to Kolkata (280 km, textiles and FMCG), Jamshedpur to Ranchi (130 km, coal and construction — ideal for daily trips), Jamshedpur to Bhubaneswar (340 km, agricultural produce and machinery), and Jamshedpur to Rourkela (220 km, steel products and industrial goods)." },
+      { question: "What are the best return load corridors from Jamshedpur?", answer: "The most active corridors are Jamshedpur to Kolkata (280 km, textiles and FMCG), Jamshedpur to Ranchi (130 km, coal and construction — ideal for daily trips), Jamshedpur to Bhubaneswar (347 km, agricultural produce and machinery), and Jamshedpur to Rourkela (198 km, steel products and industrial goods)." },
       { question: "How much can truckers earn from Jamshedpur return loads?", answer: "Truckers who book return loads from Jamshedpur earn 40-60% more per round trip compared to running empty. A Jamshedpur-Kolkata round trip with return load generates 40,000-53,000 rupees revenue versus 20,000-28,000 without a return load." },
       { question: "How does LoadSaathi find return loads from Jamshedpur?", answer: "LoadSaathi AI matching engine identifies return-load opportunities before the outbound trip concludes. It matches the truck route, capacity, and vehicle type with verified shipper requirements, pushing offers in real-time as the trucker approaches Jamshedpur." },
     ],
@@ -711,7 +711,7 @@ export const articles: Record<string, BlogArticle> = {
     readTime: "5 min read",
     author: "Sanjaya Sahu",
     coverImage: "/blog/og/ranchi-bhubaneswar-route.svg",
-    summary: "Ranchi to Bhubaneswar freight rates for 2026: PTL 6-9 rupees per kg, FTL 30,000-45,000 rupees by vehicle type. 450 km via NH-20 and NH-16, 10-12 hours transit. Includes return-load opportunities, cargo types, and booking tips.",
+    summary: "Ranchi to Bhubaneswar freight rates for 2026: PTL 6-9 rupees per kg, FTL 30,000-45,000 rupees by vehicle type. 470 km via NH-20 and NH-16, 10-12 hours transit. Includes return-load opportunities, cargo types, and booking tips.",
     content: [],
     relatedRoutes: ["ranchi-to-bhubaneswar", "rourkela-to-bhubaneswar"],
     faq: [
@@ -747,7 +747,7 @@ export const articles: Record<string, BlogArticle> = {
     readTime: "5 min read",
     author: "Sanjaya Sahu",
     coverImage: "/blog/og/jamshedpur-bhubaneswar-route.svg",
-    summary: "Jamshedpur to Bhubaneswar freight rates for 2026: PTL 6-9 rupees per kg, FTL 25,000-38,000 rupees by vehicle type. 340 km via NH-16, 8-10 hours transit. Includes return-load opportunities, Tata Steel cargo patterns, and booking tips.",
+    summary: "Jamshedpur to Bhubaneswar freight rates for 2026: PTL 6-9 rupees per kg, FTL 25,000-38,000 rupees by vehicle type. 347 km via NH-16, 8-10 hours transit. Includes return-load opportunities, Tata Steel cargo patterns, and booking tips.",
     content: [],
     relatedRoutes: ["jamshedpur-to-bhubaneswar", "ranchi-to-bhubaneswar"],
     faq: [
@@ -785,7 +785,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/dhanbad-jamshedpur-route.svg",
-    summary: "Dhanbad to Jamshedpur freight rates for 2026: PTL 4-6 rupees per kg, FTL 12,000-22,000 rupees by vehicle type. 170 km via NH-33, 3.5 hours transit. Jharkhand coal-steel corridor with coke, coal, and steel products dominating freight.",
+    summary: "Dhanbad to Jamshedpur freight rates for 2026: PTL 4-6 rupees per kg, FTL 12,000-22,000 rupees by vehicle type. 145 km via NH-33, 3.5 hours transit. Jharkhand coal-steel corridor with coke, coal, and steel products dominating freight.",
     content: [],
     relatedRoutes: ["dhanbad-to-jamshedpur", "coal-transport-jharkhand", "return-loads-jamshedpur"],
     faq: [
@@ -804,7 +804,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/ranchi-dhanbad-route.svg",
-    summary: "Ranchi to Dhanbad freight rates for 2026: PTL 5-8 rupees per kg, FTL 18,000-32,000 rupees by vehicle type. 280 km via NH-33, 6 hours transit. Jharkhand coal corridor for coal, mining equipment, and FMCG products.",
+    summary: "Ranchi to Dhanbad freight rates for 2026: PTL 5-8 rupees per kg, FTL 18,000-32,000 rupees by vehicle type. 155 km via NH-33, 6 hours transit. Jharkhand coal corridor for coal, mining equipment, and FMCG products.",
     content: [],
     relatedRoutes: ["ranchi-to-dhanbad", "coal-transport-jharkhand", "return-loads-ranchi"],
     faq: [
@@ -823,7 +823,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/bhubaneswar-vizag-route.svg",
-    summary: "Bhubaneswar to Visakhapatnam freight rates for 2026: PTL 5-8 rupees per kg, FTL 22,000-42,000 rupees by vehicle type. 450 km via NH-16, 8-9 hours transit. Coastal corridor connecting Odisha and Andhra Pradesh for steel, petroleum, and seafood.",
+    summary: "Bhubaneswar to Visakhapatnam freight rates for 2026: PTL 5-8 rupees per kg, FTL 22,000-42,000 rupees by vehicle type. 445 km via NH-16, 8-9 hours transit. Coastal corridor connecting Odisha and Andhra Pradesh for steel, petroleum, and seafood.",
     content: [],
     relatedRoutes: ["bhubaneswar-to-vizag", "bhubaneswar-to-kolkata", "return-loads-ranchi"],
     faq: [
@@ -918,7 +918,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/ranchi-rourkela-route.svg",
-    summary: "Ranchi to Rourkela freight rates for 2026: PTL 4-7 rupees per kg, FTL 18,000-35,000 rupees by vehicle type. 210 km via NH-23, 5 hours transit. Jharkhand steel corridor for coal, steel products, and mining equipment.",
+    summary: "Ranchi to Rourkela freight rates for 2026: PTL 4-7 rupees per kg, FTL 18,000-35,000 rupees by vehicle type. 180 km via NH-23, 5 hours transit. Jharkhand steel corridor for coal, steel products, and mining equipment.",
     content: [],
     relatedRoutes: ["ranchi-to-rourkela", "return-loads-ranchi", "steel-transport-india-guide"],
     faq: [
@@ -937,7 +937,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/rourkela-jamshedpur-route.svg",
-    summary: "Rourkela to Jamshedpur freight rates for 2026: PTL 4-6 rupees per kg, FTL 15,000-28,000 rupees by vehicle type. 180 km via NH-23, 4 hours transit. Steel-steel corridor for coils, sheets, automotive parts, and industrial goods.",
+    summary: "Rourkela to Jamshedpur freight rates for 2026: PTL 4-6 rupees per kg, FTL 15,000-28,000 rupees by vehicle type. 198 km via NH-23, 4 hours transit. Steel-steel corridor for coils, sheets, automotive parts, and industrial goods.",
     content: [],
     relatedRoutes: ["rourkela-to-jamshedpur", "return-loads-rourkela", "return-loads-jamshedpur"],
     faq: [
@@ -956,7 +956,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/jamshedpur-rourkela-route.svg",
-    summary: "Jamshedpur to Rourkela freight rates for 2026: PTL 4-6 rupees per kg, FTL 15,000-28,000 rupees by vehicle type. 180 km via NH-33, 4 hours transit. Reverse steel corridor for Tata Steel products, automotive parts, and engineering goods.",
+    summary: "Jamshedpur to Rourkela freight rates for 2026: PTL 4-6 rupees per kg, FTL 15,000-28,000 rupees by vehicle type. 198 km via NH-33, 4 hours transit. Reverse steel corridor for Tata Steel products, automotive parts, and engineering goods.",
     content: [],
     relatedRoutes: ["jamshedpur-to-rourkela", "return-loads-jamshedpur", "return-loads-rourkela"],
     faq: [
@@ -975,7 +975,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/rourkela-burdwan-route.svg",
-    summary: "Rourkela to Burdwan freight rates for 2026: PTL 5-8 rupees per kg, FTL 20,000-38,000 rupees by vehicle type. 350 km via NH-14 and NH-2, 8 hours transit. Cross-state corridor for steel, coal, and agricultural produce.",
+    summary: "Rourkela to Burdwan freight rates for 2026: PTL 5-8 rupees per kg, FTL 20,000-38,000 rupees by vehicle type. 320 km via NH-14 and NH-2, 8 hours transit. Cross-state corridor for steel, coal, and agricultural produce.",
     content: [],
     relatedRoutes: ["rourkela-to-burdwan", "return-loads-rourkela", "coal-transport-jharkhand"],
     faq: [
@@ -1032,7 +1032,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/jamshedpur-burdwan-route.svg",
-    summary: "Jamshedpur to Burdwan freight rates for 2026: PTL 5-8 rupees per kg, FTL 18,000-35,000 rupees by vehicle type. 320 km via NH-33 and NH-2, 7 hours transit. Cross-state corridor for steel, automotive parts, and agricultural produce.",
+    summary: "Jamshedpur to Burdwan freight rates for 2026: PTL 5-8 rupees per kg, FTL 18,000-35,000 rupees by vehicle type. 200 km via NH-33 and NH-2, 7 hours transit. Cross-state corridor for steel, automotive parts, and agricultural produce.",
     content: [],
     relatedRoutes: ["jamshedpur-to-burdwan", "return-loads-jamshedpur", "coal-transport-jharkhand"],
     faq: [
@@ -1051,7 +1051,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/bhubaneswar-burdwan-route.svg",
-    summary: "Bhubaneswar to Burdwan freight rates for 2026: PTL 5-8 rupees per kg, FTL 22,000-42,000 rupees by vehicle type. 480 km via NH-16 and NH-2, 10-12 hours transit. Cross-state corridor connecting Odisha and West Bengal for agricultural produce, FMCG, and construction materials.",
+    summary: "Bhubaneswar to Burdwan freight rates for 2026: PTL 5-8 rupees per kg, FTL 22,000-42,000 rupees by vehicle type. 420 km via NH-16 and NH-2, 10-12 hours transit. Cross-state corridor connecting Odisha and West Bengal for agricultural produce, FMCG, and construction materials.",
     content: [],
     relatedRoutes: ["bhubaneswar-to-burdwan", "return-loads-ranchi", "coal-transport-jharkhand"],
     faq: [
@@ -1070,7 +1070,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/sambalpur-jharsuguda-route.svg",
-    summary: "Sambalpur to Jharsuguda freight rates for 2026: PTL 3-5 rupees per kg, FTL 8,000-16,000 rupees by vehicle type. 80 km via NH-53, 2 hours transit. Western Odisha short-haul corridor for coal, aluminium, and forest products.",
+    summary: "Sambalpur to Jharsuguda freight rates for 2026: PTL 3-5 rupees per kg, FTL 8,000-16,000 rupees by vehicle type. 50 km via NH-53, 2 hours transit. Western Odisha short-haul corridor for coal, aluminium, and forest products.",
     content: [],
     relatedRoutes: ["sambalpur-to-jharsuguda", "return-loads-ranchi", "steel-transport-india-guide"],
     faq: [
@@ -1089,7 +1089,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/sambalpur-bhubaneswar-route.svg",
-    summary: "Sambalpur to Bhubaneswar freight rates for 2026: PTL 4-6 rupees per kg, FTL 12,000-24,000 rupees by vehicle type. 280 km via NH-53 and NH-16, 6 hours transit. Intra-Odisha corridor for coal, aluminium, and agricultural produce.",
+    summary: "Sambalpur to Bhubaneswar freight rates for 2026: PTL 4-6 rupees per kg, FTL 12,000-24,000 rupees by vehicle type. 350 km via NH-53 and NH-16, 6 hours transit. Intra-Odisha corridor for coal, aluminium, and agricultural produce.",
     content: [],
     relatedRoutes: ["sambalpur-to-bhubaneswar", "return-loads-ranchi", "coal-transport-jharkhand"],
     faq: [
@@ -1108,7 +1108,7 @@ export const articles: Record<string, BlogArticle> = {
     author: "Sanjaya Sahu",
     authorBio: "Sanjaya Sahu is the founder of LoadSaathi with deep expertise in Indian logistics and freight corridors.",
     coverImage: "/blog/og/rourkela-cuttack-route.svg",
-    summary: "Rourkela to Cuttack freight rates for 2026: PTL 4-7 rupees per kg, FTL 18,000-35,000 rupees by vehicle type. 350 km via NH-14 and NH-16, 8 hours transit. Intra-Odisha corridor connecting steel hub with commercial capital for steel, textiles, and handicrafts.",
+    summary: "Rourkela to Cuttack freight rates for 2026: PTL 4-7 rupees per kg, FTL 18,000-35,000 rupees by vehicle type. 300 km via NH-14 and NH-16, 8 hours transit. Intra-Odisha corridor connecting steel hub with commercial capital for steel, textiles, and handicrafts.",
     content: [],
     relatedRoutes: ["rourkela-to-cuttack", "return-loads-rourkela", "steel-transport-india-guide"],
     faq: [

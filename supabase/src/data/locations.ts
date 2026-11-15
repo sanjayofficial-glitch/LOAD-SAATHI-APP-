@@ -39,7 +39,7 @@ export const cityData: Record<string, {
     localFaq: [
       { q: "What is the average truck freight rate from Rourkela to Bhubaneswar?", a: "FTL truck rates from Rourkela to Bhubaneswar range from ₹38,000 to ₹55,000 depending on truck type (Open, Container, Trailer) and cargo weight. PTL shipments cost ₹6–9 per kg. Use LoadSaathi's freight rate calculator for a precise quote." },
       { q: "Which industries drive freight demand in Rourkela?", a: "The Rourkela Steel Plant (SAIL) is the single largest freight generator. Cement plants, aluminium smelters, and forest product exporters also contribute significantly to outbound freight. Inbound freight includes FMCG, food grains, and construction materials." },
-      { q: "What is the fastest route from Rourkela to Kolkata for trucking?", a: "The fastest trucking route from Rourkela to Kolkata is via NH-49 and NH-16, covering approximately 530 km in 12–14 hours. LoadSaathi's OSRM-based route planner provides real-time distance and transit time calculations." },
+      { q: "What is the fastest route from Rourkela to Kolkata for trucking?", a: "The fastest trucking route from Rourkela to Kolkata is via NH-49 and NH-16, covering approximately 420 km in 12–14 hours. LoadSaathi's OSRM-based route planner provides real-time distance and transit time calculations." },
     ],
   },
   ranchi: {
@@ -89,7 +89,7 @@ export const cityData: Record<string, {
     localFaq: [
       { q: "What are the truck freight rates from Kolkata to Bhubaneswar?", a: "FTL rates from Kolkata to Bhubaneswar range from ₹42,000 to ₹60,000 for a full truck load. PTL shipments cost ₹5–8 per kg. Rates vary by truck type, cargo nature, and pickup location within Kolkata." },
       { q: "How does LoadSaathi handle Kolkata port logistics?", a: "LoadSaathi connects port-bound and port-origin freight with available trucks. If you're moving goods from Kolkata Port (Haldia/DP World) to inland destinations, post your shipment and get matched with truckers who specialise in port pickup and documentation." },
-      { q: "What is the best route from Kolkata to Rourkela for heavy cargo?", a: "The recommended route for heavy cargo is Kolkata → Kharagpur → Rourkela via NH-16 and NH-49 (530 km). This route has good road infrastructure and weighbridges. LoadSaathi's route planner confirms current conditions." },
+      { q: "What is the best route from Kolkata to Rourkela for heavy cargo?", a: "The recommended route for heavy cargo is Kolkata → Kharagpur → Rourkela via NH-16 and NH-49 (420 km). This route has good road infrastructure and weighbridges. LoadSaathi's route planner confirms current conditions." },
     ],
   },
   bhubaneswar: {
@@ -137,7 +137,7 @@ export const cityData: Record<string, {
     localFaq: [
       { q: "What freight rates apply for steel transport from Jamshedpur?", a: "Steel transport from Jamshedpur ranges from ₹36–52 per kg for FTL loads depending on destination. Kolkata is the cheapest corridor (₹36–42/kg) while Bhubaneswar costs ₹40–52/kg. LoadSaathi provides real-time rates for your specific route." },
       { q: "How do I book a truck for Tata Steel cargo from Jamshedpur?", a: "Post your shipment on LoadSaathi with origin Jamshedpur, destination, weight, and cargo type (steel coils, bars, sheets). Our AI matching connects you with truckers experienced in steel handling. All truckers are verified with insurance and KYC." },
-      { q: "What is the fastest route from Jamshedpur to Kolkata for trucking?", a: "The fastest route is via NH-33 and NH-16 (290 km, 6–7 hours). This is one of the busiest freight corridors in East India. LoadSaathi's route planner confirms current road conditions and suggests optimal departure times." },
+      { q: "What is the fastest route from Jamshedpur to Kolkata for trucking?", a: "The fastest route is via NH-33 and NH-16 (280 km, 6–7 hours). This is one of the busiest freight corridors in East India. LoadSaathi's route planner confirms current road conditions and suggests optimal departure times." },
     ],
   },
   cuttack: {
@@ -185,7 +185,7 @@ export const cityData: Record<string, {
     localFaq: [
       { q: "What freight rates apply for aluminium transport from Sambalpur?", a: "Aluminium transport from Sambalpur ranges from ₹34–50 per kg for FTL loads. Bhubaneswar corridor costs ₹34–42/kg while Kolkata costs ₹40–50/kg. LoadSaathi's AI pricing considers aluminium's specific handling requirements." },
       { q: "How do I book a truck from Sambalpur to Bhubaneswar?", a: "Post your shipment on LoadSaathi with origin Sambalpur, destination Bhubaneswar, weight, and cargo type. Our AI matches you with verified truckers. Sambalpur to Bhubaneswar is a high-demand corridor with frequent truck availability." },
-      { q: "What is the fastest route from Sambalpur to Jharsuguda?", a: "The fastest route from Sambalpur to Jharsuguda is via NH-53 (80 km, 1.5–2 hours). This is a short-haul corridor with high truck frequency. LoadSaathi offers instant booking for this route." },
+      { q: "What is the fastest route from Sambalpur to Jharsuguda?", a: "The fastest route from Sambalpur to Jharsuguda is via NH-53 (50 km, 1.5–2 hours). This is a short-haul corridor with high truck frequency. LoadSaathi offers instant booking for this route." },
     ],
   },
   angul: {
@@ -232,7 +232,7 @@ export const cityData: Record<string, {
     ],
     localFaq: [
       { q: "What freight rates apply for aluminium transport from Jharsuguda?", a: "Aluminium transport from Jharsuguda ranges from ₹32–48 per kg for FTL loads. Sambalpur corridor (80 km) is the cheapest at ₹32–36/kg. Bhubaneswar corridor costs ₹38–48/kg. LoadSaathi provides instant quotes for your specific route." },
-      { q: "How do I book a truck from Jharsuguda to Sambalpur?", a: "Post your shipment on LoadSaathi with origin Jharsuguda, destination Sambalpur, weight, and cargo type. This 80 km corridor has very high truck frequency with multiple daily departures. LoadSaathi matches you with the best available trucker." },
+      { q: "How do I book a truck from Jharsuguda to Sambalpur?", a: "Post your shipment on LoadSaathi with origin Jharsuguda, destination Sambalpur, weight, and cargo type. This 50 km corridor has very high truck frequency with multiple daily departures. LoadSaathi matches you with the best available trucker." },
       { q: "What is the fastest route from Jharsuguda to Bhubaneswar?", a: "The fastest route is via NH-53 and NH-16 (380 km, 8–9 hours). This route passes through Sambalpur and Cuttack. LoadSaathi's route planner provides real-time distance and transit calculations." },
     ],
   },

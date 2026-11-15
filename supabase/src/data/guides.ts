@@ -60,7 +60,7 @@ export const guideData: Record<string, {
     authorBio: "Amit Verma is a supply chain consultant who helps SMEs in East India digitize their freight operations.",
     readTime: "8 min read",
     steps: [
-      { name: "Identify your origin and destination corridors", text: "Rates vary by route. Short corridors like Rourkela–Ranchi (180 km) are cheaper per tonne than long-haul routes like Rourkela–Kolkata (430 km)." },
+      { name: "Identify your origin and destination corridors", text: "Rates vary by route. Short corridors like Rourkela–Ranchi (180 km) are cheaper per tonne than long-haul routes like Rourkela–Kolkata (420 km)." },
       { name: "Estimate cargo weight and type", text: "PTL rates are quoted per tonne while FTL rates are per vehicle. Steel and heavy industrial cargo typically command a premium." },
       { name: "Check current market rates", text: "Reference corridor averages such as ₹1,800-2,500/tonne for Rourkela–Ranchi PTL and ₹9,000-12,000 for a 7-ton FTL on the same route." },
       { name: "Use LoadSaathi's AI Price Predictor", text: "Post your shipment and the AI analyzes live market conditions, fuel, and truck availability to recommend fair pricing." },
@@ -71,14 +71,14 @@ export const guideData: Record<string, {
       rows: [
         ["Rourkela–Ranchi", "180 km", "₹1,800–2,500", "₹9,000–12,000 (7-ton) / ₹22,000–28,000 (25-ton)"],
         ["Rourkela–Bhubaneswar", "340 km", "₹2,200–3,000", "—"],
-        ["Rourkela–Kolkata", "430 km", "₹2,500–3,500", "—"],
+        ["Rourkela–Kolkata", "420 km", "₹2,500–3,500", "—"],
       ],
       footnote: "Indicative 2026 corridor averages from this guide. FTL is quoted per vehicle — check the Fare Calculator for current pricing.",
     },
     content: [
       "Understanding freight rates across East India's industrial corridors is essential for MSMEs looking to optimize their logistics budgets. Rates vary significantly based on distance, cargo type, vehicle availability, and seasonal demand.",
       "The Rourkela–Ranchi corridor (180 km) is one of the busiest, with PTL rates averaging ₹1,800-2,500 per tonne. Full truckload rates range from ₹9,000-12,000 for a 7-ton truck to ₹22,000-28,000 for a 25-ton trailer.",
-      "For the Rourkela–Bhubaneswar route (340 km), expect PTL rates of ₹2,200-3,000 per tonne. The Rourkela–Kolkata corridor (430 km) commands ₹2,500-3,500 per tonne for PTL shipments.",
+      "For the Rourkela–Bhubaneswar route (340 km), expect PTL rates of ₹2,200-3,000 per tonne. The Rourkela–Kolkata corridor (420 km) commands ₹2,500-3,500 per tonne for PTL shipments.",
       "Several factors influence pricing: fuel costs, toll charges, seasonal demand during festivals, truck availability in both cities, and the type of cargo being shipped. Steel products from Rourkela's mills often command slightly higher rates.",
       "LoadSaathi's AI Price Predictor analyzes current market conditions, historical data, and available truck capacity to recommend fair pricing for any corridor. Post your shipment and receive competitive bids from verified truckers within minutes.",
     ],
