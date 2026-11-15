@@ -18,8 +18,8 @@ const Index = () => {
   return (
     <>
       <SeoMeta
-        title="LoadSaathi: Free Load Board & Return Loads India"
-        description="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes."
+        title="LoadSaathi: Save Up to 40% on Part Truckload | India"
+        description="Save up to 40% on part truckload — pay only for the space you fill. AI-matched PTL/LTL loads, live GPS tracking, GST-verified truckers, zero broker fees."
         canonical="/"
         keywords="PTL freight Rourkela, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela"
         alternates={[{ hreflang: "hi", href: "/hi" }]}

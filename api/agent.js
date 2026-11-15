@@ -707,8 +707,8 @@ const ROUTE_DATA = {
 // ── Static page SEO metadata ──────────────────────────────────────────────────
 const STATIC_PAGE_DATA = {
   "/": {
-    title: "LoadSaathi: Free Load Board & Return Loads India",
-    metaDescription: "Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes.",
+    title: "LoadSaathi: Save Up to 40% on Part Truckload | India",
+    metaDescription: "Save up to 40% on part truckload — pay only for the space you fill. AI-matched PTL/LTL loads, live GPS tracking, GST-verified truckers, zero broker fees.",
     keywords: "PTL freight Rourkela, LTL transport East India, shared truck Ranchi Burdwan, part load Jharkhand Odisha, freight marketplace India, truck booking Rourkela",
     summary: "LoadSaathi is India's AI-powered freight marketplace for booking trucks and loads across 500+ corridors."
   },
@@ -5631,7 +5631,7 @@ function contentFor(path, seoMeta) {
 
     // Homepage: purpose-built crawl-visible block (exactly one H1 + pathways).
     if (path === '/') {
-      heading = 'Move Goods Smarter with Shared Freight';
+      heading = 'Pay Only for the Space You Fill';
       blocks.push({
         p: 'LoadSaathi is a shared freight marketplace that connects shippers, MSMEs and businesses that need to move goods with truck owners and transporters who have truck space. Matching part-load and full-load cargo across trips helps shippers find suitable transport faster and helps transporters reduce empty return journeys — starting from Rourkela and growing across Odisha, Jharkhand and East India corridors.'
       });

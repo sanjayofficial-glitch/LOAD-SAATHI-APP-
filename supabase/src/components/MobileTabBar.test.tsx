@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import type { ReactElement } from "react";
 import MobileTabBar, { type MobileTabItem } from "./MobileTabBar";
@@ -62,6 +62,39 @@ describe("MobileTabBar (island nav)", () => {
     delete window.visualViewport;
     // @ts-expect-error reset the matchMedia stub between tests
     delete window.matchMedia;
+  });
+
+  it("gives the menu sheet a real drag-to-dismiss handle (not a decorative one)", async () => {
+    renderNav(
+      <MobileTabBar
+        tabs={tabs}
+        menuItems={[{ label: "About", path: "/about", icon: <Search className="h-5 w-5" /> }]}
+        centerAction={centerAction}
+        accent="blue"
+      />,
+    );
+
+    // Open the sheet. The button is localized, so target it by its
+    // semantic aria-haspopup rather than by label text.
+    const menuButton = document.querySelector(
+      'button[aria-haspopup="dialog"]',
+    ) as HTMLButtonElement;
+    expect(menuButton).toBeTruthy();
+    fireEvent.click(menuButton);
+
+    const handle = await waitFor(() => {
+      const el = document.querySelector('[data-slot="sheet-grab-handle"]');
+      expect(el).toBeTruthy();
+      return el as HTMLElement;
+    });
+
+    // The handle advertises that it is draggable — a signifier that now
+    // matches the behaviour (the sheet primitive owns the gesture).
+    expect(handle.className).toContain("cursor-grab");
+    expect(handle.className).toContain("touch-none");
+
+    // The sheet surface the gesture drives is present.
+    expect(document.querySelector('[data-slot="sheet-content"]')).toBeTruthy();
   });
 
   it("renders the island pill with role-agnostic nav semantics", () => {

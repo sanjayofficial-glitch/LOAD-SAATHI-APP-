@@ -161,12 +161,15 @@ const MobileTabBar = React.memo(
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetContent
             side="bottom"
+            /* Drag-to-dismiss: the grab strip is real, not decorative — the
+               sheet follows the finger 1:1, rubber-bands past its bound, and
+               settles from the release velocity (Apple §2, §9, §10). */
+            swipeToDismiss
             className="z-[110] max-h-[75dvh] overflow-y-auto rounded-t-3xl border-t border-gray-200/70 bg-white/95 p-0 pb-[max(env(safe-area-inset-bottom),1rem)] backdrop-blur-lg dark:border-white/10 dark:bg-gray-950/95"
           >
-            <div className="flex justify-center pt-3">
-              <div className="h-1 w-10 rounded-full bg-gray-300 dark:bg-gray-600" aria-hidden="true" />
-            </div>
-            <SheetHeader className="px-5 pb-1 pt-2 text-left">
+            {/* Extra top padding clears the drag strip that the Sheet
+                primitive renders when swipeToDismiss is on. */}
+            <SheetHeader className="px-5 pb-1 pt-9 text-left">
               <SheetTitle className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
                 {t('nav.menu')}
               </SheetTitle>

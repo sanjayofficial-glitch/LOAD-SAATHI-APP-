@@ -161,7 +161,8 @@ export default function HeroQuoteWidget() {
         </label>
         <Button
           type="submit"
-          className="col-span-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold tracking-wider uppercase"
+          variant="outline"
+          className="col-span-2 border-orange-300 dark:border-orange-700/60 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-xs font-bold tracking-wider uppercase"
         >
           Get estimate — no login needed
         </Button>
@@ -169,16 +170,33 @@ export default function HeroQuoteWidget() {
 
       {estimate && estimate !== 'unknown' && (
         <div className="mt-4 rounded-xl border border-orange-500/30 bg-orange-500/5 p-4">
-          <p className="text-xs text-muted-foreground mb-1">
+          <p className="text-xs text-muted-foreground mb-2">
             {estimate.km} km · ~{estimate.hours} hrs · {estimate.vehicleLabel}
           </p>
+
+          {/* Anchor first, then offer, then delta (DK-02, AR-04) */}
+          <p className="text-sm font-semibold text-muted-foreground line-through decoration-1">
+            Full truck: {inr(estimate.ftlMin)}–{inr(estimate.ftlMax)}
+          </p>
+
           {estimate.ptlMin !== null && estimate.ptlMax !== null ? (
-            <p className="text-lg font-black text-foreground">
+            <p className="text-lg font-black text-foreground mt-0.5">
               Shared: {inr(estimate.ptlMin)}–{inr(estimate.ptlMax)}
             </p>
-          ) : null}
-          <p className="text-sm font-semibold text-muted-foreground">
-            Full truck: {inr(estimate.ftlMin)}–{inr(estimate.ftlMax)}
+          ) : (
+            <p className="text-lg font-black text-foreground mt-0.5">
+              Full load booked: {inr(estimate.ftlMin)}–{inr(estimate.ftlMax)}
+            </p>
+          )}
+
+          {estimate.ptlMin !== null && estimate.ptlMax !== null && (
+            <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-orange-100 dark:bg-orange-900/40 border border-orange-300 dark:border-orange-700/50 px-2.5 py-1 text-xs font-bold text-orange-700 dark:text-orange-300">
+              You save ≈ {inr(Math.max(0, estimate.ftlMin - (estimate.ptlMax ?? 0)))}
+            </p>
+          )}
+
+          <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">
+            Compared with a full truck on the same corridor &amp; date. How we calculate
           </p>
           <Link
             to={calcHref}

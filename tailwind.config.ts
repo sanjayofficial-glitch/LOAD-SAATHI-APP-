@@ -18,6 +18,21 @@ export default {
     },
     extend: {
       colors: {
+        orange: {
+          600: "#C2410C", /* darkened from #EA580C so text passes 4.5:1 on white */
+        },
+        /* Derived brand tokens from the SharedTruckVisualizer redesign (user-provided
+           component). Used by the visualizer (and its route map) only — the core
+           brand chain stays untouched. */
+        brand: {
+          orange: "#f15a24",
+          blue: "#2e6fb5",
+          navy: "#0d2340",
+          slate: "#64748b",
+          line: "#e2e8f0",
+          soft: "#f1f5f9",
+          warm: "#fff7e6",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

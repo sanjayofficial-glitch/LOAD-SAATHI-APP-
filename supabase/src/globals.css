@@ -16,14 +16,14 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 25 100% 55%; /* Orange */
+    --primary: #C2410C; /* Orange-700: white label passes 4.5:1 */
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 50%;
+    --muted-foreground: 215 15% 45%;
 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
@@ -74,8 +74,8 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 25 100% 55%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: #C2410C;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -275,11 +275,13 @@
 
   /* ─── Press feedback ───
      Feedback lives on the press (pointer-down), not the release — and it is
-     instant. Shared by buttons, tabs, cards, and any tappable surface. */
+     instant. Shared by buttons, tabs, cards, and any tappable surface.
+     Only transform is transitioned: animating box-shadow repaints the layer
+     on every press, which is the most expensive thing a button can do on a
+     mid-range phone (Apple §11 — compositor-friendly properties only). */
   .press {
     transition:
-      transform var(--dur-fast) var(--ease-out-quint),
-      box-shadow var(--dur-base) var(--ease-out-quint),
+      transform var(--dur-press) var(--ease-out-quint),
       background-color var(--dur-base) ease,
       border-color var(--dur-base) ease,
       color var(--dur-base) ease;
@@ -382,7 +384,8 @@
     contain: layout style paint;
   }
   .dark .glass-panel {
-    background: hsl(var(--card) / 0.6);
+    background: hsl(var(--card) / 0.55);
+    border-color: hsl(var(--border) / 0.6);
   }
 
   .glass-card {
@@ -392,6 +395,7 @@
   }
   .dark .glass-card {
     background: hsl(var(--card));
+    border-color: hsl(var(--border) / 0.7);
   }
 
   /* Animated floating — GPU accelerated */
@@ -712,47 +716,47 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
 }
 .dark .cl-card {
-  background: hsl(222.2, 84%, 4.9%) !important;
+  background: hsl(var(--card)) !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
 }
 .dark .cl-cardContent {
   background: transparent;
 }
 .dark .cl-formFieldInput {
-  background: hsl(217.2, 32.6%, 17.5%) !important;
-  color: hsl(210, 40%, 98%) !important;
-  border-color: hsl(217.2, 32.6%, 17.5%) !important;
+  background: hsl(var(--input)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--input)) !important;
 }
 .dark .cl-socialButtonsIconButton {
-  background: hsl(217.2, 32.6%, 17.5%) !important;
-  border-color: hsl(217.2, 32.6%, 17.5%) !important;
+  background: hsl(var(--input)) !important;
+  border-color: hsl(var(--input)) !important;
 }
 .dark .cl-footer {
   background: transparent !important;
 }
 .dark .cl-headerTitle {
-  color: hsl(210, 40%, 98%) !important;
+  color: hsl(var(--foreground)) !important;
 }
 .dark .cl-headerSubtitle {
-  color: hsl(215, 15%, 78%) !important;
+  color: hsl(var(--muted-foreground)) !important;
 }
 .dark .cl-formFieldLabel {
-  color: hsl(215, 15%, 78%) !important;
+  color: hsl(var(--muted-foreground)) !important;
 }
 .dark .cl-dividerText {
-  color: hsl(215, 15%, 78%) !important;
+  color: hsl(var(--muted-foreground)) !important;
 }
 .dark .cl-dividerLine {
-  background: hsl(217.2, 32.6%, 17.5%) !important;
+  background: hsl(var(--border)) !important;
 }
 .cl-formButtonPrimary {
-  background: hsl(25, 100%, 55%) !important;
+  background: hsl(var(--primary)) !important;
 }
 .cl-formButtonPrimary:hover {
-  background: hsl(25, 100%, 45%) !important;
+  background: hsl(var(--primary) / 0.85) !important;
 }
 .cl-footerActionLink {
-  color: hsl(25, 100%, 55%) !important;
+  color: hsl(var(--primary)) !important;
 }
 .cl-internal-1dauvpw {
   display: none !important;
@@ -819,6 +823,9 @@
 }
 .leaflet-container .leaflet-control-zoom a:hover {
   background: hsl(var(--muted)) !important;
+}
+.dark .leaflet-container .leaflet-control-zoom a:hover {
+  background: hsl(var(--muted-foreground) / 0.12) !important;
 }
 
 /* iOS Safari auto-zooms into any form control whose font-size is under 16px.
@@ -1029,4 +1036,28 @@
   .tab {
     min-height: 44px;
   }
+}
+
+/* ─── SharedTruckVisualizer motion (ported from the redesign component) ─── */
+@keyframes stv-route-dash {
+  to { stroke-dashoffset: -22; }
+}
+@keyframes stv-ring-pulse {
+  0% { transform: scale(0.8); opacity: 0.55; }
+  100% { transform: scale(2.3); opacity: 0; }
+}
+@keyframes stv-wheel-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes stv-speed-line {
+  0% { transform: translateX(6px); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateX(-10px); opacity: 0; }
+}
+.route-dash { animation: stv-route-dash 1.2s linear infinite; }
+.pulse-ring { animation: stv-ring-pulse 1.9s ease-out infinite; }
+.wheel-spin { animation: stv-wheel-spin 0.7s linear infinite; }
+.speed-line { animation: stv-speed-line 0.7s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .route-dash, .pulse-ring, .wheel-spin, .speed-line { animation: none; }
 }

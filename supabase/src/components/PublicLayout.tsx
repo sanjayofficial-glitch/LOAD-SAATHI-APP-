@@ -203,7 +203,7 @@ function PublicLayoutInner({ children }: { children: React.ReactNode }) {
                   Sign In
                 </Link>
                 <Link to="/register" className="hidden sm:inline-block">
-                  <Button className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold tracking-wider uppercase px-5 py-2 h-auto shadow-lg">
+                  <Button className="border border-orange-300 dark:border-orange-700/60 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-xs font-semibold tracking-wider uppercase px-5 py-2 h-auto">
                     Get Started
                   </Button>
                 </Link>

@@ -119,6 +119,7 @@ const SheetContent = React.forwardRef<
       <SheetOverlay />
       <SheetPrimitive.Content
         ref={setRefs}
+        data-slot="sheet-content"
         className={cn(sheetVariants({ side }), className)}
         {...props}
         onPointerDown={(event) => {
@@ -143,8 +144,12 @@ const SheetContent = React.forwardRef<
           <div
             ref={handleRef}
             aria-hidden="true"
+            data-slot="sheet-grab-handle"
             {...handlers}
-            className="press absolute left-0 right-0 top-0 z-10 flex h-8 cursor-grab touch-none items-center justify-center"
+            /* No `press` here: a drag handle must not scale under the
+               pointer while the sheet is being dragged (Apple §11 — the
+               surface tracks the finger 1:1, it does not animate). */
+            className="absolute left-0 right-0 top-0 z-10 flex h-8 cursor-grab touch-none items-center justify-center active:cursor-grabbing"
           >
             <div className="h-1.5 w-10 rounded-full bg-muted-foreground/30" />
           </div>

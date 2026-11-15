@@ -64,21 +64,22 @@
          separate prerendered files). Every other URL gets its canonical
          replaced by api/agent.js on the server and by SeoMeta on hydration. -->
     <link rel="canonical" href="https://loadsaathi.in/" />
-    <title>LoadSaathi: Free Load Board & Return Loads India</title>
-    <meta name="description" content="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes." />
+    <title>LoadSaathi: Save Up to 40% on Part Truckload | India</title>
+    <meta name="description" content="Save up to 40% on part truckload — pay only for the space you fill. AI-matched PTL/LTL loads, live GPS tracking, GST-verified truckers, zero broker fees." />
     <meta name="robots" content="index, follow" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="LoadSaathi: Free Load Board & Return Loads India" />
-    <meta property="og:description" content="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes." />
+    <meta property="og:title" content="LoadSaathi: Save Up to 40% on Part Truckload | India" />
+    <meta property="og:description" content="Save up to 40% on part truckload — pay only for the space you fill. AI-matched PTL/LTL loads, live GPS tracking, GST-verified truckers, zero broker fees." />
     <meta property="og:image" content="https://loadsaathi.in/og-image.png" />
+    <meta property="og:image:alt" content="LoadSaathi — shared freight marketplace. Save up to 40% on part truckload across East India." />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://loadsaathi.in/" />
     <meta property="og:site_name" content="LoadSaathi" />
     <meta property="og:locale" content="en_IN" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LoadSaathi: Free Load Board & Return Loads India" />
-    <meta name="twitter:description" content="Find truck loads & return loads free — no broker, no commission. India's load board for Jharkhand, Odisha, Bengal. Post a load or truck in 2 minutes." />
+    <meta name="twitter:title" content="LoadSaathi: Save Up to 40% on Part Truckload | India" />
+    <meta name="twitter:description" content="Save up to 40% on part truckload — pay only for the space you fill. AI-matched PTL/LTL loads, live GPS tracking, GST-verified truckers, zero broker fees." />
     <meta name="twitter:image" content="https://loadsaathi.in/og-image.png" />
     <meta name="google-site-verification" content="f4bedcfa3ed7330b" />
     <!-- Bing Webmaster Tools: uncomment and replace with your verification code -->
@@ -310,8 +311,8 @@
       <div id="ssr-fallback" style="min-height:100vh;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#ffffff">
         <div id="ssr-fallback-content" style="max-width:860px;margin:0 auto;padding:2rem 1.25rem 3rem;line-height:1.65;color:#1f2937;text-align:left">
           <div id="ssr-home-fallback">
-          <h1 style="font-size:2rem;line-height:1.2;margin:0 0 1rem;color:#111827">Move Goods Smarter with Shared Freight</h1>
-          <p style="margin:0 0 1rem">LoadSaathi is a shared freight marketplace that connects shippers, MSMEs and businesses that need to move goods with truck owners and transporters who have truck space. Matching part-load and full-load cargo across trips helps shippers find suitable transport faster and helps transporters reduce empty return journeys — starting from Rourkela and growing across Odisha, Jharkhand and East India corridors.</p>
+          <h1 style="font-size:2rem;line-height:1.2;margin:0 0 1rem;color:#111827">Pay Only for the Space You Fill</h1>
+          <p style="margin:0 0 1rem">LoadSaathi is a shared freight marketplace connecting shippers, MSMEs and businesses that need to move goods with truck owners and transporters who have truck space. Matching part-load and full-load cargo across trips helps shippers save up to 40% on part-truckload (PTL/LTL) rates vs booking a full truck, and helps transporters reduce empty return journeys — starting from Rourkela and growing across Odisha, Jharkhand and East India corridors.</p>
           <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">For shippers and businesses</h2>
           <p style="margin:0 0 1rem">If you are an MSME, trader or manufacturer moving steel, cement, FMCG, agro or engineering goods, post your shipment on LoadSaathi. Your load is matched against trucks whose route, capacity and date fit, and you can book part-load (PTL/LTL) or full-truck movement with live tracking.</p>
           <h2 style="font-size:1.25rem;margin:1.5rem 0 0.5rem;color:#111827">For truck owners and transporters</h2>
@@ -399,10 +400,20 @@
                 window.cookiehub.load({
                   onStatusChange: function (status) {
                     if (status && status.answered === true) {
-                      // Optional: persist a backup marker in localStorage so
-                      // environments where the first-party cookie doesn't stick
-                      // (localhost dev, Android WebView) still skip the banner.
-                      try { localStorage.setItem('loadsaathi_cookie_consent', '1'); } catch (e) {}
+                      var analyticsOk = true;
+                      if (status.categories && typeof status.categories === 'object') {
+                        analyticsOk = status.categories.analytics === true;
+                      }
+                      if (analyticsOk) {
+                        // Backup marker: persist only when analytics is allowed.
+                        try { localStorage.setItem('loadsaathi_cookie_consent', '1'); } catch (e) {}
+                        // Load any pending tracking tags now that consent exists.
+                        if (typeof window.__loadAnalyticsTags === 'function') {
+                          window.__loadAnalyticsTags();
+                        }
+                      } else {
+                        try { localStorage.removeItem('loadsaathi_cookie_consent'); } catch (e) {}
+                      }
                     }
                   }
                 });
@@ -420,9 +431,36 @@
         }
 
         var tagsLoaded = false;
+
+        // Consent gate (GDPR / DPDP): only load tracking tags after CookieHub
+        // reports analytics consent. The localStorage marker is written ONLY
+        // when analytics is allowed (see onStatusChange above).
+        function analyticsConsentGranted() {
+          try {
+            if (localStorage.getItem('loadsaathi_cookie_consent') === '1') return true;
+            var m = document.cookie.match(/(?:^|; )cookiehub=([^;]*)/);
+            if (!m) return false;
+            var decoded = JSON.parse(decodeURIComponent(atob(m[1])));
+            if (decoded.answered !== true) return false;
+            if (decoded.categories && typeof decoded.categories === 'object') {
+              return decoded.categories.analytics === true;
+            }
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+
         function loadAnalyticsTags() {
           if (tagsLoaded) return;
+          if (!analyticsConsentGranted()) {
+            // Hold until CookieHub confirms analytics consent (dispatched by
+            // the onStatusChange handler above), then load exactly once.
+            window.__loadAnalyticsTags = loadAnalyticsTags;
+            return;
+          }
           tagsLoaded = true;
+          window.__loadAnalyticsTags = undefined;
           // Google Analytics 4 — the real library owns window.gtag and drains the queue
           var ga = document.createElement('script'); ga.async = true;
           ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-GEFWPQNHT6';
@@ -440,16 +478,20 @@
           // replaces the previous GTM-managed Clarity tag (xv8eh2c0e3).
           (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xwwzzsvxj0");
         }
-        // Real users always interact within a few seconds — analytics stays timely.
-        ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (ev) {
-          window.addEventListener(ev, loadAnalyticsTags, { once: true, passive: true, capture: true });
-        });
-        // Fallback: load during idle, at most 10s after the load event.
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(loadAnalyticsTags, { timeout: 10000 });
-        } else {
-          setTimeout(loadAnalyticsTags, 10000);
+        // If consent was already given on a previous visit, load immediately-ish.
+        if (analyticsConsentGranted()) {
+          // Real users always interact within a few seconds — analytics stays timely.
+          ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (ev) {
+            window.addEventListener(ev, loadAnalyticsTags, { once: true, passive: true, capture: true });
+          });
+          // Fallback: load during idle, at most 10s after the load event.
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(loadAnalyticsTags, { timeout: 10000 });
+          } else {
+            setTimeout(loadAnalyticsTags, 10000);
+          }
         }
+        // Otherwise wait for the CookieHub onStatusChange callback above.
       });
     </script>
 </html>

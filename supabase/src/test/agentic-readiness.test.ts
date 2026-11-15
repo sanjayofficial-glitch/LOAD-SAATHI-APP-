@@ -411,7 +411,7 @@ describe('Agentic Readiness: index.html SSR fallback (no-JS content)', () => {
     const slice = content.slice(start, start + 2000);
     const h1Count = (slice.match(/<h1/g) ?? []).length;
     expect(h1Count).toBe(1);
-    expect(slice).toContain('Move Goods Smarter with Shared Freight');
+    expect(slice).toContain('Pay Only for the Space You Fill');
   });
 
   it('SSR fallback has 500+ chars of text', () => {
