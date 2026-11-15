@@ -32,6 +32,7 @@
 
 import {
   checkRateLimit,
+  checkRateLimitShared,
   errorResponse,
   extractBearerToken,
   generateRequestId,
@@ -107,7 +108,7 @@ export async function handleTts(
   deps: TtsDeps = {},
 ): Promise<Response> {
   const env = deps.env ?? ((name: string) => Deno.env.get(name));
-  const checkRateLimitImpl = deps.checkRateLimitImpl ?? checkRateLimit;
+  const checkRateLimitImpl = deps.checkRateLimitImpl ?? checkRateLimitShared;
   const fetchImpl = deps.fetchImpl ?? fetch;
 
   const requestId = generateRequestId();

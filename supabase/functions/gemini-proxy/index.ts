@@ -14,6 +14,7 @@
 import {
   getCorsHeaders,
   checkRateLimit,
+  checkRateLimitShared,
   getRequestIp,
   extractBearerToken,
   verifyJwt,
@@ -208,7 +209,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const ip = getRequestIp(req);
-  if (!checkRateLimit(ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)) {
+  if (!(await checkRateLimitShared(ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS))) {
     return errorResponse("Rate limit exceeded. Try again in 1 minute.", 429, headers, requestId);
   }
 

@@ -7,7 +7,7 @@ import {
   type SurchargeConfig,
   type PricingConfig,
 } from "./pricing.ts";
-import { getCorsHeaders, checkRateLimit, getRequestIp, extractBearerToken, verifyJwt, errorResponse, optionsResponse, generateRequestId } from "../_shared/edgeHelpers.ts";
+import { getCorsHeaders, checkRateLimit, checkRateLimitShared, getRequestIp, extractBearerToken, verifyJwt, errorResponse, optionsResponse, generateRequestId } from "../_shared/edgeHelpers.ts";
 import { fetchOsrmDistance } from "../_shared/osrm.ts";
 import { getLatestFuelPrice } from "../_shared/fuel.ts";
 
@@ -672,7 +672,7 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return errorResponse("Method not allowed", 405, headers, requestId);
 
   const ip = getRequestIp(req);
-  if (!checkRateLimit(ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)) {
+  if (!(await checkRateLimitShared(ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS))) {
     return errorResponse("Rate limit exceeded. Try again in 1 minute.", 429, headers, requestId);
   }
 

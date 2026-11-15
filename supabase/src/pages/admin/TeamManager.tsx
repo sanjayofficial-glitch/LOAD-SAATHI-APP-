@@ -298,16 +298,16 @@ export default function TeamManager() {
 
               {/* Actions */}
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleMove(member, 'up')} disabled={idx === 0}>
+                <Button variant="ghost" size="icon" onClick={() => handleMove(member, 'up')} disabled={idx === 0} aria-label={`Move ${member.name} up`}>
                   ↑
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleMove(member, 'down')} disabled={idx === members.length - 1}>
+                <Button variant="ghost" size="icon" onClick={() => handleMove(member, 'down')} disabled={idx === members.length - 1} aria-label={`Move ${member.name} down`}>
                   ↓
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing({ ...member }); setIsNew(false); }}>
+                <Button variant="ghost" size="icon" onClick={() => { setEditing({ ...member }); setIsNew(false); }} aria-label={`Edit ${member.name}`}>
                   ✏️
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600" onClick={() => handleDelete(member)}>
+                <Button variant="ghost" size="icon" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(member)} aria-label={`Delete ${member.name}`}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>

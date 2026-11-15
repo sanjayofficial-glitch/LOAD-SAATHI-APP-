@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useT } from '@/i18n/useT';
-import { useAuth as useClerkAuth, useUser } from '@clerk/clerk-react'; // Clerk's useAuth for getToken
+import { useAuth as useClerkAuth, useUser, useClerk } from '@clerk/clerk-react'; // Clerk's useAuth for getToken
 import { createClerkSupabaseClient } from '@/utils/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +35,7 @@ import {
   ShieldCheck,
   RefreshCw,
   Camera,
+  Trash2,
 } from 'lucide-react';
 
 import type { Review } from '@/types';
@@ -59,6 +60,29 @@ const Profile = () => {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const { data: creditData } = useCreditScore();
+  const clerkGlobal = useClerk();
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('This will permanently delete your LoadSaathi account, profile, documents and saved data. This cannot be undone. Continue?')) return;
+    if (!window.confirm('Are you absolutely sure? Marketplace records that involve other users will be anonymized rather than removed.')) return;
+    setDeleting(true);
+    try {
+      const supabaseToken = await getToken({ template: 'supabase' });
+      if (!supabaseToken) throw new Error('No session');
+      const supabase = createClerkSupabaseClient(supabaseToken);
+      const { error } = await supabase.rpc('delete_my_account');
+      if (error) throw error;
+      showSuccess('Account deletion requested. You are being signed out.');
+      await clerkGlobal.signOut();
+      window.location.href = '/';
+    } catch (err) {
+      console.error('[Profile] delete account failed', err);
+      showError('Could not delete your account right now. Please contact support@loadsaathi.in');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const fetchStats = useCallback(async () => {
     if (!userProfile) return;
@@ -786,6 +810,28 @@ const Profile = () => {
                 <p className="text-[10px] text-gray-400 dark:text-gray-500 italic text-center">
                   Note: Switching roles will change your dashboard and available features.
                 </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-red-200 dark:border-red-900/60 shadow-sm overflow-hidden">
+              <div className="h-1 bg-gradient-to-r from-red-600 to-red-500" />
+              <CardHeader>
+                <CardTitle className="flex items-center text-red-900 dark:text-red-300">
+                  <Trash2 className="mr-2 h-5 w-5 text-red-600 dark:text-red-400" />
+                  Delete Account
+                </CardTitle>
+                <CardDescription className="dark:text-gray-400">
+                  Permanently delete your profile and personal data. Marketplace records involving other users are anonymized rather than removed.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  This removes your saved profile info, documents, notifications, push subscriptions and uploads. You will be signed out.
+                </p>
+                <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleting}>
+                  {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                  {deleting ? 'Deleting…' : 'Delete my account'}
+                </Button>
               </CardContent>
             </Card>
           </div>

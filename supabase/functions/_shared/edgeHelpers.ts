@@ -85,6 +85,45 @@ export function checkRateLimit(
   return true;
 }
 
+/**
+ * Shared rate limiter backed by the `rate_limit_check` RPC (service-role
+ * only). Falls back to the per-isolate in-memory limiter when the RPC or the
+ * service-role key is unavailable, so deployments without the migration keep
+ * working.
+ */
+export async function checkRateLimitShared(
+  ip: string,
+  maxRequests: number,
+  windowMs: number,
+): Promise<boolean> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+  if (!supabaseUrl || !serviceKey) {
+    return checkRateLimit(ip, maxRequests, windowMs);
+  }
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/rpc/rate_limit_check`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: serviceKey,
+        Authorization: `Bearer ${serviceKey}`,
+      },
+      body: JSON.stringify({
+        p_key: `${ip}:${maxRequests}:${windowMs}`,
+        p_max: maxRequests,
+        p_window_seconds: Math.max(1, Math.floor(windowMs / 1000)),
+      }),
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return checkRateLimit(ip, maxRequests, windowMs);
+    const allowed: unknown = await res.json();
+    return allowed === true;
+  } catch {
+    return checkRateLimit(ip, maxRequests, windowMs);
+  }
+}
+
 // --- Bearer Token Extraction ---
 
 export function extractBearerToken(req: Request): string | null {

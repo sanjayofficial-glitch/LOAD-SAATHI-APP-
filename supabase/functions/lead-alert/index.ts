@@ -162,6 +162,32 @@ async function handler(req: Request): Promise<Response> {
     return errorResponse("Invalid JSON body", 400, cors);
   }
 
+  // CAPTCHA (optional, dormant until TURNSTILE_SECRET_KEY is configured):
+  // when enabled, every alert payload must carry a valid Turnstile token.
+  const turnstileSecret = Deno.env.get("TURNSTILE_SECRET_KEY") ?? "";
+  if (turnstileSecret) {
+    const tsToken = (payload.captcha_token ?? "").trim();
+    if (!tsToken) {
+      return json({ ok: false, reason: "captcha_required" }, 200);
+    }
+    let tsOk = false;
+    try {
+      const vr = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret: turnstileSecret, response: tsToken }),
+        signal: AbortSignal.timeout(5000),
+      });
+      const vj: unknown = await vr.json();
+      tsOk = typeof vj === "object" && vj !== null && (vj as { success?: boolean }).success === true;
+    } catch {
+      tsOk = false;
+    }
+    if (!tsOk) {
+      return json({ ok: false, reason: "captcha_invalid" }, 200);
+    }
+  }
+
   // --- Substantiation: a real lead row must exist recently ---------------
   const admin = createClient(supabaseUrl, serviceKey);
   const since = new Date(Date.now() - FRESH_WINDOW_MS).toISOString();

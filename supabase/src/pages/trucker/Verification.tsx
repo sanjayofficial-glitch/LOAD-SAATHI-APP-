@@ -408,7 +408,7 @@ const Verification = () => {
                           type="date"
                           value={expiryDraft[doc.id] || ''}
                           onChange={(e) => void handleExpiryChange(doc.id, e.target.value)}
-                          className="h-9 dark:bg-gray-900 dark:text-white"
+                          className="h-11 dark:bg-gray-900 dark:text-white"
                         />
                         {expiry === 'expired' && (
                           <p className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">

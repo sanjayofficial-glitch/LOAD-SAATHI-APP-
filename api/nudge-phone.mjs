@@ -18,47 +18,24 @@ const REPLY_TO = 'support@loadsaathi.in';
 const SITE_URL = 'https://loadsaathi.in';
 const PROFILE_URL = `${SITE_URL}/profile`;
 
-/** Onboarded users who have no phone number saved (excludes admins). */
-const RECIPIENTS = [
-  { email: 'sriharimugri87@gmail.com', name: 'SRIHARI MUGRI' },
-  { email: 'mrarya725@gmail.com', name: 'MR ARYA' },
-  { email: 'shankarrocks.patra@gmail.com', name: 'Shankar Fruits' },
-  { email: 'suvamsahoo11@gmail.com', name: 'Suvam Sahoo' },
-  { email: 'dinkargoel1985@gmail.com', name: 'DINKAR GOEL' },
-  { email: 'acc.vedlogistics@gmail.com', name: 'Santidhya Mangal' },
-  { email: 'behera.dhaneswar007@gmail.com', name: 'Abhijit Behera' },
-  { email: 'brundabannag726@gmail.com', name: 'Brundaban Nag' },
-  { email: 'sahuuchhab791@gmail.com', name: 'Sanjukta Sahoo' },
-  { email: 'anand870aa@gmail.com', name: 'Anand' },
-  { email: 'archanau983@gmail.com', name: 'Archana' },
-  { email: 'darshanp82@gmail.com', name: 'Darshan Parekh' },
-  { email: 'rohantayal2244@gmail.com', name: 'Rohan Tayal' },
-  { email: 'nuraliwadhwaniya13@gmail.com', name: 'Nurali Wadhwaniya' },
-  { email: 'noman7ashraf@gmail.com', name: 'Noman Ashraf' },
-  { email: 'eswaramuthu423@gmail.com', name: 'Muthu Mani' },
-  { email: 'cmsteelsrkl@gmail.com', name: 'Chetan Agarwal' },
-  { email: 'kowshikthota43@gmail.com', name: 'Kowshik Thota' },
-  { email: 'ajanakiram8@gmail.com', name: 'A Janakiram' },
-  { email: 'bargelatarun02@gmail.com', name: 'Bargela Tarun' },
-  { email: 'makhnalal3@gmail.com', name: 'Makhna Lal' },
-  { email: 'naren123123123123@gmail.com', name: 'Naren' },
-  { email: 'liju280@gmail.com', name: 'Alwin Liju' },
-  { email: 'sales@cmcoldchain.com', name: 'CHFMART Logistics' },
-  { email: 'rahulranchisinha@gmail.com', name: 'Rahul Sinha' },
-  { email: 'daga.shrenik@gmail.com', name: 'Shrenik Daga' },
-  { email: 'bbuvhancheerla19@gmail.com', name: 'Bhuvan Cheerla' },
-  { email: 'makkarharshit502@gmail.com', name: 'Harshit Makkar' },
-  { email: 'ravyafashionrkl@gmail.com', name: 'Sanjaya Sahu' },
-  { email: 'raiirfan7898@gmail.com', name: 'Irfan Rai' },
-  { email: 'sauravprasaad@gmail.com', name: 'Saurav Swain' },
-  { email: 'daaku088@gmail.com', name: 'Dinesh' },
-  { email: 'asifkhan20122003@gmail.com', name: 'ASIF KHAN' },
-  { email: 'sobhitsriwas@gmail.com', name: 'Sobhit Sriwas' },
-  { email: 'srtransportsudt@gmail.com', name: 'srtransports' },
-  { email: 'aashish22092001@gmail.com', name: 'Aashish Sridhar' },
-  { email: 'mayurkalal2580@gmail.com', name: 'Mayur Kalal' },
-  { email: 'mrsuresh3868@gmail.com', name: 'Suresh Lamani' },
-];
+/**
+ * Onboarded users who have no phone number saved (excludes admins).
+ * Recipients are NOT hardcoded here — they come from the environment variable
+ * NUDGE_RECIPIENTS_JSON ([{ "email": "...", "name": "..." }]) so real user
+ * PII never lives in the repository.
+ */
+function loadRecipients() {
+  const raw = process.env.NUDGE_RECIPIENTS_JSON || '';
+  if (!raw.trim()) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((r) => r && typeof r.email === 'string' && r.email.includes('@'));
+  } catch {
+    console.error('NUDGE_RECIPIENTS_JSON is not valid JSON — no recipients loaded.');
+    return [];
+  }
+}
 
 const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) =>
@@ -111,6 +88,12 @@ async function main() {
   if (!process.env.RESEND_API_KEY) {
     console.error('RESEND_API_KEY is not set — nothing was sent.');
     process.exitCode = 1;
+    return;
+  }
+
+  const RECIPIENTS = loadRecipients();
+  if (RECIPIENTS.length === 0) {
+    console.log('No recipients configured (NUDGE_RECIPIENTS_JSON unset or empty) — nothing was sent.');
     return;
   }
 
