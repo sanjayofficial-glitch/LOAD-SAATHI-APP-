@@ -191,6 +191,24 @@ describe('Agentic Readiness: index.html metadata', () => {
     expect(content).toContain('<link rel="canonical" href="https://loadsaathi.in/" />');
   });
 
+  it('declares a self-referencing and reciprocal hreflang set for the homepage', () => {
+    // The homepage is served as a static file (Vercel resolves the filesystem
+    // before rewrites), so api/agent.js never injects hreflang for "/". It
+    // must therefore ship its own set — and because Google honours a hreflang
+    // pair only when BOTH directions exist and each page self-references,
+    // the reciprocal "hi" alternate is mandatory here.
+    expect(content).toContain(
+      '<link rel="alternate" hreflang="en-in" href="https://loadsaathi.in/" />',
+    );
+    expect(content).toContain(
+      '<link rel="alternate" hreflang="hi" href="https://loadsaathi.in/hi" />',
+    );
+    // x-default is the fallback for unmatched locales → the default locale.
+    expect(content).toContain(
+      '<link rel="alternate" hreflang="x-default" href="https://loadsaathi.in/" />',
+    );
+  });
+
   it('has og:type', () => {
     expect(content).toContain('<meta property="og:type" content="website" />');
   });
@@ -298,6 +316,26 @@ describe('Agentic Readiness: edge function (api/agent.js)', () => {
 
   it('exports edge runtime config', () => {
     expect(content).toContain("runtime: 'edge'");
+  });
+
+  it('points x-default at the default locale for Hindi pages', () => {
+    // A Hindi page's x-default must be its English counterpart, never itself
+    // (x-default is the fallback for locales that match nothing).
+    expect(content).toContain('englishCounterpart');
+    expect(content).toContain('hreflang="x-default" href="${xDefault}"');
+  });
+
+  it('serves Hindi pages with a matching document language', () => {
+    // og:locale was pinned to en_IN by a check against a code ("hi-in") that
+    // the branch never produced, and <html lang> stayed "en" on Hindi pages.
+    expect(content).toContain("const locale = isHindi ? 'hi_IN' : 'en_IN';");
+    expect(content).toContain('lang="hi"');
+  });
+
+  it('gives transport-service pages a real meta description, not the title', () => {
+    // These entries have no summary, so the description used to fall back to
+    // the title verbatim — the same string twice in the head.
+    expect(content).toContain('Book part load and full truck transport in ${entry.cityName}');
   });
 
   it('has a list of known SPA routes', () => {

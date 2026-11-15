@@ -182,7 +182,18 @@ export default function SeoMeta({
     if (robots) appendManaged("meta", { name: "robots", content: robots });
     appendManaged("link", { rel: "canonical", href: url });
     appendManaged("link", { rel: "alternate", hreflang, href: url });
-    appendManaged("link", { rel: "alternate", hreflang: "x-default", href: url });
+    // x-default is the fallback for locales that match nothing, so it must
+    // point at the default (English) locale: a Hindi page points it at its
+    // English counterpart, an English page points it at itself. Matches the
+    // edge function's injection (api/agent.js) so prerendered and
+    // edge-served HTML never disagree.
+    const englishAlt = hreflang === "hi" ? (alternates ?? []).find((a) => a.hreflang !== "hi") : null;
+    const xDefaultHref = englishAlt
+      ? englishAlt.href.startsWith("http")
+        ? englishAlt.href
+        : `${BASE_URL}${englishAlt.href}`
+      : url;
+    appendManaged("link", { rel: "alternate", hreflang: "x-default", href: xDefaultHref });
     // Reciprocal language alternates (EN↔HI pairs). Absolute URLs only —
     // hreflang hrefs must be fully-qualified per Google's guidelines.
     for (const alt of alternates ?? []) {

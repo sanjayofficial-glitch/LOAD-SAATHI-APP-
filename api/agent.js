@@ -3644,11 +3644,15 @@ function getSeoMeta(path) {
   const tsMatch = n.match(/^\/transport-service\/(.+)$/);
   if (tsMatch && TRANSPORT_SERVICE_DATA[tsMatch[1]]) {
     const entry = TRANSPORT_SERVICE_DATA[tsMatch[1]];
+    // These entries carry a title but no summary, so the description used to
+    // fall back to the title verbatim — the same string twice, which reads as
+    // a duplicate to crawlers. Generate a real, keyword-bearing description.
+    const tsSummary = entry.summary || `Book part load and full truck transport in ${entry.cityName}. See PTL/LTL freight rates per km, request an instant quote, and connect directly with verified truckers.`;
     return {
       seoTitle: entry.title,
-      metaDescription: entry.metaDescription || clampMetaDescription(entry.summary || entry.title || ''),
+      metaDescription: entry.metaDescription || clampMetaDescription(tsSummary),
       keywords: entry.keywords,
-      summary: entry.summary,
+      summary: entry.summary || tsSummary,
       faq: entry.faq || null,
       type: 'transport-service',
       slug: tsMatch[1],
@@ -6337,8 +6341,17 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
         const image = OG_IMAGE;
         // "hi" matches SeoMeta's Hindi pages (hreflang="hi"), so prerendered
         // and edge-injected HTML can never disagree on the language label.
-        const hreflang = path === '/hi' || path.startsWith('/hi/') ? 'hi' : 'en-in';
-        const locale = hreflang === 'hi-in' ? 'hi_IN' : 'en_IN';
+        const isHindi = path === '/hi' || path.startsWith('/hi/');
+        const hreflang = isHindi ? 'hi' : 'en-in';
+        const locale = isHindi ? 'hi_IN' : 'en_IN';
+        // x-default is the fallback for locales that match nothing — it must
+        // point at the default (English) locale. A Hindi page therefore points
+        // x-default at its English counterpart, never at itself; an English
+        // page points x-default at itself.
+        const englishCounterpart = isHindi
+          ? (LANG_ALTERNATES[path] ?? []).find((p) => !p.startsWith('/hi'))
+          : null;
+        const xDefault = englishCounterpart ? `https://loadsaathi.in${englishCounterpart}` : canonical;
         // Reciprocal language alternates — hreflang only works when BOTH
         // directions exist. The client-side SeoMeta emits the same set, so
         // prerendered pages and edge-injected pages stay identical.
@@ -6355,7 +6368,7 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
           `  <meta name="robots" content="${seoMeta.noindex ? "noindex, follow" : "index, follow"}" />\n` +
           `  <link rel="canonical" href="${canonical}" />\n` +
           `  <link rel="alternate" hreflang="${hreflang}" href="${canonical}" />\n` +
-          `  <link rel="alternate" hreflang="x-default" href="${canonical}" />\n` +
+          `  <link rel="alternate" hreflang="x-default" href="${xDefault}" />\n` +
           altLinks +
           `  <meta property="og:type" content="website" />\n` +
           `  <meta property="og:url" content="${canonical}" />\n` +
@@ -6372,6 +6385,12 @@ LoadSaathi is India's AI-powered shared freight marketplace connecting shippers 
           `  <meta name="twitter:image" content="${image}" />\n` +
           (seoMeta.author ? `  <meta name="author" content="${escapeHtml(seoMeta.author)}" />\n` : "");
         html = html.replace("</head>", `  ${head}  ${buildJsonLd(path, seoMeta)}\n  </head>`);
+        // The document language must match the visible content: a Hindi page
+        // served as lang="en" is mispronounced by screen readers and read as
+        // English by crawlers that rely on <html lang>.
+        if (isHindi) {
+          html = html.replace(/<html([^>]*)\slang="[^"]*"/i, '<html$1 lang="hi"');
+        }
         // Body copy: the SPA shell only carries a ~34-word card, so inject the
         // page's own long-form content for crawlers and no-JS clients.
         html = injectContentBlock(html, path, seoMeta);

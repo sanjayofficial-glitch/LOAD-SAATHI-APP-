@@ -64,6 +64,15 @@
          separate prerendered files). Every other URL gets its canonical
          replaced by api/agent.js on the server and by SeoMeta on hydration. -->
     <link rel="canonical" href="https://loadsaathi.in/" />
+    <!-- Hreflang for the homepage. The homepage is served as a static file
+         (Vercel resolves the filesystem before rewrites), so api/agent.js
+         never runs for "/" and cannot inject these. Google honours a
+         hreflang pair only when BOTH directions exist and each page
+         self-references — /hi already points here, so this side must point
+         back, plus an x-default for the English (default) locale. -->
+    <link rel="alternate" hreflang="en-in" href="https://loadsaathi.in/" />
+    <link rel="alternate" hreflang="hi" href="https://loadsaathi.in/hi" />
+    <link rel="alternate" hreflang="x-default" href="https://loadsaathi.in/" />
     <title>LoadSaathi: Save Up to 40% on Part Truckload | India</title>
     <meta name="description" content="Save up to 40% on part truckload — pay only for the space you fill. AI-matched PTL/LTL loads, live GPS tracking, GST-verified truckers, zero broker fees." />
     <meta name="robots" content="index, follow" />
