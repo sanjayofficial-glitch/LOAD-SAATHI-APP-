@@ -176,11 +176,11 @@ function markdownForPath(path) {
 
 // Canonical lane table — the same file the React app reads
 // (supabase/src/data/routes.ts). One source of truth for lane data.
-import ROUTE_DATA from './routeData.json' with { type: 'json' };
+import ROUTE_DATA from './routeData.json';
 // Canonical truck-type comparison meta — generated from truckTypes.ts by
 // scripts/generate-truck-pair-meta.mjs at build time, so the edge function
 // serves the same titles/descriptions/FAQs as the React pages.
-import TRUCK_PAIR_META from './truckPairMeta.json' with { type: 'json' };
+import TRUCK_PAIR_META from './truckPairMeta.json';
 
 // ── Static page SEO metadata ──────────────────────────────────────────────────
 const STATIC_PAGE_DATA = {
